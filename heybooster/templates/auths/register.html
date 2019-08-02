@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <h4>
+        <strong>
+            Kayıt Olun
+        </strong>
+    </h4>
+    <hr>
+
+    <form method="POST">
+
+        {{ form.name(class_='form-control') }}
+        {{ form.username(class_='form-control') }}
+        {{ form.email(class_='form-control') }}
+        {{ form.password(class_='form-control') }}
+        {{ form.confirm(class_='form-control') }}
+
+        <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+    </form>
+
+{% endblock %}
