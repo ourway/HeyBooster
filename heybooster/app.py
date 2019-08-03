@@ -5,6 +5,8 @@ from functools import wraps
 from forms import LoginForm, RegisterForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 
+from data import data
+
 
 # Kullanıcı Giriş Decorator'ı
 
@@ -26,8 +28,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ilteriskeskin/Belgeler/
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = ''
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = ''
+app.config["SLACK_OAUTH_CLIENT_ID"] = '711101969589.708601483569'
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = 'f319c69ea84ecb3b6b5643e09c31ca97'
 slack_bp = make_slack_blueprint(scope=["admin,identify,bot,chat:write:bot"])
 app.register_blueprint(slack_bp, url_prefix="/login")
 
@@ -94,11 +96,14 @@ def logout():
 @login_required
 @app.route("/connect")
 def connect():
+    redrct = data()
+    text = ':exclamation: Bu ay kalan para: {} ₺'.format(redrct)
+
     if not slack.authorized:
         return redirect(url_for("slack.login"))
     resp = slack.post("chat.postMessage", data={
         "channel": "#general",
-        "text": "Selam ben Flask Bot :)",
+        "text": text,
         "icon_emoji": ":robot_face:",
     })
     assert resp.ok, resp.text
