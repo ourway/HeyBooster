@@ -28,8 +28,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ilteriskeskin/Belgeler/
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = '711101969589.708601483569'
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = 'f319c69ea84ecb3b6b5643e09c31ca97'
+app.config["SLACK_OAUTH_CLIENT_ID"] = ''
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = ''
 slack_bp = make_slack_blueprint(scope=["admin,identify,bot,chat:write:bot"])
 app.register_blueprint(slack_bp, url_prefix="/login")
 
@@ -96,15 +96,15 @@ def logout():
 @login_required
 @app.route("/connect")
 def connect():
-    redrct = data()
-    text = ':exclamation: Bu ay kalan para: {} ₺'.format(redrct)
+    rdrct = data()
+    text = ':exclamation: Bu ay kalan para: {} ₺'.format(rdrct)
 
     if not slack.authorized:
         return redirect(url_for("slack.login"))
     resp = slack.post("chat.postMessage", data={
         "channel": "#general",
         "text": text,
-        "icon_emoji": ":robot_face:",
+        "icon_emoji": ":male-technologist:",
     })
     assert resp.ok, resp.text
     return resp.text
