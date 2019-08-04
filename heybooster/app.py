@@ -35,7 +35,7 @@ db = SQLAlchemy(app)
 
 app.config["SLACK_OAUTH_CLIENT_ID"] = '711101969589.708601483569'
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = 'f319c69ea84ecb3b6b5643e09c31ca97'
-slack_bp = make_slack_blueprint(scope=["admin,identify,bot,chat:write:bot"])
+slack_bp = make_slack_blueprint(scope=["admin,identify,bot,incoming-webhook,channels:read,chat:write:bot,links:read"])
 
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -51,11 +51,11 @@ class User(db.Model):
 
 
 class Form(FlaskForm):
-    account = SelectField("account", choices=[('','-- Select an Option --')])
-    property = SelectField("property", choices=[('','-- Select an Option --')])
-    view = SelectField("view", choices=[('','-- Select an Option --')])
-    metric = SelectField('metric', choices=[('ga:users','users')])
-    dimension = SelectField('dimension',choices=[('ga:userType', 'user type')])
+    account = SelectField("account", choices=[('', '-- Select an Option --')])
+    property = SelectField("property", choices=[('', '-- Select an Option --')])
+    view = SelectField("view", choices=[('', '-- Select an Option --')])
+    metric = SelectField('metric', choices=[('ga:users', 'users')])
+    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
     start_date = DateField('start_date', format='%Y-%m-%d')
     end_date = DateField('end_date', format='%Y-%m-%d')
 
@@ -116,7 +116,6 @@ def logout():
 def connect():
     rdrct = data()
     text = ':exclamation: Bu ay kalan para: {} ₺'.format(rdrct)
-
     if not slack.authorized:
         return redirect(url_for("slack.login"))
     resp = slack.post("chat.postMessage", data={
