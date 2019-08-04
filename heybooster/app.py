@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from forms import LoginForm, RegisterForm
 from flask_wtf import FlaskForm
-from wtforms import SelectField
+from wtforms import SelectField, DateField
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 
 from data import data
@@ -51,9 +51,13 @@ class User(db.Model):
 
 
 class Form(FlaskForm):
-    account = SelectField("account", choices=[('', '-- Select an Option --')])
-    property = SelectField("property", choices=[('', '-- Select an Option --')])
-    view = SelectField("view", choices=[('', '-- Select an Option --')])
+    account = SelectField("account", choices=[('','-- Select an Option --')])
+    property = SelectField("property", choices=[('','-- Select an Option --')])
+    view = SelectField("view", choices=[('','-- Select an Option --')])
+    metric = SelectField('metric', choices=[('ga:users','users')])
+    dimension = SelectField('dimension',choices=[('ga:userType', 'user type')])
+    start_date = DateField('start_date', format='%Y-%m-%d')
+    end_date = DateField('end_date', format='%Y-%m-%d')
 
 
 @app.route('/')
@@ -124,12 +128,15 @@ def connect():
     return resp.text
 
 
-@app.route("/notifications")
+@app.route("/notifications", methods=['GET', 'POST'])
 @login_required
 def notifications():
-    form = Form()
-    form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
-    return render_template('notifications.html', form=form)
+    form = Form(request.form)
+    if request.method == 'POST':
+        return google_analytics.get_results(form)
+    else:
+        form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
+        return render_template('notifications.html', form=form)
 
 
 if __name__ == '__main__':
