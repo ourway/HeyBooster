@@ -12,6 +12,7 @@ from data import data
 import google_auth
 import google_analytics
 
+
 # Kullanıcı Giriş Decorator'ı
 
 def login_required(f):
@@ -28,7 +29,6 @@ def login_required(f):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ilteriskeskin/Belgeler/Boostroas/HeyBooster/heybooster/data.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -41,6 +41,7 @@ app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(15), unique=True)
@@ -48,11 +49,13 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(25), unique=True)
 
+
 class Form(FlaskForm):
-    account = SelectField("account", choices=[('','-- Select an Option --')])
-    property = SelectField("property", choices=[('','-- Select an Option --')])
-    view = SelectField("view", choices=[('','-- Select an Option --')])
-    
+    account = SelectField("account", choices=[('', '-- Select an Option --')])
+    property = SelectField("property", choices=[('', '-- Select an Option --')])
+    view = SelectField("view", choices=[('', '-- Select an Option --')])
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -120,12 +123,14 @@ def connect():
     assert resp.ok, resp.text
     return resp.text
 
+
 @app.route("/notifications")
 @login_required
 def notifications():
     form = Form()
     form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
     return render_template('notifications.html', form=form)
+
 
 if __name__ == '__main__':
     db.create_all()
