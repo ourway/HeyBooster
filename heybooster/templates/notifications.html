@@ -5,10 +5,21 @@
     <div style="margin: 20%">
 	<form method="POST">
 		{{ form.csrf_token }}
+		Account<br>
 		{{ form.account }}
+		<br>Property<br>
 		{{ form.property }}
+		<br>View<br>
 		{{ form.view }}
-        <input type="submit" name="submit" value="Submit">
+		<br>Start Date<br>
+		{{ form.start_date }}
+		<br>End Date<br>
+		{{ form.end_date }}
+		<br>Metric<br>
+		{{ form.metric }}
+		<br>Dimension<br>
+		{{ form.dimension }}
+      <br><input type="submit" name="submit" value="Submit">
     </form> 
     </div>
 {% endblock %}

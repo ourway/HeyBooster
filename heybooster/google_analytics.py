@@ -52,12 +52,19 @@ def get_views(accountId, propertyId):
             views.append({'id': prof.get('id'), 'name': prof.get('name')})
         return jsonify({'views':views})
 
-def get_results(profile_id):
+def get_results(form):
     service = build_management_api_v3()
+    viewId = form.view.data
+    start_date = form.start_date.data.strftime('%Y-%m-%d')
+    end_date = form.end_date.data.strftime('%Y-%m-%d')
+    metric = form.metric.data
+    dimension = form.dimension.data
     # Use the Analytics Service Object to query the Core Reporting API
     # for the number of sessions within the last seven days.
-    return service.data().ga().get(
-            ids='ga:' + profile_id,
-            start_date='6daysAgo',
-            end_date='today',
-            metrics='ga:sessions').execute()
+    results = service.data().ga().get(
+            ids='ga:' + viewId,
+            start_date=start_date,
+            end_date=end_date,
+            metrics=metric,
+            dimensions=dimension).execute()
+    return str(results.get('rows'))
