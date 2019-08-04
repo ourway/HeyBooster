@@ -65,15 +65,6 @@ def get_results(form):
     end_date = form.end_date.data.strftime('%Y-%m-%d')
     metric = form.metric.data
     dimension = form.dimension.data
-    # Use the Analytics Service Object to query the Core Reporting API
-    # for the number of sessions within the last seven days.
-<<<<<<< HEAD
-    return service.data().ga().get(
-        ids='ga:' + profile_id,
-        start_date='6daysAgo',
-        end_date='today',
-        metrics='ga:sessions').execute()
-=======
     results = service.data().ga().get(
             ids='ga:' + viewId,
             start_date=start_date,
@@ -81,4 +72,3 @@ def get_results(form):
             metrics=metric,
             dimensions=dimension).execute()
     return str(results.get('rows'))
->>>>>>> c28154bf733ebb99964c0cfc8a2f3a5651aac00b
