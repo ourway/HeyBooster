@@ -114,8 +114,11 @@ def logout():
 @app.route("/connect")
 @login_required
 def connect():
-    rdrct = data()
-    text = ':exclamation: Bu ay kalan para: {} ₺'.format(rdrct)
+    # rdrct = data()
+    # text = ':exclamation: Bu ay kalan para: {} ₺'.format(rdrct)
+    file = open('data.txt', 'r')
+    text = file.read()
+
     if not slack.authorized:
         return redirect(url_for("slack.login"))
     resp = slack.post("chat.postMessage", data={
@@ -134,6 +137,10 @@ def connect():
 def notifications():
     form = Form(request.form)
     if request.method == 'POST':
+        value = google_analytics.get_results(form)
+        file = open('data.txt', 'w')
+        file.write(value)
+        file.close()
         return google_analytics.get_results(form)
     else:
         form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
