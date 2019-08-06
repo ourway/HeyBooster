@@ -7,10 +7,11 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField, DateField
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 
-from data import data
-
 import google_auth
 import google_analytics
+
+import time
+import datetime
 
 
 # Kullanıcı Giriş Decorator'ı
@@ -60,9 +61,17 @@ class Form(FlaskForm):
     end_date = DateField('end_date', format='%Y-%m-%d')
 
 
-@app.route('/')
+class TimesForm(FlaskForm):
+    time_range = SelectField("account", choices=[('daily', 'Daily'), ('weekly', 'Weekly')])
+
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('index.html')
+    form = TimesForm(request.form)
+    if request.method == 'POST':
+        value = form.time_range.data
+        return value
+    return render_template('index.html', form=form)
 
 
 @app.route('/about')
@@ -99,7 +108,6 @@ def register():
                         password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        flash('Başarılı bir şekilde kayıt oldunuz', 'success')
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
@@ -114,22 +122,23 @@ def logout():
 @app.route("/connect")
 @login_required
 def connect():
-    # rdrct = data()
-    # text = ':exclamation: Bu ay kalan para: {} ₺'.format(rdrct)
+    now = datetime.datetime.now()
+    hour = now.hour
+
     file = open('data.txt', 'r')
     text = file.read()
 
     if not slack.authorized:
         return redirect(url_for("slack.login"))
     resp = slack.post("chat.postMessage", data={
-        "channel": "#web-app",
         "text": text,
+        "channel": "#general",
         "icon_emoji": ":male-technologist:",
     })
 
-    assert resp.ok, resp.text
+    # assert resp.ok, resp.text
 
-    return resp.text
+    return redirect('/')
 
 
 @app.route("/notifications", methods=['GET', 'POST'])
@@ -141,7 +150,7 @@ def notifications():
         file = open('data.txt', 'w')
         file.write(value)
         file.close()
-        return google_analytics.get_results(form)
+        return redirect('/')
     else:
         form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
         return render_template('notifications.html', form=form)

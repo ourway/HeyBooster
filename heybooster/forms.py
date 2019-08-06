@@ -1,5 +1,4 @@
 from wtforms import Form, StringField, PasswordField, validators
-from wtforms.validators import DataRequired
 
 
 # Kullanıcı giriş formu
