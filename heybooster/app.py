@@ -154,8 +154,3 @@ def notifications():
     else:
         form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
         return render_template('notifications.html', form=form)
-
-
-if __name__ == '__main__':
-    db.create_all()
-    app.run(debug=True)
