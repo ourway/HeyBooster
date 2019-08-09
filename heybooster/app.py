@@ -10,9 +10,6 @@ from flask_dance.contrib.slack import make_slack_blueprint, slack
 import google_auth
 import google_analytics
 
-import time
-import datetime
-
 
 # Kullanıcı Giriş Decorator'ı
 
@@ -70,7 +67,10 @@ def home():
     form = TimesForm(request.form)
     if request.method == 'POST':
         value = form.time_range.data
-        return value
+        file = open('value.txt', 'w')
+        file.write(value)
+        file.close()
+        return redirect('/')
     return render_template('index.html', form=form)
 
 
@@ -122,15 +122,20 @@ def logout():
 @app.route("/connect")
 @login_required
 def connect():
-    now = datetime.datetime.now()
-    hour = now.hour
-
     file = open('data.txt', 'r')
     text = file.read()
+    file.close()
+    # file2 = open('value.txt', 'r')
+    # value = file2.read()
+    #
+    # if value == 'daily':
+    #     print('daily')
+    # elif value == 'weekly':
+    #     print('weekly')
 
     if not slack.authorized:
         return redirect(url_for("slack.login"))
-    resp = slack.post("chat.postMessage", data={
+    slack.post("chat.postMessage", data={
         "text": text,
         "channel": "#general",
         "icon_emoji": ":male-technologist:",
