@@ -1,7 +1,7 @@
 import flask
 from flask import jsonify
 import googleapiclient.discovery
-from google_auth import build_credentials, get_user_info
+from google_auth import build_credentials, build_credentials_woutSession, get_user_info
 
 app = flask.Blueprint('google_analytics', __name__)
 
@@ -10,11 +10,18 @@ def build_management_api_v3():
     credentials = build_credentials()
     return googleapiclient.discovery.build('analytics', 'v3', credentials=credentials)
 
+def build_management_api_v3_woutSession(email):
+    credentials = build_credentials_woutSession(email)
+    print(credentials.token)
+    return googleapiclient.discovery.build('analytics', 'v3', credentials=credentials)
 
 def build_reporting_api_v4():
     credentials = build_credentials()
     return googleapiclient.discovery.build('analyticsreporting', 'v4', credentials=credentials)
 
+def build_reporting_api_v4_woutSession(email):
+    credentials = build_credentials_woutSession(email)
+    return googleapiclient.discovery.build('analyticsreporting', 'v4', credentials=credentials)
 
 @app.route("/analytics/accounts")
 def get_accounts():

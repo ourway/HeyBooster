@@ -6,6 +6,8 @@ from authlib.client import OAuth2Session
 import google.oauth2.credentials
 import googleapiclient.discovery
 
+from database import db
+
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
 
@@ -13,8 +15,8 @@ AUTHORIZATION_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
 
 AUTH_REDIRECT_URI = "http://127.0.0.1:5000/google/auth"
 BASE_URI = "http://127.0.0.1:5000"
-CLIENT_ID = "367134361719-d7f3630fqnpe7p1bo825580uc6fo7n49.apps.googleusercontent.com"
-CLIENT_SECRET = "qEvTMA6p7SrZd3Mg4cgCkVth"
+CLIENT_ID = ""
+CLIENT_SECRET = ""
 
 AUTH_TOKEN_KEY = 'auth_token'
 AUTH_STATE_KEY = 'auth_state'
@@ -34,6 +36,20 @@ def build_credentials():
 
     oauth2_tokens = flask.session[AUTH_TOKEN_KEY]
 
+    return google.oauth2.credentials.Credentials(
+        oauth2_tokens['access_token'],
+        refresh_token=oauth2_tokens['refresh_token'],
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        token_uri=ACCESS_TOKEN_URI)
+
+def build_credentials_woutSession(email):
+
+    oauth2_tokens = {}
+    user = db.find_one('user', {'email':email})
+    oauth2_tokens['access_token'] = user['ga_accesstoken']
+    oauth2_tokens['refresh_token'] = user['ga_refreshtoken']
+    
     return google.oauth2.credentials.Credentials(
         oauth2_tokens['access_token'],
         refresh_token=oauth2_tokens['refresh_token'],
@@ -72,7 +88,6 @@ def login():
                             redirect_uri=AUTH_REDIRECT_URI)
 
     uri, state = session.authorization_url(AUTHORIZATION_URL)
-    print(flask.session.keys())
     flask.session[AUTH_STATE_KEY] = state
     flask.session.permanent = True
 
@@ -83,7 +98,6 @@ def login():
 @no_cache
 def google_auth_redirect():
     req_state = flask.request.args.get('state', default=None, type=None)
-    print(flask.session.keys())
     if req_state != flask.session[AUTH_STATE_KEY]:
         response = flask.make_response('Invalid state parameter', 401)
         return response
@@ -98,7 +112,7 @@ def google_auth_redirect():
         authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
-
+    db.modify_gatoken(collection = 'user', email = flask.session['email'], accesstoken =  oauth2_tokens['access_token'], refreshtoken=oauth2_tokens['refresh_token'])
     return flask.redirect(BASE_URI, code=302)
 
 

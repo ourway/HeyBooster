@@ -6,11 +6,16 @@ from forms import LoginForm, RegisterForm
 from flask_wtf import FlaskForm
 from wtforms import SelectField, DateField
 from flask_dance.contrib.slack import make_slack_blueprint, slack
-
+from flask_pymongo import PyMongo
+from mongoengine import *
 import google_auth
 import google_analytics
+import time
+import datetime
 
-
+from database import db
+from models.user import User
+from slack_auth import authorized
 # Kullanıcı Giriş Decorator'ı
 
 def login_required(f):
@@ -26,27 +31,19 @@ def login_required(f):
 
 
 app = Flask(__name__)
+db.init()
+
+
+
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = '711101969589.708601483569'
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = 'f319c69ea84ecb3b6b5643e09c31ca97'
+app.config["SLACK_OAUTH_CLIENT_ID"] = ''
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = ''
 slack_bp = make_slack_blueprint(scope=["admin,identify,bot,incoming-webhook,channels:read,chat:write:bot,links:read"])
-
+slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(15), unique=True)
-    username = db.Column(db.String(15), unique=True)
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(25), unique=True)
-
 
 class Form(FlaskForm):
     account = SelectField("account", choices=[('', '-- Select an Option --')])
@@ -67,10 +64,7 @@ def home():
     form = TimesForm(request.form)
     if request.method == 'POST':
         value = form.time_range.data
-        file = open('value.txt', 'w')
-        file.write(value)
-        file.close()
-        return redirect('/')
+        return value
     return render_template('index.html', form=form)
 
 
@@ -83,13 +77,13 @@ def about():
 def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
-        user = User.query.filter_by(email=form.email.data).first()
+        user = db.find_one('user', {'email': form.email.data})
         if user:
-            if check_password_hash(user.password, form.password.data):
+            if check_password_hash(user['password'], form.password.data):
                 flash("Başarıyla Giriş Yaptınız", "success")
 
                 session['logged_in'] = True
-                session['email'] = user.email
+                session['email'] = user['email']
 
                 return redirect(url_for('home'))
             else:
@@ -105,9 +99,8 @@ def register():
     if request.method == 'POST' and form.validate():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = User(name=form.name.data, username=form.username.data, email=form.email.data,
-                        password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
+                        password=hashed_password, ga_accesstoken='', ga_refreshtoken='', sl_accesstoken = '')
+        new_user.insert()
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
@@ -122,20 +115,15 @@ def logout():
 @app.route("/connect")
 @login_required
 def connect():
+    now = datetime.datetime.now()
+    hour = now.hour
+
     file = open('data.txt', 'r')
     text = file.read()
-    file.close()
-    # file2 = open('value.txt', 'r')
-    # value = file2.read()
-    #
-    # if value == 'daily':
-    #     print('daily')
-    # elif value == 'weekly':
-    #     print('weekly')
 
     if not slack.authorized:
         return redirect(url_for("slack.login"))
-    slack.post("chat.postMessage", data={
+    resp = slack.post("chat.postMessage", data={
         "text": text,
         "channel": "#general",
         "icon_emoji": ":male-technologist:",
@@ -159,3 +147,13 @@ def notifications():
     else:
         form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
         return render_template('notifications.html', form=form)
+    
+@app.route("/gatest/<email>")
+def gatest(email):
+    service = google_analytics.build_management_api_v3_woutSession(email)
+    accs = service.management().accounts().list().execute()
+    accounts = []
+    if accs.get('items'):
+        for acc in accs.get('items'):
+            accounts.append({'id': acc.get('id'), 'name': acc.get('name')})
+    return {'accounts': accounts}
