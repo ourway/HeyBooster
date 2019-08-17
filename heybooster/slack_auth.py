@@ -1,4 +1,15 @@
 from database import db
+import json
+
+import logging
+import flask
+from flask import request, url_for, redirect, current_app
+from flask_dance.consumer import oauth_authorized, oauth_error
+from werkzeug.wrappers import Response
+from oauthlib.oauth2 import MissingCodeError
+
+log = logging.getLogger(__name__)
+
 
 def authorized(self):
     """
@@ -46,12 +57,14 @@ def authorized(self):
     log.debug("client_id = %s", self.client_id)
     log.debug("client_secret = %s", self.client_secret)
     try:
+        print("aDADADAD")
         token = self.session.fetch_token(
             self.token_url,
             authorization_response=request.url,
             client_secret=self.client_secret,
             **self.token_url_params
         )
+        db.modify_sltoken(collection='user', email=flask.session['email'], accesstoken=token['access_token'])
     except MissingCodeError as e:
         e.args = (
             e.args[0],
@@ -72,7 +85,7 @@ def authorized(self):
     if set_token:
         try:
             self.token = token
-            db.modify_sltoken(collection = 'user', email = flask.session['email'], accesstoken =  token['access_token'])
+
         except ValueError as error:
             log.warning("OAuth 2 authorization error: %s", str(error))
             oauth_error.send(self, error=error)

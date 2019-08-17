@@ -10,12 +10,14 @@ from flask_pymongo import PyMongo
 from mongoengine import *
 import google_auth
 import google_analytics
-import time
-import datetime
 
 from database import db
 from models.user import User
 from slack_auth import authorized
+from flask_dance.consumer import OAuth2ConsumerBlueprint
+OAuth2ConsumerBlueprint.authorized = authorized
+
+
 # Kullanıcı Giriş Decorator'ı
 
 def login_required(f):
@@ -33,8 +35,6 @@ def login_required(f):
 app = Flask(__name__)
 db.init()
 
-
-
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
 app.config["SLACK_OAUTH_CLIENT_ID"] = ''
@@ -44,6 +44,7 @@ slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
+
 
 class Form(FlaskForm):
     account = SelectField("account", choices=[('', '-- Select an Option --')])
@@ -61,6 +62,8 @@ class TimesForm(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    # if slack.authorized:
+    #     db.modify_sltoken(collection='user', email=session['email'], accesstoken=slack.token['access_token'])
     form = TimesForm(request.form)
     if request.method == 'POST':
         value = form.time_range.data
@@ -99,7 +102,7 @@ def register():
     if request.method == 'POST' and form.validate():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = User(name=form.name.data, username=form.username.data, email=form.email.data,
-                        password=hashed_password, ga_accesstoken='', ga_refreshtoken='', sl_accesstoken = '')
+                        password=hashed_password, ga_accesstoken='', ga_refreshtoken='', sl_accesstoken='')
         new_user.insert()
         return redirect(url_for('login'))
     else:
@@ -115,21 +118,13 @@ def logout():
 @app.route("/connect")
 @login_required
 def connect():
-    now = datetime.datetime.now()
-    hour = now.hour
-
-    file = open('data.txt', 'r')
-    text = file.read()
-
     if not slack.authorized:
         return redirect(url_for("slack.login"))
-    resp = slack.post("chat.postMessage", data={
-        "text": text,
+    slack.post("chat.postMessage", data={
+        "text": 'hello',
         "channel": "#general",
         "icon_emoji": ":male-technologist:",
     })
-
-    # assert resp.ok, resp.text
 
     return redirect('/')
 
@@ -139,15 +134,13 @@ def connect():
 def notifications():
     form = Form(request.form)
     if request.method == 'POST':
-        value = google_analytics.get_results(form)
-        file = open('data.txt', 'w')
-        file.write(value)
-        file.close()
+        google_analytics.get_results(form)
         return redirect('/')
     else:
         form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
         return render_template('notifications.html', form=form)
-    
+
+
 @app.route("/gatest/<email>")
 def gatest(email):
     service = google_analytics.build_management_api_v3_woutSession(email)

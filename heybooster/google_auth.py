@@ -43,13 +43,13 @@ def build_credentials():
         client_secret=CLIENT_SECRET,
         token_uri=ACCESS_TOKEN_URI)
 
-def build_credentials_woutSession(email):
 
+def build_credentials_woutSession(email):
     oauth2_tokens = {}
-    user = db.find_one('user', {'email':email})
+    user = db.find_one('user', {'email': email})
     oauth2_tokens['access_token'] = user['ga_accesstoken']
     oauth2_tokens['refresh_token'] = user['ga_refreshtoken']
-    
+
     return google.oauth2.credentials.Credentials(
         oauth2_tokens['access_token'],
         refresh_token=oauth2_tokens['refresh_token'],
@@ -112,7 +112,8 @@ def google_auth_redirect():
         authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
-    db.modify_gatoken(collection = 'user', email = flask.session['email'], accesstoken =  oauth2_tokens['access_token'], refreshtoken=oauth2_tokens['refresh_token'])
+    db.modify_gatoken(collection='user', email=flask.session['email'], accesstoken=oauth2_tokens['access_token'],
+                      refreshtoken=oauth2_tokens['refresh_token'])
     return flask.redirect(BASE_URI, code=302)
 
 
