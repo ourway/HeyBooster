@@ -1,4 +1,25 @@
-from wtforms import Form, StringField, PasswordField, validators
+from wtforms import Form, StringField, PasswordField, validators, SelectField
+from wtforms.fields.html5 import DateField
+
+#Times Formu
+class TimesForm(Form):
+    time_range = SelectField("account", choices=[('daily', 'Daily'), ('weekly', 'Weekly')])
+
+
+
+
+
+#Notification Formu
+
+class NotificationForm(Form):
+    account = SelectField("account", choices=[('', '-- Select an Option --')])
+    property = SelectField("property", choices=[('', '-- Select an Option --')])
+    view = SelectField("view", choices=[('', '-- Select an Option --')])
+    metric = SelectField('metric', choices=[('ga:users', 'users')])
+    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
+    start_date = DateField('start_date', format="%Y-%m-%d")
+    end_date = DateField('end_date', format="%Y-%m-%d")
+
 
 
 # Kullanıcı giriş formu

@@ -2,9 +2,7 @@ from flask import Flask, render_template, flash, redirect, request, session, url
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from forms import LoginForm, RegisterForm
-from flask_wtf import FlaskForm
-from wtforms import SelectField, DateField
+from forms import LoginForm, RegisterForm, NotificationForm, TimesForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 from flask_pymongo import PyMongo
 from mongoengine import *
@@ -44,21 +42,6 @@ slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
-
-
-class Form(FlaskForm):
-    account = SelectField("account", choices=[('', '-- Select an Option --')])
-    property = SelectField("property", choices=[('', '-- Select an Option --')])
-    view = SelectField("view", choices=[('', '-- Select an Option --')])
-    metric = SelectField('metric', choices=[('ga:users', 'users')])
-    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
-    start_date = DateField('start_date', format='%Y-%m-%d')
-    end_date = DateField('end_date', format='%Y-%m-%d')
-
-
-class TimesForm(FlaskForm):
-    time_range = SelectField("account", choices=[('daily', 'Daily'), ('weekly', 'Weekly')])
-
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -132,7 +115,7 @@ def connect():
 @app.route("/notifications", methods=['GET', 'POST'])
 @login_required
 def notifications():
-    form = Form(request.form)
+    form = NotificationForm(request.form)
     if request.method == 'POST':
         google_analytics.get_results(form)
         return redirect('/')
