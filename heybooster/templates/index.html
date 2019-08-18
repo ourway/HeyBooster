@@ -20,11 +20,6 @@
                     </a>
                 {% endif %}
             </form>
-            <form method="POST">
-                {{ form.csrf_token }}
-                {{ form.time_range }}
-                <br><input type="submit" name="submit" value="Submit">
-            </form>
 
             <form method="POST">
                 {% if session['logged_in'] %}
