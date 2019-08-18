@@ -102,12 +102,6 @@ def logout():
 def connect():
     if not slack.authorized:
         return redirect(url_for("slack.login"))
-    slack.post("chat.postMessage", data={
-        "text": 'hello',
-        "channel": "#general",
-        "icon_emoji": ":male-technologist:",
-    })
-
     return redirect('/')
 
 
