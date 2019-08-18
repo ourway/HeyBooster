@@ -15,6 +15,7 @@ from database import db
 from models.user import User
 from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
+
 OAuth2ConsumerBlueprint.authorized = authorized
 
 
@@ -37,8 +38,8 @@ db.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = ''
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = ''
+app.config["SLACK_OAUTH_CLIENT_ID"] = '711101969589.708601483569'
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = '4ce072c2adcff06a1a11dde3c56680f5'
 slack_bp = make_slack_blueprint(scope=["admin,identify,bot,incoming-webhook,channels:read,chat:write:bot,links:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
@@ -62,8 +63,6 @@ class TimesForm(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    # if slack.authorized:
-    #     db.modify_sltoken(collection='user', email=session['email'], accesstoken=slack.token['access_token'])
     form = TimesForm(request.form)
     if request.method == 'POST':
         value = form.time_range.data
@@ -134,7 +133,8 @@ def connect():
 def notifications():
     form = Form(request.form)
     if request.method == 'POST':
-        google_analytics.get_results(form)
+        message = google_analytics.get_results(form)
+        slack_message(message)
         return redirect('/')
     else:
         form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
@@ -150,3 +150,15 @@ def gatest(email):
         for acc in accs.get('items'):
             accounts.append({'id': acc.get('id'), 'name': acc.get('name')})
     return {'accounts': accounts}
+
+
+def slack_message(message):
+    if not slack.authorized:
+        return redirect(url_for("slack.login"))
+    slack.post("chat.postMessage", data={
+        "text": message,
+        "channel": "#general",
+        "icon_emoji": ":male-technologist:",
+    })
+
+    return redirect('/')

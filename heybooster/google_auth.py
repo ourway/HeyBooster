@@ -15,8 +15,8 @@ AUTHORIZATION_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
 
 AUTH_REDIRECT_URI = "http://127.0.0.1:5000/google/auth"
 BASE_URI = "http://127.0.0.1:5000"
-CLIENT_ID = ""
-CLIENT_SECRET = ""
+CLIENT_ID = "367134361719-d7f3630fqnpe7p1bo825580uc6fo7n49.apps.googleusercontent.com"
+CLIENT_SECRET = "qEvTMA6p7SrZd3Mg4cgCkVth"
 
 AUTH_TOKEN_KEY = 'auth_token'
 AUTH_STATE_KEY = 'auth_state'
