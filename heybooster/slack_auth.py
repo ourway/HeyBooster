@@ -64,7 +64,7 @@ def authorized(self):
             client_secret=self.client_secret,
             **self.token_url_params
         )
-        db.modify_sltoken(collection='user', email=flask.session['email'], accesstoken=token['access_token'])
+        db.find_and_modify(collection='user', email=flask.session['email'], sl_accesstoken=token['access_token'])
     except MissingCodeError as e:
         e.args = (
             e.args[0],

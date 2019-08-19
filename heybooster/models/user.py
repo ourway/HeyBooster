@@ -1,7 +1,7 @@
 from database import db
  
 class User(object):
-    def __init__(self, name, username, email, password, ga_accesstoken, ga_refreshtoken, sl_accesstoken):
+    def __init__(self, name, username, email, password):
         self.name = name
         self.username = username
         self.email = email

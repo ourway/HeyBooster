@@ -5,7 +5,7 @@ import flask
 from authlib.client import OAuth2Session
 import google.oauth2.credentials
 import googleapiclient.discovery
-
+import google_analytics
 from database import db
 
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
@@ -112,8 +112,10 @@ def google_auth_redirect():
         authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
-    db.modify_gatoken(collection='user', email=flask.session['email'], accesstoken=oauth2_tokens['access_token'],
-                      refreshtoken=oauth2_tokens['refresh_token'])
+    db.find_and_modify(collection='user', email=flask.session['email'], ga_accesstoken=oauth2_tokens['access_token'],
+                      ga_refreshtoken=oauth2_tokens['refresh_token'])
+    viewId = google_analytics.get_first_profile_id()
+    db.find_and_modify(collection='notification', email=flask.session['email'], viewId=viewId)
     return flask.redirect(BASE_URI, code=302)
 
 

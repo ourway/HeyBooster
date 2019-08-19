@@ -1,14 +1,10 @@
 from flask import Flask, render_template, flash, redirect, request, session, url_for
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from forms import LoginForm, RegisterForm, NotificationForm, TimesForm
+from forms import LoginForm, RegisterForm, NotificationForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
-from flask_pymongo import PyMongo
-from mongoengine import *
 import google_auth
 import google_analytics
-
 from database import db
 from models.user import User
 from slack_auth import authorized
@@ -81,8 +77,22 @@ def register():
     if request.method == 'POST' and form.validate():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = User(name=form.name.data, username=form.username.data, email=form.email.data,
-                        password=hashed_password, ga_accesstoken='', ga_refreshtoken='', sl_accesstoken='')
+                        password=hashed_password)
         new_user.insert()
+        db.insert('notification', data={
+                'email': form.email.data,
+                'type': 'performancechangetracking',
+                'period': 1,
+                'scheduleType': 'daily',
+                'frequency': 0,
+                'timeofDay': '07:00',
+                'metric': 'Session',
+                'segment': 'mobile',
+                'channel': '#general',
+                'status': 'active',
+                'lastRunDate': '',
+                'viewId':''
+                })
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)

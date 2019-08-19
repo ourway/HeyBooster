@@ -1,26 +1,25 @@
 import flask
 from flask import jsonify
 import googleapiclient.discovery
-from google_auth import build_credentials, build_credentials_woutSession, get_user_info
+import google_auth
 
 app = flask.Blueprint('google_analytics', __name__)
 
 
 def build_management_api_v3():
-    credentials = build_credentials()
+    credentials = google_auth.build_credentials()
     return googleapiclient.discovery.build('analytics', 'v3', credentials=credentials)
 
 def build_management_api_v3_woutSession(email):
-    credentials = build_credentials_woutSession(email)
-    print(credentials.token)
+    credentials = google_auth.build_credentials_woutSession(email)
     return googleapiclient.discovery.build('analytics', 'v3', credentials=credentials)
 
 def build_reporting_api_v4():
-    credentials = build_credentials()
+    credentials = google_auth.build_credentials()
     return googleapiclient.discovery.build('analyticsreporting', 'v4', credentials=credentials)
 
 def build_reporting_api_v4_woutSession(email):
-    credentials = build_credentials_woutSession(email)
+    credentials = google_auth.build_credentials_woutSession(email)
     return googleapiclient.discovery.build('analyticsreporting', 'v4', credentials=credentials)
 
 @app.route("/analytics/accounts")
@@ -79,3 +78,26 @@ def get_results(form):
             metrics=metric,
             dimensions=dimension).execute()
     return str(results.get('rows'))
+
+def get_first_profile_id():
+    # Use the Analytics service object to get the first profile id.
+    service = build_management_api_v3()
+	 # Get a list of all Google Analytics accounts for this user
+    accounts = service.management().accounts().list().execute()
+    if accounts.get('items'):
+        # Get the first Google Analytics account.
+        account = accounts.get('items')[0].get('id')
+        # Get a list of all the properties for the first account.
+        properties = service.management().webproperties().list(
+                accountId=account).execute()
+        if properties.get('items'):
+            # Get the first property id.
+            property = properties.get('items')[0].get('id')
+            # Get a list of all views (profiles) for the first property.
+            profiles = service.management().profiles().list(
+                    accountId=account,
+                    webPropertyId=property).execute()
+            if profiles.get('items'):
+                # return the first view (profile) id.
+                return profiles.get('items')[0].get('id')
+    return None

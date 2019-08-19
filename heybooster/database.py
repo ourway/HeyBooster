@@ -16,12 +16,12 @@ class db(object):
     @staticmethod
     def find_one(collection, query):
         return db.DATABASE[collection].find_one(query)
-
-    def modify_gatoken(collection, email, accesstoken, refreshtoken):
-        db.DATABASE[collection].find_and_modify(query={'email': email}, update={
-            "$set": {'ga_accesstoken': accesstoken, 'ga_refreshtoken': refreshtoken}}, upsert=False, full_response=True)
-
-    def modify_sltoken(collection, email, accesstoken):
+    
+    def find(collection, query):
+        return db.DATABASE[collection].find(query)
+    
+    def find_and_modify(collection, email, **kwargs):
+        print(kwargs)
         db.DATABASE[collection].find_and_modify(query={'email': email},
-                                                update={"$set": {'sl_accesstoken': accesstoken}}, upsert=False,
+                                                update={"$set": kwargs}, upsert=False,
                                                 full_response=True)
