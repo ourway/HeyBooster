@@ -12,6 +12,7 @@ import slack
 def performancechangetracking(slack_token, task):
     email = task['email']
     service = google_analytics.build_management_api_v3_woutSession(email)
+    
     viewId = "ga:"+task['viewId']
     metrics = task['metric']
     channel = task['channel']
@@ -20,6 +21,7 @@ def performancechangetracking(slack_token, task):
     
     
     period = task['period']
+    
     if(period==1):
         start_date_1 = 'yesterday'
         end_date_1 = start_date_1

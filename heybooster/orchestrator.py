@@ -6,7 +6,7 @@ from database import db
 from modules import performancechangetracking
 
 def dtimetostrf(x):
-    return x.strftime('%H-%M')
+    return x.strftime('%H.%M')
 
 def do_job(tasks_to_accomplish):
     while True:
@@ -20,6 +20,7 @@ def do_job(tasks_to_accomplish):
             slack_token = db.find_one('user', {'email':task['email']})['sl_accesstoken']
             if(task['type']=='performancechangetracking'):
                 performancechangetracking(slack_token, task)
+                
         except queue.Empty:
             break
     return True
@@ -28,10 +29,7 @@ def do_job(tasks_to_accomplish):
 def main():
     number_of_processes = 4
     tasks_to_accomplish = Queue()
-    tasks_that_are_done = Queue()
     processes = []
-    
-    db.init()
     
     mday = datetime.today().day #Month of Day
     wday = datetime.today().weekday()+1
@@ -51,7 +49,7 @@ def main():
 
     # creating processes
     for w in range(number_of_processes):
-        p = Process(target=do_job, args=(tasks_to_accomplish, tasks_that_are_done))
+        p = Process(target=do_job, args=(tasks_to_accomplish))
         processes.append(p)
         p.start()
 
@@ -59,16 +57,13 @@ def main():
     for p in processes:
         p.join()
 
-    # print the output
-    while not tasks_that_are_done.empty():
-        print(tasks_that_are_done.get())
-
     return True
 
 if __name__ == '__main__':
+    db.init()
     while(True):
         if(datetime.now().second == 0):
-            print('Dakika')
+            main()
             while(datetime.now().second < 1):
                 pass
-    main()
+    
