@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, request, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from forms import LoginForm, RegisterForm, NotificationForm
+from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 import google_auth
 import google_analytics
@@ -43,6 +43,7 @@ app.register_blueprint(google_analytics.app)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    slack_message()
     return render_template('index.html')
 
 
@@ -80,19 +81,19 @@ def register():
                         password=hashed_password)
         new_user.insert()
         db.insert('notification', data={
-                'email': form.email.data,
-                'type': 'performancechangetracking',
-                'period': 1,
-                'scheduleType': 'daily',
-                'frequency': 0,
-                'timeofDay': '07:00',
-                'metric': 'Session',
-                'segment': 'mobile',
-                'channel': '#general',
-                'status': 'active',
-                'lastRunDate': '',
-                'viewId':''
-                })
+            'email': form.email.data,
+            'type': 'performancechangetracking',
+            'period': 1,
+            'scheduleType': 'daily',
+            'frequency': 0,
+            'timeofDay': '07:00',
+            'metric': 'Session',
+            'segment': 'mobile',
+            'channel': '#general',
+            'status': 'active',
+            'lastRunDate': '',
+            'viewId': ''
+        })
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
@@ -115,14 +116,17 @@ def connect():
 @app.route("/notifications", methods=['GET', 'POST'])
 @login_required
 def notifications():
-    form = NotificationForm(request.form)
+    nForm = NotificationForm(request.form)
+    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        message = google_analytics.get_results(form)
-        slack_message(message)
+        # message = google_analytics.get_results(nForm)
+        # slack_message()
         return redirect('/')
     else:
-        form.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
-        return render_template('notifications.html', form=form)
+        nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
+        incoming_webhook = slack.token['incoming_webhook']
+        print(incoming_webhook['channel'])
+        return render_template('notifications.html', nForm=nForm, tForm=tForm)
 
 
 @app.route("/gatest/<email>")
@@ -136,11 +140,27 @@ def gatest(email):
     return {'accounts': accounts}
 
 
-def slack_message(message):
+@app.route("/save", methods=['GET', 'POST'])
+def save():
+    tForm = TimeForm(request.form)
+
+    scheduleType = tForm.scheduleType.data
+    segment = tForm.segment.data
+    timeofDay = tForm.timeofDay.data
+
+    db.find_and_modify(collection='notification',
+                       email=session['email'],
+                       scheduleType=scheduleType,
+                       segment=segment,
+                       timeofDay=timeofDay)
+
+    return redirect('/')
+
+
+def slack_message():
     if not slack.authorized:
         return redirect(url_for("slack.login"))
     slack.post("chat.postMessage", data={
-        "text": message,
         "channel": "#general",
         "icon_emoji": ":male-technologist:",
     })

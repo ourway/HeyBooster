@@ -1,25 +1,35 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <div style="margin: 20%">
-        <form method="POST" action="">
-            {{ form.csrf_token }}
+    <div style="margin: 10%">
+        <form method="POST" action="/save">
+            {{ nForm.csrf_token }}
+            {{ tForm.csrf_token }}
             <br>Account<br>
-            {{ form.account }}
+            {{ nForm.account }}
             <br>Property<br>
-            {{ form.property }}
+            {{ nForm.property }}
             <br>View<br>
-            {{ form.view }}
+            {{ nForm.view }}
             <br>Start Date<br>
-            {{ form.start_date }}
+            {{ nForm.start_date }}
             <br>End Date<br>
-            {{ form.end_date }}
+            {{ nForm.end_date }}
             <br>Metric<br>
-            {{ form.metric }}
+            {{ nForm.metric }}
             <br>Dimension<br>
-            {{ form.dimension }}
+            {{ nForm.dimension }}
+            <br>Segment<br>
+            {{ tForm.segment }}
+            <br>Time of Day<br>
+            {{ tForm.timeofDay }}
+            <br>Schedule Type<br>
+            {{ tForm.scheduleType }}
+            <br>Channel<br>
+            {{ tForm.channel }}
             <br><input type="submit" name="submit" value="Submit">
         </form>
+
     </div>
 {% endblock %}
 
