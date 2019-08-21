@@ -44,15 +44,15 @@ app.register_blueprint(google_analytics.app)
 SLACK_BUTTONS = [
     {
         'name': 'lead_story',
-        'display': 'Button LeadStory',
+        'display': 'Daily',
         'value': 'True',
-        'url': 'https://google.com'
+        'url': 'http://127.0.0.1:5000/scheduleType/daily'
     },
     {
         'name': 'head_deck',
-        'display': 'Button Headdeck',
+        'display': 'Weekly',
         'value': 'True',
-        'url': 'https://google.com'
+        'url': 'http://127.0.0.1:5000/scheduleType/weekly'
     },
     {
         'name': 'sidebar',
@@ -180,6 +180,24 @@ def save():
     return redirect('/')
 
 
+@app.route('/scheduleType/daily', methods=['GET', 'POST'])
+def scheduleTypeDaily():
+    scheduleType = "daily"
+    db.find_and_modify(collection='notification',
+                       email=session['email'],
+                       scheduleType=scheduleType)
+    return make_response()
+
+
+@app.route('/scheduleType/weekly', methods=['GET', 'POST'])
+def scheduleTypeWeekly():
+    scheduleType = "weekly"
+    db.find_and_modify(collection='notification',
+                       email=session['email'],
+                       scheduleType=scheduleType)
+    return make_response()
+
+
 def slack_message():
     if not slack.authorized:
         return redirect(url_for("slack.login"))
@@ -203,7 +221,6 @@ def slack_message():
     ]
 
     for button_dict in SLACK_BUTTONS:
-        print(button_dict)
         button = {
             'type': 'button',
             'name': button_dict['name'],
