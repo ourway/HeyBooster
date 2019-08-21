@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, request, session, url_for
+from flask import Flask, render_template, flash, redirect, request, session, url_for, make_response, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
@@ -9,6 +9,7 @@ from database import db
 from models.user import User
 from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
+import json
 
 OAuth2ConsumerBlueprint.authorized = authorized
 
@@ -32,13 +33,35 @@ db.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = ''
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = ''
+app.config["SLACK_OAUTH_CLIENT_ID"] = '711101969589.708601483569'
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = '4ce072c2adcff06a1a11dde3c56680f5'
 slack_bp = make_slack_blueprint(scope=["admin,identify,bot,incoming-webhook,channels:read,chat:write:bot,links:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
+
+SLACK_BUTTONS = [
+    {
+        'name': 'lead_story',
+        'display': 'Button LeadStory',
+        'value': 'True',
+        'url': 'https://google.com'
+    },
+    {
+        'name': 'head_deck',
+        'display': 'Button Headdeck',
+        'value': 'True',
+        'url': 'https://google.com'
+    },
+    {
+        'name': 'sidebar',
+        'display': 'Button Sidebar',
+        'value': 'True',
+        'url': 'https://google.com'
+
+    }
+]
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -145,13 +168,13 @@ def save():
     tForm = TimeForm(request.form)
 
     scheduleType = tForm.scheduleType.data
-    segment = tForm.segment.data
+    frequency = tForm.frequency.data
     timeofDay = tForm.timeofDay.data
 
     db.find_and_modify(collection='notification',
                        email=session['email'],
                        scheduleType=scheduleType,
-                       segment=segment,
+                       frequency=frequency,
                        timeofDay=timeofDay)
 
     return redirect('/')
@@ -160,9 +183,42 @@ def save():
 def slack_message():
     if not slack.authorized:
         return redirect(url_for("slack.login"))
+    attachments = [
+        {
+            'title': 'Title',
+            'title_link': 'https://title-link.com',
+            'callback_id': 'button_test',
+            'actions': [],
+            'fields': [
+                {
+                    'value': 'Field1'
+                },
+                {
+                    'title': 'Field2 Title',
+                    'value': 'Field2 Value',
+                    'short': True
+                },
+            ]
+        }
+    ]
+
+    for button_dict in SLACK_BUTTONS:
+        print(button_dict)
+        button = {
+            'type': 'button',
+            'name': button_dict['name'],
+            'text': button_dict['display'],
+            'value': button_dict['value'],
+            'url': button_dict['url'],
+            'style': 'primary',
+        }
+        attachments[0]['actions'].append(button)
+
     slack.post("chat.postMessage", data={
         "channel": "#general",
         "icon_emoji": ":male-technologist:",
+        "text": "Would you like some coffee? :coffee:",
+        'attachments': json.dumps(attachments)
     })
 
     return redirect('/')

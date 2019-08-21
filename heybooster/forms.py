@@ -17,7 +17,7 @@ class NotificationForm(Form):
 # Time Formu
 
 class TimeForm(Form):
-    segment = SelectField('segment', choices=[('ga:mobile', 'Mobile'), ('ga:desktop', 'Desktop')])
+    frequency = SelectField('frequency', choices=[('0', '0'), ('1', '1')])
     scheduleType = SelectField('scheduletype', choices=[('daily', 'Daily'), ('weekly', 'weekly')])
     timeofDay = SelectField('timeofDay', choices=[('07.00', '07.00'), ('09.00', '09.00')])
     channel = SelectField('channel', choices=[('', '-- Select an Channel --')])
