@@ -33,8 +33,8 @@ db.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = '711101969589.708601483569'
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = '4ce072c2adcff06a1a11dde3c56680f5'
+app.config["SLACK_OAUTH_CLIENT_ID"] = ''
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = ''
 slack_bp = make_slack_blueprint(scope=["admin,identify,bot,incoming-webhook,channels:read,chat:write:bot,links:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
@@ -104,19 +104,18 @@ def register():
                         password=hashed_password)
         new_user.insert()
         db.insert('notification', data={
-            'email': form.email.data,
-            'type': 'performancechangetracking',
-            'period': 1,
-            'scheduleType': 'daily',
-            'frequency': 0,
-            'timeofDay': '07:00',
-            'metric': 'Session',
-            'segment': 'mobile',
-            'channel': '#general',
-            'status': 'active',
-            'lastRunDate': '',
-            'viewId': ''
-        })
+                'type': 'performancechangetracking',
+                'email': form.email.data,
+                'period': 1,
+                'threshold':0.10,
+                'scheduleType': 'daily',
+                'frequency': 0,
+                'timeofDay': '07.00',
+                'channel': '#general',
+                'status': 'active',
+                'lastRunDate': '',
+                'viewId':''
+            })
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
