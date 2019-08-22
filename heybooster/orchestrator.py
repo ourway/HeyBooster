@@ -65,7 +65,9 @@ def main():
 if __name__ == '__main__':
     db.init()
     while (True):
+        try:
+            time.sleep(59.5 - datetime.now().second)
+        except:
+            pass
         if (datetime.now().second == 0):
             main()
-            while (datetime.now().second < 1):
-                pass
