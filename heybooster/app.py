@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, request, session, url_for, make_response, Response
+from flask import Flask, render_template, flash, redirect, request, session, url_for, make_response, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
@@ -104,18 +104,18 @@ def register():
                         password=hashed_password)
         new_user.insert()
         db.insert('notification', data={
-                'type': 'performancechangetracking',
-                'email': form.email.data,
-                'period': 1,
-                'threshold':0.10,
-                'scheduleType': 'daily',
-                'frequency': 0,
-                'timeofDay': '07.00',
-                'channel': '#general',
-                'status': 'active',
-                'lastRunDate': '',
-                'viewId':''
-            })
+            'type': 'performancechangetracking',
+            'email': form.email.data,
+            'period': 1,
+            'threshold': 0.10,
+            'scheduleType': 'daily',
+            'frequency': 0,
+            'timeofDay': '07.00',
+            'channel': '#general',
+            'status': 'active',
+            'lastRunDate': '',
+            'viewId': ''
+        })
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
@@ -179,13 +179,16 @@ def save():
     return redirect('/')
 
 
-@app.route('/scheduleType/daily', methods=['GET', 'POST'])
+@app.route('/scheduleType/daily', methods=['POST'])
 def scheduleTypeDaily():
     scheduleType = "daily"
     db.find_and_modify(collection='notification',
                        email=session['email'],
                        scheduleType=scheduleType)
-    return make_response()
+    return jsonify(
+        response_type='in_channel',
+        text='<https://youtu.be/frszEJb0aOo|General Kenobi!>',
+    )
 
 
 @app.route('/scheduleType/weekly', methods=['GET', 'POST'])
@@ -200,6 +203,7 @@ def scheduleTypeWeekly():
 def slack_message():
     if not slack.authorized:
         return redirect(url_for("slack.login"))
+
     attachments = [
         {
             'title': 'Title',
@@ -218,8 +222,8 @@ def slack_message():
             ]
         }
     ]
-
     for button_dict in SLACK_BUTTONS:
+        print(button_dict)
         button = {
             'type': 'button',
             'name': button_dict['name'],
@@ -229,7 +233,6 @@ def slack_message():
             'style': 'primary',
         }
         attachments[0]['actions'].append(button)
-
     slack.post("chat.postMessage", data={
         "channel": "#general",
         "icon_emoji": ":male-technologist:",
