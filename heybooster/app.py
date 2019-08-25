@@ -33,9 +33,9 @@ db.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = '711101969589.708601483569'
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = '4ce072c2adcff06a1a11dde3c56680f5'
-slack_bp = make_slack_blueprint(scope=["admin,identify,bot,incoming-webhook,channels:read,chat:write:bot,links:read"])
+app.config["SLACK_OAUTH_CLIENT_ID"] = ''
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = ''
+slack_bp = make_slack_blueprint(scope=["admin,identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
