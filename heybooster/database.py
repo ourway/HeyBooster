@@ -20,8 +20,8 @@ class db(object):
     def find(collection, query):
         return db.DATABASE[collection].find(query)
 
-    def find_and_modify(collection, email, **kwargs):
+    def find_and_modify(collection, query, **kwargs):
         print(kwargs)
-        db.DATABASE[collection].find_and_modify(query={'email': email},
+        db.DATABASE[collection].find_and_modify(query=query,
                                                 update={"$set": kwargs}, upsert=False,
                                                 full_response=True)

@@ -24,7 +24,7 @@ def do_job(tasks_to_accomplish):
                 message_ts = performancechangetracking(slack_token, task)
             elif(task['type']=='shoppingfunnelchangestracking'):
                 message_ts = shoppingfunnelchangestracking(slack_token, task)
-            db.find_and_modify(collection='notification', email=task['email'], message_ts = message_ts)
+            db.find_and_modify(collection='notification', query={'email':task['email']}, message_ts = message_ts)
         except queue.Empty:
             break
     return True

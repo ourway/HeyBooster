@@ -171,7 +171,7 @@ def save():
     timeofDay = tForm.timeofDay.data
 
     db.find_and_modify(collection='notification',
-                       email=session['email'],
+                       query = {'email':session['email']},
                        scheduleType=scheduleType,
                        frequency=frequency,
                        timeofDay=timeofDay)
@@ -183,7 +183,7 @@ def save():
 def scheduleTypeDaily():
     scheduleType = "daily"
     db.find_and_modify(collection='notification',
-                       email=session['email'],
+                       query={'email':session['email']},
                        scheduleType=scheduleType)
     return jsonify(
         response_type='in_channel',
@@ -195,7 +195,7 @@ def scheduleTypeDaily():
 def scheduleTypeWeekly():
     scheduleType = "weekly"
     db.find_and_modify(collection='notification',
-                       email=session['email'],
+                       query={'email':session['email']},
                        scheduleType=scheduleType)
     return make_response()
 
@@ -296,7 +296,7 @@ def message_actions():
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         scheduleType = submission['schedule_types']
-        db.find_and_modify(collection='notification', email=email, scheduleType = scheduleType)
+        db.find_and_modify(collection='notification', query={'email': email}, scheduleType = scheduleType)
 #        # Update the message to show that we're in the process of taking their order
 #        slack_client.api_call(
 #            "chat.update",
