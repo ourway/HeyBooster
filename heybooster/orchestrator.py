@@ -21,10 +21,10 @@ def do_job(tasks_to_accomplish):
             task = tasks_to_accomplish.get_nowait()
             slack_token = db.find_one('user', {'email': task['email']})['sl_accesstoken']
             if (task['type'] == 'performancechangetracking'):
-                performancechangetracking(slack_token, task)
+                message_ts = performancechangetracking(slack_token, task)
             elif(task['type']=='shoppingfunnelchangestracking'):
-                shoppingfunnelchangestracking(slack_token, task)
-
+                message_ts = shoppingfunnelchangestracking(slack_token, task)
+            db.find_and_modify(collection='notification', email=task['email'], message_ts = message_ts)
         except queue.Empty:
             break
     return True
@@ -47,10 +47,10 @@ def main():
                             {'$and': [{"scheduleType": 'weekly'}, {"frequency": wday}]},
                             {'$and': [{"scheduleType": 'monthly'}, {"frequency": mday}]}
                         ]}]})
-
+    
     for task in tasks:
         tasks_to_accomplish.put(task)
-
+    
     # creating processes
     for w in range(number_of_processes):
         p = Process(target=do_job, args=(tasks_to_accomplish,))

@@ -6,7 +6,7 @@ Created on Mon Aug 19 20:49:15 2019
 """
 import google_analytics
 from datetime import datetime
-import slack
+from slackclient import SlackClient
 
 
 def performancechangetracking(slack_token, task):
@@ -104,10 +104,33 @@ def performancechangetracking(slack_token, task):
                     start_date_2,
                     int(sessions_new))
 
-    client = slack.WebClient(token=slack_token)
-    client.chat_postMessage(channel=channel, text=message)
-
-    return message
+    slack_client = SlackClient(slack_token)
+    
+    attachments=[{
+        "text": "",
+        "callback_id": "notification_form",
+        "color": "#3AA3E3",
+        "attachment_type": "default",
+        "actions": [{
+          "name": "ignore",
+          "text": "Ignore",
+          "type": "button",
+          "value": "ignore"
+        },
+        {
+          "name": "track",
+          "text": "Track",
+          "type": "button",
+          "value": "track"
+        }]
+      }]
+    resp = slack_client.api_call(
+                      "chat.postMessage",
+                      channel=channel,
+                      text=message,
+                      attachments=attachments)
+    message_ts = resp['ts']
+    return message_ts
 
 
 def shoppingfunnelchangestracking(slack_token, task):
@@ -181,5 +204,30 @@ def shoppingfunnelchangestracking(slack_token, task):
                     start_date_2,
                     int(sessions_new))
 
-    client = slack.WebClient(token=slack_token)
-    client.chat_postMessage(channel=channel, text=message)
+    slack_client = SlackClient(slack_token)
+    
+    attachments=[{
+        "text": "",
+        "callback_id": "notification_form",
+        "color": "#3AA3E3",
+        "attachment_type": "default",
+        "actions": [{
+          "name": "ignore",
+          "text": "Ignore",
+          "type": "button",
+          "value": "ignore"
+        },
+        {
+          "name": "track",
+          "text": "Track",
+          "type": "button",
+          "value": "track"
+        }]
+      }]
+        
+    resp = slack_client.api_call(
+                      "chat.postMessage",
+                      channel=channel,
+                      text=message,
+                      attachments=attachments)
+    return resp['ts']

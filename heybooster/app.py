@@ -10,7 +10,7 @@ from models.user import User
 from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 import json
-
+from slackclient import SlackClient
 OAuth2ConsumerBlueprint.authorized = authorized
 
 
@@ -240,3 +240,69 @@ def slack_message():
     })
 
     return redirect('/')
+
+@app.route("/slack/message_actions", methods=["POST"])
+def message_actions():
+    # Parse the request payload
+    message_action = json.loads(request.form["payload"])
+    #Open a slack client
+    user = db.find_one('user', {'user_id': message_action['user']['id']})
+    slack_token = user['sl_accesstoken']
+    email = user['email']
+#    notification = db.find_one('notification', {'email': email})
+#    channel = notification['channel']
+#    message_ts = notification['message_ts']
+    slack_client = SlackClient(token=slack_token)
+    if message_action["type"] == "interactive_message":
+        if(message_action['actions'][0]['value']=='track'):
+            # Show the ordering dialog to the user
+            slack_client.api_call(
+                "dialog.open",
+                trigger_id=message_action["trigger_id"],
+                dialog={
+                    "title": "Notification Settings",
+                    "submit_label": "Submit",
+                    "callback_id": "notification_form",
+                    "elements": [
+                        {
+                            "label": "Schedule Type",
+                            "type": "select",
+                            "name": "schedule_types",
+                            "placeholder": "Select a schedule type",
+                            "options": [
+                                {
+                                    "label": "Daily",
+                                    "value": "daily"
+                                },
+                                {
+                                    "label": "Weekly",
+                                    "value": "weekly"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            )
+
+#        # Update the message to show that we're in the process of taking their order
+#        resp = slack_client.api_call(
+#            "chat.update",
+#            channel=channel,
+#            ts=message_ts,
+#            text=message_action['original_message']['text'] + ":pencil: Taking your order...",
+#            attachments=[]
+#        )
+
+    elif message_action["type"] == "dialog_submission":
+        submission = message_action['submission']
+        scheduleType = submission['schedule_types']
+        db.find_and_modify(collection='notification', email=email, scheduleType = scheduleType)
+#        # Update the message to show that we're in the process of taking their order
+#        slack_client.api_call(
+#            "chat.update",
+#            channel=channel,
+#            ts=message_ts,
+#            text=":white_check_mark: Order received!",
+#            attachments=[]
+#        )
+    return make_response("", 200)
