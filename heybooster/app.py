@@ -313,8 +313,10 @@ def message_actions():
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
+        moduleType = submission['module_types']
         scheduleType = submission['schedule_types']
-        db.find_and_modify(collection='notification', query={'email': email}, scheduleType = scheduleType)
+        threshold = float(submission['threshold'])
+        db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, threshold = threshold)
 #        # Update the message to show that we're in the process of taking their order
 #        slack_client.api_call(
 #            "chat.update",
