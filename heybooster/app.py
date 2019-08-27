@@ -256,7 +256,6 @@ def message_actions():
         if(message_action['actions'][0]['value']=='track'):
             # Show the ordering dialog to the user
             slack_client.dialog_open(
-                "dialog.open",
                 trigger_id=message_action["trigger_id"],
                 dialog={
                     "title": "Notification Settings",
