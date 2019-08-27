@@ -6,7 +6,7 @@ Created on Mon Aug 19 20:49:15 2019
 """
 import google_analytics
 from datetime import datetime
-from slackclient import SlackClient
+from slack import WebClient
 
 
 def performancechangetracking(slack_token, task):
@@ -24,7 +24,7 @@ def performancechangetracking(slack_token, task):
         {
             "dimensionName": "ga:deviceCategory",
             "operator": "EXACT",
-            "expressions": ["desktop"]
+            "expressions": ["mobile"]
         }
     ]
 
@@ -104,7 +104,7 @@ def performancechangetracking(slack_token, task):
                     start_date_2,
                     int(sessions_new))
 
-    slack_client = SlackClient(slack_token)
+    slack_client = WebClient(token = slack_token)
     
     attachments=[{
         "text": "",
@@ -124,8 +124,7 @@ def performancechangetracking(slack_token, task):
           "value": "track"
         }]
       }]
-    resp = slack_client.api_call(
-                      "chat.postMessage",
+    resp = slack_client.chat_postMessage(
                       channel=channel,
                       text=message,
                       attachments=attachments)
@@ -204,7 +203,7 @@ def shoppingfunnelchangestracking(slack_token, task):
                     start_date_2,
                     int(sessions_new))
 
-    slack_client = SlackClient(slack_token)
+    slack_client = WebClient(token=slack_token)
     
     attachments=[{
         "text": "",
@@ -225,8 +224,7 @@ def shoppingfunnelchangestracking(slack_token, task):
         }]
       }]
         
-    resp = slack_client.api_call(
-                      "chat.postMessage",
+    resp = slack_client.chat_postMessage(
                       channel=channel,
                       text=message,
                       attachments=attachments)
