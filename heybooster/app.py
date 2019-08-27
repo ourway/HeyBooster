@@ -10,7 +10,9 @@ from models.user import User
 from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 import json
-from slackclient import SlackClient
+#from slackclient import SlackClient
+from slack import WebClient
+
 OAuth2ConsumerBlueprint.authorized = authorized
 
 
@@ -185,10 +187,7 @@ def scheduleTypeDaily():
     db.find_and_modify(collection='notification',
                        query={'email':session['email']},
                        scheduleType=scheduleType)
-    return jsonify(
-        response_type='in_channel',
-        text='<https://youtu.be/frszEJb0aOo|General Kenobi!>',
-    )
+    return make_response()
 
 
 @app.route('/scheduleType/weekly', methods=['GET', 'POST'])
@@ -252,11 +251,11 @@ def message_actions():
 #    notification = db.find_one('notification', {'email': email})
 #    channel = notification['channel']
 #    message_ts = notification['message_ts']
-    slack_client = SlackClient(token=slack_token)
+    slack_client = WebClient(token=slack_token)
     if message_action["type"] == "interactive_message":
         if(message_action['actions'][0]['value']=='track'):
             # Show the ordering dialog to the user
-            slack_client.api_call(
+            slack_client.dialog_open(
                 "dialog.open",
                 trigger_id=message_action["trigger_id"],
                 dialog={
