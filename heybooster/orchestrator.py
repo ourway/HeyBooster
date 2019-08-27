@@ -19,12 +19,12 @@ def do_job(tasks_to_accomplish):
                 queue(False) function would do the same task also.
             '''
             task = tasks_to_accomplish.get_nowait()
+            db.init()
             slack_token = db.find_one('user', {'email': task['email']})['sl_accesstoken']
             if (task['type'] == 'performancechangetracking'):
-                message_ts = performancechangetracking(slack_token, task)
+                performancechangetracking(slack_token, task)
             elif(task['type']=='shoppingfunnelchangestracking'):
-                message_ts = shoppingfunnelchangestracking(slack_token, task)
-            db.find_and_modify(collection='notification', query={'email':task['email']}, message_ts = message_ts)
+                shoppingfunnelchangestracking(slack_token, task)
         except queue.Empty:
             break
     return True

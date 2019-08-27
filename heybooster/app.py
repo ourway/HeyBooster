@@ -248,59 +248,58 @@ def message_actions():
     user = db.find_one('user', {'user_id': message_action['user']['id']})
     slack_token = user['sl_accesstoken']
     email = user['email']
-#    notification = db.find_one('notification', {'email': email})
-#    channel = notification['channel']
-#    message_ts = notification['message_ts']
     slack_client = WebClient(token=slack_token)
     if message_action["type"] == "interactive_message":
         if(message_action['actions'][0]['value']=='track'):
-            # Show the ordering dialog to the user
-            slack_client.dialog_open(
-                    trigger_id=message_action["trigger_id"],
-                    dialog={
-                        "title": "Notification Settings",
-                        "submit_label": "Submit",
-                        "callback_id": "notification_form",
-                        "elements": [
-                            {
-                                "label": "Module Type",
-                                "type": "select",
-                                "name": "module_types",
-                                "placeholder": "Select a module type",
-                                "value": "performancechangetracking",
-                                "options": [
-                                    {
-                                        "label": "Performance Changes Tracking",
-                                        "value": "performancechangetracking"
-                                    }
-                                ]
-                            },
-                            {
-                                "label": "Schedule Type",
-                                "type": "select",
-                                "name": "schedule_types",
-                                "placeholder": "Select a schedule type",
-                                "options": [
-                                    {
-                                        "label": "Daily",
-                                        "value": "daily"
-                                    },
-                                    {
-                                        "label": "Weekly",
-                                        "value": "weekly"
-                                    }
-                                ]
-                            },
-                            {
-                              "label": "Threshold (%)",
-                              "name": "threshold",
-                              "type": "text",
-                              "subtype": "number",
-                              "placeholder": "10"
-                            }  
-                        ]
-                    }
-                )
+            text = message_action['original_message']['text']
+            if(("performance" in text.lower()) and ("change" in text.lower())):
+                # Show the ordering dialog to the user
+                slack_client.dialog_open(
+                        trigger_id=message_action["trigger_id"],
+                        dialog={
+                            "title": "Notification Settings",
+                            "submit_label": "Submit",
+                            "callback_id": "notification_form",
+                            "elements": [
+                                {
+                                    "label": "Module Type",
+                                    "type": "select",
+                                    "name": "module_types",
+                                    "placeholder": "Select a module type",
+                                    "value": "performancechangetracking",
+                                    "options": [
+                                        {
+                                            "label": "Performance Changes Tracking",
+                                            "value": "performancechangetracking"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "Schedule Type",
+                                    "type": "select",
+                                    "name": "schedule_types",
+                                    "placeholder": "Select a schedule type",
+                                    "options": [
+                                        {
+                                            "label": "Daily",
+                                            "value": "daily"
+                                        },
+                                        {
+                                            "label": "Weekly",
+                                            "value": "weekly"
+                                        }
+                                    ]
+                                },
+                                {
+                                  "label": "Threshold (%)",
+                                  "name": "threshold",
+                                  "type": "text",
+                                  "subtype": "number",
+                                  "placeholder": "10"
+                                }  
+                            ]
+                        }
+                    )
 
 #        # Update the message to show that we're in the process of taking their order
 #        resp = slack_client.api_call(

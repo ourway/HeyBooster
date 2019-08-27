@@ -11,7 +11,8 @@ from slack import WebClient
 
 def performancechangetracking(slack_token, task):
     # Mobile Performance Changes Tracking
-    message = "*Mobile Performance Changes Tracking*\n"
+    text_m= "*Mobile Performance Changes Tracking*"
+    attachments_m = []
     metrics = [{'expression': 'ga:sessions'}]
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -19,7 +20,7 @@ def performancechangetracking(slack_token, task):
     channel = task['channel']
 
     period = task['period']
-    threshold = task['threshold']
+    threshold = float(task['threshold'])/100
     filters = [
         {
             "dimensionName": "ga:deviceCategory",
@@ -58,14 +59,17 @@ def performancechangetracking(slack_token, task):
     for metric in metrics:
         if (metric == "ga:sessions"):
             if (sessions_new < sessions_old * (1 - threshold)):
-                message += "- {0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new))
+                attachments_m += {"text": "- {0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
+                                            start_date_1,
+                                            round(threshold * 100, 2),
+                                            start_date_2,
+                                            int(sessions_new)),
+                                "color": "#FF0000"}
 
     # Desktop Performance Changes Tracking
-    message += "*Desktop Performance Changes Tracking*\n"
+    text_d = "*Desktop Performance Changes Tracking*"
+    attachments_d = []
+    
     filters = [
         {
             "dimensionName": "ga:deviceCategory",
@@ -98,15 +102,14 @@ def performancechangetracking(slack_token, task):
     for metric in metrics:  # Only one metric for now
         if (metric['expression'] == "ga:sessions"):
             if (sessions_new < sessions_old * (1 - threshold)):
-                message += "- {0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new))
-
-    slack_client = WebClient(token = slack_token)
+                attachments_d += {"text": "- {0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
+                                            start_date_1,
+                                            round(threshold * 100, 2),
+                                            start_date_2,
+                                            int(sessions_new)),
+                                "color": "FF0000"}
     
-    attachments=[{
+    attachments_d+=[{
         "text": "",
         "callback_id": "notification_form",
         "color": "#3AA3E3",
@@ -124,17 +127,26 @@ def performancechangetracking(slack_token, task):
           "value": "track"
         }]
       }]
+        
+    slack_client = WebClient(token = slack_token)
+    
+    slack_client.chat_postMessage(
+                      channel=channel,
+                      text=text_m,
+                      attachments=attachments_m)
+
     resp = slack_client.chat_postMessage(
                       channel=channel,
-                      text=message,
-                      attachments=attachments)
+                      text=text_d,
+                      attachments=attachments_d)
     message_ts = resp['ts']
     return message_ts
 
 
 def shoppingfunnelchangestracking(slack_token, task):
     # Funnel Changes Tracking
-    message = "*Shopping Funnel Changes Tracking*\n"
+    text = "*Shopping Funnel Changes Tracking*"
+    attachments = []
     metrics = [
         {'expression': 'ga:sessions'},
         {'expression': 'ga:productDetailViews'},
@@ -149,7 +161,7 @@ def shoppingfunnelchangestracking(slack_token, task):
     channel = task['channel']
 
     period = task['period']
-    threshold = task['threshold']
+    threshold = float(task['threshold'])/100
 
     if (period == 1):
         start_date_1 = 'yesterday'
@@ -173,39 +185,49 @@ def shoppingfunnelchangestracking(slack_token, task):
         sessions_old = float(results['reports'][0]['data']['totals'][1]['values'][i])
         if (sessions_new < sessions_old * (1 - threshold)):
             if (metric['expression'] == "ga:sessions"):
-                message += "- {0} Total Session is less {1}% than {2}. {0} Total session: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new))
+                attachments += {"text": "{0} Total Session is less {1}% than {2}. {0} Total session: {3}\n".format(
+                            start_date_1,
+                            round(threshold * 100, 2),
+                            start_date_2,
+                            int(sessions_new)),
+                            "color": "FF0000"
+                            }
             elif (metric['expression'] == 'ga:productDetailViews'):
-                message += "- {0} Session without any shopping activity is less {1}% than {2}. {0} Session without any shopping activity: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new))
+                attachments += {"text": "{0} Session without any shopping activity is less {1}% than {2}. {0} Session without any shopping activity: {3}\n".format(
+                                            start_date_1,
+                                            round(threshold * 100, 2),
+                                            start_date_2,
+                                            int(sessions_new)),
+                                "color": "FF0000"
+                                }
             elif (metric['expression'] == 'ga:productAddsToCart'):
-                message += "- {0} Add to Cart is less {1}% than {2}. {0} Add to Cart: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new))
+                attachments += {"text": "{0} Add to Cart is less {1}% than {2}. {0} Add to Cart: {3}\n".format(
+                                        start_date_1,
+                                        round(threshold * 100, 2),
+                                        start_date_2,
+                                        int(sessions_new)),
+                                "color": "FF0000"
+                                }
             elif (metric['expression'] == 'ga:productCheckouts'):
-                message += "- {0} Checkout is less {1}% than {2}. {0} Checkout: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new))
+                attachments += {"text": "{0} Checkout is less {1}% than {2}. {0} Checkout: {3}\n".format(
+                                        start_date_1,
+                                        round(threshold * 100, 2),
+                                        start_date_2,
+                                        int(sessions_new)),
+                                "color": "FF0000"
+                                }
             elif (metric['expression'] == 'ga:transactions'):
-                message += "- {0} Total Transaction is less {1}% than {2}. {0} Total Transaction: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new))
+                attachments += {"text": "{0} Total Transaction is less {1}% than {2}. {0} Total Transaction: {3}\n".format(
+                                        start_date_1,
+                                        round(threshold * 100, 2),
+                                        start_date_2,
+                                        int(sessions_new)),
+                                "color": "FF0000"
+                                }
 
     slack_client = WebClient(token=slack_token)
     
-    attachments=[{
+    attachments+=[{
         "text": "",
         "callback_id": "notification_form",
         "color": "#3AA3E3",
@@ -226,6 +248,6 @@ def shoppingfunnelchangestracking(slack_token, task):
         
     resp = slack_client.chat_postMessage(
                       channel=channel,
-                      text=message,
+                      text=text,
                       attachments=attachments)
     return resp['ts']
