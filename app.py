@@ -295,12 +295,107 @@ def message_actions():
                                   "name": "threshold",
                                   "type": "text",
                                   "subtype": "number",
-                                  "placeholder": "10"
+                                  "placeholder": "Enter a number"
                                 }  
                             ]
                         }
                     )
-
+            if(("funnel" in text.lower()) and ("change" in text.lower())):
+                # Show the ordering dialog to the user
+                slack_client.dialog_open(
+                        trigger_id=message_action["trigger_id"],
+                        dialog={
+                            "title": "Notification Settings",
+                            "submit_label": "Submit",
+                            "callback_id": "notification_form",
+                            "elements": [
+                                {
+                                    "label": "Module Type",
+                                    "type": "select",
+                                    "name": "module_types",
+                                    "placeholder": "Select a module type",
+                                    "value": "shoppingfunnelchangetracking",
+                                    "options": [
+                                        {
+                                            "label": "Shopping Funnel Changes Tracking",
+                                            "value": "shoppingfunnelchangetracking"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "Schedule Type",
+                                    "type": "select",
+                                    "name": "schedule_types",
+                                    "placeholder": "Select a schedule type",
+                                    "options": [
+                                        {
+                                            "label": "Daily",
+                                            "value": "daily"
+                                        },
+                                        {
+                                            "label": "Weekly",
+                                            "value": "weekly"
+                                        }
+                                    ]
+                                },
+                                {
+                                  "label": "Threshold (%)",
+                                  "name": "threshold",
+                                  "type": "text",
+                                  "subtype": "number",
+                                  "placeholder": "Enter a number"
+                                }  
+                            ]
+                        }
+                    )
+            if(("cost" in text.lower()) and ("prediction" in text.lower())):
+                # Show the ordering dialog to the user
+                slack_client.dialog_open(
+                        trigger_id=message_action["trigger_id"],
+                        dialog={
+                            "title": "Notification Settings",
+                            "submit_label": "Submit",
+                            "callback_id": "notification_form",
+                            "elements": [
+                                {
+                                    "label": "Module Type",
+                                    "type": "select",
+                                    "name": "module_types",
+                                    "placeholder": "Select a module type",
+                                    "value": "costprediction",
+                                    "options": [
+                                        {
+                                            "label": "Cost Prediction",
+                                            "value": "costprediction"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "Schedule Type",
+                                    "type": "select",
+                                    "name": "schedule_types",
+                                    "placeholder": "Select a schedule type",
+                                    "options": [
+                                        {
+                                            "label": "Daily",
+                                            "value": "daily"
+                                        },
+                                        {
+                                            "label": "Weekly",
+                                            "value": "weekly"
+                                        }
+                                    ]
+                                },
+                                {
+                                  "label": "Monthly Budget",
+                                  "name": "target",
+                                  "type": "text",
+                                  "subtype": "number",
+                                  "placeholder": "Enter a number"
+                                }  
+                            ]
+                        }
+                    )
 #        # Update the message to show that we're in the process of taking their order
 #        resp = slack_client.api_call(
 #            "chat.update",
@@ -313,9 +408,14 @@ def message_actions():
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         moduleType = submission['module_types']
-        scheduleType = submission['schedule_types']
-        threshold = float(submission['threshold'])
-        db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, threshold = threshold)
+        if(moduleType == 'performancechangetracking'):
+            scheduleType = submission['schedule_types']
+            threshold = float(submission['threshold'])
+            db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, threshold = threshold)
+        elif(moduleType == 'costprediction'):
+            scheduleType = submission['schedule_types']
+            target = float(submission['target'])
+            db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, target = target)
 #        # Update the message to show that we're in the process of taking their order
 #        slack_client.api_call(
 #            "chat.update",
