@@ -10,7 +10,7 @@
     <hr>
 
     <form method="POST">
-
+        {{ form.csrf_token }}
         {{ form.name(class_='form-control') }}
         {{ form.username(class_='form-control') }}
         {{ form.email(class_='form-control') }}
