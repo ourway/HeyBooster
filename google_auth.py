@@ -1,6 +1,7 @@
 import functools
 
 import flask
+import os
 
 from authlib.client import OAuth2Session
 import google.oauth2.credentials
@@ -13,10 +14,12 @@ AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=of
 
 AUTHORIZATION_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
 
-AUTH_REDIRECT_URI = "http://127.0.0.1:5000/google/auth"
-BASE_URI = "http://127.0.0.1:5000"
-CLIENT_ID = ""
-CLIENT_SECRET = ""
+AUTH_REDIRECT_URI = "https://app.heybooster.ai/google/auth"
+BASE_URI = "https://app.heybooster.ai"
+#CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+#CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+
+
 
 AUTH_TOKEN_KEY = 'auth_token'
 AUTH_STATE_KEY = 'auth_state'

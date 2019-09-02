@@ -12,6 +12,7 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 import json
 #from slackclient import SlackClient
 from slack import WebClient
+import os
 
 OAuth2ConsumerBlueprint.authorized = authorized
 
@@ -35,8 +36,9 @@ db.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = ''
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = ''
+#app.config["SLACK_OAUTH_CLIENT_ID"]=os.environ.get('SLACK_CLIENT_ID')
+#app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
+
 slack_bp = make_slack_blueprint(scope=["admin,identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
