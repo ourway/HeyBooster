@@ -107,19 +107,7 @@ def register():
         new_user = User(name=form.name.data, username=form.username.data, email=form.email.data,
                         password=hashed_password)
         new_user.insert()
-        db.insert('notification', data={
-            'type': 'performancechangetracking',
-            'email': form.email.data,
-            'period': 1,
-            'threshold': 0.10,
-            'scheduleType': 'daily',
-            'frequency': 0,
-            'timeofDay': '07.00',
-            'channel': '#general',
-            'status': 'active',
-            'lastRunDate': '',
-            'viewId': ''
-        })
+        insertdefaultnotifications(email = form.email.data)
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
@@ -427,3 +415,44 @@ def message_actions():
 #            attachments=[]
 #        )
     return make_response("", 200)
+
+def insertdefaultnotifications(email):
+    #Default Notifications will be inserted here
+    db.insert('notification', data={
+            'type': 'performancechangetracking',
+            'email': email,
+            'period': 1,
+            'threshold': 10,
+            'scheduleType': 'daily',
+            'frequency': 0,
+            'timeofDay': '07.00',
+            'channel': '#general',
+            'status': 'active',
+            'lastRunDate': '',
+            'viewId': ''
+        })
+    db.insert('notification', data={
+            'type': 'shoppingfunnelchangetracking',
+            'email': email,
+            'period': 1,
+            'threshold': 10,
+            'scheduleType': 'daily',
+            'frequency': 0,
+            'timeofDay': '07.00',
+            'channel': '#general',
+            'status': 'active',
+            'lastRunDate': '',
+            'viewId': ''
+        })
+    db.insert('notification', data={
+            'type': 'costprediction',
+            'email': email,
+            'target': 100,
+            'scheduleType': 'daily',
+            'frequency': 0,
+            'timeofDay': '07.00',
+            'channel': '#general',
+            'status': 'active',
+            'lastRunDate': '',
+            'viewId': ''
+        })

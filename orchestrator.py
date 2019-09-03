@@ -20,12 +20,16 @@ def do_job(tasks_to_accomplish):
             '''
             task = tasks_to_accomplish.get_nowait()
             db.init()
-            slack_token = db.find_one('user', {'email': task['email']})['sl_accesstoken']
+            user = db.find_one('user', {'email': task['email']})
+            slack_token = ['sl_accesstoken']
             if (task['type'] == 'performancechangetracking'):
+                task['channel'] = user['channel']
                 performancechangetracking(slack_token, task)
             elif(task['type']=='shoppingfunnelchangetracking'):
+                task['channel'] = user['channel']
                 shoppingfunnelchangetracking(slack_token, task)
             elif(task['type']=='costprediction'):
+                task['channel'] = user['channel']
                 costprediction(slack_token, task)
             db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']}, lastRunDate=time.time())
         except queue.Empty:
