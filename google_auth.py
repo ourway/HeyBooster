@@ -118,7 +118,7 @@ def google_auth_redirect():
     db.find_and_modify(collection='user', query={'email': flask.session['email']}, ga_accesstoken=oauth2_tokens['access_token'],
                       ga_refreshtoken=oauth2_tokens['refresh_token'])
     viewId = google_analytics.get_first_profile_id()
-    db.find_and_modify(collection='notification', query={'email':flask.session['email']}, viewId=viewId)
+    db.find_and_modify(collection='user', query={'email':flask.session['email']}, viewId=viewId)
     return flask.redirect(BASE_URI, code=302)
 
 
