@@ -16,8 +16,8 @@ AUTHORIZATION_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
 
 AUTH_REDIRECT_URI = "https://app.heybooster.ai/google/auth"
 BASE_URI = "https://app.heybooster.ai"
-#CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
-#CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 
 
 

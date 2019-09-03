@@ -36,10 +36,10 @@ db.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
-#app.config["SLACK_OAUTH_CLIENT_ID"]=os.environ.get('SLACK_CLIENT_ID')
-#app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
+app.config["SLACK_OAUTH_CLIENT_ID"]=os.environ.get('SLACK_CLIENT_ID')
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
-slack_bp = make_slack_blueprint(scope=["admin,identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read"])
+slack_bp = make_slack_blueprint(scope=["identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read,users:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -70,7 +70,7 @@ SLACK_BUTTONS = [
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    slack_message()
+    # slack_message()
     return render_template('index.html')
 
 
