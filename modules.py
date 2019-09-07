@@ -14,7 +14,7 @@ def dtimetostrf(x):
 def performancechangetracking(slack_token, task):
     # Mobile Performance Changes Tracking
     text_m= "*Mobile Performance Changes Tracking*"
-    attachments_m = []
+    attachments_m = [{'text':text_m}]
     metrics = [{'expression': 'ga:sessions'}]
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -61,7 +61,7 @@ def performancechangetracking(slack_token, task):
     for metric in metrics:
         if (metric == "ga:sessions"):
             if (sessions_new < sessions_old * (1 - threshold)):
-                attachments_m += [{"text": "- {0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
+                attachments_m += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
                                             start_date_1,
                                             round(threshold * 100, 2),
                                             start_date_2,
@@ -70,7 +70,7 @@ def performancechangetracking(slack_token, task):
 
     # Desktop Performance Changes Tracking
     text_d = "*Desktop Performance Changes Tracking*"
-    attachments_d = []
+    attachments_d = [{'text':text_d}]
     
     filters = [
         {
@@ -104,7 +104,7 @@ def performancechangetracking(slack_token, task):
     for metric in metrics:  # Only one metric for now
         if (metric['expression'] == "ga:sessions"):
             if (sessions_new < sessions_old * (1 - threshold)):
-                attachments_d += [{"text": "- {0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
+                attachments_d += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
                                             start_date_1,
                                             round(threshold * 100, 2),
                                             start_date_2,
@@ -132,15 +132,15 @@ def performancechangetracking(slack_token, task):
         
     slack_client = WebClient(token = slack_token)
     
-    slack_client.chat_postMessage(
-                      channel=channel,
-                      text=text_m,
-                      attachments=attachments_m)
-
     resp = slack_client.chat_postMessage(
                       channel=channel,
-                      text=text_d,
-                      attachments=attachments_d)
+                      #text=text_m,
+                      attachments=attachments_m+attachments_d)
+
+    #resp = slack_client.chat_postMessage(
+     #                 channel=channel,
+      #                #text=text_d,
+     #                 attachments=attachments_d)
     message_ts = resp['ts']
     return message_ts
 

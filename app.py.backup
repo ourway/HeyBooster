@@ -9,12 +9,11 @@ from database import db
 from models.user import User
 from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
-from datetime import datetime, timedelta, timezone
 import json
 #from slackclient import SlackClient
 from slack import WebClient
 import os
-import time
+
 OAuth2ConsumerBlueprint.authorized = authorized
 
 
@@ -40,7 +39,7 @@ app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 app.config["SLACK_OAUTH_CLIENT_ID"]=os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
-slack_bp = make_slack_blueprint(scope=["identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read,users:read"])
+slack_bp = make_slack_blueprint(scope=["admin,identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read,users:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -74,9 +73,6 @@ def home():
     # slack_message()
     return render_template('index.html')
 
-@app.route('/change', methods=['GET', 'POST'])
-def change():
-    return 'Change Methodu'
 
 @app.route('/about')
 def about():
@@ -246,7 +242,38 @@ def message_actions():
     if message_action["type"] == "interactive_message":
         if(message_action['actions'][0]['value']=='track'):
             text = message_action['original_message']['text']
-            if(("performance" in text.lower()) and ("change" in text.lower())):
+            if ("default" in text.lower() and ("time" in text.lower())):
+                houroptions = []
+                for i in range(0,24):
+                    houroptions.append({'label':str(i).zfill(2), 'value':i})
+                minuteoptions = []
+                for i in range(0,60):
+                    minuteoptions.append({'label':str(i).zfill(2), 'value':i})
+                slack_client.dialog_open(
+                        trigger_id=message_action["trigger_id"],
+                        dialog={
+                            "title": "Notification Settings",
+                            "submit_label": "Submit",
+                            "callback_id": "notification_form",
+                            "elements": [
+                                {
+                                    "label": "hour",
+                                    "type": "select",
+                                    "name": "hour",
+                                    "placeholder": "Select an hour",
+                                    "options": houroptions
+                                },
+                                {
+                                    "label": "minute",
+                                    "type": "select",
+                                    "name": "minute",
+                                    "placeholder": "Select a minute",
+                                    "options": minuteoptions
+                                }
+                            ]
+                        }
+                    )
+            elif(("performance" in text.lower()) and ("change" in text.lower())):
                 # Show the ordering dialog to the user
                 slack_client.dialog_open(
                         trigger_id=message_action["trigger_id"],
@@ -398,70 +425,26 @@ def message_actions():
 #            text=message_action['original_message']['text'] + ":pencil: Taking your order...",
 #            attachments=[]
 #        )
-        elif(message_action['actions'][0]['value']=='change'):
-            text = message_action['original_message']['text']
-            if (True):
-                houroptions = []
-                for i in range(0,24):
-                    houroptions.append({'label':str(i), 'value':i})
-                minuteoptions = []
-                for i in range(0,60):
-                    minuteoptions.append({'label':str(i), 'value':i})
-                slack_client.dialog_open(
-                        trigger_id=message_action["trigger_id"],
-                        dialog={
-                            "title": "Notification Settings",
-                            "submit_label": "Submit",
-                            "callback_id": "notification_form",
-                            "elements": [
-                                {
-                                    "label": "Hour",
-                                    "type": "select",
-                                    "name": "hour",
-                                    "placeholder": "Select an hour",
-                                    "options": houroptions
-                                },
-                                {
-                                    "label": "Minute",
-                                    "type": "select",
-                                    "name": "minute",
-                                    "placeholder": "Select a minute",
-                                    "options": minuteoptions
-                                }
-                            ]
-                        }
-                    )
-        
+
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
-        if('module_types' in submission.keys()):
-            moduleType = submission['module_types']
-            if(moduleType == 'performancechangetracking'):
-                scheduleType = submission['schedule_types']
-                threshold = float(submission['threshold'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, threshold = threshold)
-            elif(moduleType == 'shoppingfunnelchangetracking'):
-                scheduleType = submission['schedule_types']
-                threshold = float(submission['threshold'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, threshold = threshold)
-            elif(moduleType == 'costprediction'):
-                scheduleType = submission['schedule_types']
-                target = float(submission['target'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, target = target)
-        else:
-            modules = db.find("notification",query={'email':email})
-            lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds//3600
-        #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-            usr_tz_offset = slack_client.users_info(user = message_action['user']['id'])['user']['tz_offset']//3600
-            selectedhour = int(submission['hour'])
-            selectedminute = str(submission['minute']).zfill(2)
-            #writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-            if(selectedhour > (usr_tz_offset - lc_tz_offset)):
-                writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-            else:
-                writtenhour = str(24 + (selectedhour - (usr_tz_offset - lc_tz_offset))).zfill(2)
-            for module in modules:
-                db.find_and_modify("notification",query={'_id':module['_id']}, timeofDay = "%s.%s"%(writtenhour, selectedminute))
+        moduleType = submission['module_types']
+        if(moduleType == 'performancechangetracking'):
+            scheduleType = submission['schedule_types']
+            threshold = float(submission['threshold'])
+            db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, threshold = threshold)
+        elif(moduleType == 'costprediction'):
+            scheduleType = submission['schedule_types']
+            target = float(submission['target'])
+            db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, target = target)
+#        # Update the message to show that we're in the process of taking their order
+#        slack_client.api_call(
+#            "chat.update",
+#            channel=channel,
+#            ts=message_ts,
+#            text=":white_check_mark: Order received!",
+#            attachments=[]
+#        )
     return make_response("", 200)
 
 def insertdefaultnotifications(email):
@@ -504,4 +487,3 @@ def insertdefaultnotifications(email):
             'lastRunDate': '',
             'viewId': ''
         })
-

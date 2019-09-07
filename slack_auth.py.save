@@ -111,11 +111,9 @@ def authorized(self):
     headers = {'Content-type':'application/json', 'Authorization':'Bearer ' + token['access_token']}
     data={
       "channel":token['incoming_webhook']['channel'],
+#      "text":'Hi, I am HeyBooster, Default notification time is set as 07:00.\nClick "Change" button for changing it.',
       "attachments":[{
-        "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
-Click "Change" button for changing it."""},
-        {
-        "text":"",
+        "text": "",
         "callback_id": "notification_form",
         "color": "#3AA3E3",
         "attachment_type": "default",
