@@ -11,10 +11,8 @@ from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from datetime import datetime, timedelta, timezone
 import json
-#from slackclient import SlackClient
 from slack import WebClient
-import os
-import time
+
 OAuth2ConsumerBlueprint.authorized = authorized
 
 
@@ -40,7 +38,8 @@ app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 app.config["SLACK_OAUTH_CLIENT_ID"]=os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
-slack_bp = make_slack_blueprint(scope=["identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read,users:read"])
+slack_bp = make_slack_blueprint(
+    scope=["identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read,users:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -74,9 +73,47 @@ def home():
     # slack_message()
     return render_template('index.html')
 
+
 @app.route('/change', methods=['GET', 'POST'])
 def change():
-    return 'Change Methodu'
+    message_action = json.loads(request.form["payload"])
+    # Open a slack client
+    user = db.find_one('user', {'user_id': message_action['user']['id']})
+    slack_token = user['sl_accesstoken']
+    slack_client = WebClient(token=slack_token)
+    text = message_action['original_message']['text']
+    if (True):
+        houroptions = []
+        for i in range(0, 24):
+            houroptions.append({'label': str(i), 'value': i})
+        minuteoptions = []
+        for i in range(0, 60):
+            minuteoptions.append({'label': str(i), 'value': i})
+    slack_client.dialog_open(
+        trigger_id=message_action["trigger_id"],
+        dialog={
+            "title": "Notification Settings",
+            "submit_label": "Submit",
+            "callback_id": "notification_form",
+            "elements": [
+                {
+                    "label": "Hour",
+                    "type": "select",
+                    "name": "hour",
+                    "placeholder": "Select an hour",
+                    "options": houroptions
+                },
+                {
+                    "label": "Minute",
+                    "type": "select",
+                    "name": "minute",
+                    "placeholder": "Select a minute",
+                    "options": minuteoptions
+                }
+            ]
+        }
+    )
+
 
 @app.route('/about')
 def about():
@@ -111,7 +148,7 @@ def register():
         new_user = User(name=form.name.data, username=form.username.data, email=form.email.data,
                         password=hashed_password)
         new_user.insert()
-        insertdefaultnotifications(email = form.email.data)
+        insertdefaultnotifications(email=form.email.data)
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
@@ -158,6 +195,7 @@ def gatest(email):
     return {'accounts': accounts}
 
 
+"""
 @app.route("/save", methods=['GET', 'POST'])
 def save():
     tForm = TimeForm(request.form)
@@ -167,7 +205,7 @@ def save():
     timeofDay = tForm.timeofDay.data
 
     db.find_and_modify(collection='notification',
-                       query = {'email':session['email']},
+                       query={'email': session['email']},
                        scheduleType=scheduleType,
                        frequency=frequency,
                        timeofDay=timeofDay)
@@ -179,7 +217,7 @@ def save():
 def scheduleTypeDaily():
     scheduleType = "daily"
     db.find_and_modify(collection='notification',
-                       query={'email':session['email']},
+                       query={'email': session['email']},
                        scheduleType=scheduleType)
     return make_response()
 
@@ -188,7 +226,7 @@ def scheduleTypeDaily():
 def scheduleTypeWeekly():
     scheduleType = "weekly"
     db.find_and_modify(collection='notification',
-                       query={'email':session['email']},
+                       query={'email': session['email']},
                        scheduleType=scheduleType)
     return make_response()
 
@@ -234,274 +272,281 @@ def slack_message():
 
     return redirect('/')
 
+"""
+
+
 @app.route("/slack/message_actions", methods=["POST"])
 def message_actions():
     # Parse the request payload
     message_action = json.loads(request.form["payload"])
-    #Open a slack client
+    # Open a slack client
     user = db.find_one('user', {'user_id': message_action['user']['id']})
     slack_token = user['sl_accesstoken']
     email = user['email']
     slack_client = WebClient(token=slack_token)
     if message_action["type"] == "interactive_message":
-        if(message_action['actions'][0]['value']=='track'):
+        if (message_action['actions'][0]['value'] == 'track'):
             text = message_action['original_message']['text']
-            if(("performance" in text.lower()) and ("change" in text.lower())):
+            if (("performance" in text.lower()) and ("change" in text.lower())):
                 # Show the ordering dialog to the user
                 slack_client.dialog_open(
-                        trigger_id=message_action["trigger_id"],
-                        dialog={
-                            "title": "Notification Settings",
-                            "submit_label": "Submit",
-                            "callback_id": "notification_form",
-                            "elements": [
-                                {
-                                    "label": "Module Type",
-                                    "type": "select",
-                                    "name": "module_types",
-                                    "placeholder": "Select a module type",
-                                    "value": "performancechangetracking",
-                                    "options": [
-                                        {
-                                            "label": "Performance Changes Tracking",
-                                            "value": "performancechangetracking"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "label": "Schedule Type",
-                                    "type": "select",
-                                    "name": "schedule_types",
-                                    "placeholder": "Select a schedule type",
-                                    "options": [
-                                        {
-                                            "label": "Daily",
-                                            "value": "daily"
-                                        },
-                                        {
-                                            "label": "Weekly",
-                                            "value": "weekly"
-                                        }
-                                    ]
-                                },
-                                {
-                                  "label": "Threshold (%)",
-                                  "name": "threshold",
-                                  "type": "text",
-                                  "subtype": "number",
-                                  "placeholder": "Enter a number"
-                                }  
-                            ]
-                        }
-                    )
-            if(("funnel" in text.lower()) and ("change" in text.lower())):
+                    trigger_id=message_action["trigger_id"],
+                    dialog={
+                        "title": "Notification Settings",
+                        "submit_label": "Submit",
+                        "callback_id": "notification_form",
+                        "elements": [
+                            {
+                                "label": "Module Type",
+                                "type": "select",
+                                "name": "module_types",
+                                "placeholder": "Select a module type",
+                                "value": "performancechangetracking",
+                                "options": [
+                                    {
+                                        "label": "Performance Changes Tracking",
+                                        "value": "performancechangetracking"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Schedule Type",
+                                "type": "select",
+                                "name": "schedule_types",
+                                "placeholder": "Select a schedule type",
+                                "options": [
+                                    {
+                                        "label": "Daily",
+                                        "value": "daily"
+                                    },
+                                    {
+                                        "label": "Weekly",
+                                        "value": "weekly"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Threshold (%)",
+                                "name": "threshold",
+                                "type": "text",
+                                "subtype": "number",
+                                "placeholder": "Enter a number"
+                            }
+                        ]
+                    }
+                )
+            if (("funnel" in text.lower()) and ("change" in text.lower())):
                 # Show the ordering dialog to the user
                 slack_client.dialog_open(
-                        trigger_id=message_action["trigger_id"],
-                        dialog={
-                            "title": "Notification Settings",
-                            "submit_label": "Submit",
-                            "callback_id": "notification_form",
-                            "elements": [
-                                {
-                                    "label": "Module Type",
-                                    "type": "select",
-                                    "name": "module_types",
-                                    "placeholder": "Select a module type",
-                                    "value": "shoppingfunnelchangetracking",
-                                    "options": [
-                                        {
-                                            "label": "Shopping Funnel Changes Tracking",
-                                            "value": "shoppingfunnelchangetracking"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "label": "Schedule Type",
-                                    "type": "select",
-                                    "name": "schedule_types",
-                                    "placeholder": "Select a schedule type",
-                                    "options": [
-                                        {
-                                            "label": "Daily",
-                                            "value": "daily"
-                                        },
-                                        {
-                                            "label": "Weekly",
-                                            "value": "weekly"
-                                        }
-                                    ]
-                                },
-                                {
-                                  "label": "Threshold (%)",
-                                  "name": "threshold",
-                                  "type": "text",
-                                  "subtype": "number",
-                                  "placeholder": "Enter a number"
-                                }  
-                            ]
-                        }
-                    )
-            if(("cost" in text.lower()) and ("prediction" in text.lower())):
+                    trigger_id=message_action["trigger_id"],
+                    dialog={
+                        "title": "Notification Settings",
+                        "submit_label": "Submit",
+                        "callback_id": "notification_form",
+                        "elements": [
+                            {
+                                "label": "Module Type",
+                                "type": "select",
+                                "name": "module_types",
+                                "placeholder": "Select a module type",
+                                "value": "shoppingfunnelchangetracking",
+                                "options": [
+                                    {
+                                        "label": "Shopping Funnel Changes Tracking",
+                                        "value": "shoppingfunnelchangetracking"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Schedule Type",
+                                "type": "select",
+                                "name": "schedule_types",
+                                "placeholder": "Select a schedule type",
+                                "options": [
+                                    {
+                                        "label": "Daily",
+                                        "value": "daily"
+                                    },
+                                    {
+                                        "label": "Weekly",
+                                        "value": "weekly"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Threshold (%)",
+                                "name": "threshold",
+                                "type": "text",
+                                "subtype": "number",
+                                "placeholder": "Enter a number"
+                            }
+                        ]
+                    }
+                )
+            if (("cost" in text.lower()) and ("prediction" in text.lower())):
                 # Show the ordering dialog to the user
                 slack_client.dialog_open(
-                        trigger_id=message_action["trigger_id"],
-                        dialog={
-                            "title": "Notification Settings",
-                            "submit_label": "Submit",
-                            "callback_id": "notification_form",
-                            "elements": [
-                                {
-                                    "label": "Module Type",
-                                    "type": "select",
-                                    "name": "module_types",
-                                    "placeholder": "Select a module type",
-                                    "value": "costprediction",
-                                    "options": [
-                                        {
-                                            "label": "Cost Prediction",
-                                            "value": "costprediction"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "label": "Schedule Type",
-                                    "type": "select",
-                                    "name": "schedule_types",
-                                    "placeholder": "Select a schedule type",
-                                    "options": [
-                                        {
-                                            "label": "Daily",
-                                            "value": "daily"
-                                        },
-                                        {
-                                            "label": "Weekly",
-                                            "value": "weekly"
-                                        }
-                                    ]
-                                },
-                                {
-                                  "label": "Monthly Budget",
-                                  "name": "target",
-                                  "type": "text",
-                                  "subtype": "number",
-                                  "placeholder": "Enter a number"
-                                }  
-                            ]
-                        }
-                    )
-#        # Update the message to show that we're in the process of taking their order
-#        resp = slack_client.api_call(
-#            "chat.update",
-#            channel=channel,
-#            ts=message_ts,
-#            text=message_action['original_message']['text'] + ":pencil: Taking your order...",
-#            attachments=[]
-#        )
-        elif(message_action['actions'][0]['value']=='change'):
+                    trigger_id=message_action["trigger_id"],
+                    dialog={
+                        "title": "Notification Settings",
+                        "submit_label": "Submit",
+                        "callback_id": "notification_form",
+                        "elements": [
+                            {
+                                "label": "Module Type",
+                                "type": "select",
+                                "name": "module_types",
+                                "placeholder": "Select a module type",
+                                "value": "costprediction",
+                                "options": [
+                                    {
+                                        "label": "Cost Prediction",
+                                        "value": "costprediction"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Schedule Type",
+                                "type": "select",
+                                "name": "schedule_types",
+                                "placeholder": "Select a schedule type",
+                                "options": [
+                                    {
+                                        "label": "Daily",
+                                        "value": "daily"
+                                    },
+                                    {
+                                        "label": "Weekly",
+                                        "value": "weekly"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Monthly Budget",
+                                "name": "target",
+                                "type": "text",
+                                "subtype": "number",
+                                "placeholder": "Enter a number"
+                            }
+                        ]
+                    }
+                )
+        #        # Update the message to show that we're in the process of taking their order
+        #        resp = slack_client.api_call(
+        #            "chat.update",
+        #            channel=channel,
+        #            ts=message_ts,
+        #            text=message_action['original_message']['text'] + ":pencil: Taking your order...",
+        #            attachments=[]
+        #        )
+        elif (message_action['actions'][0]['value'] == 'change'):
             text = message_action['original_message']['text']
             if (True):
                 houroptions = []
-                for i in range(0,24):
-                    houroptions.append({'label':str(i), 'value':i})
+                for i in range(0, 24):
+                    houroptions.append({'label': str(i), 'value': i})
                 minuteoptions = []
-                for i in range(0,60):
-                    minuteoptions.append({'label':str(i), 'value':i})
+                for i in range(0, 60):
+                    minuteoptions.append({'label': str(i), 'value': i})
                 slack_client.dialog_open(
-                        trigger_id=message_action["trigger_id"],
-                        dialog={
-                            "title": "Notification Settings",
-                            "submit_label": "Submit",
-                            "callback_id": "notification_form",
-                            "elements": [
-                                {
-                                    "label": "Hour",
-                                    "type": "select",
-                                    "name": "hour",
-                                    "placeholder": "Select an hour",
-                                    "options": houroptions
-                                },
-                                {
-                                    "label": "Minute",
-                                    "type": "select",
-                                    "name": "minute",
-                                    "placeholder": "Select a minute",
-                                    "options": minuteoptions
-                                }
-                            ]
-                        }
-                    )
-        
+                    trigger_id=message_action["trigger_id"],
+                    dialog={
+                        "title": "Notification Settings",
+                        "submit_label": "Submit",
+                        "callback_id": "notification_form",
+                        "elements": [
+                            {
+                                "label": "Hour",
+                                "type": "select",
+                                "name": "hour",
+                                "placeholder": "Select an hour",
+                                "options": houroptions
+                            },
+                            {
+                                "label": "Minute",
+                                "type": "select",
+                                "name": "minute",
+                                "placeholder": "Select a minute",
+                                "options": minuteoptions
+                            }
+                        ]
+                    }
+                )
+
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
-        if('module_types' in submission.keys()):
+        if ('module_types' in submission.keys()):
             moduleType = submission['module_types']
-            if(moduleType == 'performancechangetracking'):
+            if (moduleType == 'performancechangetracking'):
                 scheduleType = submission['schedule_types']
                 threshold = float(submission['threshold'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, threshold = threshold)
-            elif(moduleType == 'shoppingfunnelchangetracking'):
+                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
+                                   scheduleType=scheduleType, threshold=threshold)
+            elif (moduleType == 'shoppingfunnelchangetracking'):
                 scheduleType = submission['schedule_types']
                 threshold = float(submission['threshold'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, threshold = threshold)
-            elif(moduleType == 'costprediction'):
+                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
+                                   scheduleType=scheduleType, threshold=threshold)
+            elif (moduleType == 'costprediction'):
                 scheduleType = submission['schedule_types']
                 target = float(submission['target'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType}, scheduleType = scheduleType, target = target)
+                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
+                                   scheduleType=scheduleType, target=target)
         else:
-            modules = db.find("notification",query={'email':email})
-            lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds//3600
-        #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-            usr_tz_offset = slack_client.users_info(user = message_action['user']['id'])['user']['tz_offset']//3600
+            modules = db.find("notification", query={'email': email})
+            lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
+            #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
+            usr_tz_offset = slack_client.users_info(user=message_action['user']['id'])['user']['tz_offset'] // 3600
             selectedhour = int(submission['hour'])
             selectedminute = str(submission['minute']).zfill(2)
-            #writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-            if(selectedhour > (usr_tz_offset - lc_tz_offset)):
+            # writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
+            if (selectedhour > (usr_tz_offset - lc_tz_offset)):
                 writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
             else:
                 writtenhour = str(24 + (selectedhour - (usr_tz_offset - lc_tz_offset))).zfill(2)
             for module in modules:
-                db.find_and_modify("notification",query={'_id':module['_id']}, timeofDay = "%s.%s"%(writtenhour, selectedminute))
+                db.find_and_modify("notification", query={'_id': module['_id']},
+                                   timeofDay="%s.%s" % (writtenhour, selectedminute))
     return make_response("", 200)
 
-def insertdefaultnotifications(email):
-    #Default Notifications will be inserted here
-    db.insert('notification', data={
-            'type': 'performancechangetracking',
-            'email': email,
-            'period': 1,
-            'threshold': 10,
-            'scheduleType': 'daily',
-            'frequency': 0,
-            'timeofDay': '07.00',
-            'channel': '#general',
-            'status': 'active',
-            'lastRunDate': '',
-            'viewId': ''
-        })
-    db.insert('notification', data={
-            'type': 'shoppingfunnelchangetracking',
-            'email': email,
-            'period': 1,
-            'threshold': 10,
-            'scheduleType': 'daily',
-            'frequency': 0,
-            'timeofDay': '07.00',
-            'channel': '#general',
-            'status': 'active',
-            'lastRunDate': '',
-            'viewId': ''
-        })
-    db.insert('notification', data={
-            'type': 'costprediction',
-            'email': email,
-            'target': 100,
-            'scheduleType': 'daily',
-            'frequency': 0,
-            'timeofDay': '07.00',
-            'channel': '#general',
-            'status': 'active',
-            'lastRunDate': '',
-            'viewId': ''
-        })
 
+def insertdefaultnotifications(email):
+    # Default Notifications will be inserted here
+    db.insert('notification', data={
+        'type': 'performancechangetracking',
+        'email': email,
+        'period': 1,
+        'threshold': 10,
+        'scheduleType': 'daily',
+        'frequency': 0,
+        'timeofDay': '07.00',
+        'channel': '#general',
+        'status': 'active',
+        'lastRunDate': '',
+        'viewId': ''
+    })
+    db.insert('notification', data={
+        'type': 'shoppingfunnelchangetracking',
+        'email': email,
+        'period': 1,
+        'threshold': 10,
+        'scheduleType': 'daily',
+        'frequency': 0,
+        'timeofDay': '07.00',
+        'channel': '#general',
+        'status': 'active',
+        'lastRunDate': '',
+        'viewId': ''
+    })
+    db.insert('notification', data={
+        'type': 'costprediction',
+        'email': email,
+        'target': 100,
+        'scheduleType': 'daily',
+        'frequency': 0,
+        'timeofDay': '07.00',
+        'channel': '#general',
+        'status': 'active',
+        'lastRunDate': '',
+        'viewId': ''
+    })

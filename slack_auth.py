@@ -8,8 +8,10 @@ from flask_dance.consumer import oauth_authorized, oauth_error
 from werkzeug.wrappers import Response
 from oauthlib.oauth2 import MissingCodeError
 import requests
+
 URL = "https://slack.com/api/{}"
 log = logging.getLogger(__name__)
+
 
 def authorized(self):
     """
@@ -63,7 +65,9 @@ def authorized(self):
             client_secret=self.client_secret,
             **self.token_url_params
         )
-        db.find_and_modify(collection='user', query={'email':flask.session['email']}, sl_accesstoken=token['access_token'], user_id=token['user_id'], channel = token['incoming_webhook']['channel'])
+        db.find_and_modify(collection='user', query={'email': flask.session['email']},
+                           sl_accesstoken=token['access_token'], user_id=token['user_id'],
+                           channel=token['incoming_webhook']['channel'])
     except MissingCodeError as e:
         e.args = (
             e.args[0],
@@ -88,57 +92,56 @@ def authorized(self):
         except ValueError as error:
             log.warning("OAuth 2 authorization error: %s", str(error))
             oauth_error.send(self, error=error)
-    #When the slack connection is completed send notification user to set time
-#    self.post(
-#      "chat.postMessage",data={
-#      "channel":token['incoming_webhook']['channel'],
-#      "text":"""Hi, I am HeyBooster, Default notification time is set as 07:00.
-#      Click "Change" button for changing it.""",
-#      "attachments":[{
-#        "text": "",
-#        "callback_id": "notification_form",
-#        "color": "#3AA3E3",
-#        "attachment_type": "default",
-#        "actions": [
-#        {
-#          "name": "change",
-#          "text": "Change",
-#          "type": "button",
-#          "value": "change"
-#        }]
-#      }]}
-#    )
-    headers = {'Content-type':'application/json', 'Authorization':'Bearer ' + token['access_token']}
-    data={
-      "channel":token['incoming_webhook']['channel'],
-      "attachments":[{
-        "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
+    # When the slack connection is completed send notification user to set time
+    #    self.post(
+    #      "chat.postMessage",data={
+    #      "channel":token['incoming_webhook']['channel'],
+    #      "text":"""Hi, I am HeyBooster, Default notification time is set as 07:00.
+    #      Click "Change" button for changing it.""",
+    #      "attachments":[{
+    #        "text": "",
+    #        "callback_id": "notification_form",
+    #        "color": "#3AA3E3",
+    #        "attachment_type": "default",
+    #        "actions": [
+    #        {
+    #          "name": "change",
+    #          "text": "Change",
+    #          "type": "button",
+    #          "value": "change"
+    #        }]
+    #      }]}
+    #    )
+    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + token['access_token']}
+    data = {
+        "channel": token['incoming_webhook']['channel'],
+        "attachments": [{
+            "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
 Click "Change" button for changing it."""},
-        {
-        "text":"",
-        "callback_id": "notification_form",
-        "color": "#3AA3E3",
-        "attachment_type": "default",
-        "actions": [
-        {
-          "name": "change",
-          "text": "Change",
-          "type": "button",
-          "value": "change"
-        }]
-      }]}
-    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers = headers)
-    modules = db.find("notification",query={'email':flask.session['email']})
-    lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds//3600
-#    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-    data = [('token', token['access_token']), 
+            {
+                "text": "",
+                "callback_id": "notification_form",
+                "color": "#3AA3E3",
+                "attachment_type": "default",
+                "actions": [
+                    {
+                        "name": "change",
+                        "text": "Change",
+                        "type": "button",
+                        "value": "change"
+                    }]
+            }]}
+    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
+    modules = db.find("notification", query={'email': flask.session['email']})
+    lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
+    #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
+    data = [('token', token['access_token']),
             ('user', token['user_id'])]
-    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset']//3600
-    if(7 >= (usr_tz_offset - lc_tz_offset)):
+    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
+    if (7 >= (usr_tz_offset - lc_tz_offset)):
         default_time = str(7 - (usr_tz_offset - lc_tz_offset)).zfill(2)
     else:
         default_time = str(24 + (7 - (usr_tz_offset - lc_tz_offset))).zfill(2)
     for module in modules:
-        db.find_and_modify("notification",query={'_id':module['_id']}, timeofDay = "%s.00"%(default_time))
+        db.find_and_modify("notification", query={'_id': module['_id']}, timeofDay="%s.00" % (default_time))
     return redirect(next_url)
-
