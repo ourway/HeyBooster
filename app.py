@@ -12,6 +12,7 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from datetime import datetime, timedelta, timezone
 import json
 from slack import WebClient
+import os
 
 OAuth2ConsumerBlueprint.authorized = authorized
 
@@ -74,46 +75,10 @@ def home():
     return render_template('index.html')
 
 
-@app.route('/change', methods=['GET', 'POST'])
+@app.route('/change', methods=['POST'])
 def change():
-    message_action = json.loads(request.form["payload"])
-    # Open a slack client
-    user = db.find_one('user', {'user_id': message_action['user']['id']})
-    slack_token = user['sl_accesstoken']
-    slack_client = WebClient(token=slack_token)
-    text = message_action['original_message']['text']
-    if (True):
-        houroptions = []
-        for i in range(0, 24):
-            houroptions.append({'label': str(i), 'value': i})
-        minuteoptions = []
-        for i in range(0, 60):
-            minuteoptions.append({'label': str(i), 'value': i})
-    slack_client.dialog_open(
-        trigger_id=message_action["trigger_id"],
-        dialog={
-            "title": "Notification Settings",
-            "submit_label": "Submit",
-            "callback_id": "notification_form",
-            "elements": [
-                {
-                    "label": "Hour",
-                    "type": "select",
-                    "name": "hour",
-                    "placeholder": "Select an hour",
-                    "options": houroptions
-                },
-                {
-                    "label": "Minute",
-                    "type": "select",
-                    "name": "minute",
-                    "placeholder": "Select a minute",
-                    "options": minuteoptions
-                }
-            ]
-        }
-    )
 
+    return "Time of Day: "
 
 @app.route('/about')
 def about():
