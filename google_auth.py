@@ -8,16 +8,18 @@ import google.oauth2.credentials
 import googleapiclient.discovery
 import google_analytics
 from database import db
+import requests
 
+TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
 
-AUTHORIZATION_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
+AUTHORIZATION_SCOPE = ['https://www.googleapis.com/auth/analytics.readonly']
 
 AUTH_REDIRECT_URI = "https://app.heybooster.ai/google/auth"
 BASE_URI = "https://app.heybooster.ai"
-CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
+CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
 
 
 
@@ -50,9 +52,22 @@ def build_credentials():
 def build_credentials_woutSession(email):
     oauth2_tokens = {}
     user = db.find_one('user', {'email': email})
-    oauth2_tokens['access_token'] = user['ga_accesstoken']
-    oauth2_tokens['refresh_token'] = user['ga_refreshtoken']
 
+    resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken']))
+    
+    if('error' in resp.json().keys()):
+        data = [('client_id', CLIENT_ID),
+                ('client_secret', CLIENT_SECRET),
+                ('refresh_token', user['ga_refreshtoken']),
+                ('grant_type', 'refresh_token')]
+        resp = requests.post(ACCESS_TOKEN_URI, data).json()
+        db.find_and_modify('user', query={'email':email}, ga_accesstoken=resp['access_token'])
+        oauth2_tokens['access_token'] = resp['access_token']
+    else:
+        oauth2_tokens['access_token'] = user['ga_accesstoken']
+    
+    oauth2_tokens['refresh_token'] = user['ga_refreshtoken']
+    
     return google.oauth2.credentials.Credentials(
         oauth2_tokens['access_token'],
         refresh_token=oauth2_tokens['refresh_token'],
@@ -129,3 +144,4 @@ def logout():
     flask.session.pop(AUTH_STATE_KEY, None)
 
     return flask.redirect(BASE_URI, code=302)
+
