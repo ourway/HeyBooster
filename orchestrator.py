@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 import queue  # imported for using queue.Empty exception
 from database import db
-from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction
+from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction, performancegoaltracking
 
 
 def dtimetostrf(x):
@@ -34,6 +34,10 @@ def do_job(tasks_to_accomplish):
                 task['channel'] = user['channel']
                 task['viewId'] = user['viewId']
                 costprediction(slack_token, task)
+            elif(task['type']=='performancegoaltracking'):
+                task['channel'] = user['channel']
+                task['viewId'] = user['viewId']
+                performancegoaltracking(slack_token, task)
             db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']}, lastRunDate=time.time())
         except queue.Empty:
             break
@@ -51,7 +55,7 @@ def main():
     tasks = db.find('notification',
                     {'$and': [
                         {"timeofDay": timeofDay},
-                        {"status": "active"},
+                        {"status": "1"},
                         {'$or': [
                             {"scheduleType": 'daily'},
                             {'$and': [{"scheduleType": 'weekly'}, {"frequency": wday}]},
@@ -83,3 +87,4 @@ if __name__ == '__main__':
             pass
         if (datetime.now().second == 0):
             main()
+

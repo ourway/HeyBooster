@@ -14,7 +14,7 @@ def dtimetostrf(x):
 def performancechangetracking(slack_token, task):
     # Mobile Performance Changes Tracking
     text_m= "*Mobile Performance Changes Tracking*"
-    attachments_m = [{'text':text_m}]
+    attachments_m = []
     metrics = [{'expression': 'ga:sessions'}]
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -58,19 +58,18 @@ def performancechangetracking(slack_token, task):
     # WARNING: obtain data for other metrics
     sessions_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
 
-    for metric in metrics:
-        if (metric == "ga:sessions"):
-            if (sessions_new < sessions_old * (1 - threshold)):
-                attachments_m += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
-                                            start_date_1,
-                                            round(threshold * 100, 2),
-                                            start_date_2,
-                                            int(sessions_new)),
-                                "color": "#FF0000"}]
+    if (sessions_new < sessions_old * (1 - threshold)):
+        attachments_m += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
+                                    start_date_1,
+                                    round(threshold * 100, 2),
+                                    start_date_2,
+                                    int(sessions_new)),
+                        "color": "#FF0000",
+                        "pretext": text_m}]
 
     # Desktop Performance Changes Tracking
     text_d = "*Desktop Performance Changes Tracking*"
-    attachments_d = [{'text':text_d}]
+    attachments_d = []
     
     filters = [
         {
@@ -101,18 +100,17 @@ def performancechangetracking(slack_token, task):
     # WARNING: obtain data for other metrics
     sessions_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
 
-    for metric in metrics:  # Only one metric for now
-        if (metric['expression'] == "ga:sessions"):
-            if (sessions_new < sessions_old * (1 - threshold)):
-                attachments_d += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
-                                            start_date_1,
-                                            round(threshold * 100, 2),
-                                            start_date_2,
-                                            int(sessions_new)),
-                                "color": "FF0000"}]
+    if (sessions_new < sessions_old * (1 - threshold)):
+            attachments_d += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
+                                        start_date_1,
+                                        round(threshold * 100, 2),
+                                        start_date_2,
+                                        int(sessions_new)),
+                            "color": "FF0000",
+                            "pretext": text_d}]
     
     attachments_d+=[{
-        "text": "",
+        "pretext": "Click *_Track_* to configure *_Performance Changes Tracking_* notification",
         "callback_id": "notification_form",
         "color": "#3AA3E3",
         "attachment_type": "default",
@@ -129,20 +127,17 @@ def performancechangetracking(slack_token, task):
           "value": "track"
         }]
       }]
-        
+    
+    
     slack_client = WebClient(token = slack_token)
     
-    resp = slack_client.chat_postMessage(
-                      channel=channel,
-                      #text=text_m,
-                      attachments=attachments_m+attachments_d)
+    if(len(attachments_m+attachments_d)>1):
+        resp = slack_client.chat_postMessage(
+                          channel=channel,
+                          attachments=attachments_m+attachments_d)
 
-    #resp = slack_client.chat_postMessage(
-     #                 channel=channel,
-      #                #text=text_d,
-     #                 attachments=attachments_d)
-    message_ts = resp['ts']
-    return message_ts
+        
+        return resp['ts']
 
 
 def shoppingfunnelchangetracking(slack_token, task):
@@ -226,11 +221,13 @@ def shoppingfunnelchangetracking(slack_token, task):
                                         int(sessions_new)),
                                 "color": "FF0000"
                                 }]
-
+    if(len(attachments)>0):
+        attachments[0]['pretext'] = text
+    
     slack_client = WebClient(token=slack_token)
     
     attachments+=[{
-        "text": "",
+        "pretext": "Click *_Track_* to configure *_Shopping Funnel Changes Tracking_* notification",
         "callback_id": "notification_form",
         "color": "#3AA3E3",
         "attachment_type": "default",
@@ -247,15 +244,15 @@ def shoppingfunnelchangetracking(slack_token, task):
           "value": "track"
         }]
       }]
-        
-    resp = slack_client.chat_postMessage(
-                      channel=channel,
-                      text=text,
-                      attachments=attachments)
-    return resp['ts']
+    
+    if(len(attachments)>1):
+        resp = slack_client.chat_postMessage(
+                          channel=channel,
+                          attachments=attachments)
+        return resp['ts']
 
 def costprediction(slack_token, task):
-        # Funnel Changes Tracking
+    # Cost Prediction
     text = "*Cost Prediction*"
     attachments = []
     metrics = [
@@ -306,13 +303,15 @@ def costprediction(slack_token, task):
             attachments += [{"text": "Your monthly total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                             round(prediction,2),
                             round(target, 2)),
-                            "color": "00FF00"
+                            "color": "00FF00",
+                            "pretext": text
                             }]
         else:
             attachments += [{"text": "Your monthly total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                             round(prediction,2),
                             round(target, 2)),
-                            "color": "FF0000"
+                            "color": "FF0000",
+                            "pretext": text
                             }]
     else:
         #Prediction is less than target
@@ -320,18 +319,21 @@ def costprediction(slack_token, task):
             attachments += [{"text": "Your monthly total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                             round(prediction,2),
                             round(target, 2)),
-                            "color": "00FF00"
+                            "color": "00FF00",
+                            "pretext": text
                             }]
         else:
             attachments += [{"text": "Your monthly total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                             round(prediction,2),
                             round(target, 2)),
-                            "color": "FF0000"
+                            "color": "FF0000",
+                            "pretext": text
                             }]
+    
     slack_client = WebClient(token=slack_token)
     
     attachments+=[{
-        "text": "",
+        "pretext": "Click *_Track_* to configure *_Cost Prediction_* notification",
         "callback_id": "notification_form",
         "color": "#3AA3E3",
         "attachment_type": "default",
@@ -348,9 +350,76 @@ def costprediction(slack_token, task):
           "value": "track"
         }]
       }]
-        
-    resp = slack_client.chat_postMessage(
-                      channel=channel,
-                      text=text,
-                      attachments=attachments)
-    return resp['ts']
+    
+    if(len(attachments)>1):
+        resp = slack_client.chat_postMessage(
+                          channel=channel,
+                          attachments=attachments)
+        return resp['ts']
+
+def performancegoaltracking(slack_token, task):
+    # Funnel Changes Tracking
+    text = "*Performance Goal Tracking*"
+    attachments = []
+    metrics = [
+        {'expression': 'ga:adCost'},
+    ]
+
+    email = task['email']
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    viewId = task['viewId']
+    channel = task['channel']
+
+    target = float(task['target'])
+    
+    today = datetime.today()
+    start_date = datetime(today.year, today.month, 1) #First day of current day
+
+    start_date_1 = dtimetostrf(start_date) #Convert it to string format
+    end_date_1 = 'yesterday'
+
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics
+                }]}).execute()
+
+    query = float(results['reports'][0]['data']['totals'][0]['values'][0])
+    
+    if('ROAS' in task['metric']):
+        attachments += [{"text": "This month, Adwords ROAS is {0}, Your Target ROAS: {1}".format(
+                            round(query,2),
+                            round(target, 2)),
+                            "color": "000000",
+                            "pretext": text
+                            }]
+            
+    slack_client = WebClient(token=slack_token)
+    
+    attachments+=[{
+        "pretext": "Click *_Track_* to configure *_Performance Goal Tracking_* notification",
+        "callback_id": "notification_form",
+        "color": "#3AA3E3",
+        "attachment_type": "default",
+        "actions": [{
+          "name": "ignore",
+          "text": "Ignore",
+          "type": "button",
+          "value": "ignore"
+        },
+        {
+          "name": "track",
+          "text": "Track",
+          "type": "button",
+          "value": "track"
+        }]
+      }]
+    
+    if(len(attachments)>1):
+        resp = slack_client.chat_postMessage(
+                          channel=channel,
+                          attachments=attachments)
+        return resp['ts']

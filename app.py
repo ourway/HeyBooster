@@ -287,9 +287,8 @@ def message_actions():
     slack_client = WebClient(token=slack_token)
     if message_action["type"] == "interactive_message":
         if (message_action['actions'][0]['value'] == 'track'):
-            text = message_action['original_message']['text']
+            text = message_action['original_message']['attachments'][-1]['pretext']
             if (("performance" in text.lower()) and ("change" in text.lower())):
-                # Show the ordering dialog to the user
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
                     dialog={
@@ -336,8 +335,7 @@ def message_actions():
                         ]
                     }
                 )
-            if (("funnel" in text.lower()) and ("change" in text.lower())):
-                # Show the ordering dialog to the user
+            elif (("funnel" in text.lower()) and ("change" in text.lower())):
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
                     dialog={
@@ -384,8 +382,7 @@ def message_actions():
                         ]
                     }
                 )
-            if (("cost" in text.lower()) and ("prediction" in text.lower())):
-                # Show the ordering dialog to the user
+            elif (("cost" in text.lower()) and ("prediction" in text.lower())):
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
                     dialog={
@@ -432,6 +429,73 @@ def message_actions():
                         ]
                     }
                 )
+            elif (("performance" in text.lower()) and ("goal" in text.lower())):
+                slack_client.dialog_open(
+                    trigger_id=message_action["trigger_id"],
+                    dialog={
+                        "title": "Notification Settings",
+                        "submit_label": "Submit",
+                        "callback_id": "notification_form",
+                        "elements": [
+                            {
+                                "label": "Module Type",
+                                "type": "select",
+                                "name": "module_types",
+                                "placeholder": "Select a module type",
+                                "value": "costprediction",
+                                "options": [
+                                    {
+                                        "label": "Performance Goal Tracking",
+                                        "value": "performancegoaltracking"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Schedule Type",
+                                "type": "select",
+                                "name": "schedule_types",
+                                "placeholder": "Select a schedule type",
+                                "options": [
+                                    {
+                                        "label": "Daily",
+                                        "value": "daily"
+                                    },
+                                    {
+                                        "label": "Weekly",
+                                        "value": "weekly"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Metric Type",
+                                "type": "select",
+                                "name": "metric_types",
+                                "placeholder": "Select a metric type",
+                                "options": [
+                                    {
+                                        "label": "ROAS",
+                                        "value": "ga:ROAS"
+                                    },
+                                    {
+                                        "label": "CPC",
+                                        "value": "ga:CPC"
+                                    },
+                                    {
+                                        "label": "Revenue",
+                                        "value": "ga:transactionRevenue"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Goal",
+                                "name": "target",
+                                "type": "text",
+                                "subtype": "number",
+                                "placeholder": "Enter a number"
+                            }
+                        ]
+                    }
+                )
         #        # Update the message to show that we're in the process of taking their order
         #        resp = slack_client.api_call(
         #            "chat.update",
@@ -440,6 +504,24 @@ def message_actions():
         #            text=message_action['original_message']['text'] + ":pencil: Taking your order...",
         #            attachments=[]
         #        )
+        elif(message_action['actions'][0]['value'] == 'ignore'):
+            text = message_action['original_message']['attachments'][-1]['pretext']
+            if (("performance" in text.lower()) and ("change" in text.lower())):
+                db.find_and_modify('notification', query = {'email': email,
+                                                            'type': 'performancechangetracking'}, 
+                                                    status='0')
+            elif (("funnel" in text.lower()) and ("change" in text.lower())):
+                db.find_and_modify('notification', query = {'email': email,
+                                                            'type': 'shoppingfunnelchangetracking'}, 
+                                                    status='0')
+            elif (("cost" in text.lower()) and ("prediction" in text.lower())):
+                db.find_and_modify('notification', query = {'email': email,
+                                                            'type': 'costprediction'}, 
+                                                    status='0')
+            elif (("performance" in text.lower()) and ("goal" in text.lower())):
+                db.find_and_modify('notification', query = {'email': email,
+                                                            'type': 'performancegoaltracking'}, 
+                                                    status='0')
         elif (message_action['actions'][0]['value'] == 'change'):
             text = message_action['original_message']['text']
             if (True):
@@ -482,17 +564,23 @@ def message_actions():
                 scheduleType = submission['schedule_types']
                 threshold = float(submission['threshold'])
                 db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
-                                   scheduleType=scheduleType, threshold=threshold)
+                                   scheduleType=scheduleType, threshold=threshold, status='1')
             elif (moduleType == 'shoppingfunnelchangetracking'):
                 scheduleType = submission['schedule_types']
                 threshold = float(submission['threshold'])
                 db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
-                                   scheduleType=scheduleType, threshold=threshold)
+                                   scheduleType=scheduleType, threshold=threshold, status='1')
             elif (moduleType == 'costprediction'):
                 scheduleType = submission['schedule_types']
                 target = float(submission['target'])
                 db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
-                                   scheduleType=scheduleType, target=target)
+                                   scheduleType=scheduleType, target=target, status='1')
+            elif (moduleType == 'performancegoaltracking'):
+                scheduleType = submission['schedule_types']
+                target = float(submission['target'])
+                metric = submission['metric']
+                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
+                                   scheduleType=scheduleType, target=target, metric=metric, status='1')
         else:
             modules = db.find("notification", query={'email': email})
             lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
@@ -522,7 +610,7 @@ def insertdefaultnotifications(email):
         'frequency': 0,
         'timeofDay': '07.00',
         'channel': '#general',
-        'status': 'active',
+        'status': '1',
         'lastRunDate': '',
         'viewId': ''
     })
@@ -535,7 +623,7 @@ def insertdefaultnotifications(email):
         'frequency': 0,
         'timeofDay': '07.00',
         'channel': '#general',
-        'status': 'active',
+        'status': '1',
         'lastRunDate': '',
         'viewId': ''
     })
@@ -547,7 +635,21 @@ def insertdefaultnotifications(email):
         'frequency': 0,
         'timeofDay': '07.00',
         'channel': '#general',
-        'status': 'active',
+        'status': '1',
         'lastRunDate': '',
         'viewId': ''
     })
+    db.insert('notification', data={
+        'type': 'performancegoaltracking',
+        'email': email,
+        'metric': 'ga:ROAS',
+        'target': 100,
+        'scheduleType': 'daily',
+        'frequency': 0,
+        'timeofDay': '07.00',
+        'channel': '#general',
+        'status': '1',
+        'lastRunDate': '',
+        'viewId': ''
+    })
+
