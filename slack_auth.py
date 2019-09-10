@@ -117,7 +117,9 @@ def authorized(self):
         "channel": token['incoming_webhook']['channel'],
         "attachments": [{
             "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
-Click "Change" button for changing it."""},
+Click "Change" button for changing it.""",
+            "title": "Blog Yazıları",
+            "title_link": "https://blog.boostroas.com/tr/"},
             {
                 "text": "",
                 "callback_id": "notification_form",
