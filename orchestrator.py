@@ -26,19 +26,20 @@ def do_job(tasks_to_accomplish):
                 task['channel'] = user['channel']
                 task['viewId'] = user['viewId']
                 performancechangetracking(slack_token, task)
-            elif(task['type']=='shoppingfunnelchangetracking'):
+            elif (task['type'] == 'shoppingfunnelchangetracking'):
                 task['channel'] = user['channel']
                 task['viewId'] = user['viewId']
                 shoppingfunnelchangetracking(slack_token, task)
-            elif(task['type']=='costprediction'):
+            elif (task['type'] == 'costprediction'):
                 task['channel'] = user['channel']
                 task['viewId'] = user['viewId']
                 costprediction(slack_token, task)
-            elif(task['type']=='performancegoaltracking'):
+            elif (task['type'] == 'performancegoaltracking'):
                 task['channel'] = user['channel']
                 task['viewId'] = user['viewId']
                 performancegoaltracking(slack_token, task)
-            db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']}, lastRunDate=time.time())
+            db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']},
+                               lastRunDate=time.time())
         except queue.Empty:
             break
     return True
@@ -61,10 +62,10 @@ def main():
                             {'$and': [{"scheduleType": 'weekly'}, {"frequency": wday}]},
                             {'$and': [{"scheduleType": 'monthly'}, {"frequency": mday}]}
                         ]}]})
-    
+
     for task in tasks:
         tasks_to_accomplish.put(task)
-    
+
     # creating processes
     for w in range(number_of_processes):
         p = Process(target=do_job, args=(tasks_to_accomplish,))
@@ -87,4 +88,3 @@ if __name__ == '__main__':
             pass
         if (datetime.now().second == 0):
             main()
-
