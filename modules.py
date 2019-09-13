@@ -361,8 +361,9 @@ def performancegoaltracking(slack_token, task):
     # Funnel Changes Tracking
     text = "*Performance Goal Tracking*"
     attachments = []
+    
     metrics = [
-        {'expression': 'ga:adCost'},
+        {'expression': task['metric']},
     ]
 
     email = task['email']
@@ -390,12 +391,20 @@ def performancegoaltracking(slack_token, task):
     query = float(results['reports'][0]['data']['totals'][0]['values'][0])
     
     if('ROAS' in task['metric']):
-        attachments += [{"text": "This month, Adwords ROAS is {0}, Your Target ROAS: {1}".format(
-                            round(query,2),
-                            round(target, 2)),
-                            "color": "000000",
-                            "pretext": text
-                            }]
+        if(query<target):
+            attachments += [{"text": "This month, Adwords ROAS is {0}, Your Target ROAS: {1}".format(
+                                round(query,2),
+                                round(target, 2)),
+                                "color": "FF0000",
+                                "pretext": text
+                                }]
+        else:
+            attachments += [{"text": "This month, Adwords ROAS is {0}, Your Target ROAS: {1}".format(
+                                round(query,2),
+                                round(target, 2)),
+                                "color": "00FF00",
+                                "pretext": text
+                                }]
             
     slack_client = WebClient(token=slack_token)
     
@@ -423,3 +432,4 @@ def performancegoaltracking(slack_token, task):
                           channel=channel,
                           attachments=attachments)
         return resp['ts']
+
