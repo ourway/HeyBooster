@@ -21,8 +21,6 @@ BASE_URI = "https://app.heybooster.ai"
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
 
-
-
 AUTH_TOKEN_KEY = 'auth_token'
 AUTH_STATE_KEY = 'auth_state'
 
@@ -54,20 +52,20 @@ def build_credentials_woutSession(email):
     user = db.find_one('user', {'email': email})
 
     resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken']))
-    
-    if('error' in resp.json().keys()):
+
+    if ('error' in resp.json().keys()):
         data = [('client_id', CLIENT_ID),
                 ('client_secret', CLIENT_SECRET),
                 ('refresh_token', user['ga_refreshtoken']),
                 ('grant_type', 'refresh_token')]
         resp = requests.post(ACCESS_TOKEN_URI, data).json()
-        db.find_and_modify('user', query={'email':email}, ga_accesstoken=resp['access_token'])
+        db.find_and_modify('user', query={'email': email}, ga_accesstoken=resp['access_token'])
         oauth2_tokens['access_token'] = resp['access_token']
     else:
         oauth2_tokens['access_token'] = user['ga_accesstoken']
-    
+
     oauth2_tokens['refresh_token'] = user['ga_refreshtoken']
-    
+
     return google.oauth2.credentials.Credentials(
         oauth2_tokens['access_token'],
         refresh_token=oauth2_tokens['refresh_token'],
@@ -130,10 +128,11 @@ def google_auth_redirect():
         authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
-    db.find_and_modify(collection='user', query={'email': flask.session['email']}, ga_accesstoken=oauth2_tokens['access_token'],
-                      ga_refreshtoken=oauth2_tokens['refresh_token'])
+    db.find_and_modify(collection='user', query={'email': flask.session['email']},
+                       ga_accesstoken=oauth2_tokens['access_token'],
+                       ga_refreshtoken=oauth2_tokens['refresh_token'])
     viewId = google_analytics.get_first_profile_id()
-    db.find_and_modify(collection='user', query={'email':flask.session['email']}, viewId=viewId)
+    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
     return flask.redirect(BASE_URI, code=302)
 
 
@@ -144,4 +143,3 @@ def logout():
     flask.session.pop(AUTH_STATE_KEY, None)
 
     return flask.redirect(BASE_URI, code=302)
-

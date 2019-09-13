@@ -36,7 +36,7 @@ db.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
-app.config["SLACK_OAUTH_CLIENT_ID"]=os.environ.get('SLACK_CLIENT_ID')
+app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
@@ -82,7 +82,7 @@ def change():
     user = db.find_one('user', {'user_id': message_action['user_id']})
     slack_token = user['sl_accesstoken']
     slack_client = WebClient(token=slack_token)
-    #text = message_action['original_message']['text']
+    # text = message_action['original_message']['text']
     if (True):
         houroptions = []
         for i in range(0, 24):
@@ -115,6 +115,7 @@ def change():
             }
         )
     return make_response("Time of Day: ", 200)
+
 
 @app.route('/about')
 def about():
@@ -504,24 +505,24 @@ def message_actions():
         #            text=message_action['original_message']['text'] + ":pencil: Taking your order...",
         #            attachments=[]
         #        )
-        elif(message_action['actions'][0]['value'] == 'ignore'):
+        elif (message_action['actions'][0]['value'] == 'ignore'):
             text = message_action['original_message']['attachments'][-1]['pretext']
             if (("performance" in text.lower()) and ("change" in text.lower())):
-                db.find_and_modify('notification', query = {'email': email,
-                                                            'type': 'performancechangetracking'}, 
-                                                    status='0')
+                db.find_and_modify('notification', query={'email': email,
+                                                          'type': 'performancechangetracking'},
+                                   status='0')
             elif (("funnel" in text.lower()) and ("change" in text.lower())):
-                db.find_and_modify('notification', query = {'email': email,
-                                                            'type': 'shoppingfunnelchangetracking'}, 
-                                                    status='0')
+                db.find_and_modify('notification', query={'email': email,
+                                                          'type': 'shoppingfunnelchangetracking'},
+                                   status='0')
             elif (("cost" in text.lower()) and ("prediction" in text.lower())):
-                db.find_and_modify('notification', query = {'email': email,
-                                                            'type': 'costprediction'}, 
-                                                    status='0')
+                db.find_and_modify('notification', query={'email': email,
+                                                          'type': 'costprediction'},
+                                   status='0')
             elif (("performance" in text.lower()) and ("goal" in text.lower())):
-                db.find_and_modify('notification', query = {'email': email,
-                                                            'type': 'performancegoaltracking'}, 
-                                                    status='0')
+                db.find_and_modify('notification', query={'email': email,
+                                                          'type': 'performancegoaltracking'},
+                                   status='0')
         elif (message_action['actions'][0]['value'] == 'change'):
             text = message_action['original_message']['text']
             if (True):
@@ -652,4 +653,3 @@ def insertdefaultnotifications(email):
         'lastRunDate': '',
         'viewId': ''
     })
-
