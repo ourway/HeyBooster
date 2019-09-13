@@ -11,8 +11,8 @@
 
     <form method="POST">
         {{ form.csrf_token }}
-        {{ form.email(class_='form-control') }}
-        {{ form.password(class_='form-control') }}
+        Email:  {{ form.email(class_='form-control') }}
+        Parola: {{ form.password(class_='form-control') }}
 
         <button type="submit" class="btn btn-primary">Giriş Yap</button>
     </form>
