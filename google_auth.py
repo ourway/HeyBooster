@@ -14,7 +14,7 @@ TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
 
-CONNECT_AUTHORIZATION_SCOPE = ['https://www.googleapis.com/auth/analytics.readonly']
+CONNECT_AUTHORIZATION_SCOPE = ['email','https://www.googleapis.com/auth/analytics.readonly']
 LOGIN_AUTHORIZATION_SCOPE = ['email']
 
 LOGINAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/loginauth"
@@ -162,14 +162,15 @@ def google_connectauth_redirect():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=LOGIN_AUTHORIZATION_SCOPE,
                             state=flask.session[AUTH_STATE_KEY],
-                            redirect_uri=LOGINAUTH_REDIRECT_URI)
+                            redirect_uri=CONNECTAUTH_REDIRECT_URI)
 
     oauth2_tokens = session.fetch_access_token(
         ACCESS_TOKEN_URI,
         authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
-    db.find_and_modify(collection='user', query={'email': flask.session['email']},
+    user_info = get_user_info()
+    db.find_and_modify(collection='user', query={'email': user_info['email']},
                        ga_accesstoken=oauth2_tokens['access_token'],
                        ga_refreshtoken=oauth2_tokens['refresh_token'])
 #    viewId = google_analytics.get_first_profile_id()
@@ -183,3 +184,4 @@ def logout():
     flask.session.pop(AUTH_STATE_KEY, None)
 
     return flask.redirect(BASE_URI, code=302)
+

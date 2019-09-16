@@ -180,7 +180,8 @@ def notifications():
         # slack_message()
         return redirect('/')
     else:
-        nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
+        user_info = google_auth.get_user_info()
+        nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts(user_info['email'])['accounts']]
         # incoming_webhook = slack.token['incoming_webhook']
         return render_template('notifications.html', nForm=nForm, tForm=tForm)
 
@@ -652,3 +653,4 @@ def insertdefaultnotifications(email):
         'lastRunDate': '',
         'viewId': ''
     })
+

@@ -27,8 +27,8 @@ def build_reporting_api_v4_woutSession(email):
 
 
 @app.route("/analytics/accounts")
-def get_accounts():
-    service = build_management_api_v3()
+def get_accounts(email):
+    service = build_management_api_v3_woutSession(email)
     # Use the Analytics service object to get the first profile id.
     # Get a list of all Google Analytics accounts for this user
     accs = service.management().accounts().list().execute()
@@ -37,7 +37,6 @@ def get_accounts():
         for acc in accs.get('items'):
             accounts.append({'id': acc.get('id'), 'name': acc.get('name')})
     return {'accounts': accounts}
-
 
 @app.route("/analytics/properties/<accountId>")
 def get_properties(accountId):
@@ -106,3 +105,4 @@ def get_first_profile_id():
                 # return the first view (profile) id.
                 return profiles.get('items')[0].get('id')
     return None
+
