@@ -3,12 +3,12 @@ import os
 
 
 class db(object):
-    #user = os.environ.get('DB_USER')
-    #pw = os.environ.get('DB_PASSWORD')
-    #URI = "mongodb://%s:%s@myflask-shard-00-00-raeh0.mongodb.net:27017,myflask-shard-00-01-raeh0.mongodb.net:27017,myflask-shard-00-02-raeh0.mongodb.net:27017/test?ssl=true&replicaSet=myFlask-shard-0&authSource=admin&retryWrites=true&w=majority" % (
-    #    user, pw)
+    user = os.environ.get('DB_USER')
+    pw = os.environ.get('DB_PASSWORD')
+    URI = "mongodb://%s:%s@myflask-shard-00-00-raeh0.mongodb.net:27017,myflask-shard-00-01-raeh0.mongodb.net:27017,myflask-shard-00-02-raeh0.mongodb.net:27017/test?ssl=true&replicaSet=myFlask-shard-0&authSource=admin&retryWrites=true&w=majority" % (
+        user, pw)
 
-    URI = "mongodb://ilteriskeskin:Msaia21322312.@myflask-shard-00-00-raeh0.mongodb.net:27017,myflask-shard-00-01-raeh0.mongodb.net:27017,myflask-shard-00-02-raeh0.mongodb.net:27017/test?ssl=true&replicaSet=myFlask-shard-0&authSource=admin&retryWrites=true&w=majority"
+    URI = "mongodb://ilteriskeskin:<password>@myflask-shard-00-00-raeh0.mongodb.net:27017,myflask-shard-00-01-raeh0.mongodb.net:27017,myflask-shard-00-02-raeh0.mongodb.net:27017/test?ssl=true&replicaSet=myFlask-shard-0&authSource=admin&retryWrites=true&w=majority"
 
     @staticmethod
     def init():
