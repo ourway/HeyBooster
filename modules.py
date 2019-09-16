@@ -109,8 +109,30 @@ def performancechangetracking(slack_token, task):
             start_date_2,
             int(sessions_new)),
             "color": "FF0000",
-            "pretext": text_d}]
+            "pretext": text_d,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+            "actions": [{
+                "name": "ignore",
+                "text": "Ignore",
+                "type": "button",
+                "value": "ignore"
+            },
+                {
+                    "name": "track",
+                    "text": "Track",
+                    "type": "button",
+                    "value": "track"
+                }]
+        }]
 
+        slack_client = WebClient(token=slack_token)
+        resp = slack_client.chat_postMessage(
+            channel=channel,
+            attachments=attachments_m + attachments_d)
+
+        return resp['ts']
+"""
     attachments_d += [{
         "pretext": "Click *_Track_* to configure *_Performance Changes Tracking_* notification",
         "callback_id": "notification_form",
@@ -129,16 +151,14 @@ def performancechangetracking(slack_token, task):
                 "value": "track"
             }]
     }]
-
-    slack_client = WebClient(token=slack_token)
-
+    
     if (len(attachments_m + attachments_d) > 1):
         resp = slack_client.chat_postMessage(
             channel=channel,
             attachments=attachments_m + attachments_d)
 
         return resp['ts']
-
+"""
 
 def shoppingfunnelchangetracking(slack_token, task):
     # Funnel Changes Tracking
