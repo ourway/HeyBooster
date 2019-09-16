@@ -207,7 +207,21 @@ def shoppingfunnelchangetracking(slack_token, task):
                     round(threshold * 100, 2),
                     start_date_2,
                     int(sessions_new)),
-                    "color": "FF0000"
+                    "color": "FF0000",
+                    "callback_id": "notification_form",
+                    "attachment_type": "default",
+                    "actions": [{
+                        "name": "ignore",
+                        "text": "Ignore",
+                        "type": "button",
+                        "value": "ignore"
+                    },
+                        {
+                            "name": "track",
+                            "text": "Track",
+                            "type": "button",
+                            "value": "track"
+                        }]
                 }]
             elif (metric['expression'] == 'ga:productDetailViews'):
                 attachments += [{
@@ -216,7 +230,21 @@ def shoppingfunnelchangetracking(slack_token, task):
                         round(threshold * 100, 2),
                         start_date_2,
                         int(sessions_new)),
-                    "color": "FF0000"
+                    "callback_id": "notification_form",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    "actions": [{
+                        "name": "ignore",
+                        "text": "Ignore",
+                        "type": "button",
+                        "value": "ignore"
+                    },
+                        {
+                            "name": "track",
+                            "text": "Track",
+                            "type": "button",
+                            "value": "track"
+                        }]
                 }]
             elif (metric['expression'] == 'ga:productAddsToCart'):
                 attachments += [{"text": "{0} Add to Cart is less {1}% than {2}. {0} Add to Cart: {3}\n".format(
@@ -224,7 +252,21 @@ def shoppingfunnelchangetracking(slack_token, task):
                     round(threshold * 100, 2),
                     start_date_2,
                     int(sessions_new)),
-                    "color": "FF0000"
+                    "callback_id": "notification_form",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    "actions": [{
+                        "name": "ignore",
+                        "text": "Ignore",
+                        "type": "button",
+                        "value": "ignore"
+                    },
+                        {
+                            "name": "track",
+                            "text": "Track",
+                            "type": "button",
+                            "value": "track"
+                        }]
                 }]
             elif (metric['expression'] == 'ga:productCheckouts'):
                 attachments += [{"text": "{0} Checkout is less {1}% than {2}. {0} Checkout: {3}\n".format(
@@ -232,7 +274,21 @@ def shoppingfunnelchangetracking(slack_token, task):
                     round(threshold * 100, 2),
                     start_date_2,
                     int(sessions_new)),
-                    "color": "FF0000"
+                    "callback_id": "notification_form",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    "actions": [{
+                        "name": "ignore",
+                        "text": "Ignore",
+                        "type": "button",
+                        "value": "ignore"
+                    },
+                        {
+                            "name": "track",
+                            "text": "Track",
+                            "type": "button",
+                            "value": "track"
+                        }]
                 }]
             elif (metric['expression'] == 'ga:transactions'):
                 attachments += [
@@ -241,13 +297,32 @@ def shoppingfunnelchangetracking(slack_token, task):
                         round(threshold * 100, 2),
                         start_date_2,
                         int(sessions_new)),
-                        "color": "FF0000"
+                        "callback_id": "notification_form",
+                        "color": "#3AA3E3",
+                        "attachment_type": "default",
+                        "actions": [{
+                            "name": "ignore",
+                            "text": "Ignore",
+                            "type": "button",
+                            "value": "ignore"
+                        },
+                            {
+                                "name": "track",
+                                "text": "Track",
+                                "type": "button",
+                                "value": "track"
+                            }]
                     }]
     if (len(attachments) > 0):
         attachments[0]['pretext'] = text
 
     slack_client = WebClient(token=slack_token)
+    resp = slack_client.chat_postMessage(
+        channel=channel,
+        attachments=attachments)
+    return resp['ts']
 
+"""
     attachments += [{
         "pretext": "Click *_Track_* to configure *_Shopping Funnel Changes Tracking_* notification",
         "callback_id": "notification_form",
@@ -273,7 +348,7 @@ def shoppingfunnelchangetracking(slack_token, task):
             attachments=attachments)
         return resp['ts']
 
-
+"""
 def costprediction(slack_token, task):
     # Cost Prediction
     text = "*Cost Prediction*"
@@ -328,7 +403,21 @@ def costprediction(slack_token, task):
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "00FF00",
-                "pretext": text
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+                "actions": [{
+                    "name": "ignore",
+                    "text": "Ignore",
+                    "type": "button",
+                    "value": "ignore"
+                },
+                    {
+                        "name": "track",
+                        "text": "Track",
+                        "type": "button",
+                        "value": "track"
+                    }]
             }]
         else:
             attachments += [{
@@ -336,7 +425,21 @@ def costprediction(slack_token, task):
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "FF0000",
-                "pretext": text
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+                "actions": [{
+                    "name": "ignore",
+                    "text": "Ignore",
+                    "type": "button",
+                    "value": "ignore"
+                },
+                    {
+                        "name": "track",
+                        "text": "Track",
+                        "type": "button",
+                        "value": "track"
+                    }]
             }]
     else:
         # Prediction is less than target
@@ -346,7 +449,21 @@ def costprediction(slack_token, task):
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "00FF00",
-                "pretext": text
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+                "actions": [{
+                    "name": "ignore",
+                    "text": "Ignore",
+                    "type": "button",
+                    "value": "ignore"
+                },
+                    {
+                        "name": "track",
+                        "text": "Track",
+                        "type": "button",
+                        "value": "track"
+                    }]
             }]
         else:
             attachments += [{
@@ -354,11 +471,30 @@ def costprediction(slack_token, task):
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "FF0000",
-                "pretext": text
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+                "actions": [{
+                    "name": "ignore",
+                    "text": "Ignore",
+                    "type": "button",
+                    "value": "ignore"
+                },
+                    {
+                        "name": "track",
+                        "text": "Track",
+                        "type": "button",
+                        "value": "track"
+                    }]
             }]
 
     slack_client = WebClient(token=slack_token)
+    resp = slack_client.chat_postMessage(
+        channel=channel,
+        attachments=attachments)
+    return resp['ts']
 
+"""
     attachments += [{
         "pretext": "Click *_Track_* to configure *_Cost Prediction_* notification",
         "callback_id": "notification_form",
@@ -383,7 +519,7 @@ def costprediction(slack_token, task):
             channel=channel,
             attachments=attachments)
         return resp['ts']
-
+"""
 
 def performancegoaltracking(slack_token, task):
     # Funnel Changes Tracking
