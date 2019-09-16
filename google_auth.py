@@ -114,7 +114,7 @@ def login():
 
 @app.route('/google/loginauth')
 @no_cache
-def google_auth_redirect():
+def google_loginauth_redirect():
     req_state = flask.request.args.get('state', default=None, type=None)
     if req_state != flask.session[AUTH_STATE_KEY]:
         response = flask.make_response('Invalid state parameter', 401)
@@ -139,7 +139,7 @@ def google_auth_redirect():
 
 @app.route('/google/connect')
 @no_cache
-def login():
+def connect():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=CONNECT_AUTHORIZATION_SCOPE,
                             redirect_uri=CONNECTAUTH_REDIRECT_URI)
@@ -153,7 +153,7 @@ def login():
 
 @app.route('/google/connectauth')
 @no_cache
-def google_auth_redirect():
+def google_connectauth_redirect():
     req_state = flask.request.args.get('state', default=None, type=None)
     if req_state != flask.session[AUTH_STATE_KEY]:
         response = flask.make_response('Invalid state parameter', 401)
