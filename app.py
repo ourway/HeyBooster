@@ -443,7 +443,7 @@ def message_actions():
                                 "type": "select",
                                 "name": "module_types",
                                 "placeholder": "Select a module type",
-                                "value": "costprediction",
+                                "value": "performancegoaltracking",
                                 "options": [
                                     {
                                         "label": "Performance Goal Tracking",
@@ -579,8 +579,9 @@ def message_actions():
             elif (moduleType == 'performancegoaltracking'):
                 scheduleType = submission['schedule_types']
                 target = float(submission['target'])
+                metric = submission['metric']
                 db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
-                                   scheduleType=scheduleType, target=target, status='1')
+                                   scheduleType=scheduleType, target=target, metric=metric, status='1')
         else:
             modules = db.find("notification", query={'email': email})
             lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
