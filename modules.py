@@ -113,16 +113,16 @@ def performancechangetracking(slack_token, task):
             "callback_id": "notification_form",
             "attachment_type": "default",
             "actions": [{
-                "name": "ignore",
-                "text": "Ignore",
+                "name": "track",
+                "text": "Track",
                 "type": "button",
-                "value": "ignore"
+                "value": "track"
             },
                 {
-                    "name": "track",
-                    "text": "Track",
+                    "name": "ignore",
+                    "text": "Ignore",
                     "type": "button",
-                    "value": "track"
+                    "value": "ignore"
                 }]
         }]
 
@@ -207,20 +207,21 @@ def shoppingfunnelchangetracking(slack_token, task):
                     round(threshold * 100, 2),
                     start_date_2,
                     int(sessions_new)),
+                    # change notification setting
                     "color": "FF0000",
                     "callback_id": "notification_form",
                     "attachment_type": "default",
                     "actions": [{
-                        "name": "ignore",
-                        "text": "Ignore",
+                        "name": "track",
+                        "text": "Change Notification Settings",
                         "type": "button",
-                        "value": "ignore"
+                        "value": "track"
                     },
                         {
-                            "name": "track",
-                            "text": "Track",
+                            "name": "ignore",
+                            "text": "Ignore",
                             "type": "button",
-                            "value": "track"
+                            "value": "ignore"
                         }]
                 }]
             elif (metric['expression'] == 'ga:productDetailViews'):
@@ -234,16 +235,16 @@ def shoppingfunnelchangetracking(slack_token, task):
                     "color": "#3AA3E3",
                     "attachment_type": "default",
                     "actions": [{
-                        "name": "ignore",
-                        "text": "Ignore",
+                        "name": "track",
+                        "text": "Change Notification Settings",
                         "type": "button",
-                        "value": "ignore"
+                        "value": "track"
                     },
                         {
-                            "name": "track",
-                            "text": "Track",
+                            "name": "ignore",
+                            "text": "Ignore",
                             "type": "button",
-                            "value": "track"
+                            "value": "ignore"
                         }]
                 }]
             elif (metric['expression'] == 'ga:productAddsToCart'):
@@ -256,16 +257,16 @@ def shoppingfunnelchangetracking(slack_token, task):
                     "color": "#3AA3E3",
                     "attachment_type": "default",
                     "actions": [{
-                        "name": "ignore",
-                        "text": "Ignore",
+                        "name": "track",
+                        "text": "Change Notification Settings",
                         "type": "button",
-                        "value": "ignore"
+                        "value": "track"
                     },
                         {
-                            "name": "track",
-                            "text": "Track",
+                            "name": "ignore",
+                            "text": "Ignore",
                             "type": "button",
-                            "value": "track"
+                            "value": "ignore"
                         }]
                 }]
             elif (metric['expression'] == 'ga:productCheckouts'):
@@ -278,16 +279,16 @@ def shoppingfunnelchangetracking(slack_token, task):
                     "color": "#3AA3E3",
                     "attachment_type": "default",
                     "actions": [{
-                        "name": "ignore",
-                        "text": "Ignore",
+                        "name": "track",
+                        "text": "Change Notification Settings",
                         "type": "button",
-                        "value": "ignore"
+                        "value": "track"
                     },
                         {
-                            "name": "track",
-                            "text": "Track",
+                            "name": "ignore",
+                            "text": "Ignore",
                             "type": "button",
-                            "value": "track"
+                            "value": "ignore"
                         }]
                 }]
             elif (metric['expression'] == 'ga:transactions'):
@@ -301,16 +302,16 @@ def shoppingfunnelchangetracking(slack_token, task):
                         "color": "#3AA3E3",
                         "attachment_type": "default",
                         "actions": [{
-                            "name": "ignore",
-                            "text": "Ignore",
+                            "name": "track",
+                            "text": "Change Notification Settings",
                             "type": "button",
-                            "value": "ignore"
+                            "value": "track"
                         },
                             {
-                                "name": "track",
-                                "text": "Track",
+                                "name": "ignore",
+                                "text": "Ignore",
                                 "type": "button",
-                                "value": "track"
+                                "value": "ignore"
                             }]
                     }]
     if (len(attachments) > 0):
@@ -407,16 +408,16 @@ def costprediction(slack_token, task):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
                 "actions": [{
-                    "name": "ignore",
-                    "text": "Ignore",
+                    "name": "track",
+                    "text": "Change Notification Settings",
                     "type": "button",
-                    "value": "ignore"
+                    "value": "track"
                 },
                     {
-                        "name": "track",
-                        "text": "Track",
+                        "name": "ignore",
+                        "text": "Ignore",
                         "type": "button",
-                        "value": "track"
+                        "value": "ignore"
                     }]
             }]
         else:
@@ -429,16 +430,16 @@ def costprediction(slack_token, task):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
                 "actions": [{
-                    "name": "ignore",
-                    "text": "Ignore",
+                    "name": "track",
+                    "text": "Change Notification Settings",
                     "type": "button",
-                    "value": "ignore"
+                    "value": "track"
                 },
                     {
-                        "name": "track",
-                        "text": "Track",
+                        "name": "ignore",
+                        "text": "Ignore",
                         "type": "button",
-                        "value": "track"
+                        "value": "ignore"
                     }]
             }]
     else:
@@ -453,16 +454,16 @@ def costprediction(slack_token, task):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
                 "actions": [{
-                    "name": "ignore",
-                    "text": "Ignore",
+                    "name": "track",
+                    "text": "Change Notification Settings",
                     "type": "button",
-                    "value": "ignore"
+                    "value": "track"
                 },
                     {
-                        "name": "track",
-                        "text": "Track",
+                        "name": "ignore",
+                        "text": "Ignore",
                         "type": "button",
-                        "value": "track"
+                        "value": "ignore"
                     }]
             }]
         else:
@@ -475,16 +476,16 @@ def costprediction(slack_token, task):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
                 "actions": [{
-                    "name": "ignore",
-                    "text": "Ignore",
+                    "name": "track",
+                    "text": "Change Notification Settings",
                     "type": "button",
-                    "value": "ignore"
+                    "value": "track"
                 },
                     {
-                        "name": "track",
-                        "text": "Track",
+                        "name": "ignore",
+                        "text": "Ignore",
                         "type": "button",
-                        "value": "track"
+                        "value": "ignore"
                     }]
             }]
 
@@ -501,16 +502,16 @@ def costprediction(slack_token, task):
         "color": "#3AA3E3",
         "attachment_type": "default",
         "actions": [{
-            "name": "ignore",
-            "text": "Ignore",
+            "name": "track",
+            "text": "Track",
             "type": "button",
-            "value": "ignore"
+            "value": "track"
         },
             {
-                "name": "track",
-                "text": "Track",
+                "name": "ignore",
+                "text": "Ignore",
                 "type": "button",
-                "value": "track"
+                "value": "ignore"
             }]
     }]
 
@@ -564,16 +565,16 @@ def performancegoaltracking(slack_token, task):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
                 "actions": [{
-                    "name": "ignore",
-                    "text": "Ignore",
+                    "name": "track",
+                    "text": "Change Target Goal",
                     "type": "button",
-                    "value": "ignore"
+                    "value": "track"
                 },
                     {
-                        "name": "track",
-                        "text": "Track",
+                        "name": "ignore",
+                        "text": "Ignore",
                         "type": "button",
-                        "value": "track"
+                        "value": "ignore"
                     }]
             }]
 
@@ -599,16 +600,16 @@ def performancegoaltracking(slack_token, task):
         "color": "#3AA3E3",
         "attachment_type": "default",
         "actions": [{
-            "name": "ignore",
-            "text": "Ignore",
+            "name": "track",
+            "text": "Track",
             "type": "button",
-            "value": "ignore"
+            "value": "track"
         },
             {
-                "name": "track",
-                "text": "Track",
+                "name": "ignore",
+                "text": "Ignore",
                 "type": "button",
-                "value": "track"
+                "value": "ignore"
             }]
     }]
     
