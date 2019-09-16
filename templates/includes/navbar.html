@@ -12,7 +12,7 @@
             <li class="nav-item active">
                 <a class="nav-link" href="/about">Hakkında</a>
             </li>
-            {% if session['logged_in'] %}
+            {% if session['logged_in'] or session['auth_token']%}
 				<li class="nav-item active">
                     <a class="nav-link" href="/notifications">Bildirimler</a>
                 </li>

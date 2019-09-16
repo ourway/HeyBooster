@@ -14,9 +14,11 @@ TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
 
-AUTHORIZATION_SCOPE = ['https://www.googleapis.com/auth/analytics.readonly']
+CONNECT_AUTHORIZATION_SCOPE = ['https://www.googleapis.com/auth/analytics.readonly']
+LOGIN_AUTHORIZATION_SCOPE = ['email']
 
-AUTH_REDIRECT_URI = "https://app.heybooster.ai/google/auth"
+LOGINAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/loginauth"
+CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/connectauth"
 BASE_URI = "https://app.heybooster.ai"
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
@@ -100,8 +102,8 @@ def no_cache(view):
 @no_cache
 def login():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
-                            scope=AUTHORIZATION_SCOPE,
-                            redirect_uri=AUTH_REDIRECT_URI)
+                            scope=LOGIN_AUTHORIZATION_SCOPE,
+                            redirect_uri=LOGINAUTH_REDIRECT_URI)
 
     uri, state = session.authorization_url(AUTHORIZATION_URL)
     flask.session[AUTH_STATE_KEY] = state
@@ -110,7 +112,7 @@ def login():
     return flask.redirect(uri, code=302)
 
 
-@app.route('/google/auth')
+@app.route('/google/loginauth')
 @no_cache
 def google_auth_redirect():
     req_state = flask.request.args.get('state', default=None, type=None)
@@ -119,9 +121,48 @@ def google_auth_redirect():
         return response
 
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
-                            scope=AUTHORIZATION_SCOPE,
+                            scope=LOGIN_AUTHORIZATION_SCOPE,
                             state=flask.session[AUTH_STATE_KEY],
-                            redirect_uri=AUTH_REDIRECT_URI)
+                            redirect_uri=LOGINAUTH_REDIRECT_URI)
+
+    oauth2_tokens = session.fetch_access_token(
+        ACCESS_TOKEN_URI,
+        authorization_response=flask.request.url)
+
+    flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
+#    db.find_and_modify(collection='user', query={'email': flask.session['email']},
+#                       ga_accesstoken=oauth2_tokens['access_token'],
+#                       ga_refreshtoken=oauth2_tokens['refresh_token'])
+#    viewId = google_analytics.get_first_profile_id()
+#    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
+    return flask.redirect(BASE_URI, code=302)
+
+@app.route('/google/connect')
+@no_cache
+def login():
+    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
+                            scope=CONNECT_AUTHORIZATION_SCOPE,
+                            redirect_uri=CONNECTAUTH_REDIRECT_URI)
+
+    uri, state = session.authorization_url(AUTHORIZATION_URL)
+    flask.session[AUTH_STATE_KEY] = state
+    flask.session.permanent = True
+
+    return flask.redirect(uri, code=302)
+
+
+@app.route('/google/connectauth')
+@no_cache
+def google_auth_redirect():
+    req_state = flask.request.args.get('state', default=None, type=None)
+    if req_state != flask.session[AUTH_STATE_KEY]:
+        response = flask.make_response('Invalid state parameter', 401)
+        return response
+
+    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
+                            scope=LOGIN_AUTHORIZATION_SCOPE,
+                            state=flask.session[AUTH_STATE_KEY],
+                            redirect_uri=LOGINAUTH_REDIRECT_URI)
 
     oauth2_tokens = session.fetch_access_token(
         ACCESS_TOKEN_URI,
@@ -131,10 +172,9 @@ def google_auth_redirect():
     db.find_and_modify(collection='user', query={'email': flask.session['email']},
                        ga_accesstoken=oauth2_tokens['access_token'],
                        ga_refreshtoken=oauth2_tokens['refresh_token'])
-    viewId = google_analytics.get_first_profile_id()
-    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
+#    viewId = google_analytics.get_first_profile_id()
+#    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
     return flask.redirect(BASE_URI, code=302)
-
 
 @app.route('/google/logout')
 @no_cache
