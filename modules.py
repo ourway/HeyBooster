@@ -112,7 +112,7 @@ def performancechangetracking(slack_token, task):
             "pretext": text_d}]
 
     attachments_d += [{
-        "text": "Click *_Track_* to configure *_Performance Changes Tracking_* notification",
+        "pretext": "Click *_Track_* to configure *_Performance Changes Tracking_* notification",
         "callback_id": "notification_form",
         "color": "#3AA3E3",
         "attachment_type": "default",
@@ -420,6 +420,7 @@ def performancegoaltracking(slack_token, task):
                         "value": "track"
                     }]
             }]
+
         else:
             attachments += [{"text": "This month, Adwords ROAS is {0}, Your Target ROAS: {1}".format(
                 round(query, 2),
@@ -429,6 +430,11 @@ def performancegoaltracking(slack_token, task):
             }]
 
     slack_client = WebClient(token=slack_token)
+
+    resp = slack_client.chat_postMessage(
+            channel=channel,
+            attachments=attachments)
+    return resp['ts']
 
 """
     attachments += [{
