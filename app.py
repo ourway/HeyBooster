@@ -148,11 +148,16 @@ def login():
 def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(name=form.name.data, email=form.email.data, password=hashed_password)
-        new_user.insert()
-#        insertdefaultnotifications(email=form.email.data)
-        return redirect(url_for('login'))
+        user = db.find_one('user', {'email': form.email.data})
+        if(user):
+            flash('Bu kullanıcı zaten Google hesabı ile kayıtlı! Lütfen "Sign in with Google" butonuna basınız', "danger")
+            return redirect(url_for('register'))
+        else:            
+            hashed_password = generate_password_hash(form.password.data, method='sha256')
+            new_user = User(name=form.name.data, email=form.email.data, password=hashed_password)
+            new_user.insert()
+    #        insertdefaultnotifications(email=form.email.data)
+            return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
 
