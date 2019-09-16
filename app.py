@@ -36,8 +36,12 @@ db.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
-app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
+# app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
+# app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
+
+app.config["SLACK_OAUTH_CLIENT_ID"] = "711101969589.736773188944"
+app.config["SLACK_OAUTH_CLIENT_SECRET"] = "0f5d15668f4e1408dcd2096488e6f416"
+OAUTHLIB_RELAX_TOKEN_SCOPE = True
 
 slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read,users:read"])
@@ -181,8 +185,7 @@ def notifications():
         return redirect('/')
     else:
         nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts()['accounts']]
-        incoming_webhook = slack.token['incoming_webhook']
-        print(incoming_webhook['channel'])
+        # incoming_webhook = slack.token['incoming_webhook']
         return render_template('notifications.html', nForm=nForm, tForm=tForm)
 
 
