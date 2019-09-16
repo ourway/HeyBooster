@@ -127,17 +127,19 @@ def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
         user = db.find_one('user', {'email': form.email.data})
+        
         if user:
-            if check_password_hash(user['password'], form.password.data):
-                flash("Başarıyla Giriş Yaptınız", "success")
-
-                session['logged_in'] = True
-                session['email'] = user['email']
-
-                return redirect(url_for('home'))
-            else:
-                flash("Kullanıcı Adı veya Parola Yanlış", "danger")
-                return redirect(url_for('login'))
+            if user['password']!= "":
+                if check_password_hash(user['password'], form.password.data):
+                    flash("Başarıyla Giriş Yaptınız", "success")
+    
+                    session['logged_in'] = True
+                    session['email'] = user['email']
+    
+                    return redirect(url_for('home'))
+                else:
+                    flash("Kullanıcı Adı veya Parola Yanlış", "danger")
+                    return redirect(url_for('login'))
 
     return render_template('auths/login.html', form=form)
 
@@ -147,9 +149,9 @@ def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(email=form.email.data, password=hashed_password)
+        new_user = User(name=form.name.data, email=form.email.data, password=hashed_password)
         new_user.insert()
-        insertdefaultnotifications(email=form.email.data)
+#        insertdefaultnotifications(email=form.email.data)
         return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)

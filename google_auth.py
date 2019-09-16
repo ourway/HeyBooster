@@ -2,7 +2,7 @@ import functools
 
 import flask
 import os
-
+from models.user import User
 from authlib.client import OAuth2Session
 import google.oauth2.credentials
 import googleapiclient.discovery
@@ -130,6 +130,9 @@ def google_loginauth_redirect():
         authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
+    user_info = get_user_info()
+    new_user = User(name=user_info['given_name'] + ' ' + user_info['family_name'], email=user_info['email'], password="")
+    new_user.insert()
 #    db.find_and_modify(collection='user', query={'email': flask.session['email']},
 #                       ga_accesstoken=oauth2_tokens['access_token'],
 #                       ga_refreshtoken=oauth2_tokens['refresh_token'])
