@@ -34,6 +34,10 @@ class LoginForm(Form):
 # Kullanıcı kayıt formu
 
 class RegisterForm(Form):
+    name = StringField("Ad", validators=[validators.Length(min=3, max=25),
+                                         validators.DataRequired(message="Lütfen Bu Alanı Doldurun")])
+    username = StringField("Kullanıcı Adı", validators=[validators.Length(min=3, max=25),
+                                                        validators.DataRequired(message="Lütfen Bu Alanı Doldurun")])
     email = StringField("Email", validators=[validators.Email(message="Lütfen Geçerli Bir Email Adresi Girin")])
     password = PasswordField("Parola", validators=[
         validators.DataRequired(message="Lütfen Bu Alanı Doldurun"),

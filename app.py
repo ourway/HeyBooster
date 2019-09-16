@@ -25,7 +25,7 @@ def login_required(f):
         if 'logged_in' in session or 'auth_token' in session:
             return f(*args, **kwargs)
         else:
-            flash('Bu sayfayı görüntülemek için lütfen giriş yapın.', 'danger')
+            flash('Bu sayfayı görüntülemek için lütfen giriş yapın.', category='danger')
             return redirect(url_for('login'))
 
     return decorated_function
@@ -131,14 +131,14 @@ def login():
         if user:
             if user['password']!= "":
                 if check_password_hash(user['password'], form.password.data):
-                    flash("Başarıyla Giriş Yaptınız", "success")
+                    flash("Başarıyla Giriş Yaptınız", category="success")
     
                     session['logged_in'] = True
                     session['email'] = user['email']
     
                     return redirect(url_for('home'))
                 else:
-                    flash("Kullanıcı Adı veya Parola Yanlış", "danger")
+                    flash("Kullanıcı Adı veya Parola Yanlış", category="danger")
                     return redirect(url_for('login'))
 
     return render_template('auths/login.html', form=form)
@@ -150,8 +150,8 @@ def register():
     if request.method == 'POST' and form.validate():
         user = db.find_one('user', {'email': form.email.data})
         if(user):
-            flash('Bu kullanıcı zaten Google hesabı ile kayıtlı! Lütfen "Sign in with Google" butonuna basınız', "danger")
-            return redirect(url_for('register'))
+            flash('Bu kullanıcı zaten Google hesabı ile kayıtlı! Lütfen "Sign in with Google" butonuna basınız', category="danger")
+            return redirect(url_for('login'))
         else:            
             hashed_password = generate_password_hash(form.password.data, method='sha256')
             new_user = User(name=form.name.data, email=form.email.data, password=hashed_password)
