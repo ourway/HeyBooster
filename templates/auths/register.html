@@ -11,8 +11,6 @@
 
     <form method="POST">
         {{ form.csrf_token }}
-        İsim-Soyisim: {{ form.name(class_='form-control') }}
-        Kullanıcı adı: {{ form.username(class_='form-control') }}
         Email: {{ form.email(class_='form-control') }}
         Parola: {{ form.password(class_='form-control') }}
         Parola Onay: {{ form.confirm(class_='form-control') }}

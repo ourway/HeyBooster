@@ -147,8 +147,7 @@ def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(name=form.name.data, username=form.username.data, email=form.email.data,
-                        password=hashed_password)
+        new_user = User(email=form.email.data, password=hashed_password)
         new_user.insert()
         insertdefaultnotifications(email=form.email.data)
         return redirect(url_for('login'))
