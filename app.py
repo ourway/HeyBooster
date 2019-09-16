@@ -22,7 +22,7 @@ OAuth2ConsumerBlueprint.authorized = authorized
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'logged_in' in session:
+        if 'logged_in' in session or 'auth_token' in session:
             return f(*args, **kwargs)
         else:
             flash('Bu sayfayı görüntülemek için lütfen giriş yapın.', 'danger')
