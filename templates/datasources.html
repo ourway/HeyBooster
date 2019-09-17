@@ -23,13 +23,14 @@
         let account_select = document.getElementById("account");
         let property_select = document.getElementById("property");
         let view_select = document.getElementById("view");
+		let bellchar = '';
         account_select.onchange = function () {
-            account = account_select.value.split('&#x0007;')[0];
+            account = account_select.value.split(bellchar)[0];
             fetch('/analytics/properties/' + account).then(function (response) {
                 response.json().then(function (data) {
                     var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
                     for (var property of data.properties) {
-                        optionHTML += '<option value="' + property.id + '&#x0007;' +  property.name + '">' + property.name + '</option>';
+                        optionHTML += '<option value="' + property.id + bellchar +  property.name + '">' + property.name + '</option>';
                     }
                     property_select.innerHTML = optionHTML;
                 })
@@ -37,12 +38,12 @@
             });
         }
         property_select.onchange = function () {
-            property = property_select.value.split('&#x0007;')[0];
-            fetch('/analytics/views/' + account_select.value.split('&#x0007;')[0] + '/' + property).then(function (response) {
+            property = property_select.value.split(bellchar)[0];
+            fetch('/analytics/views/' + account_select.value.split(bellchar)[0] + '/' + property).then(function (response) {
                 response.json().then(function (data) {
                     var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
                     for (var view of data.views) {
-                        optionHTML += '<option value="' + view.id + '&#x0007;' + view.name + '">' + view.name + '</option>';
+                        optionHTML += '<option value="' + view.id + bellchar + view.name + '">' + view.name + '</option>';
                     }
                     view_select.innerHTML = optionHTML;
                 })
