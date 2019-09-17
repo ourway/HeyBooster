@@ -174,22 +174,22 @@ def datasources():
         data= {
         'email' : session['email'],
         'sourceType' : "Google Analytics",
-        'accountID' : nForm.account.data.split(' ')[0],
-        'accountName' : nForm.account.data.split(' ')[1],
-        'propertyID' : nForm.property.data.split(' ')[0],
-        'propertyName' : nForm.property.data.split(' ')[1],
-        'viewID' : nForm.view.data.split(' ')[0],
-        'viewName' : nForm.view.data.split(' ')[1],
+        'accountID' : nForm.account.data.split('\u0007')[0],
+        'accountName' : nForm.account.data.split('\u0007')[1],
+        'propertyID' : nForm.property.data.split('\u0007')[0],
+        'propertyName' : nForm.property.data.split('\u0007')[1],
+        'viewID' : nForm.view.data.split('\u0007')[0],
+        'viewName' : nForm.view.data.split('\u0007')[1],
         'channelType' : "Slack",
-        'channelID' : nForm.channel.data.split(' ')[0],
-        'channelName' : nForm.channel.data.split(' ')[1]}
+        'channelID' : nForm.channel.data.split('\u0007')[0],
+        'channelName' : nForm.channel.data.split('\u0007')[1]}
         resp = db.insert("datasource", data=data)
         return str(resp)
     else:
 #        user_info = google_auth.get_user_info()
-        nForm.account.choices += [(acc['id'] + ' ' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
+        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
-        nForm.channel.choices += [(channel['id']+ ' ' + '#' + channel['name'], '#' + channel['name']) for channel in channels]
+        nForm.channel.choices += [(channel['id']+ '\u0007' + '#' + channel['name'], '#' + channel['name']) for channel in channels]
         # incoming_webhook = slack.token['incoming_webhook']
         return render_template('datasources.html', nForm=nForm)
 
