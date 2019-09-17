@@ -233,7 +233,9 @@ def message_actions():
     # Parse the request payload
     message_action = json.loads(request.form["payload"])
     # Open a slack client
-    user = db.find_one('user', {'sl_userid': message_action['user']['id']})
+    sl_userid = message_action['user']['id']
+    channel = message_action['channel']['id']    
+    user = db.find_one('user', {'sl_userid': sl_userid})
     slack_token = user['sl_accesstoken']
     email = user['email']
     slack_client = WebClient(token=slack_token)
@@ -458,20 +460,21 @@ def message_actions():
         #        )
         elif (message_action['actions'][0]['value'] == 'ignore'):
             text = message_action['original_message']['attachments'][-1]['pretext']
+            datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 'channelID': channel})['_id']
             if (("performance" in text.lower()) and ("change" in text.lower())):
-                db.find_and_modify('notification', query={'email': email,
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'performancechangetracking'},
                                    status='0')
             elif (("funnel" in text.lower()) and ("change" in text.lower())):
-                db.find_and_modify('notification', query={'email': email,
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'shoppingfunnelchangetracking'},
                                    status='0')
             elif (("cost" in text.lower()) and ("prediction" in text.lower())):
-                db.find_and_modify('notification', query={'email': email,
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'costprediction'},
                                    status='0')
             elif (("performance" in text.lower()) and ("goal" in text.lower())):
-                db.find_and_modify('notification', query={'email': email,
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'performancegoaltracking'},
                                    status='0')
         elif (message_action['actions'][0]['value'] == 'change'):
@@ -510,31 +513,51 @@ def message_actions():
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
+        datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
+                                                        'channelID': channel})['_id']
         if ('module_types' in submission.keys()):
             moduleType = submission['module_types']
             if (moduleType == 'performancechangetracking'):
                 scheduleType = submission['schedule_types']
                 threshold = float(submission['threshold'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
-                                   scheduleType=scheduleType, threshold=threshold, status='1')
+                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                                                                     'type': moduleType
+                                                                     },
+                                                               scheduleType=scheduleType, 
+                                                               threshold=threshold, 
+                                                               status='1')
             elif (moduleType == 'shoppingfunnelchangetracking'):
                 scheduleType = submission['schedule_types']
                 threshold = float(submission['threshold'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
-                                   scheduleType=scheduleType, threshold=threshold, status='1')
+                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                                                                     'type': moduleType
+                                                                     },
+                                                               scheduleType=scheduleType, 
+                                                               threshold=threshold, 
+                                                               status='1')
             elif (moduleType == 'costprediction'):
                 scheduleType = submission['schedule_types']
                 target = float(submission['target'])
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
-                                   scheduleType=scheduleType, target=target, status='1')
+                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                                                                     'type': moduleType
+                                                                     },
+                                                                   scheduleType=scheduleType, 
+                                                                   target=target, 
+                                                                   status='1')
             elif (moduleType == 'performancegoaltracking'):
                 scheduleType = submission['schedule_types']
                 target = float(submission['target'])
                 metric = submission['metric']
-                db.find_and_modify(collection='notification', query={'email': email, 'type': moduleType},
-                                   scheduleType=scheduleType, target=target, metric=metric, status='1')
+                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                                                                     'type': moduleType},
+                                                                       scheduleType=scheduleType,
+                                                                       target=target, 
+                                                                       metric=metric, 
+                                                                       status='1')
         else:
-            modules = db.find("notification", query={'email': email})
+            datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
+                                                        'channelID': channel})['_id']
+            modules = db.find("notification", query={'datasourceID': datasourceID})
             lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
             #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
             usr_tz_offset = slack_client.users_info(user=message_action['user']['id'])['user']['tz_offset'] // 3600
