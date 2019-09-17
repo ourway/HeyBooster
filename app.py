@@ -202,6 +202,7 @@ def datasources():
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
         unsortedargs.append(data)
+        insertdefaultnotifications(session['email'], _id)
 #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
 #        return render_template('datasources.html', nForm = nForm, args = args)
     else:
@@ -548,7 +549,7 @@ def message_actions():
     return make_response("", 200)
 
 
-def insertdefaultnotifications(email):
+def insertdefaultnotifications(email, dataSourceID):
     # Default Notifications will be inserted here
     db.insert('notification', data={
         'type': 'performancechangetracking',
@@ -558,10 +559,9 @@ def insertdefaultnotifications(email):
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': '07.00',
-        'channel': '#general',
         'status': '1',
         'lastRunDate': '',
-        'viewId': ''
+        'datasourceID': dataSourceID
     })
     db.insert('notification', data={
         'type': 'shoppingfunnelchangetracking',
@@ -571,10 +571,9 @@ def insertdefaultnotifications(email):
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': '07.00',
-        'channel': '#general',
         'status': '1',
         'lastRunDate': '',
-        'viewId': ''
+        'datasourceID': dataSourceID
     })
     db.insert('notification', data={
         'type': 'costprediction',
@@ -583,10 +582,9 @@ def insertdefaultnotifications(email):
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': '07.00',
-        'channel': '#general',
         'status': '1',
         'lastRunDate': '',
-        'viewId': ''
+        'datasourceID': dataSourceID
     })
     db.insert('notification', data={
         'type': 'performancegoaltracking',
@@ -596,9 +594,7 @@ def insertdefaultnotifications(email):
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': '07.00',
-        'channel': '#general',
         'status': '1',
         'lastRunDate': '',
-        'viewId': ''
+        'datasourceID': dataSourceID
     })
-
