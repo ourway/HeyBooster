@@ -19,6 +19,10 @@
         {% if args %}
             {% for arg in args %}
                 {{ arg.sourceType }}
+                {{ arg.accountName }}
+                {{ arg.propertyName }}
+                {{ arg.viewName }}
+                {{ arg.channelName }}
             {% endfor %}
         {% endif %}
     </div>
