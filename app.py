@@ -196,14 +196,14 @@ def datasources():
         'createdTS': ts
         }
         db.insert("datasource", data=data)
-        return render_template('datasources.html', args = sortedargs)
+        return render_template('datasources.html', args = args)
     else:
 #        user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
         nForm.channel.choices += [(channel['id']+ '\u0007' + '#' + channel['name'], '#' + channel['name']) for channel in channels]
         # incoming_webhook = slack.token['incoming_webhook']
-        return render_template('datasources.html', nForm = nForm, args = sortedargs)
+        return render_template('datasources.html', nForm = nForm, args = args)
 
 
 @app.route("/gatest/<email>")
