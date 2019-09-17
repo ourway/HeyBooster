@@ -171,22 +171,20 @@ def datasources():
     nForm = DataSourceForm(request.form)
 #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        email = session['email']
-        sourceType = "Google Analytics"
-        accountID = nForm.account.data.split(' ')[0]
-        accountName = nForm.account.data.split(' ')[1]
-        propertyID = nForm.property.data.split(' ')[0]
-        propertyName = nForm.property.data.split(' ')[1]
-        viewID = nForm.view.data.split(' ')[0]
-        viewName = nForm.view.data.split(' ')[1]
-        channelType = "Slack"
-        channelID = nForm.channel.data.split(' ')[0]
-        channelName = nForm.channel.data.split(' ')[1]
-        return db.insert("datasource", email=email, sourceType=sourceType,
-                  accountID=accountID, accountName=accountName,
-                  propertyID=propertyID, propertyName=propertyName,
-                  viewID=viewID, viewName=viewName,channelType=channelType,
-                  channelID=channelID, channelName=channelName)
+        data= {
+        'email' : session['email'],
+        'sourceType' : "Google Analytics",
+        'accountID' : nForm.account.data.split(' ')[0],
+        'accountName' : nForm.account.data.split(' ')[1],
+        'propertyID' : nForm.property.data.split(' ')[0],
+        'propertyName' : nForm.property.data.split(' ')[1],
+        'viewID' : nForm.view.data.split(' ')[0],
+        'viewName' : nForm.view.data.split(' ')[1],
+        'channelType' : "Slack",
+        'channelID' : nForm.channel.data.split(' ')[0],
+        'channelName' : nForm.channel.data.split(' ')[1]}
+        resp = db.insert("datasource", data=data)
+        return str(resp)
     else:
 #        user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'] + ' ' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
