@@ -27,7 +27,7 @@
             account = account_select.value;
             fetch('/analytics/properties/' + account).then(function (response) {
                 response.json().then(function (data) {
-                    var optionHTML = '<option value="' + '' + '" name="">' + '-- Select an Option --' + '</option>';
+                    var optionHTML = '<option value="' + '' + '" name="' + '' + '">' + '-- Select an Option --' + '</option>';
                     for (var property of data.properties) {
                         optionHTML += '<option value="' + property.id + '" name="' + property.name '">' + property.name + '</option>';
                     }
@@ -40,9 +40,9 @@
             property = property_select.value;
             fetch('/analytics/views/' + account_select.value + '/' + property).then(function (response) {
                 response.json().then(function (data) {
-                    var optionHTML = '<option value="' + '' + '" name="">' + '-- Select an Option --' + '</option>';
+                    var optionHTML = '<option value="' + '' + '" name="' + '' + '">' + '-- Select an Option --' + '</option>';
                     for (var view of data.views) {
-                        optionHTML += '<option value="' + view.id + '" name="' + property.name '">' + view.name + '</option>';
+                        optionHTML += '<option value="' + view.id + '" name="' + view.name '">' + view.name + '</option>';
                     }
                     view_select.innerHTML = optionHTML;
                 })
