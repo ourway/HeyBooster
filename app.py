@@ -181,7 +181,7 @@ def connect():
 
 def get_channels():
     data = [('token', slack.token['access_token'])]
-    return requests.post(URL.format('channels.list'), data).json()
+    return requests.post(URL.format('channels.list'), data).json()['channels']
 
 
 @app.route("/datasources", methods=['GET', 'POST'])
