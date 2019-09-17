@@ -14,9 +14,10 @@ from datetime import datetime, timedelta, timezone
 import json
 from slack import WebClient
 import os
+import requests
 
 OAuth2ConsumerBlueprint.authorized = authorized
-
+URL = "https://slack.com/api/{}"
 
 # Kullanıcı Giriş Decorator'ı
 
@@ -168,6 +169,10 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
+@app.route("/slack/channels")
+def get_channels():
+    data = [('token', slack.token['access_token'])]
+    return jsonify(requests.post(URL.format('channels.list'), data).json())
 
 @app.route("/connect")
 @login_required

@@ -14,6 +14,7 @@ URL = "https://slack.com/api/{}"
 log = logging.getLogger(__name__)
 
 
+
 def authorized(self):
     """
     This is the route/function that the user will be redirected to by
