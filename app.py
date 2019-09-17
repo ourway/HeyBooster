@@ -171,7 +171,7 @@ def datasources():
     nForm = DataSourceForm(request.form)
 #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        return ("Form:"+ str(request.form.view) + str(type(request.form.view)))
+        return ("Form:"+ str(nForm.view.name.data))
         return redirect('/datasources')
     else:
 #        user_info = google_auth.get_user_info()
