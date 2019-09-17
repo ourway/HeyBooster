@@ -17,8 +17,8 @@
 
     <div style="background-color: bisque; margin-top: 2%">
         {% if args %}
-            {% for key, value in args.item %}
-                {{ key }} : {{ value }}
+            {% for arg in args %}
+                {{ arg.sourceType }}
             {% endfor %}
         {% endif %}
     </div>
