@@ -1,7 +1,8 @@
 from flask import Flask, render_template, flash, redirect, request, session, url_for, make_response, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
+#from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
+from forms import LoginForm, RegisterForm, DataSourceForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 import google_auth
 import google_analytics
@@ -176,11 +177,11 @@ def connect():
     return redirect('/')
 
 
-@app.route("/notifications", methods=['GET', 'POST'])
+@app.route("/datasources", methods=['GET', 'POST'])
 @login_required
-def notifications():
-    nForm = NotificationForm(request.form)
-    tForm = TimeForm(request.form)
+def datasources():
+    nForm = DataSourceForm(request.form)
+#    tForm = TimeForm(request.form)
     if request.method == 'POST':
         # message = google_analytics.get_results(nForm)
         # slack_message()
@@ -189,7 +190,7 @@ def notifications():
         user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts(user_info['email'])['accounts']]
         # incoming_webhook = slack.token['incoming_webhook']
-        return render_template('notifications.html', nForm=nForm, tForm=tForm)
+        return render_template('datasources.html', nForm=nForm)
 
 
 @app.route("/gatest/<email>")
