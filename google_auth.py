@@ -173,11 +173,13 @@ def google_connectauth_redirect():
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     user_info = get_user_info()
-    db.find_and_modify(collection='user', query={'email': user_info['email']},
+    flask.session['email'] = user_info['email']
+    db.find_and_modify(collection='user', query={'email': flask.session['email']},
                        ga_accesstoken=oauth2_tokens['access_token'],
                        ga_refreshtoken=oauth2_tokens['refresh_token'])
 #    viewId = google_analytics.get_first_profile_id()
 #    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
+    
     return flask.redirect(BASE_URI + '/connect', code=302)
 
 @app.route('/google/logout')

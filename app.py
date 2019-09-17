@@ -194,8 +194,8 @@ def datasources():
         # slack_message()
         return redirect('/')
     else:
-        user_info = google_auth.get_user_info()
-        nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts(user_info['email'])['accounts']]
+#        user_info = google_auth.get_user_info()
+        nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
         nForm.channel.choices += [(channel['id'], channel['name']) for channel in channels]
         # incoming_webhook = slack.token['incoming_webhook']
