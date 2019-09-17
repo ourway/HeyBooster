@@ -171,9 +171,8 @@ def datasources():
     nForm = DataSourceForm(request.form)
 #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        # message = google_analytics.get_results(nForm)
-        # slack_message()
-        return redirect('/')
+        return ("Form:"+ str(request.form.view) + str(type(request.form.view)))
+        return redirect('/datasources')
     else:
 #        user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
