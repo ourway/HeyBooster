@@ -18,13 +18,11 @@
     <div style="background-color: bisque; margin-top: 2%">
         {% if args %}
             {% for arg in args %}
-                <li>
-                    <p style="color: red"> {{ arg.sourceType }}  ---- </p>
-                    <p style="color: deepskyblue"> {{ arg.accountName }} ---- </p>
-                    <p style="color: green"> {{ arg.propertyName }} ---- </p>
-                    <p style="color: tomato"> {{ arg.viewName }} ---- </p>
-                    <p style="color: darkgoldenrod"> {{ arg.channelName }} </p>
-                </li>
+                <h4 style="color: red"> {{ arg.sourceType }}  ---- </h4>
+                <h4 style="color: deepskyblue"> {{ arg.accountName }} ---- </h4>
+                <h4 style="color: green"> {{ arg.propertyName }} ---- </h4>
+                <h4 style="color: tomato"> {{ arg.viewName }} ---- </h4>
+                <h4 style="color: darkgoldenrod"> {{ arg.channelName }} </h4>
                 <br>
             {% endfor %}
         {% else %}
