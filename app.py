@@ -42,33 +42,11 @@ app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
-    scope=["identify,bot,commands,incoming-webhook,channels:read,chat:write:bot,links:read,users:read"])
+    scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read"])
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
-
-SLACK_BUTTONS = [
-    {
-        'name': 'lead_story',
-        'display': 'Daily',
-        'value': 'True',
-        'url': 'http://127.0.0.1:5000/scheduleType/daily'
-    },
-    {
-        'name': 'head_deck',
-        'display': 'Weekly',
-        'value': 'True',
-        'url': 'http://127.0.0.1:5000/scheduleType/weekly'
-    },
-    {
-        'name': 'sidebar',
-        'display': 'Button Sidebar',
-        'value': 'True',
-        'url': 'https://google.com'
-
-    }
-]
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -180,7 +158,10 @@ def connect():
 
 
 def get_channels():
-    data = [('token', slack.token['access_token'])]
+#    data = [('token', slack.token['access_token'])]
+    if not 'sl_accesstoken' in session.keys():
+        session['sl_accesstoken'] = db.find_one('user', query={'email': session['email']})['sl_accesstoken']
+    data = [('token', session['sl_accesstoken'])]
     return requests.post(URL.format('channels.list'), data).json()['channels']
 
 
@@ -211,86 +192,6 @@ def gatest(email):
         for acc in accs.get('items'):
             accounts.append({'id': acc.get('id'), 'name': acc.get('name')})
     return {'accounts': accounts}
-
-
-"""
-@app.route("/save", methods=['GET', 'POST'])
-def save():
-    tForm = TimeForm(request.form)
-
-    scheduleType = tForm.scheduleType.data
-    frequency = tForm.frequency.data
-    timeofDay = tForm.timeofDay.data
-
-    db.find_and_modify(collection='notification',
-                       query={'email': session['email']},
-                       scheduleType=scheduleType,
-                       frequency=frequency,
-                       timeofDay=timeofDay)
-
-    return redirect('/')
-
-
-@app.route('/scheduleType/daily', methods=['POST'])
-def scheduleTypeDaily():
-    scheduleType = "daily"
-    db.find_and_modify(collection='notification',
-                       query={'email': session['email']},
-                       scheduleType=scheduleType)
-    return make_response()
-
-
-@app.route('/scheduleType/weekly', methods=['GET', 'POST'])
-def scheduleTypeWeekly():
-    scheduleType = "weekly"
-    db.find_and_modify(collection='notification',
-                       query={'email': session['email']},
-                       scheduleType=scheduleType)
-    return make_response()
-
-
-def slack_message():
-    if not slack.authorized:
-        return redirect(url_for("slack.login"))
-
-    attachments = [
-        {
-            'title': 'Title',
-            'title_link': 'https://title-link.com',
-            'callback_id': 'button_test',
-            'actions': [],
-            'fields': [
-                {
-                    'value': 'Field1'
-                },
-                {
-                    'title': 'Field2 Title',
-                    'value': 'Field2 Value',
-                    'short': True
-                },
-            ]
-        }
-    ]
-    for button_dict in SLACK_BUTTONS:
-        button = {
-            'type': 'button',
-            'name': button_dict['name'],
-            'text': button_dict['display'],
-            'value': button_dict['value'],
-            'url': button_dict['url'],
-            'style': 'primary',
-        }
-        attachments[0]['actions'].append(button)
-    slack.post("chat.postMessage", data={
-        "channel": "#general",
-        "icon_emoji": ":male-technologist:",
-        "text": "Would you like some coffee? :coffee:",
-        'attachments': json.dumps(attachments)
-    })
-
-    return redirect('/')
-
-"""
 
 
 @app.route("/slack/message_actions", methods=["POST"])
