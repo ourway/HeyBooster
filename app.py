@@ -60,7 +60,7 @@ def home():
 def change():
     message_action = request.form
     # Open a slack client
-    user = db.find_one('user', {'user_id': message_action['user_id']})
+    user = db.find_one('user', {'sl_userid': message_action['sl_userid']})
     slack_token = user['sl_accesstoken']
     slack_client = WebClient(token=slack_token)
     # text = message_action['original_message']['text']
@@ -233,7 +233,7 @@ def message_actions():
     # Parse the request payload
     message_action = json.loads(request.form["payload"])
     # Open a slack client
-    user = db.find_one('user', {'user_id': message_action['user']['id']})
+    user = db.find_one('user', {'sl_userid': message_action['user']['id']})
     slack_token = user['sl_accesstoken']
     email = user['email']
     slack_client = WebClient(token=slack_token)
@@ -571,7 +571,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'threshold': 10,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': default_time,
+        'timeofDay': "%s.00" % (default_time),
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID
@@ -583,7 +583,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'threshold': 10,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': default_time,
+        'timeofDay': "%s.00" % (default_time),
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID
@@ -594,7 +594,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'target': 100,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': default_time,
+        'timeofDay': "%s.00" % (default_time),
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID
@@ -606,7 +606,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'target': 100,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': default_time,
+        'timeofDay': "%s.00" % (default_time),
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID
