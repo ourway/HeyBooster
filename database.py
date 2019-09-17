@@ -16,6 +16,9 @@ class db(object):
     @staticmethod
     def insert(collection, data):
         db.DATABASE[collection].insert(data)
+        
+    def insert_one(collection, data):
+        return db.DATABASE[collection].insert_one(data)
 
     @staticmethod
     def find_one(collection, query):
@@ -29,3 +32,4 @@ class db(object):
         db.DATABASE[collection].find_and_modify(query=query,
                                                 update={"$set": kwargs}, upsert=False,
                                                 full_response=True)
+

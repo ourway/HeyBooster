@@ -68,7 +68,7 @@ def authorized(self):
             **self.token_url_params
         )
         db.find_and_modify(collection='user', query={'email': google_auth.get_user_info()['email']},
-                           sl_accesstoken=token['access_token'], user_id=token['user_id'])
+                           sl_accesstoken=token['access_token'], sl_userid=token['user_id'])
     except MissingCodeError as e:
         e.args = (
             e.args[0],

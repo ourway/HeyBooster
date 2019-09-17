@@ -174,11 +174,12 @@ def datasources():
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
-    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False) 
+#    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False) 
 #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        data = [('token', session['sl_accesstoken'])]
-        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
+#        data = [('token', session['sl_accesstoken'])]
+#        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
+        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
         data= {
         'email' : session['email'],
@@ -195,16 +196,20 @@ def datasources():
         'channelName' : nForm.channel.data.split('\u0007')[1],
         'createdTS': ts
         }
-        db.insert("datasource", data=data)
-        return render_template('datasources.html', args = args)
+        _id = db.insert_one("datasource", data=data).inserted_id
+        data['_id'] = _id
+        unsortedargs.append(data)
+#        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
+#        return render_template('datasources.html', nForm = nForm, args = args)
     else:
 #        user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
         nForm.channel.choices += [(channel['id']+ '\u0007' + '#' + channel['name'], '#' + channel['name']) for channel in channels]
         # incoming_webhook = slack.token['incoming_webhook']
-        return render_template('datasources.html', nForm = nForm, args = args)
-
+#        return render_template('datasources.html', nForm = nForm, args = args)
+    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
+    return render_template('datasources.html', nForm = nForm, args = args)
 
 @app.route("/gatest/<email>")
 def gatest(email):
