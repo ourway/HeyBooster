@@ -171,13 +171,27 @@ def datasources():
     nForm = DataSourceForm(request.form)
 #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        return ("Form:"+ str(nForm.view.raw_data))
-        return redirect('/datasources')
+        email = session['email']
+        sourceType = "Google Analytics"
+        accountID = request.account.data.split(' ')[0]
+        accountName = request.account.data.split(' ')[1]
+        propertyID = request.property.data.split(' ')[0]
+        propertyName = request.property.data.split(' ')[1]
+        viewID = request.view.data.split(' ')[0]
+        viewName = request.view.data.split(' ')[1]
+        channelType = "Slack"
+        channelID = request.channel.data.split(' ')[0]
+        channelName = request.channel.data.split(' ')[1]
+        db.insert("datasource", email=email, sourceType=sourceType,
+                  accountID=accountID, accountName=accountName,
+                  propertyID=propertyID, propertyName=propertyName,
+                  viewID=viewID, viewName=viewName,channelType=channelType,
+                  channelID=channelID, channelName=channelName)
     else:
 #        user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'] + ' ' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
-        nForm.channel.choices += [(channel['id']+ ' ' + channel['name'], channel['name']) for channel in channels]
+        nForm.channel.choices += [(channel['id']+ ' ' + '#' + channel['name'], '#' + channel['name']) for channel in channels]
         # incoming_webhook = slack.token['incoming_webhook']
         return render_template('datasources.html', nForm=nForm)
 
