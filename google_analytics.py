@@ -1,7 +1,8 @@
 import flask
-from flask import jsonify
+from flask import jsonify, session
 import googleapiclient.discovery
 import google_auth
+from database import db
 
 app = flask.Blueprint('google_analytics', __name__)
 
@@ -40,7 +41,8 @@ def get_accounts(email):
 
 @app.route("/analytics/properties/<accountId>")
 def get_properties(accountId):
-    service = build_management_api_v3()
+    email = session['email']
+    service = build_management_api_v3_woutSession(email)
     # Get a list of all the properties for the first account.
     props = service.management().webproperties().list(
         accountId=accountId).execute()
@@ -54,7 +56,8 @@ def get_properties(accountId):
 
 @app.route("/analytics/views/<accountId>/<propertyId>")
 def get_views(accountId, propertyId):
-    service = build_management_api_v3()
+    email = session['email']
+    service = build_management_api_v3_woutSession(email)
     # Get a list of all views (profiles) for the first property.
     profiles = service.management().profiles().list(
         accountId=accountId,
