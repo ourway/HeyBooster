@@ -15,6 +15,7 @@ import json
 from slack import WebClient
 import os
 import requests
+import time
 
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
@@ -170,13 +171,18 @@ def get_channels():
 def datasources():
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
-    args = []
+    unsortedargs = []
     for datasource in datasources:
-        args.append(datasource)
+        unsortedargs.append(datasource)
+    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False) 
 #    tForm = TimeForm(request.form)
     if request.method == 'POST':
+        data = [('token', session['sl_accesstoken'])]
+        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
+        ts = time.time()
         data= {
         'email' : session['email'],
+        'sl_userid': uID,
         'sourceType' : "Google Analytics",
         'accountID' : nForm.account.data.split('\u0007')[0],
         'accountName' : nForm.account.data.split('\u0007')[1],
@@ -186,16 +192,18 @@ def datasources():
         'viewName' : nForm.view.data.split('\u0007')[1],
         'channelType' : "Slack",
         'channelID' : nForm.channel.data.split('\u0007')[0],
-        'channelName' : nForm.channel.data.split('\u0007')[1]}
+        'channelName' : nForm.channel.data.split('\u0007')[1],
+        'createdTS': ts
+        }
         db.insert("datasource", data=data)
-        return render_template('datasources.html', args = args)
+        return render_template('datasources.html', args = sortedargs)
     else:
 #        user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
         nForm.channel.choices += [(channel['id']+ '\u0007' + '#' + channel['name'], '#' + channel['name']) for channel in channels]
         # incoming_webhook = slack.token['incoming_webhook']
-        return render_template('datasources.html', nForm = nForm, args = args)
+        return render_template('datasources.html', nForm = nForm, args = sortedargs)
 
 
 @app.route("/gatest/<email>")
