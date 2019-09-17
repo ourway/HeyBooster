@@ -148,6 +148,9 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
+@app.route('/privacypolicy')
+def privacy():
+    return render_template('privacy.html')
 
 @app.route("/connect")
 @login_required
