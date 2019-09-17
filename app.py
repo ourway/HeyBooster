@@ -423,7 +423,7 @@ def message_actions():
                             {
                                 "label": "Metric Type",
                                 "type": "select",
-                                "name": "metric_types",
+                                "name": "metric",
                                 "placeholder": "Select a metric type",
                                 "options": [
                                     {
