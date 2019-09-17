@@ -18,12 +18,17 @@
     <div style="background-color: bisque; margin-top: 2%">
         {% if args %}
             {% for arg in args %}
-                {{ arg.sourceType }}
-                {{ arg.accountName }}
-                {{ arg.propertyName }}
-                {{ arg.viewName }}
-                {{ arg.channelName }}
+                <li>
+                    <p style="color: red"> {{ arg.sourceType }}  ---- </p>
+                    <p style="color: deepskyblue"> {{ arg.accountName }} ---- </p>
+                    <p style="color: green"> {{ arg.propertyName }} ---- </p>
+                    <p style="color: tomato"> {{ arg.viewName }} ---- </p>
+                    <p style="color: darkgoldenrod"> {{ arg.channelName }} </p>
+                </li>
+                <br>
             {% endfor %}
+        {% else %}
+            <h4 style="color: #9C1A1C">Veri yok submit et dene</h4>
         {% endif %}
     </div>
     </div>
