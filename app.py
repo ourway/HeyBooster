@@ -171,13 +171,13 @@ def datasources():
     nForm = DataSourceForm(request.form)
 #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        return ("Form:"+ str(nForm.view.name.data))
+        return ("Form:"+ str(nForm.view.raw_data))
         return redirect('/datasources')
     else:
 #        user_info = google_auth.get_user_info()
-        nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
+        nForm.account.choices += [(acc['id'] + ' ' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
-        nForm.channel.choices += [(channel['id'], channel['name']) for channel in channels]
+        nForm.channel.choices += [(channel['id']+ ' ' + channel['name'], channel['name']) for channel in channels]
         # incoming_webhook = slack.token['incoming_webhook']
         return render_template('datasources.html', nForm=nForm)
 
