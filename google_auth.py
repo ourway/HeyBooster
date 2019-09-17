@@ -131,7 +131,8 @@ def google_loginauth_redirect():
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     user_info = get_user_info()
-    new_user = User(name=user_info['name'], email=user_info['email'], password="")
+    flask.session['email'] = user_info['email']
+    new_user = User(name=user_info['name'], email=flask.session['email'], password="")
     new_user.insert()
 #    db.find_and_modify(collection='user', query={'email': flask.session['email']},
 #                       ga_accesstoken=oauth2_tokens['access_token'],
@@ -172,8 +173,7 @@ def google_connectauth_redirect():
         authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
-    user_info = get_user_info()
-    flask.session['email'] = user_info['email']
+#    user_info = get_user_info()
     db.find_and_modify(collection='user', query={'email': flask.session['email']},
                        ga_accesstoken=oauth2_tokens['access_token'],
                        ga_refreshtoken=oauth2_tokens['refresh_token'])
