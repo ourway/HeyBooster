@@ -12,7 +12,7 @@ class DataSourceForm(Form):
 #    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
 #    start_date = DateField('start_date', format="%Y-%m-%d")
 #    end_date = DateField('end_date', format="%Y-%m-%d")
-    channel = SelectField('channel', choices=[('', '-- Select an Channel --')])
+    channel = SelectField('channel', choices=[('', '-- Select a Channel --')])
 
 
 # Time Formu

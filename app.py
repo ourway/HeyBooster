@@ -169,10 +169,6 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
-@app.route("/slack/channels")
-def get_channels():
-    data = [('token', slack.token['access_token'])]
-    return jsonify(requests.post(URL.format('channels.list'), data).json())
 
 @app.route("/connect")
 @login_required
@@ -181,6 +177,11 @@ def connect():
 #        return redirect(url_for("slack.login"))
 #    return redirect('/')
     return redirect(url_for("slack.login"))
+
+
+def get_channels():
+    data = [('token', slack.token['access_token'])]
+    return requests.post(URL.format('channels.list'), data).json()
 
 
 @app.route("/datasources", methods=['GET', 'POST'])
@@ -195,6 +196,8 @@ def datasources():
     else:
         user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'], acc['name']) for acc in google_analytics.get_accounts(user_info['email'])['accounts']]
+        channels = get_channels()
+        nForm.channel.choices += [(channel['id'], channel['name']) for channel in channels]
         # incoming_webhook = slack.token['incoming_webhook']
         return render_template('datasources.html', nForm=nForm)
 
