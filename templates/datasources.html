@@ -15,9 +15,11 @@
             <br><input type="submit" name="submit" value="Submit">
         </form>
 
-    <div style="background-color: blueviolet">
+    <div style="background-color: bisque; margin-top: 2%">
         {% if args %}
-            {{ args[0] }}
+            {% for key, value in args.item %}
+                {{ key }} : {{ value }}
+            {% endfor %}
         {% endif %}
     </div>
     </div>
