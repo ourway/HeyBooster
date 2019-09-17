@@ -202,7 +202,9 @@ def datasources():
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
         unsortedargs.append(data)
-        insertdefaultnotifications(session['email'], _id)
+        insertdefaultnotifications(session['email'], userID = uID, 
+                                   dataSourceID = _id, 
+                                   channelID = nForm.channel.data.split('\u0007')[0])
 #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
 #        return render_template('datasources.html', nForm = nForm, args = args)
     else:
@@ -549,8 +551,19 @@ def message_actions():
     return make_response("", 200)
 
 
-def insertdefaultnotifications(email, dataSourceID):
+def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     # Default Notifications will be inserted here
+#    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
+#    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
+    lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
+    #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
+    data = [('token', session['sl_accesstoken']),
+            ('user', userID)]
+    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
+    if (7 >= (usr_tz_offset - lc_tz_offset)):
+        default_time = str(7 - (usr_tz_offset - lc_tz_offset)).zfill(2)
+    else:
+        default_time = str(24 + (7 - (usr_tz_offset - lc_tz_offset))).zfill(2)
     db.insert('notification', data={
         'type': 'performancechangetracking',
         'email': email,
@@ -558,7 +571,7 @@ def insertdefaultnotifications(email, dataSourceID):
         'threshold': 10,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': '07.00',
+        'timeofDay': default_time,
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID
@@ -570,7 +583,7 @@ def insertdefaultnotifications(email, dataSourceID):
         'threshold': 10,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': '07.00',
+        'timeofDay': default_time,
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID
@@ -581,7 +594,7 @@ def insertdefaultnotifications(email, dataSourceID):
         'target': 100,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': '07.00',
+        'timeofDay': default_time,
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID
@@ -593,8 +606,31 @@ def insertdefaultnotifications(email, dataSourceID):
         'target': 100,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': '07.00',
+        'timeofDay': default_time,
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID
     })
+    # When the slack connection is completed send notification user to set time
+    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
+    data = {
+        "channel": channelID,
+        "attachments": [{
+            "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
+Click "Change" button for changing it.""",
+            "title": "Blog Yazıları",
+            "title_link": "https://blog.boostroas.com/tr/"},
+            {
+                "text": "",
+                "callback_id": "notification_form",
+                "color": "#3AA3E3",
+                "attachment_type": "default",
+                "actions": [
+                    {
+                        "name": "change",
+                        "text": "Change",
+                        "type": "button",
+                        "value": "change"
+                    }]
+            }]}
+    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
