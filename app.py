@@ -172,9 +172,10 @@ def logout():
 @app.route("/connect")
 @login_required
 def connect():
-    if not slack.authorized:
-        return redirect(url_for("slack.login"))
-    return redirect('/')
+#    if not slack.authorized:
+#        return redirect(url_for("slack.login"))
+#    return redirect('/')
+    return redirect(url_for("slack.login"))
 
 
 @app.route("/datasources", methods=['GET', 'POST'])

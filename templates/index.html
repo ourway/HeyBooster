@@ -11,7 +11,7 @@
             </strong>
         </p>
         <div style="text-align:center;display:inline-block;">
-            <form method="POST" style="margin-bottom:5px;">
+           <!-- <form method="POST" style="margin-bottom:5px;">
                 {% if session['logged_in'] or session['auth_token']%}
                     <a href="/connect">
                         <img alt="Add to Slack" height="40" width="139"
@@ -19,13 +19,13 @@
                              srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x">
                     </a>
                 {% endif %}
-            </form>
+            </form> -->
 
             <form method="POST">
                 {% if session['logged_in'] or session['auth_token']%}
-                    <a href="/google/connect">
-                        <img alt="Connect Google Analytics" height="40" width="150"
-                             src="static/icons/ganalytics.png">
+                    <a href="/google/connect" class="btn btn-primary">
+                        <img alt="Connect heyBooster" height="40" width="150"
+                             src="static/icons/heybooster.png">
                     </a>
                 {% endif %}
             </form>

@@ -17,7 +17,7 @@ class DataSourceForm(Form):
 
 # Time Formu
 
-class TimeForm(Form):
+#class TimeForm(Form):
 #    frequency = SelectField('frequency', choices=[('0', '0'), ('1', '1')])
 #    scheduleType = SelectField('scheduletype', choices=[('daily', 'Daily'), ('weekly', 'weekly')])
 #    timeofDay = SelectField('timeofDay', choices=[('07.00', '07.00'), ('09.00', '09.00')])

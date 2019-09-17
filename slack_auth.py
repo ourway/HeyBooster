@@ -8,6 +8,7 @@ from flask_dance.consumer import oauth_authorized, oauth_error
 from werkzeug.wrappers import Response
 from oauthlib.oauth2 import MissingCodeError
 import requests
+import google_auth
 
 URL = "https://slack.com/api/{}"
 log = logging.getLogger(__name__)
@@ -65,9 +66,8 @@ def authorized(self):
             client_secret=self.client_secret,
             **self.token_url_params
         )
-        db.find_and_modify(collection='user', query={'email': flask.session['email']},
-                           sl_accesstoken=token['access_token'], user_id=token['user_id'],
-                           channel=token['incoming_webhook']['channel'])
+        db.find_and_modify(collection='user', query={'email': google_auth.get_user_info()['email']},
+                           sl_accesstoken=token['access_token'], user_id=token['user_id'])
     except MissingCodeError as e:
         e.args = (
             e.args[0],
@@ -134,7 +134,7 @@ Click "Change" button for changing it.""",
                     }]
             }]}
     requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
-    modules = db.find("notification", query={'email': flask.session['email']})
+    modules = db.find("notification", query={'email': google_auth.get_user_info()['email']})
     lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
     #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
     data = [('token', token['access_token']),
