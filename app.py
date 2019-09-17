@@ -173,16 +173,16 @@ def datasources():
     if request.method == 'POST':
         email = session['email']
         sourceType = "Google Analytics"
-        accountID = request.account.data.split(' ')[0]
-        accountName = request.account.data.split(' ')[1]
-        propertyID = request.property.data.split(' ')[0]
-        propertyName = request.property.data.split(' ')[1]
-        viewID = request.view.data.split(' ')[0]
-        viewName = request.view.data.split(' ')[1]
+        accountID = nForm.account.data.split(' ')[0]
+        accountName = nForm.account.data.split(' ')[1]
+        propertyID = nForm.property.data.split(' ')[0]
+        propertyName = nForm.property.data.split(' ')[1]
+        viewID = nForm.view.data.split(' ')[0]
+        viewName = nForm.view.data.split(' ')[1]
         channelType = "Slack"
-        channelID = request.channel.data.split(' ')[0]
-        channelName = request.channel.data.split(' ')[1]
-        db.insert("datasource", email=email, sourceType=sourceType,
+        channelID = nForm.channel.data.split(' ')[0]
+        channelName = nForm.channel.data.split(' ')[1]
+        return db.insert("datasource", email=email, sourceType=sourceType,
                   accountID=accountID, accountName=accountName,
                   propertyID=propertyID, propertyName=propertyName,
                   viewID=viewID, viewName=viewName,channelType=channelType,
