@@ -629,7 +629,7 @@ def message_actions():
                                                                        target=target, 
                                                                        metric=metric, 
                                                                        status='1')
-        else:
+        elif('hour' in submission.keys() and 'minute' in submission.keys()):
             datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
                                                         'channelID': channel})['_id']
             modules = db.find("notification", query={'datasourceID': datasourceID})
@@ -646,7 +646,15 @@ def message_actions():
             for module in modules:
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
-
+        elif('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys())):
+            datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
+                                                        'channelID': channel})['_id']
+            module = db.find_one("notification", query={'datasourceID': datasourceID,
+                                                    'type': 'performancegoaltracking'})
+            metricindex = module['metric'].index(submission['metric'])
+            module_id = module['_id']
+            db.update({"_id": module_id},
+                    { "$set": { 'target.'+str(metricindex)+'.content' : submission['target']}})
             
     return make_response("", 200)
 
