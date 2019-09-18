@@ -659,10 +659,13 @@ def message_actions():
                     {'$set' : {"target."+str(metricindex) : submission['target']}}
                 )
             except:
-                metricindex = len(module['metric'])
                 db.DATABASE['notification'].update(
                     {'_id' : module_id},
-                    {'$push' : [{'metric': submission['metric']}, {'target': submission['target']}]}
+                    {'$push' : {'metric': submission['metric']}}
+                )
+                db.DATABASE['notification'].update(
+                    {'_id' : module_id},
+                    {'$push' : {'target': submission['target']}}
                 )
             
     return make_response("", 200)
