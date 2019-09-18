@@ -722,8 +722,8 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     db.insert('notification', data={
         'type': 'performancegoaltracking',
         'email': email,
-        'metric': 'ga:ROAS',
-        'target': 100,
+        'metric': [],
+        'target': [],
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': "%s.00" % (default_time),
