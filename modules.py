@@ -120,7 +120,7 @@ def performancechangetracking(slack_token, task):
             },
                 {
                     "name": "ignore",
-                    "text": "Ignore",
+                    "text": ":heavy_multiplication_x:",
                     "type": "button",
                     "value": "ignore"
                 }]
@@ -140,7 +140,7 @@ def performancechangetracking(slack_token, task):
         "attachment_type": "default",
         "actions": [{
             "name": "ignore",
-            "text": "Ignore",
+            "text": ":heavy_multiplication_x:",
             "type": "button",
             "value": "ignore"
         },
@@ -219,7 +219,7 @@ def shoppingfunnelchangetracking(slack_token, task):
                     },
                         {
                             "name": "ignore",
-                            "text": "Ignore",
+                            "text": ":heavy_multiplication_x:",
                             "type": "button",
                             "value": "ignore"
                         }]
@@ -242,7 +242,7 @@ def shoppingfunnelchangetracking(slack_token, task):
                     },
                         {
                             "name": "ignore",
-                            "text": "Ignore",
+                            "text": ":heavy_multiplication_x:",
                             "type": "button",
                             "value": "ignore"
                         }]
@@ -264,7 +264,7 @@ def shoppingfunnelchangetracking(slack_token, task):
                     },
                         {
                             "name": "ignore",
-                            "text": "Ignore",
+                            "text": ":heavy_multiplication_x:",
                             "type": "button",
                             "value": "ignore"
                         }]
@@ -286,7 +286,7 @@ def shoppingfunnelchangetracking(slack_token, task):
                     },
                         {
                             "name": "ignore",
-                            "text": "Ignore",
+                            "text": ":heavy_multiplication_x:",
                             "type": "button",
                             "value": "ignore"
                         }]
@@ -309,7 +309,7 @@ def shoppingfunnelchangetracking(slack_token, task):
                         },
                             {
                                 "name": "ignore",
-                                "text": "Ignore",
+                                "text": ":heavy_multiplication_x:",
                                 "type": "button",
                                 "value": "ignore"
                             }]
@@ -331,7 +331,7 @@ def shoppingfunnelchangetracking(slack_token, task):
         "attachment_type": "default",
         "actions": [{
             "name": "ignore",
-            "text": "Ignore",
+            "text": ":heavy_multiplication_x:",
             "type": "button",
             "value": "ignore"
         },
@@ -415,7 +415,7 @@ def costprediction(slack_token, task):
                 },
                     {
                         "name": "ignore",
-                        "text": "Ignore",
+                        "text": ":heavy_multiplication_x:",
                         "type": "button",
                         "value": "ignore"
                     }]
@@ -437,7 +437,7 @@ def costprediction(slack_token, task):
                 },
                     {
                         "name": "ignore",
-                        "text": "Ignore",
+                        "text": ":heavy_multiplication_x:",
                         "type": "button",
                         "value": "ignore"
                     }]
@@ -461,7 +461,7 @@ def costprediction(slack_token, task):
                 },
                     {
                         "name": "ignore",
-                        "text": "Ignore",
+                        "text": ":heavy_multiplication_x:",
                         "type": "button",
                         "value": "ignore"
                     }]
@@ -483,7 +483,7 @@ def costprediction(slack_token, task):
                 },
                     {
                         "name": "ignore",
-                        "text": "Ignore",
+                        "text": ":heavy_multiplication_x:",
                         "type": "button",
                         "value": "ignore"
                     }]
@@ -509,7 +509,7 @@ def costprediction(slack_token, task):
         },
             {
                 "name": "ignore",
-                "text": "Ignore",
+                "text": ":heavy_multiplication_x:",
                 "type": "button",
                 "value": "ignore"
             }]
@@ -572,7 +572,7 @@ def performancegoaltracking(slack_token, task):
                 },
                     {
                         "name": "ignore",
-                        "text": "Ignore",
+                        "text": ":heavy_multiplication_x:",
                         "type": "button",
                         "value": "ignore"
                     }]
@@ -607,7 +607,7 @@ def performancegoaltracking(slack_token, task):
         },
             {
                 "name": "ignore",
-                "text": "Ignore",
+                "text": ":heavy_multiplication_x:",
                 "type": "button",
                 "value": "ignore"
             }]
