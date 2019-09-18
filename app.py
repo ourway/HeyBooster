@@ -374,7 +374,7 @@ def message_actions():
                                 ]
                             },
                             {
-                                "label": "Monthly Budget",
+                                "label": "Monthly Adwords Budget",
                                 "name": "target",
                                 "type": "text",
                                 "subtype": "number",
@@ -558,7 +558,7 @@ def message_actions():
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
                     dialog={
-                        "title": "Notification Settings",
+                        "title": "Set My Budget",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
                         "elements": [
@@ -576,23 +576,7 @@ def message_actions():
                                 ]
                             },
                             {
-                                "label": "Schedule Type",
-                                "type": "select",
-                                "name": "schedule_types",
-                                "placeholder": "Select a schedule type",
-                                "options": [
-                                    {
-                                        "label": "Daily",
-                                        "value": "daily"
-                                    },
-                                    {
-                                        "label": "Weekly",
-                                        "value": "weekly"
-                                    }
-                                ]
-                            },
-                            {
-                                "label": "Monthly Budget",
+                                "label": "Monthly Adwords Budget",
                                 "name": "target",
                                 "type": "text",
                                 "subtype": "number",
@@ -662,6 +646,8 @@ def message_actions():
             for module in modules:
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
+
+            
     return make_response("", 200)
 
 
