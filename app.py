@@ -511,6 +511,68 @@ def message_actions():
                     }
                 )
 
+        elif (message_action['actions'][0]['value'] == 'setmygoal'):
+            text = message_action['original_message']['text']
+            if (True):
+                slack_client.dialog_open(
+                    trigger_id=message_action["trigger_id"],
+                    dialog={
+                        "title": "Set My Goal",
+                        "submit_label": "Submit",
+                        "callback_id": "notification_form",
+                        "elements": [
+                            {
+                                "label": "Metric",
+                                "type": "select",
+                                "name": "metric",
+                                "placeholder": "Select a metric",
+                                "options": [
+                                    {
+                                        "label": "ROAS",
+                                        "value": "ga:ROAS"
+                                    },
+                                    {
+                                        "label": "CPC",
+                                        "value": "ga:CPC"
+                                    },
+                                    {
+                                        "label": "Revenue",
+                                        "value": "ga:transactionRevenue"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Target",
+                                "type": "text",
+                                "name": "target",
+                                "subtype": "number",
+                                "placeholder": "Enter a target"
+                            }
+                        ]
+                    }
+                )
+
+        elif (message_action['actions'][0]['value'] == 'setmybudget'):
+            text = message_action['original_message']['text']
+            if (True):
+                slack_client.dialog_open(
+                    trigger_id=message_action["trigger_id"],
+                    dialog={
+                        "title": "Set My Budget",
+                        "submit_label": "Submit",
+                        "callback_id": "notification_form",
+                        "elements": [
+                            {
+                                "label": "Budget",
+                                "name": "target",
+                                "type": "text",
+                                "subtype": "number",
+                                "placeholder": "Enter your budget"
+                            }
+                        ]
+                    }
+                )
+
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
