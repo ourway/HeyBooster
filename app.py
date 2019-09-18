@@ -558,16 +558,45 @@ def message_actions():
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
                     dialog={
-                        "title": "Set My Budget",
+                        "title": "Notification Settings",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
                         "elements": [
                             {
-                                "label": "Budget",
+                                "label": "Module Type",
+                                "type": "select",
+                                "name": "module_types",
+                                "placeholder": "Select a module type",
+                                "value": "costprediction",
+                                "options": [
+                                    {
+                                        "label": "Cost Prediction",
+                                        "value": "costprediction"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Schedule Type",
+                                "type": "select",
+                                "name": "schedule_types",
+                                "placeholder": "Select a schedule type",
+                                "options": [
+                                    {
+                                        "label": "Daily",
+                                        "value": "daily"
+                                    },
+                                    {
+                                        "label": "Weekly",
+                                        "value": "weekly"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Monthly Budget",
                                 "name": "target",
                                 "type": "text",
                                 "subtype": "number",
-                                "placeholder": "Enter your budget"
+                                "placeholder": "Enter a number"
                             }
                         ]
                     }
