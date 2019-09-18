@@ -655,7 +655,7 @@ def message_actions():
             module_id = module['_id']
             db.DATABASE['notification'].update(
                 {'_id' : module_id},
-                {'$set' : {"target."+metricindex+".content" : submission['target']}}
+                {'$set' : {"target."+str(metricindex)+".content" : submission['target']}}
             )
             
     return make_response("", 200)
