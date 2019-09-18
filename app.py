@@ -651,10 +651,9 @@ def message_actions():
                                                         'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                     'type': 'performancegoaltracking'})
-            
+            module_id = module['_id']
             try:
                 metricindex = module['metric'].index(submission['metric'])
-                module_id = module['_id']
                 db.DATABASE['notification'].update(
                     {'_id' : module_id},
                     {'$set' : {"target."+str(metricindex) : submission['target']}}
