@@ -653,7 +653,7 @@ def message_actions():
                                                     'type': 'performancegoaltracking'})
             metricindex = module['metric'].index(submission['metric'])
             module_id = module['_id']
-            kwargs = {'target.'+str(metricindex)+'.content' : submission['target']}
+            kwargs = {"target.+str(metricindex)+.content" : submission['target']}
             db.find_and_modify({"_id": module_id}, kwargs)
             
     return make_response("", 200)
