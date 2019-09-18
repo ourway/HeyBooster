@@ -651,12 +651,20 @@ def message_actions():
                                                         'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                     'type': 'performancegoaltracking'})
-            metricindex = module['metric'].index(submission['metric'])
-            module_id = module['_id']
-            db.DATABASE['notification'].update(
-                {'_id' : module_id},
-                {'$set' : {"target."+str(metricindex) : submission['target']}}
-            )
+            
+            try:
+                metricindex = module['metric'].index(submission['metric'])
+                module_id = module['_id']
+                db.DATABASE['notification'].update(
+                    {'_id' : module_id},
+                    {'$set' : {"target."+str(metricindex) : submission['target']}}
+                )
+            except:
+                metricindex = len(module['metric'])
+                db.DATABASE['notification'].update(
+                    {'_id' : module_id},
+                    {'$push' : [{'metric': submission['metric']}, {'target': submission['target']}]}
+                )
             
     return make_response("", 200)
 
