@@ -736,13 +736,12 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     data = {
         "channel": channelID,
         "attachments": [{
-            "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
-Click "Change" button for changing it.""",
             # "title": "Blog Yazıları",
             # "title_link": "https://blog.boostroas.com/tr/"
             },
             {
-                "text": "",
+                "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
+    Click "Change" button for changing it.""",
                 "callback_id": "notification_form",
                 "color": "#3AA3E3",
                 "attachment_type": "default",
