@@ -641,8 +641,9 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         "attachments": [{
             "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
 Click "Change" button for changing it.""",
-            "title": "Blog Yazıları",
-            "title_link": "https://blog.boostroas.com/tr/"},
+            # "title": "Blog Yazıları",
+            # "title_link": "https://blog.boostroas.com/tr/"
+            },
             {
                 "text": "",
                 "callback_id": "notification_form",
@@ -651,9 +652,22 @@ Click "Change" button for changing it.""",
                 "actions": [
                     {
                         "name": "change",
-                        "text": "Change",
+                        "text": "Change Notification Setting",
                         "type": "button",
                         "value": "change"
-                    }]
+                    },
+                    {
+                        "name": "setmygoal",
+                        "text": "Set My Goal",
+                        "type": "button",
+                        "value": "setmygoal"
+                    },
+                    {
+                        "name": "setmybudget",
+                        "text": "Set My Budget",
+                        "type": "button",
+                        "value": "setmybudget"
+                    }
+                ]
             }]}
     requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
