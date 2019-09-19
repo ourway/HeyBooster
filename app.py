@@ -241,6 +241,12 @@ def message_actions():
     slack_client = WebClient(token=slack_token)
     if message_action["type"] == "interactive_message":
         if (message_action['actions'][0]['value'] == 'track'):
+            houroptions = []
+            for i in range(0, 24):
+                houroptions.append({'label': str(i), 'value': i})
+            minuteoptions = []
+            for i in range(0, 60):
+                minuteoptions.append({'label': str(i), 'value': i})
             text = message_action['original_message']['attachments'][-1]['pretext']
             if (("performance" in text.lower()) and ("change" in text.lower())):
                 slack_client.dialog_open(
@@ -263,29 +269,43 @@ def message_actions():
                                     }
                                 ]
                             },
+#                            {
+#                                "label": "Schedule Type",
+#                                "type": "select",
+#                                "name": "schedule_types",
+#                                "placeholder": "Select a schedule type",
+#                                "options": [
+#                                    {
+#                                        "label": "Daily",
+#                                        "value": "daily"
+#                                    },
+#                                    {
+#                                        "label": "Weekly",
+#                                        "value": "weekly"
+#                                    }
+#                                ]
+#                            },
                             {
-                                "label": "Schedule Type",
+                                "label": "Hour",
                                 "type": "select",
-                                "name": "schedule_types",
-                                "placeholder": "Select a schedule type",
-                                "options": [
-                                    {
-                                        "label": "Daily",
-                                        "value": "daily"
-                                    },
-                                    {
-                                        "label": "Weekly",
-                                        "value": "weekly"
-                                    }
-                                ]
+                                "name": "hour",
+                                "placeholder": "Select an hour",
+                                "options": houroptions
                             },
                             {
-                                "label": "Threshold (%)",
-                                "name": "threshold",
-                                "type": "text",
-                                "subtype": "number",
-                                "placeholder": "Enter a number"
-                            }
+                                "label": "Minute",
+                                "type": "select",
+                                "name": "minute",
+                                "placeholder": "Select a minute",
+                                "options": minuteoptions
+                            },
+#                            {
+#                                "label": "Threshold (%)",
+#                                "name": "threshold",
+#                                "type": "text",
+#                                "subtype": "number",
+#                                "placeholder": "Enter a number"
+#                            }
                         ]
                     }
                 )
@@ -310,29 +330,43 @@ def message_actions():
                                     }
                                 ]
                             },
+#                            {
+#                                "label": "Schedule Type",
+#                                "type": "select",
+#                                "name": "schedule_types",
+#                                "placeholder": "Select a schedule type",
+#                                "options": [
+#                                    {
+#                                        "label": "Daily",
+#                                        "value": "daily"
+#                                    },
+#                                    {
+#                                        "label": "Weekly",
+#                                        "value": "weekly"
+#                                    }
+#                                ]
+#                            },
                             {
-                                "label": "Schedule Type",
+                                "label": "Hour",
                                 "type": "select",
-                                "name": "schedule_types",
-                                "placeholder": "Select a schedule type",
-                                "options": [
-                                    {
-                                        "label": "Daily",
-                                        "value": "daily"
-                                    },
-                                    {
-                                        "label": "Weekly",
-                                        "value": "weekly"
-                                    }
-                                ]
+                                "name": "hour",
+                                "placeholder": "Select an hour",
+                                "options": houroptions
                             },
                             {
-                                "label": "Threshold (%)",
-                                "name": "threshold",
-                                "type": "text",
-                                "subtype": "number",
-                                "placeholder": "Enter a number"
-                            }
+                                "label": "Minute",
+                                "type": "select",
+                                "name": "minute",
+                                "placeholder": "Select a minute",
+                                "options": minuteoptions
+                            },
+#                            {
+#                                "label": "Threshold (%)",
+#                                "name": "threshold",
+#                                "type": "text",
+#                                "subtype": "number",
+#                                "placeholder": "Enter a number"
+#                            }
                         ]
                     }
                 )
@@ -357,29 +391,43 @@ def message_actions():
                                     }
                                 ]
                             },
+#                            {
+#                                "label": "Schedule Type",
+#                                "type": "select",
+#                                "name": "schedule_types",
+#                                "placeholder": "Select a schedule type",
+#                                "options": [
+#                                    {
+#                                        "label": "Daily",
+#                                        "value": "daily"
+#                                    },
+#                                    {
+#                                        "label": "Weekly",
+#                                        "value": "weekly"
+#                                    }
+#                                ]
+#                            },
                             {
-                                "label": "Schedule Type",
+                                "label": "Hour",
                                 "type": "select",
-                                "name": "schedule_types",
-                                "placeholder": "Select a schedule type",
-                                "options": [
-                                    {
-                                        "label": "Daily",
-                                        "value": "daily"
-                                    },
-                                    {
-                                        "label": "Weekly",
-                                        "value": "weekly"
-                                    }
-                                ]
+                                "name": "hour",
+                                "placeholder": "Select an hour",
+                                "options": houroptions
                             },
                             {
-                                "label": "Monthly Adwords Budget",
-                                "name": "target",
-                                "type": "text",
-                                "subtype": "number",
-                                "placeholder": "Enter a number"
-                            }
+                                "label": "Minute",
+                                "type": "select",
+                                "name": "minute",
+                                "placeholder": "Select a minute",
+                                "options": minuteoptions
+                            },
+#                            {
+#                                "label": "Monthly Adwords Budget",
+#                                "name": "target",
+#                                "type": "text",
+#                                "subtype": "number",
+#                                "placeholder": "Enter a number"
+#                            }
                         ]
                     }
                 )
@@ -404,49 +452,63 @@ def message_actions():
                                     }
                                 ]
                             },
+#                            {
+#                                "label": "Schedule Type",
+#                                "type": "select",
+#                                "name": "schedule_types",
+#                                "placeholder": "Select a schedule type",
+#                                "options": [
+#                                    {
+#                                        "label": "Daily",
+#                                        "value": "daily"
+#                                    },
+#                                    {
+#                                        "label": "Weekly",
+#                                        "value": "weekly"
+#                                    }
+#                                ]
+#                            },
                             {
-                                "label": "Schedule Type",
+                                "label": "Hour",
                                 "type": "select",
-                                "name": "schedule_types",
-                                "placeholder": "Select a schedule type",
-                                "options": [
-                                    {
-                                        "label": "Daily",
-                                        "value": "daily"
-                                    },
-                                    {
-                                        "label": "Weekly",
-                                        "value": "weekly"
-                                    }
-                                ]
+                                "name": "hour",
+                                "placeholder": "Select an hour",
+                                "options": houroptions
                             },
                             {
-                                "label": "Metric Type",
+                                "label": "Minute",
                                 "type": "select",
-                                "name": "metric",
-                                "placeholder": "Select a metric type",
-                                "options": [
-                                    {
-                                        "label": "ROAS",
-                                        "value": "ga:ROAS"
-                                    },
-                                    {
-                                        "label": "CPC",
-                                        "value": "ga:CPC"
-                                    },
-                                    {
-                                        "label": "Revenue",
-                                        "value": "ga:transactionRevenue"
-                                    }
-                                ]
+                                "name": "minute",
+                                "placeholder": "Select a minute",
+                                "options": minuteoptions
                             },
-                            {
-                                "label": "Goal",
-                                "name": "target",
-                                "type": "text",
-                                "subtype": "number",
-                                "placeholder": "Enter a number"
-                            }
+#                            {
+#                                "label": "Metric Type",
+#                                "type": "select",
+#                                "name": "metric",
+#                                "placeholder": "Select a metric type",
+#                                "options": [
+#                                    {
+#                                        "label": "ROAS",
+#                                        "value": "ga:ROAS"
+#                                    },
+#                                    {
+#                                        "label": "CPC",
+#                                        "value": "ga:CPC"
+#                                    },
+#                                    {
+#                                        "label": "Revenue",
+#                                        "value": "ga:transactionRevenue"
+#                                    }
+#                                ]
+#                            },
+#                            {
+#                                "label": "Goal",
+#                                "name": "target",
+#                                "type": "text",
+#                                "subtype": "number",
+#                                "placeholder": "Enter a number"
+#                            }
                         ]
                     }
                 )
@@ -591,44 +653,62 @@ def message_actions():
         datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
                                                         'channelID': channel})['_id']
         if ('module_types' in submission.keys()):
+            lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
+            #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
+            usr_tz_offset = slack_client.users_info(user=message_action['user']['id'])['user']['tz_offset'] // 3600
+            selectedhour = int(submission['hour'])
+            selectedminute = str(submission['minute']).zfill(2)
+            # writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
+            if (selectedhour > (usr_tz_offset - lc_tz_offset)):
+                writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
+            else:
+                writtenhour = str(24 + (selectedhour - (usr_tz_offset - lc_tz_offset))).zfill(2)
             moduleType = submission['module_types']
             if (moduleType == 'performancechangetracking'):
                 scheduleType = submission['schedule_types']
-                threshold = float(submission['threshold'])
+#                threshold = float(submission['threshold'])
                 db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
                                                                      'type': moduleType
                                                                      },
                                                                scheduleType=scheduleType, 
-                                                               threshold=threshold, 
-                                                               status='1')
+                                                               timeofDay="%s.%s" % (writtenhour, selectedminute),
+                                                               #threshold=threshold,
+                                                               #status='1'
+                                                               )
             elif (moduleType == 'shoppingfunnelchangetracking'):
                 scheduleType = submission['schedule_types']
-                threshold = float(submission['threshold'])
+#                threshold = float(submission['threshold'])
                 db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
                                                                      'type': moduleType
                                                                      },
                                                                scheduleType=scheduleType, 
-                                                               threshold=threshold, 
-                                                               status='1')
+                                                               timeofDay="%s.%s" % (writtenhour, selectedminute),
+                                                               #threshold=threshold, 
+                                                               #status='1'
+                                                               )
             elif (moduleType == 'costprediction'):
                 scheduleType = submission['schedule_types']
-                target = float(submission['target'])
+#                target = float(submission['target'])
                 db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
                                                                      'type': moduleType
                                                                      },
                                                                    scheduleType=scheduleType, 
-                                                                   target=target, 
-                                                                   status='1')
+                                                                   timeofDay="%s.%s" % (writtenhour, selectedminute),
+                                                                   #target=target,
+                                                                   #status='1'
+                                                                   )
             elif (moduleType == 'performancegoaltracking'):
                 scheduleType = submission['schedule_types']
-                target = float(submission['target'])
-                metric = submission['metric']
+#                target = float(submission['target'])
+#                metric = submission['metric']
                 db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
                                                                      'type': moduleType},
                                                                        scheduleType=scheduleType,
-                                                                       target=target, 
-                                                                       metric=metric, 
-                                                                       status='1')
+                                                                       timeofDay="%s.%s" % (writtenhour, selectedminute),
+                                                                       #target=target, 
+                                                                       #metric=metric, 
+                                                                       #status='1'
+                                                                       )
         elif('hour' in submission.keys() and 'minute' in submission.keys()):
             datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
                                                         'channelID': channel})['_id']

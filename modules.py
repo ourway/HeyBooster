@@ -120,7 +120,7 @@ def performancechangetracking(slack_token, task):
             },
                 {
                     "name": "ignore",
-                    "text": ":heavy_multiplication_x:",
+                    "text": "Ignore",
                     "type": "button",
                     "value": "ignore"
                 }]
@@ -140,13 +140,13 @@ def performancechangetracking(slack_token, task):
         "attachment_type": "default",
         "actions": [{
             "name": "ignore",
-            "text": ":heavy_multiplication_x:",
+            "text": "Ignore",
             "type": "button",
             "value": "ignore"
         },
             {
                 "name": "track",
-                "text": "Track",
+                "text": "Reschedule",
                 "type": "button",
                 "value": "track"
             }]
@@ -213,13 +213,13 @@ def shoppingfunnelchangetracking(slack_token, task):
                     "attachment_type": "default",
                     "actions": [{
                         "name": "track",
-                        "text": "Change Notification Settings",
+                        "text": "Reschedule",
                         "type": "button",
                         "value": "track"
                     },
                         {
                             "name": "ignore",
-                            "text": ":heavy_multiplication_x:",
+                            "text": "Ignore",
                             "type": "button",
                             "value": "ignore"
                         }]
@@ -236,13 +236,13 @@ def shoppingfunnelchangetracking(slack_token, task):
                     "attachment_type": "default",
                     "actions": [{
                         "name": "track",
-                        "text": "Change Notification Settings",
+                        "text": "Reschedule",
                         "type": "button",
                         "value": "track"
                     },
                         {
                             "name": "ignore",
-                            "text": ":heavy_multiplication_x:",
+                            "text": "Ignore",
                             "type": "button",
                             "value": "ignore"
                         }]
@@ -258,13 +258,13 @@ def shoppingfunnelchangetracking(slack_token, task):
                     "attachment_type": "default",
                     "actions": [{
                         "name": "track",
-                        "text": "Change Notification Settings",
+                        "text": "Reschedule",
                         "type": "button",
                         "value": "track"
                     },
                         {
                             "name": "ignore",
-                            "text": ":heavy_multiplication_x:",
+                            "text": "Ignore",
                             "type": "button",
                             "value": "ignore"
                         }]
@@ -280,13 +280,13 @@ def shoppingfunnelchangetracking(slack_token, task):
                     "attachment_type": "default",
                     "actions": [{
                         "name": "track",
-                        "text": "Change Notification Settings",
+                        "text": "Reschedule",
                         "type": "button",
                         "value": "track"
                     },
                         {
                             "name": "ignore",
-                            "text": ":heavy_multiplication_x:",
+                            "text": "Ignore",
                             "type": "button",
                             "value": "ignore"
                         }]
@@ -303,13 +303,13 @@ def shoppingfunnelchangetracking(slack_token, task):
                         "attachment_type": "default",
                         "actions": [{
                             "name": "track",
-                            "text": "Change Notification Settings",
+                            "text": "Reschedule",
                             "type": "button",
                             "value": "track"
                         },
                             {
                                 "name": "ignore",
-                                "text": ":heavy_multiplication_x:",
+                                "text": "Ignore",
                                 "type": "button",
                                 "value": "ignore"
                             }]
@@ -331,7 +331,7 @@ def shoppingfunnelchangetracking(slack_token, task):
         "attachment_type": "default",
         "actions": [{
             "name": "ignore",
-            "text": ":heavy_multiplication_x:",
+            "text": "Ignore",
             "type": "button",
             "value": "ignore"
         },
@@ -407,18 +407,25 @@ def costprediction(slack_token, task):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [{
-                    "name": "track",
-                    "text": "Change Notification Settings",
-                    "type": "button",
-                    "value": "track"
-                },
-                    {
-                        "name": "ignore",
-                        "text": ":heavy_multiplication_x:",
-                        "type": "button",
-                        "value": "ignore"
-                    }]
+                "actions": [
+                            {
+                                "name": "setmybudget",
+                                "text": "Set My Budget",
+                                "type": "button",
+                                "value": "setmybudget"
+                            },
+                            {
+                                "name": "track",
+                                "text": "Reschedule",
+                                "type": "button",
+                                "value": "track"
+                            },
+                            {
+                                "name": "ignore",
+                                "text": "Ignore",
+                                "type": "button",
+                                "value": "ignore"
+                            }]
             }]
         else:
             attachments += [{
@@ -429,18 +436,26 @@ def costprediction(slack_token, task):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [{
-                    "name": "track",
-                    "text": "Change Notification Settings",
-                    "type": "button",
-                    "value": "track"
-                },
-                    {
-                        "name": "ignore",
-                        "text": ":heavy_multiplication_x:",
-                        "type": "button",
-                        "value": "ignore"
-                    }]
+                "actions": [
+                            {
+                                "name": "setmybudget",
+                                "text": "Set My Budget",
+                                "type": "button",
+                                "value": "setmybudget"
+                            },
+                        {
+                            "name": "track",
+                            "text": "Reschedule",
+                            "type": "button",
+                            "value": "track"
+                        },
+                        {
+                            "name": "ignore",
+                            "text": "Ignore",
+                            "type": "button",
+                            "value": "ignore"
+                        }
+                    ]
             }]
     else:
         # Prediction is less than target
@@ -453,15 +468,22 @@ def costprediction(slack_token, task):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [{
+                "actions": [
+                            {
+                                "name": "setmybudget",
+                                "text": "Set My Budget",
+                                "type": "button",
+                                "value": "setmybudget"
+                            },
+                        {
                     "name": "track",
-                    "text": "Change Notification Settings",
+                    "text": "Reschedule",
                     "type": "button",
                     "value": "track"
                 },
                     {
                         "name": "ignore",
-                        "text": ":heavy_multiplication_x:",
+                        "text": "Ignore",
                         "type": "button",
                         "value": "ignore"
                     }]
@@ -475,15 +497,22 @@ def costprediction(slack_token, task):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [{
+                "actions": [
+                            {
+                                "name": "setmybudget",
+                                "text": "Set My Budget",
+                                "type": "button",
+                                "value": "setmybudget"
+                            },
+                        {
                     "name": "track",
-                    "text": "Change Notification Settings",
+                    "text": "Reschedule",
                     "type": "button",
                     "value": "track"
                 },
                     {
                         "name": "ignore",
-                        "text": ":heavy_multiplication_x:",
+                        "text": "Ignore",
                         "type": "button",
                         "value": "ignore"
                     }]
@@ -509,7 +538,7 @@ def costprediction(slack_token, task):
         },
             {
                 "name": "ignore",
-                "text": ":heavy_multiplication_x:",
+                "text": "Ignore",
                 "type": "button",
                 "value": "ignore"
             }]
@@ -564,18 +593,25 @@ def performancegoaltracking(slack_token, task):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [{
-                    "name": "track",
-                    "text": "Change Target Goal",
-                    "type": "button",
-                    "value": "track"
-                },
-                    {
-                        "name": "ignore",
-                        "text": ":heavy_multiplication_x:",
-                        "type": "button",
-                        "value": "ignore"
-                    }]
+                "actions": [
+                            {
+                                "name": "setmybudget",
+                                "text": "Set My Budget",
+                                "type": "button",
+                                "value": "setmybudget"
+                            },
+                            {
+                                "name": "track",
+                                "text": "Change Target Goal",
+                                "type": "button",
+                                "value": "track"
+                            },
+                            {
+                                "name": "ignore",
+                                "text": "Ignore",
+                                "type": "button",
+                                "value": "ignore"
+                            }]
             }]
 
         else:
@@ -607,7 +643,7 @@ def performancegoaltracking(slack_token, task):
         },
             {
                 "name": "ignore",
-                "text": ":heavy_multiplication_x:",
+                "text": "Ignore",
                 "type": "button",
                 "value": "ignore"
             }]
