@@ -342,7 +342,7 @@ def shoppingfunnelchangetracking(slack_token, task):
     
     for i in range(len(metrics)):
         metricname = metricnames[i]
-        for dim in dims:
+        for dim in dimensions.keys():
             j = dims.index(dim)
             data_new = datas_new[j]
             data_old = datas_old[j]
