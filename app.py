@@ -791,7 +791,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': "%s.00" % (default_time),
-        'status': '1',
+        'status': '0',
         'lastRunDate': '',
         'datasourceID': dataSourceID
     })
@@ -803,7 +803,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': "%s.00" % (default_time),
-        'status': '1',
+        'status': '0',
         'lastRunDate': '',
         'datasourceID': dataSourceID
     })
@@ -816,8 +816,9 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
             # "title_link": "https://blog.boostroas.com/tr/"
             },
             {
-                "text": """Hi, I am HeyBooster, Default notification time is set as 07:00.
-    Click "Change" button for changing it.""",
+                "text": "Welcome to Heybooster, I am your digital buddy to support"+
+"you to boost your website by analyzing your data with marketing perspective."+ 
+"You will get first insights tomorrow at 7 am",
                 "callback_id": "notification_form",
                 "color": "#3AA3E3",
                 "attachment_type": "default",

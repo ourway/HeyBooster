@@ -13,30 +13,49 @@ def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
 
+
+
 def performancechangetracking(slack_token, task):
-    # Mobile Performance Changes Tracking
-    text_m = "*Mobile Performance Changes Tracking*"
-    attachments_m = []
-    metrics = [{'expression': 'ga:sessions'}]
+#    Performance Changes Tracking
+    text = "*Performance Changes Tracking*"
+    attachments = []
+    
+    metrics = [{'expression': 'ga:ROAS'},
+               {'expression': 'ga:CPC'},
+               {'expression': 'ga:costPerTransaction'},
+               {'expression': 'ga:adCost'},
+               ]
+    
+        
+    metricnames = ['ROAS',
+                   'CPC',
+                   'Cost per Transaction',
+                   'Cost'
+                   ]
+    
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
     channel = task['channel']
 
     period = task['period']
+    
     threshold = float(task['threshold']) / 100
+    
     filters = [
         {
-            "dimensionName": "ga:deviceCategory",
+            "dimensionName": "ga:sourceMedium",
             "operator": "EXACT",
-            "expressions": ["mobile"]
+            "expressions": ["google / cpc"]
         }
     ]
 
     if (period == 1):
         start_date_1 = 'yesterday'
+        str_start_date_1 = 'Yesterday'
         end_date_1 = start_date_1
         start_date_2 = '2daysAgo'
+        str_start_date_2 = 'previous day'
         end_date_2 = start_date_2
 
     results = service.reports().batchGet(
@@ -51,114 +70,249 @@ def performancechangetracking(slack_token, task):
                         {
                             "filters": filters
                         }]}]}).execute()
-
-    # WARNING: When the number of metrics is increased, 
-    # WARNING: obtain data for other metrics
-    sessions_new = float(results['reports'][0]['data']['totals'][0]['values'][0])
-
-    # WARNING: When the number of metrics is increased, 
-    # WARNING: obtain data for other metrics
-    sessions_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
-
-    if (sessions_new < sessions_old * (1 - threshold)):
-        attachments_m += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
-            start_date_1,
-            round(threshold * 100, 2),
-            start_date_2,
-            int(sessions_new)),
-            "color": "#FF0000",
-            "pretext": text_m}]
-
-    # Desktop Performance Changes Tracking
-    text_d = "*Desktop Performance Changes Tracking*"
-    attachments_d = []
-
-    filters = [
-        {
-            "dimensionName": "ga:deviceCategory",
-            "operator": "EXACT",
-            "expressions": ["desktop"]
-        }
-    ]
-
-    results = service.reports().batchGet(
-        body={
-            'reportRequests': [
-                {
-                    'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
-                                   {'startDate': start_date_2, 'endDate': end_date_2}],
-                    'metrics': metrics,
-                    "dimensionFilterClauses": [
+    for i in range(len(metrics)):
+        metricname = metricnames[i]
+        metricexpression = metrics[i]['expression']
+        
+        # WARNING: When the number of metrics is increased, 
+        # WARNING: obtain data for other metrics
+        data_new = float(results['reports'][0]['data']['totals'][0]['values'][i])
+    
+        # WARNING: When the number of metrics is increased, 
+        # WARNING: obtain data for other metrics
+        data_old = float(results['reports'][0]['data']['totals'][1]['values'][i])
+        
+        changerate = round(abs(data_old-data_new)/data_old,2)
+        
+        if(data_new < data-old):
+            if ((data_old-data_new) < (tol*data_old)):
+                attachments += [{"text": f"Yesterday {metricname} is {changerate} less than previous day. {metricname} : {round(data_new,2)}\n",
+                    "pretext": text,
+                    "callback_id": "notification_form",
+                    "attachment_type": "default",
+                    "actions": [{
+                        "name": "track",
+                        "text": "Reschedule",
+                        "type": "button",
+                        "value": "track"
+                    },
                         {
-                            "filters": filters
-                        }]}]}).execute()
-
-    # WARNING: When the number of metrics is increased, 
-    # WARNING: obtain data for other metrics
-    sessions_new = float(results['reports'][0]['data']['totals'][0]['values'][0])
-
-    # WARNING: When the number of metrics is increased, 
-    # WARNING: obtain data for other metrics
-    sessions_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
-
-    if (sessions_new < sessions_old * (1 - threshold)):
-        attachments_d += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
-            start_date_1,
-            round(threshold * 100, 2),
-            start_date_2,
-            int(sessions_new)),
-            "color": "FF0000",
-            "pretext": text_d,
-            "callback_id": "notification_form",
-            "attachment_type": "default",
-            "actions": [{
-                "name": "track",
-                "text": "Reschedule",
-                "type": "button",
-                "value": "track"
-            },
-                {
-                    "name": "ignore",
-                    "text": "Ignore",
-                    "type": "button",
-                    "value": "ignore"
+                            "name": "ignore",
+                            "text": "Ignore",
+                            "type": "button",
+                            "value": "ignore"
+                        }]
                 }]
-        }]
-
+            else:
+                attachments += [{"text": f"Yesterday {metricname} is {changerate} less than previous day. {metricname} : {round(data_new,2)}\n",
+                    "pretext": text,
+                    "callback_id": "notification_form",
+                    'color': "danger",
+                    "attachment_type": "default",
+                    "actions": [{
+                        "name": "track",
+                        "text": "Reschedule",
+                        "type": "button",
+                        "value": "track"
+                    },
+                        {
+                            "name": "ignore",
+                            "text": "Ignore",
+                            "type": "button",
+                            "value": "ignore"
+                        }]
+                }]
+        else:
+            if((data_new-data_old) > (tol*data_old)):
+                attachments += [{"text": f"Yesterday {metricname} is {changerate} more than previous day. {metricname} : {round(data_new,2)}\n",
+                    "pretext": text,
+                    "callback_id": "notification_form",
+                    "attachment_type": "default",
+                    "actions": [{
+                        "name": "track",
+                        "text": "Reschedule",
+                        "type": "button",
+                        "value": "track"
+                    },
+                        {
+                            "name": "ignore",
+                            "text": "Ignore",
+                            "type": "button",
+                            "value": "ignore"
+                        }]
+                }]
+            else:
+                attachments += [{"text": f"Yesterday {metricname} is {changerate} more than previous day. {metricname} : {round(data_new,2)}\n",
+                    "pretext": text,
+                    "callback_id": "notification_form",
+                    'color': "good",
+                    "attachment_type": "default",
+                    "actions": [{
+                        "name": "track",
+                        "text": "Reschedule",
+                        "type": "button",
+                        "value": "track"
+                    },
+                        {
+                            "name": "ignore",
+                            "text": "Ignore",
+                            "type": "button",
+                            "value": "ignore"
+                        }]
+                }]
+    
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(
             channel=channel,
-            attachments=attachments_m + attachments_d)
+            attachments=attachments)
 
-        return resp['ts']
-"""
-    attachments_d += [{
-        "pretext": "Click *_Track_* to configure *_Performance Changes Tracking_* notification",
-        "callback_id": "notification_form",
-        "color": "#3AA3E3",
-        "attachment_type": "default",
-        "actions": [{
-            "name": "ignore",
-            "text": "Ignore",
-            "type": "button",
-            "value": "ignore"
-        },
-            {
-                "name": "track",
-                "text": "Reschedule",
-                "type": "button",
-                "value": "track"
-            }]
-    }]
-    
-    if (len(attachments_m + attachments_d) > 1):
-        resp = slack_client.chat_postMessage(
-            channel=channel,
-            attachments=attachments_m + attachments_d)
-
-        return resp['ts']
-"""
+    return resp['ts']
+#def performancechangetracking(slack_token, task):
+#    # Mobile Performance Changes Tracking
+#    text_m = "*Mobile Performance Changes Tracking*"
+#    attachments_m = []
+#    metrics = [{'expression': 'ga:sessions'}]
+#    email = task['email']
+#    service = google_analytics.build_reporting_api_v4_woutSession(email)
+#    viewId = task['viewId']
+#    channel = task['channel']
+#
+#    period = task['period']
+#    threshold = float(task['threshold']) / 100
+#    filters = [
+#        {
+#            "dimensionName": "ga:deviceCategory",
+#            "operator": "EXACT",
+#            "expressions": ["mobile"]
+#        }
+#    ]
+#
+#    if (period == 1):
+#        start_date_1 = 'yesterday'
+#        end_date_1 = start_date_1
+#        start_date_2 = '2daysAgo'
+#        end_date_2 = start_date_2
+#
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
+#                                   {'startDate': start_date_2, 'endDate': end_date_2}],
+#                    'metrics': metrics,
+#                    "dimensionFilterClauses": [
+#                        {
+#                            "filters": filters
+#                        }]}]}).execute()
+#
+#    # WARNING: When the number of metrics is increased, 
+#    # WARNING: obtain data for other metrics
+#    sessions_new = float(results['reports'][0]['data']['totals'][0]['values'][0])
+#
+#    # WARNING: When the number of metrics is increased, 
+#    # WARNING: obtain data for other metrics
+#    sessions_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
+#
+#    if (sessions_new < sessions_old * (1 - threshold)):
+#        attachments_m += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
+#            start_date_1,
+#            round(threshold * 100, 2),
+#            start_date_2,
+#            int(sessions_new)),
+#            "color": "#FF0000",
+#            "pretext": text_m}]
+#
+#    # Desktop Performance Changes Tracking
+#    text_d = "*Desktop Performance Changes Tracking*"
+#    attachments_d = []
+#
+#    filters = [
+#        {
+#            "dimensionName": "ga:deviceCategory",
+#            "operator": "EXACT",
+#            "expressions": ["desktop"]
+#        }
+#    ]
+#
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
+#                                   {'startDate': start_date_2, 'endDate': end_date_2}],
+#                    'metrics': metrics,
+#                    "dimensionFilterClauses": [
+#                        {
+#                            "filters": filters
+#                        }]}]}).execute()
+#
+#    # WARNING: When the number of metrics is increased, 
+#    # WARNING: obtain data for other metrics
+#    sessions_new = float(results['reports'][0]['data']['totals'][0]['values'][0])
+#
+#    # WARNING: When the number of metrics is increased, 
+#    # WARNING: obtain data for other metrics
+#    sessions_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
+#
+#    if (sessions_new < sessions_old * (1 - threshold)):
+#        attachments_d += [{"text": "{0} mobile session is less {1}% than {2}. {0} mobile session: {3}\n".format(
+#            start_date_1,
+#            round(threshold * 100, 2),
+#            start_date_2,
+#            int(sessions_new)),
+#            "color": "FF0000",
+#            "pretext": text_d,
+#            "callback_id": "notification_form",
+#            "attachment_type": "default",
+#            "actions": [{
+#                "name": "track",
+#                "text": "Reschedule",
+#                "type": "button",
+#                "value": "track"
+#            },
+#                {
+#                    "name": "ignore",
+#                    "text": "Ignore",
+#                    "type": "button",
+#                    "value": "ignore"
+#                }]
+#        }]
+#
+#        slack_client = WebClient(token=slack_token)
+#        resp = slack_client.chat_postMessage(
+#            channel=channel,
+#            attachments=attachments_m + attachments_d)
+#
+#        return resp['ts']
+#"""
+#    attachments_d += [{
+#        "pretext": "Click *_Track_* to configure *_Performance Changes Tracking_* notification",
+#        "callback_id": "notification_form",
+#        "color": "#3AA3E3",
+#        "attachment_type": "default",
+#        "actions": [{
+#            "name": "ignore",
+#            "text": "Ignore",
+#            "type": "button",
+#            "value": "ignore"
+#        },
+#            {
+#                "name": "track",
+#                "text": "Reschedule",
+#                "type": "button",
+#                "value": "track"
+#            }]
+#    }]
+#    
+#    if (len(attachments_m + attachments_d) > 1):
+#        resp = slack_client.chat_postMessage(
+#            channel=channel,
+#            attachments=attachments_m + attachments_d)
+#
+#        return resp['ts']
+#"""
 
 def shoppingfunnelchangetracking(slack_token, task):
     # Funnel Changes Tracking
@@ -171,7 +325,7 @@ def shoppingfunnelchangetracking(slack_token, task):
         {'expression': 'ga:productCheckouts'},
         {'expression': 'ga:transactions'}
     ]
-
+    
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
@@ -357,6 +511,14 @@ def costprediction(slack_token, task):
     metrics = [
         {'expression': 'ga:adCost'},
     ]
+    
+    filters = [
+        {
+            "dimensionName": "ga:sourceMedium",
+            "operator": "EXACT",
+            "expressions": ["google / cpc"]
+        }
+    ]
 
     tol = 0.10
     email = task['email']
@@ -388,7 +550,11 @@ def costprediction(slack_token, task):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
                                    {'startDate': start_date_2, 'endDate': end_date_2}],
-                    'metrics': metrics
+                    'metrics': metrics,
+                    "dimensionFilterClauses": [
+                        {
+                            "filters": filters
+                        }]
                 }]}).execute()
 
     subquery1 = float(results['reports'][0]['data']['totals'][0]['values'][0])
@@ -400,7 +566,7 @@ def costprediction(slack_token, task):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
             attachments += [{
-                "text": "Your monthly total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
+                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "00FF00",
@@ -429,7 +595,7 @@ def costprediction(slack_token, task):
             }]
         else:
             attachments += [{
-                "text": "Your monthly total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
+                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "FF0000",
@@ -461,7 +627,7 @@ def costprediction(slack_token, task):
         # Prediction is less than target
         if ((target - prediction < (tol * target))):
             attachments += [{
-                "text": "Your monthly total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
+                "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "00FF00",
@@ -490,7 +656,7 @@ def costprediction(slack_token, task):
             }]
         else:
             attachments += [{
-                "text": "Your monthly total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
+                "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "FF0000",
