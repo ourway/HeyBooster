@@ -333,7 +333,7 @@ def shoppingfunnelchangetracking(slack_token, task):
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
                                    {'startDate': start_date_2, 'endDate': end_date_2}],
                     'metrics': metrics,
-                    'dimensions': [{'name'}:'ga:shoppingStage']
+                    'dimensions': [{'name':'ga:shoppingStage'}]
                 }]}).execute()
     
     dims = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
