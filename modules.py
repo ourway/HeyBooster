@@ -114,7 +114,7 @@ def performancechangetracking(slack_token, task):
             "attachment_type": "default",
             "actions": [{
                 "name": "track",
-                "text": "Track",
+                "text": "Reschedule",
                 "type": "button",
                 "value": "track"
             },
