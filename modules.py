@@ -40,7 +40,7 @@ def performancechangetracking(slack_token, task):
     
     period = task['period']
     
-    tol = 0.10
+    tol = 0.20
     
     filters = [
         {
@@ -87,27 +87,26 @@ def performancechangetracking(slack_token, task):
         except:
             changerate = abs(data_old-data_new)
         if(data_new < data_old):
-            if ((data_old-data_new) < (tol*data_old)):
-                attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
-                    "pretext": text,
-                    "callback_id": "notification_form",
-                    "attachment_type": "default",
-                    "actions": [{
-                        "name": "track",
-                        "text": "Reschedule",
-                        "type": "button",
-                        "value": "track"
-                    },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }]
-                }]
+            if ((data_old-data_new) <= (tol*data_old)):
+                pass
+#                attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
+#                    "callback_id": "notification_form",
+#                    "attachment_type": "default",
+#                    "actions": [{
+#                        "name": "track",
+#                        "text": "Reschedule",
+#                        "type": "button",
+#                        "value": "track"
+#                    },
+#                        {
+#                            "name": "ignore",
+#                            "text": "Ignore",
+#                            "type": "button",
+#                            "value": "ignore"
+#                        }]
+#                }]
             else:
                 attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
-                    "pretext": text,
                     "callback_id": "notification_form",
                     'color': "danger",
                     "attachment_type": "default",
@@ -125,27 +124,26 @@ def performancechangetracking(slack_token, task):
                         }]
                 }]
         else:
-            if((data_new-data_old) > (tol*data_old)):
-                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
-                    "pretext": text,
-                    "callback_id": "notification_form",
-                    "attachment_type": "default",
-                    "actions": [{
-                        "name": "track",
-                        "text": "Reschedule",
-                        "type": "button",
-                        "value": "track"
-                    },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }]
-                }]
+            if((data_new-data_old) >= (tol*data_old)):
+                pass
+#                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
+#                    "callback_id": "notification_form",
+#                    "attachment_type": "default",
+#                    "actions": [{
+#                        "name": "track",
+#                        "text": "Reschedule",
+#                        "type": "button",
+#                        "value": "track"
+#                    },
+#                        {
+#                            "name": "ignore",
+#                            "text": "Ignore",
+#                            "type": "button",
+#                            "value": "ignore"
+#                        }]
+#                }]
             else:
                 attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
-                    "pretext": text,
                     "callback_id": "notification_form",
                     'color': "good",
                     "attachment_type": "default",
@@ -162,11 +160,13 @@ def performancechangetracking(slack_token, task):
                             "value": "ignore"
                         }]
                 }]
-    
-        slack_client = WebClient(token=slack_token)
-        resp = slack_client.chat_postMessage(
-            channel=channel,
-            attachments=attachments)
+                    
+        if(len(attachments)!=0):
+            attachments[0]['pretext'] = text
+            slack_client = WebClient(token=slack_token)
+            resp = slack_client.chat_postMessage(
+                channel=channel,
+                attachments=attachments)
 
     return resp['ts']
 #def performancechangetracking(slack_token, task):
