@@ -625,21 +625,8 @@ def message_actions():
                         "callback_id": "notification_form",
                         "elements": [
                             {
-                                "label": "Module Type",
-                                "type": "select",
-                                "name": "module_types",
-                                "placeholder": "Select a module type",
-                                "value": "costprediction",
-                                "options": [
-                                    {
-                                        "label": "Cost Prediction",
-                                        "value": "costprediction"
-                                    }
-                                ]
-                            },
-                            {
                                 "label": "Monthly Adwords Budget",
-                                "name": "target",
+                                "name": "budget",
                                 "type": "text",
                                 "subtype": "number",
                                 "placeholder": "Enter a number"
@@ -651,20 +638,20 @@ def message_actions():
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
-                                                   'channelID': channel})['_id']
+                                                        'channelID': channel})['_id']
         if ('module_types' in submission.keys()):
+            lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
+            #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
+            usr_tz_offset = slack_client.users_info(user=message_action['user']['id'])['user']['tz_offset'] // 3600
+            selectedhour = int(submission['hour'])
+            selectedminute = str(submission['minute']).zfill(2)
+            # writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
+            if (selectedhour > (usr_tz_offset - lc_tz_offset)):
+                writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
+            else:
+                writtenhour = str(24 + (selectedhour - (usr_tz_offset - lc_tz_offset))).zfill(2)
             moduleType = submission['module_types']
             if (moduleType == 'performancechangetracking'):
-                lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
-                #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-                usr_tz_offset = slack_client.users_info(user=message_action['user']['id'])['user']['tz_offset'] // 3600
-                selectedhour = int(submission['hour'])
-                selectedminute = str(submission['minute']).zfill(2)
-                # writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-                if (selectedhour > (usr_tz_offset - lc_tz_offset)):
-                    writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-                else:
-                    writtenhour = str(24 + (selectedhour - (usr_tz_offset - lc_tz_offset))).zfill(2)
 #                scheduleType = submission['schedule_types']
 #                threshold = float(submission['threshold'])
                 db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
@@ -676,22 +663,12 @@ def message_actions():
                                                                #status='1'
                                                                )
             elif (moduleType == 'shoppingfunnelchangetracking'):
-                lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
-                #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-                usr_tz_offset = slack_client.users_info(user=message_action['user']['id'])['user']['tz_offset'] // 3600
-                selectedhour = int(submission['hour'])
-                selectedminute = str(submission['minute']).zfill(2)
-                # writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-                if (selectedhour > (usr_tz_offset - lc_tz_offset)):
-                    writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-                else:
-                    writtenhour = str(24 + (selectedhour - (usr_tz_offset - lc_tz_offset))).zfill(2)
 #                scheduleType = submission['schedule_types']
 #                threshold = float(submission['threshold'])
                 db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
                                                                      'type': moduleType
                                                                      },
-                                                               #scheduleType=scheduleType, 
+#                                                               scheduleType=scheduleType, 
                                                                timeofDay="%s.%s" % (writtenhour, selectedminute),
                                                                #threshold=threshold, 
                                                                #status='1'
@@ -708,16 +685,6 @@ def message_actions():
                                                                    #status='1'
                                                                    )
             elif (moduleType == 'performancegoaltracking'):
-                lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
-                #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-                usr_tz_offset = slack_client.users_info(user=message_action['user']['id'])['user']['tz_offset'] // 3600
-                selectedhour = int(submission['hour'])
-                selectedminute = str(submission['minute']).zfill(2)
-                # writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-                if (selectedhour > (usr_tz_offset - lc_tz_offset)):
-                    writtenhour = str(selectedhour - (usr_tz_offset - lc_tz_offset)).zfill(2)
-                else:
-                    writtenhour = str(24 + (selectedhour - (usr_tz_offset - lc_tz_offset))).zfill(2)
 #                scheduleType = submission['schedule_types']
 #                target = float(submission['target'])
 #                metric = submission['metric']
@@ -746,7 +713,7 @@ def message_actions():
             for module in modules:
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
-        elif('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys())):
+        elif('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys())==2):
             datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
                                                         'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
@@ -767,6 +734,17 @@ def message_actions():
                     {'_id' : module_id},
                     {'$push' : {'target': submission['target']}}
                 )
+        elif('budget' in submission.keys() and len(submission.keys()==1)):
+            datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
+                                                        'channelID': channel})['_id']
+            module = db.find_one("notification", query={'datasourceID': datasourceID,
+                                                    'type': 'costprediction'})
+            target = float(submission['budget'])
+            db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                                                                 'type': moduleType
+                                                                 },
+                                                               target=target
+                                                               )
             
     return make_response("", 200)
 
