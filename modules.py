@@ -337,7 +337,7 @@ def shoppingfunnelchangetracking(slack_token, task):
                 }]}).execute()
     
     dims_new = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
-    dims_old = [row['dimensions'][0] for row in results['reports'][1]['data']['rows']]
+    dims_old = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
     
     datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
     datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows']]
