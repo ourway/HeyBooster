@@ -293,12 +293,12 @@ def shoppingfunnelchangetracking(slack_token, task):
     metricnames = [
             'Session'
             ]
-    dimensions = [{'ALL_VISITS':'All Sessions',
+    dimensions = {'ALL_VISITS':'All Sessions',
                    'PRODUCT_VIEW':'Sessions with product view',
                    'ADD_TO_CART': 'Sessions with add to cart',
                    'CHECKOUT': 'Sessions with checkout',
                    'TRANSACTION': 'Sessions with transaction'
-                   }]
+                   }
     actions = [{
                         "name": "track",
                         "text": "Reschedule",
