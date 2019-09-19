@@ -737,11 +737,9 @@ def message_actions():
         elif('budget' in submission.keys() and len(submission.keys())==1):
             datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
                                                         'channelID': channel})['_id']
-            module = db.find_one("notification", query={'datasourceID': datasourceID,
-                                                    'type': 'costprediction'})
             target = float(submission['budget'])
             db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
-                                                                 'type': moduleType
+                                                                 'type': 'costprediction'
                                                                  },
                                                                target=target
                                                                )
