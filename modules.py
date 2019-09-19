@@ -346,6 +346,7 @@ def shoppingfunnelchangetracking(slack_token, task):
             j = dims.index(dim)
             data_new = datas_new[j]
             data_old = datas_old[j]
+            dimname = dimensions[dim]
 #            sessions_new = float(results['reports'][0]['data']['rows'][j]['metrics'][0]['values'][0])
 #            sessions_old = float(['reports'][0]['data']['rows'][j]['metrics'][1]['values'][0])
             try:
@@ -355,12 +356,13 @@ def shoppingfunnelchangetracking(slack_token, task):
             if(data_new < data_old):
                 if ((data_old-data_new) <= (tol*data_old)):
                     pass
-    #                attachments += [{"text": f"Yesterday {dimensions['dim']} is {changerate} less than previous day. {dimensions['dim']} : {data_new}\n",
+    #                attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {data_new}\n",
     #                    "callback_id": "notification_form",
     #                    "attachment_type": "default",
     #                }]
                 else:
-                    attachments += [{"text": f"Yesterday {dimensions['dim']} is {changerate} less than previous day. {dimensions['dim']} : {data_new}\n",
+                    
+                    attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {data_new}\n",
                         "callback_id": "notification_form",
                         'color': "danger",
                         "attachment_type": "default",
@@ -368,12 +370,12 @@ def shoppingfunnelchangetracking(slack_token, task):
             else:
                 if((data_new-data_old) >= (tol*data_old)):
                     pass
-    #                attachments += [{"text": f"Yesterday {dimensions['dim']} is {changerate} more than previous day. {dimensions['dim']} : {data_new}\n",
+    #                attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {data_new}\n",
     #                    "callback_id": "notification_form",
     #                    "attachment_type": "default",
     #                }]
                 else:
-                    attachments += [{"text": f"Yesterday {dimensions['dim']} is {changerate} more than previous day. {dimensions['dim']} : {data_new}\n",
+                    attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {data_new}\n",
                         "callback_id": "notification_form",
                         'color': "good",
                         "attachment_type": "default",
