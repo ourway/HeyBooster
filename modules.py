@@ -86,7 +86,6 @@ def performancechangetracking(slack_token, task):
     
     for i in range(len(metrics)):
         metricname = metricnames[i]
-        metricexpression = metrics[i]['expression']
         
         # WARNING: When the number of metrics is increased, 
         # WARNING: obtain data for other metrics
@@ -136,6 +135,7 @@ def performancechangetracking(slack_token, task):
                 attachments=attachments)
 
             return resp['ts']
+        
 #def performancechangetracking(slack_token, task):
 #    # Mobile Performance Changes Tracking
 #    text_m = "*Mobile Performance Changes Tracking*"
@@ -288,20 +288,36 @@ def shoppingfunnelchangetracking(slack_token, task):
     text = "*Shopping Funnel Changes Tracking*"
     attachments = []
     metrics = [
-        {'expression': 'ga:sessions'},
-        {'expression': 'ga:productDetailViews'},
-        {'expression': 'ga:productAddsToCart'},
-        {'expression': 'ga:productCheckouts'},
-        {'expression': 'ga:transactions'}
+        {'expression': 'ga:sessions'}
     ]
-    
+    metricnames = [
+            'Session'
+            ]
+    dimensions = [{'ALL_VISITS':'All Sessions',
+                   'PRODUCT_VIEW':'Sessions with product view',
+                   'ADD_TO_CART': 'Sessions with add to cart',
+                   'CHECKOUT': 'Sessions with checkout',
+                   'TRANSACTION': 'Sessions with transaction'
+                   }]
+    actions = [{
+                        "name": "track",
+                        "text": "Reschedule",
+                        "type": "button",
+                        "value": "track"
+                    },
+                        {
+                            "name": "ignore",
+                            "text": "Ignore",
+                            "type": "button",
+                            "value": "ignore"
+                        }]
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
     channel = task['channel']
-
     period = task['period']
-    threshold = float(task['threshold']) / 100
+    
+    tol = 0.20
 
     if (period == 1):
         start_date_1 = 'yesterday'
@@ -316,163 +332,62 @@ def shoppingfunnelchangetracking(slack_token, task):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
                                    {'startDate': start_date_2, 'endDate': end_date_2}],
-                    'metrics': metrics
+                    'metrics': metrics,
+                    'dimensions': [{'name'}:'ga:shoppingStage']
                 }]}).execute()
-
+    
+    dims = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+    datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
+    datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows']]
+    
     for i in range(len(metrics)):
-        metric = metrics[i]
-        sessions_new = float(results['reports'][0]['data']['totals'][0]['values'][i])
-        sessions_old = float(results['reports'][0]['data']['totals'][1]['values'][i])
-        if (sessions_new < sessions_old * (1 - threshold)):
-            if (metric['expression'] == "ga:sessions"):
-                attachments += [{"text": "{0} Total Session is less {1}% than {2}. {0} Total session: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new)),
-                    # change notification setting
-                    "color": "FF0000",
-                    "callback_id": "notification_form",
-                    "attachment_type": "default",
-                    "actions": [{
-                        "name": "track",
-                        "text": "Reschedule",
-                        "type": "button",
-                        "value": "track"
-                    },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }]
-                }]
-            elif (metric['expression'] == 'ga:productDetailViews'):
-                attachments += [{
-                    "text": "{0} Session without any shopping activity is less {1}% than {2}. {0} Session without any shopping activity: {3}\n".format(
-                        start_date_1,
-                        round(threshold * 100, 2),
-                        start_date_2,
-                        int(sessions_new)),
-                    "callback_id": "notification_form",
-                    "color": "#3AA3E3",
-                    "attachment_type": "default",
-                    "actions": [{
-                        "name": "track",
-                        "text": "Reschedule",
-                        "type": "button",
-                        "value": "track"
-                    },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }]
-                }]
-            elif (metric['expression'] == 'ga:productAddsToCart'):
-                attachments += [{"text": "{0} Add to Cart is less {1}% than {2}. {0} Add to Cart: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new)),
-                    "callback_id": "notification_form",
-                    "color": "#3AA3E3",
-                    "attachment_type": "default",
-                    "actions": [{
-                        "name": "track",
-                        "text": "Reschedule",
-                        "type": "button",
-                        "value": "track"
-                    },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }]
-                }]
-            elif (metric['expression'] == 'ga:productCheckouts'):
-                attachments += [{"text": "{0} Checkout is less {1}% than {2}. {0} Checkout: {3}\n".format(
-                    start_date_1,
-                    round(threshold * 100, 2),
-                    start_date_2,
-                    int(sessions_new)),
-                    "callback_id": "notification_form",
-                    "color": "#3AA3E3",
-                    "attachment_type": "default",
-                    "actions": [{
-                        "name": "track",
-                        "text": "Reschedule",
-                        "type": "button",
-                        "value": "track"
-                    },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }]
-                }]
-            elif (metric['expression'] == 'ga:transactions'):
-                attachments += [
-                    {"text": "{0} Total Transaction is less {1}% than {2}. {0} Total Transaction: {3}\n".format(
-                        start_date_1,
-                        round(threshold * 100, 2),
-                        start_date_2,
-                        int(sessions_new)),
+        metricname = metricnames[i]
+        for dim in dims:
+            j = dims.index(dim)
+            data_new = datas_new[j]
+            data_old = datas_old[j]
+#            sessions_new = float(results['reports'][0]['data']['rows'][j]['metrics'][0]['values'][0])
+#            sessions_old = float(['reports'][0]['data']['rows'][j]['metrics'][1]['values'][0])
+            try:
+                changerate = str(round(abs(data_old-data_new)/data_old,2)) + '%'
+            except:
+                changerate = abs(data_old-data_new)
+            if(data_new < data_old):
+                if ((data_old-data_new) <= (tol*data_old)):
+                    pass
+    #                attachments += [{"text": f"Yesterday {dimensions['dim']} is {changerate} less than previous day. {dimensions['dim']} : {data_new}\n",
+    #                    "callback_id": "notification_form",
+    #                    "attachment_type": "default",
+    #                }]
+                else:
+                    attachments += [{"text": f"Yesterday {dimensions['dim']} is {changerate} less than previous day. {dimensions['dim']} : {data_new}\n",
                         "callback_id": "notification_form",
-                        "color": "#3AA3E3",
+                        'color': "danger",
                         "attachment_type": "default",
-                        "actions": [{
-                            "name": "track",
-                            "text": "Reschedule",
-                            "type": "button",
-                            "value": "track"
-                        },
-                            {
-                                "name": "ignore",
-                                "text": "Ignore",
-                                "type": "button",
-                                "value": "ignore"
-                            }]
+                    }]
+            else:
+                if((data_new-data_old) >= (tol*data_old)):
+                    pass
+    #                attachments += [{"text": f"Yesterday {dimensions['dim']} is {changerate} more than previous day. {dimensions['dim']} : {data_new}\n",
+    #                    "callback_id": "notification_form",
+    #                    "attachment_type": "default",
+    #                }]
+                else:
+                    attachments += [{"text": f"Yesterday {dimensions['dim']} is {changerate} more than previous day. {dimensions['dim']} : {data_new}\n",
+                        "callback_id": "notification_form",
+                        'color': "good",
+                        "attachment_type": "default",
                     }]
     if (len(attachments) > 0):
         attachments[0]['pretext'] = text
-
-    slack_client = WebClient(token=slack_token)
-    resp = slack_client.chat_postMessage(
-        channel=channel,
-        attachments=attachments)
-    return resp['ts']
-
-"""
-    attachments += [{
-        "pretext": "Click *_Track_* to configure *_Shopping Funnel Changes Tracking_* notification",
-        "callback_id": "notification_form",
-        "color": "#3AA3E3",
-        "attachment_type": "default",
-        "actions": [{
-            "name": "ignore",
-            "text": "Ignore",
-            "type": "button",
-            "value": "ignore"
-        },
-            {
-                "name": "track",
-                "text": "Track",
-                "type": "button",
-                "value": "track"
-            }]
-    }]
-
-    if (len(attachments) > 1):
+        attachments[-1]['actions'] = actions
+        slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(
             channel=channel,
             attachments=attachments)
         return resp['ts']
 
-"""
+
 def costprediction(slack_token, task):
     # Cost Prediction
     text = "*Cost Prediction*"
@@ -659,33 +574,6 @@ def costprediction(slack_token, task):
         attachments=attachments)
     return resp['ts']
 
-"""
-    attachments += [{
-        "pretext": "Click *_Track_* to configure *_Cost Prediction_* notification",
-        "callback_id": "notification_form",
-        "color": "#3AA3E3",
-        "attachment_type": "default",
-        "actions": [{
-            "name": "track",
-            "text": "Track",
-            "type": "button",
-            "value": "track"
-        },
-            {
-                "name": "ignore",
-                "text": "Ignore",
-                "type": "button",
-                "value": "ignore"
-            }]
-    }]
-
-    if (len(attachments) > 1):
-        resp = slack_client.chat_postMessage(
-            channel=channel,
-            attachments=attachments)
-        return resp['ts']
-"""
-
 def performancegoaltracking(slack_token, task):
     # Funnel Changes Tracking
     text = "*Performance Goal Tracking*"
@@ -763,31 +651,3 @@ def performancegoaltracking(slack_token, task):
             channel=channel,
             attachments=attachments)
     return resp['ts']
-
-"""
-    attachments += [{
-        "pretext": "Click *_Track_* to configure *_Performance Goal Tracking_* notification",
-        "callback_id": "notification_form",
-        "color": "#3AA3E3",
-        "attachment_type": "default",
-        "actions": [{
-            "name": "track",
-            "text": "Track",
-            "type": "button",
-            "value": "track"
-        },
-            {
-                "name": "ignore",
-                "text": "Ignore",
-                "type": "button",
-                "value": "ignore"
-            }]
-    }]
-    
-
-    if (len(attachments) > 1):
-        resp = slack_client.chat_postMessage(
-            channel=channel,
-            attachments=attachments)
-        return resp['ts']
-"""
