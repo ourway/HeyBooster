@@ -734,6 +734,8 @@ def message_actions():
                     {'_id' : module_id},
                     {'$push' : {'target': submission['target']}}
                 )
+            db.find_and_modify("notification", query={'_id': module['_id']},
+                                   status='1')
         elif('budget' in submission.keys() and len(submission.keys())==1):
             datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
                                                         'channelID': channel})['_id']
@@ -741,7 +743,8 @@ def message_actions():
             db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
                                                                  'type': 'costprediction'
                                                                  },
-                                                               target=target
+                                                               target=target,
+                                                               status='1'
                                                                )
             
     return make_response("", 200)
