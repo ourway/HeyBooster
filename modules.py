@@ -37,10 +37,10 @@ def performancechangetracking(slack_token, task):
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
     channel = task['channel']
-
+    
     period = task['period']
     
-    threshold = float(task['threshold']) / 100
+    tol = 0.10
     
     filters = [
         {
@@ -86,7 +86,7 @@ def performancechangetracking(slack_token, task):
             changerate = str(round(abs(data_old-data_new)/data_old,2)) + '%'
         except:
             changerate = abs(data_old-data_new)
-        if(data_new < data-old):
+        if(data_new < data_old):
             if ((data_old-data_new) < (tol*data_old)):
                 attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
                     "pretext": text,
