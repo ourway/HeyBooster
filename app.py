@@ -734,7 +734,7 @@ def message_actions():
                     {'_id' : module_id},
                     {'$push' : {'target': submission['target']}}
                 )
-        elif('budget' in submission.keys() and len(submission.keys()==1)):
+        elif('budget' in submission.keys() and len(submission.keys())==1):
             datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
                                                         'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
