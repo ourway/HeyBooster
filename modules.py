@@ -82,11 +82,13 @@ def performancechangetracking(slack_token, task):
         # WARNING: obtain data for other metrics
         data_old = float(results['reports'][0]['data']['totals'][1]['values'][i])
         
-        changerate = round(abs(data_old-data_new)/data_old,2)
-        
+        try:
+            changerate = str(round(abs(data_old-data_new)/data_old,2)) + '%'
+        except:
+            changerate = abs(data_old-data_new)
         if(data_new < data-old):
             if ((data_old-data_new) < (tol*data_old)):
-                attachments += [{"text": f"Yesterday {metricname} is {changerate} less than previous day. {metricname} : {round(data_new,2)}\n",
+                attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
                     "pretext": text,
                     "callback_id": "notification_form",
                     "attachment_type": "default",
@@ -104,7 +106,7 @@ def performancechangetracking(slack_token, task):
                         }]
                 }]
             else:
-                attachments += [{"text": f"Yesterday {metricname} is {changerate} less than previous day. {metricname} : {round(data_new,2)}\n",
+                attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
                     "pretext": text,
                     "callback_id": "notification_form",
                     'color': "danger",
@@ -124,7 +126,7 @@ def performancechangetracking(slack_token, task):
                 }]
         else:
             if((data_new-data_old) > (tol*data_old)):
-                attachments += [{"text": f"Yesterday {metricname} is {changerate} more than previous day. {metricname} : {round(data_new,2)}\n",
+                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
                     "pretext": text,
                     "callback_id": "notification_form",
                     "attachment_type": "default",
@@ -142,7 +144,7 @@ def performancechangetracking(slack_token, task):
                         }]
                 }]
             else:
-                attachments += [{"text": f"Yesterday {metricname} is {changerate} more than previous day. {metricname} : {round(data_new,2)}\n",
+                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
                     "pretext": text,
                     "callback_id": "notification_form",
                     'color': "good",
