@@ -96,7 +96,7 @@ def performancechangetracking(slack_token, task):
         data_old = float(results['reports'][0]['data']['totals'][1]['values'][i])
         
         try:
-            changerate = str(round(abs(data_old-data_new)/data_old,2)) + '%'
+            changerate = str(round(abs(data_old-data_new)/data_old*100,2)) + '%'
         except:
             changerate = abs(data_old-data_new)
         if(data_new < data_old):
@@ -336,21 +336,33 @@ def shoppingfunnelchangetracking(slack_token, task):
                     'dimensions': [{'name':'ga:shoppingStage'}]
                 }]}).execute()
     
-    dims = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+    dims_new = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+    dims_old = [row['dimensions'][1] for row in results['reports'][0]['data']['rows']]
+    
     datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
     datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows']]
     
     for i in range(len(metrics)):
         metricname = metricnames[i]
         for dim in dimensions.keys():
-            j = dims.index(dim)
-            data_new = datas_new[j]
-            data_old = datas_old[j]
+            try:
+                j1 = dims_new.index(dim)
+                data_new = datas_new[j1]
+            except:
+                data_new = 0
+                
+            try:
+                j2 = dims_old.index(dim)
+                data_old = datas_old[j2]
+            except:
+                data_old = 0
+                
             dimname = dimensions[dim]
+
 #            sessions_new = float(results['reports'][0]['data']['rows'][j]['metrics'][0]['values'][0])
 #            sessions_old = float(['reports'][0]['data']['rows'][j]['metrics'][1]['values'][0])
             try:
-                changerate = str(round(abs(data_old-data_new)/data_old,2)) + '%'
+                changerate = str(round(abs(data_old-data_new)/data_old*100,2)) + '%'
             except:
                 changerate = abs(data_old-data_new)
             if(data_new < data_old):
