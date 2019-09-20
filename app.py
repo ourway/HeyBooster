@@ -668,7 +668,6 @@ def message_actions():
                                 "label": "Expression",
                                 "type": "text",
                                 "name": "expression",
-                                "subtype": "text",
                                 "placeholder": "Enter an expression (Optional)",
                                 "optional": True
                             },
