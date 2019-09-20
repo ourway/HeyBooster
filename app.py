@@ -610,7 +610,7 @@ def message_actions():
                                     },
                                     {
                                         "label": "Cost Per Transaction",
-                                        "label": "ga:costPerTransaction",
+                                        "value": "ga:costPerTransaction",
                                     },
                                     {
                                         "label": "Revenue",
@@ -877,6 +877,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'email': email,
         'metric': [],
         'target': [],
+        'filter': [],
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': "%s.00" % (default_time),
@@ -902,7 +903,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
                 "actions": [
                     {
                         "name": "change",
-                        "text": "Change Notification Setting",
+                        "text": "Reschedule",
                         "type": "button",
                         "value": "change"
                     },
