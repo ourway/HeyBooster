@@ -702,6 +702,21 @@ def message_actions():
                         ]
                     }
                 )
+        elif ('ignoreone' in message_action['actions'][-1]['value']):
+            metric = message_action['actions'][-1]['value'].split(' ')[-1]
+            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                            'channelID': channel})['_id']
+            module = db.find_one("notification", query={'datasourceID': datasourceID,
+                                                        'type': 'performancegoaltracking'})
+            module_id = module['_id']
+            metricindex = module['metric'].index(metric)
+            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$unset" : {"metric."+ str(metricindex): 1 }}) 
+            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"metric" : "null"}})
+            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$unset" : {"target."+ str(metricindex): 1 }}) 
+            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"target" : "null"}})
+            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$unset" : {"filterExpression."+ str(metricindex): 1 }}) 
+            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"filterExpression" : null}})
+        
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']

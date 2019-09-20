@@ -337,15 +337,16 @@ def shoppingfunnelchangetracking(slack_token, task):
                 }]}).execute()
     try:    
         dims_new = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+        datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
     except:
         dims_new = []
+        datas_new = []
     try:
         dims_old = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+        datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows']]
     except:
         dims_old = []
-
-    datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
-    datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows']]
+        datas_old = []
 
     for i in range(len(metrics)):
         metricname = metricnames[i]
@@ -614,18 +615,35 @@ def performancegoaltracking(slack_token, task):
             attachments += [{"text": f"This month, {metricname} is {round(query,2)}, Your Target {metricname}: {target}",
                              "color": "danger",
                              "callback_id": "notification_form",
-                             "attachment_type": "default"
+                             "attachment_type": "default",
+                             "actions": {
+                                            "name": "ignore",
+                                            "text": "Ignore",
+                                            "type": "button",
+                                            "value": "ignoreone " + metrics[i]['expression']
+                                        }
                              }]
 
         else:
             attachments += [{"text": f"This month, {metricname} is {round(query,2)}, Your Target {metricname}: {target}",
                              "color": "good",
                              "callback_id": "notification_form",
-                             "attachment_type": "default"
+                             "attachment_type": "default",
+                             "actions": {
+                                            "name": "ignore",
+                                            "text": "Remove",
+                                            "type": "button",
+                                            "value": "ignoreone " + metrics[i]['expression']
+                                        }
                              }]
 
     attachments[0]['pretext'] = text
-    attachments[-1]['actions'] = actions
+#    attachments[-1]['actions'] = actions
+    attachments += {"text": f"This month, {metricname} is {round(query,2)}, Your Target {metricname}: {target}",
+                    "color": "FFFFFF",
+                    "callback_id": "notification_form",
+                    "attachment_type": "default",
+                    "actions": actions}
 
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(
