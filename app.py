@@ -703,7 +703,7 @@ def message_actions():
                     }
                 )
         elif ('ignoreone' in message_action['actions'][-1]['value']):
-            metric = message_action['actions'][-1]['value'].split(' ')[-1]
+            metric = message_action['actions'][-1]['value'].split('_')[-1]
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,

@@ -620,7 +620,7 @@ def performancegoaltracking(slack_token, task):
                                             "name": "ignore",
                                             "text": "Ignore",
                                             "type": "button",
-                                            "value": "ignoreone " + metrics[i]['expression']
+                                            "value": "ignoreone_" + metrics[i]['expression']
                                         }
                              }]
 
@@ -633,13 +633,13 @@ def performancegoaltracking(slack_token, task):
                                             "name": "ignore",
                                             "text": "Remove",
                                             "type": "button",
-                                            "value": "ignoreone " + metrics[i]['expression']
+                                            "value": "ignoreone_" + metrics[i]['expression']
                                         }
                              }]
 
     attachments[0]['pretext'] = text
 #    attachments[-1]['actions'] = actions
-    attachments += {"text": f"This month, {metricname} is {round(query,2)}, Your Target {metricname}: {target}",
+    attachments += {"text": "",
                     "color": "FFFFFF",
                     "callback_id": "notification_form",
                     "attachment_type": "default",
