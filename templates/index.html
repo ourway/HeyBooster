@@ -40,11 +40,11 @@
             <button class="action action--open" aria-label="Open Menu"><span class="icon icon--menu"></span></button>
             <nav id="ml-menu" class="menu">
                 <button class="action action--close" aria-label="Close Menu"><span class="icon icon--cross"></span></button>
-                <div class="menu__wrap">
-                    <ul data-menu="main" class="menu__level" tabindex="-1" role="menu" aria-label="All">
-                        <li class="menu__item_s"><a class="menu__link_s" href="/">Home</a></li>
-                        <li class="menu__item_s"><a class="menu__link_s" href="/datasources">Data Sources</a></li>
-                        <li class="menu__item_s"><a class="menu__link_s" href="/login">Login</a></li>
+                <div class="">
+                    <ul data-menu="main" class="" tabindex="-1" role="menu" aria-label="All">
+                        <li class=""><a class="" href="/">Home</a></li>
+                        <li class=""><a class="" href="/datasources">Data Sources</a></li>
+                        <li class=""><a class="" href="/login">Login</a></li>
                     </ul>
                 </div>
             </nav>
@@ -56,7 +56,7 @@
                 <img src="../static/img/slack.png" style="opacity: 0.9">
                 <img src="../static/img/google-2.png">
                 <!-- Ajax loaded content here -->
-                <form method="POST" action="/connect">
+                <form method="POST" action="/google/connect">
                     {% if session['logged_in'] or session['auth_token']%}
                         <div class="ilk-button">
                             <button class="btn btn-dark btn-lg" id="btn-3">Connect Your World</button>
