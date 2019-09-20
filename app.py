@@ -528,7 +528,7 @@ def message_actions():
         #            attachments=[]
         #        )
         elif (message_action['actions'][0]['value'] == 'ignore'):
-            text = message_action['original_message']['attachments'][-1]['pretext']
+            text = message_action['original_message']['attachments'][0]['pretext']
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
             if (("performance" in text.lower()) and ("change" in text.lower())):
                 db.find_and_modify('notification', query={'datasourceID': datasourceID,
