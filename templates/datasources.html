@@ -50,32 +50,35 @@
         </div>
     </nav>
     <div class="content content-1">
-        <form>
-            <div class="connect-name">
+        <form method="POST" action="/datasources">
+            {{ nForm.csrf_token }}
+{#            <div class="connect-name">
                 <label for="validationTooltip01">
                     <h4>Connection Name</h4>
                 </label>
                 <input type="text" class="form-control" id="validationTooltip01" placeholder="First name"
                        value="Connection" required>
-            </div>
+            </div>#}
 
 
             <div class="google-option">
                 <h4>Google Analytics</h4>
 
+                <h6>Account</h6>
+                <select class="custom-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">{{ nForm.account }}</option>
+                </select>
+
                 <h6>Property</h6>
                 <select class="custom-select">
                     <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option value="1">{{ nForm.property }}</option>
                 </select>
                 <h6>View</h6>
                 <select class="custom-select">
                     <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option value="1">{{ nForm.view }}</option>
                 </select>
 
             </div>
@@ -85,13 +88,11 @@
                 <h6>Channel</h6>
                 <select class="custom-select">
                     <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option value="1">{{ nForm.channel }}</option>
                 </select>
 
 
-                <button class="btn btn-dark btnn mt-3" type="submit">Submit form</button>
+                <button class="btn btn-dark btnn mt-3" type="submit">Add Data Source</button>
             </div>
 
         </form>
