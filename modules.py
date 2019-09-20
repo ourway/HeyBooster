@@ -622,7 +622,9 @@ def performancegoaltracking(slack_token, task):
 
         else:
             attachments += [{"text": f"This month, {metricname} is {query}, Your Target {metricname}: {target}",
-                             "color": "good"
+                             "color": "good",
+                             "callback_id": "notification_form",
+                             "attachment_type": "default"
                              }]
 
     attachments[0]['pretext'] = text
