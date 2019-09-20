@@ -639,11 +639,11 @@ def performancegoaltracking(slack_token, task):
 
     attachments[0]['pretext'] = text
 #    attachments[-1]['actions'] = actions
-    attachments += {"text": "",
+    attachments += [{"text": "",
                     "color": "FFFFFF",
                     "callback_id": "notification_form",
                     "attachment_type": "default",
-                    "actions": actions}
+                    "actions": actions}]
 
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(
