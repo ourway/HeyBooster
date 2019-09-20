@@ -246,7 +246,9 @@ def message_actions():
     slack_token = user['sl_accesstoken']
     email = user['email']
     slack_client = WebClient(token=slack_token)
-    print(message_action["type"])
+    with open('abc.txt','w+') as f:
+        f.write(str(message_action["type"])+'\n'+str(message_action['actions']))
+        
     if message_action["type"] == "interactive_message":
         if (message_action['actions'][-1]['value'] == 'track'):
             houroptions = []
