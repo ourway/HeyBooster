@@ -41,7 +41,7 @@
         <div class="menu__wrap">
             <ul data-menu="main" class="menu__level" tabindex="-1" role="menu" aria-label="All">
                 <li class="menu__item_s"><a class="menu__link_s" href="/">Home</a></li>
-                <li class="menu__item_s"><a class="menu__link_s" href="/datasources">Data Sources</a></li>
+                <li class="menu__item_s"><a class="menu__link_s" href="/datasources">Data Source</a></li>
                 <li class="menu__item_s"><a class="menu__link_s" href="/login">Login</a></li>
 
             </ul>
@@ -73,6 +73,7 @@
 <script src="js/classie.js"></script>
 <script src="js/dummydata.js"></script>
 <script src="js/main.js"></script>
+
 <script>
     (function () {
         var menuEl = document.getElementById('ml-menu'),
@@ -83,6 +84,7 @@
                 // itemsDelayInterval : 60, // delay between each menu item sliding animation
                 onItemClick: loadDummyData // callback: item that doesn´t have a submenu gets clicked - onItemClick([event], [inner HTML of the clicked item])
             });
+
         // mobile menu toggle
         var openMenuCtrl = document.querySelector('.action--open'),
             closeMenuCtrl = document.querySelector('.action--close');
