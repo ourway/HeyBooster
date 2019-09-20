@@ -614,14 +614,14 @@ def performancegoaltracking(slack_token, task):
         if (str("%.2f" % (round(target, 2))).split('.')[1] == '00'):
             target = int(target)
         if (query < target):
-            attachments += [{"text": f"This month, {metricname} is {query}, Your Target ROAS: {target}",
+            attachments += [{"text": f"This month, {metricname} is {query}, Your Target {metricname}: {target}",
                              "color": "danger",
                              "callback_id": "notification_form",
                              "attachment_type": "default"
                              }]
 
         else:
-            attachments += [{"text": f"This month, {metricname} is {query}, Your Target ROAS: {target}",
+            attachments += [{"text": f"This month, {metricname} is {query}, Your Target {metricname}: {target}",
                              "color": "good"
                              }]
 

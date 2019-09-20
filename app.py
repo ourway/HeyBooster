@@ -254,7 +254,7 @@ def message_actions():
             minuteoptions = []
             for i in range(0, 60):
                 minuteoptions.append({'label': str(i), 'value': i})
-            text = message_action['original_message']['attachments'][-1]['pretext']
+            text = message_action['original_message']['attachments'][0]['pretext']
             if (("performance" in text.lower()) and ("change" in text.lower())):
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
