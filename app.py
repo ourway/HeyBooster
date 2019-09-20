@@ -622,7 +622,8 @@ def message_actions():
                                 "label": "Dimension",
                                 "type": "select",
                                 "name": "dimension",
-                                "placeholder": "Select a dimension",
+                                "placeholder": "Select a dimension (Optional)",
+                                "optional": True,
                                 "options": [
                                     {
                                         "label": "Campaign",
@@ -642,7 +643,8 @@ def message_actions():
                                 "label": "Operator",
                                 "type": "select",
                                 "name": "operator",
-                                "placeholder": "Select an operator",
+                                "placeholder": "Select an operator (Optional)",
+                                "optional": True,
                                 "options": [
                                     {
                                         "label": "Exact Match",
@@ -667,7 +669,8 @@ def message_actions():
                                 "type": "text",
                                 "name": "expression",
                                 "subtype": "text",
-                                "placeholder": "Enter an expression"
+                                "placeholder": "Enter an expression (Optional)",
+                                "optional": True
                             },
                             {
                                 "label": "Target",
