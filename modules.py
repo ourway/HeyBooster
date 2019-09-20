@@ -15,7 +15,7 @@ def dtimetostrf(x):
 
 def performancechangetracking(slack_token, task):
     #    Performance Changes Tracking
-    text = "*Performance Changes Tracking*"
+    text = "Performance Changes Tracking"
     attachments = []
 
     metrics = [{'expression': 'ga:ROAS'},
@@ -285,7 +285,7 @@ def performancechangetracking(slack_token, task):
 
 def shoppingfunnelchangetracking(slack_token, task):
     # Funnel Changes Tracking
-    text = "*Shopping Funnel Changes Tracking*"
+    text = "Shopping Funnel Changes Tracking"
     attachments = []
     metrics = [
         {'expression': 'ga:sessions'}
@@ -293,11 +293,11 @@ def shoppingfunnelchangetracking(slack_token, task):
     metricnames = [
         'Session'
     ]
-    dimensions = {'ALL_VISITS': 'All Sessions',
-                  'PRODUCT_VIEW': 'Sessions with product view',
-                  'ADD_TO_CART': 'Sessions with add to cart',
-                  'CHECKOUT': 'Sessions with checkout',
-                  'TRANSACTION': 'Sessions with transaction'
+    dimensions = {'ALL_VISITS': 'Number of session',
+                  'PRODUCT_VIEW': 'Number of session with product view',
+                  'ADD_TO_CART': 'Number of session with add to cart',
+                  'CHECKOUT': 'Number of session with checkout',
+                  'TRANSACTION': 'Number of session with transaction'
                   }
     actions = [{
         "name": "track",
@@ -368,14 +368,14 @@ def shoppingfunnelchangetracking(slack_token, task):
             if (data_new < data_old):
                 if ((data_old - data_new) <= (tol * data_old)):
                     pass
-                #                attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {data_new}\n",
+                #                attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
                 #                    "callback_id": "notification_form",
                 #                    "attachment_type": "default",
                 #                }]
                 else:
 
                     attachments += [{
-                                        "text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {data_new}\n",
+                                        "text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
                                         "callback_id": "notification_form",
                                         'color': "danger",
                                         "attachment_type": "default",
@@ -383,13 +383,13 @@ def shoppingfunnelchangetracking(slack_token, task):
             else:
                 if ((data_new - data_old) >= (tol * data_old)):
                     pass
-                #                attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {data_new}\n",
+                #                attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
                 #                    "callback_id": "notification_form",
                 #                    "attachment_type": "default",
                 #                }]
                 else:
                     attachments += [{
-                                        "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {data_new}\n",
+                                        "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
                                         "callback_id": "notification_form",
                                         'color': "good",
                                         "attachment_type": "default",
@@ -406,7 +406,7 @@ def shoppingfunnelchangetracking(slack_token, task):
 
 def costprediction(slack_token, task):
     # Cost Prediction
-    text = "*Cost Prediction*"
+    text = "Cost Prediction"
     attachments = []
     actions = [
         {
@@ -539,7 +539,7 @@ def costprediction(slack_token, task):
 
 def performancegoaltracking(slack_token, task):
     # Funnel Changes Tracking
-    text = "*Performance Goal Tracking*"
+    text = "Performance Goal Tracking"
     attachments = []
     actions = [
         {
@@ -568,10 +568,12 @@ def performancegoaltracking(slack_token, task):
     metrics = []
     metricnames = []
     targets = []
+    filters = []
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
         targets += [float(task['target'][i])]
+        filters += [task['filterExpression'][i]]
 
     email = task['email']
     viewId = task['viewId']
