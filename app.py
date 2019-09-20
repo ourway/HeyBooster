@@ -881,7 +881,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'email': email,
         'metric': [],
         'target': [],
-        'filter': [],
+        'filterExpression': [],
         'scheduleType': 'daily',
         'frequency': 0,
         'timeofDay': "%s.00" % (default_time),
