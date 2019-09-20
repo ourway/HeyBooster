@@ -246,6 +246,7 @@ def message_actions():
     slack_token = user['sl_accesstoken']
     email = user['email']
     slack_client = WebClient(token=slack_token)
+    print(message_action["type"])
     if message_action["type"] == "interactive_message":
         if (message_action['actions'][0]['value'] == 'track'):
             houroptions = []
