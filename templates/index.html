@@ -60,22 +60,24 @@
         <img src="../static/img/slack.png" style="opacity: 0.9">
         <img src="../static/img/google-2.png">
         <!-- Ajax loaded content here -->
-        <form action="/google/connect">
-            {% if session['logged_in'] or session['auth_token'] %}
+        {% if session['logged_in'] or session['auth_token'] %}
+            <form action="/google/connect">
+
                 <div class="ilk-button">
                     <button class="btn btn-dark btn-lg" id="btn-3">Connect Your World</button>
                 </div>
-            {% else %}
-                <a href="../google/login">
-                    <button class="contact100-form-btn google">
+            </form>
+
+        {% else %}
+            <a href="../google/login">
+                <button class="contact100-form-btn google">
                     <span>
                         <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
                             google ile Giriş Yap
                     </span>
-                    </button>
-                </a>
-            {% endif %}
-        </form>
+                </button>
+            </a>
+        {% endif %}
     </div>
 
 </div>
