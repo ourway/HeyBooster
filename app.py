@@ -787,7 +787,7 @@ def message_actions():
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
-            if( submission['dimension'] != "" and submission['operator'] != "" and submission['expression'] != "" ):
+            if( submission['dimension'] != None and submission['operator'] != None and submission['expression'] != None ):
                 filterExpression = submission['dimension']+submission['operator']+submission['expression']
             else:
                 filterExpression = ''

@@ -373,10 +373,10 @@ def shoppingfunnelchangetracking(slack_token, task):
             if (data_new < data_old):
                 if ((data_old - data_new) <= (tol * data_old)):
                     pass
-                #                attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
-                #                    "callback_id": "notification_form",
-                #                    "attachment_type": "default",
-                #                }]
+#                    attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
+#                        "callback_id": "notification_form",
+#                        "attachment_type": "default",
+#                    }]
                 else:
 
                     attachments += [{
@@ -386,12 +386,12 @@ def shoppingfunnelchangetracking(slack_token, task):
                                         "attachment_type": "default",
                                         }]
             else:
-                if ((data_new - data_old) >= (tol * data_old)):
+                if ((data_new - data_old) <= (tol * data_old)):
                     pass
-                #                attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
-                #                    "callback_id": "notification_form",
-                #                    "attachment_type": "default",
-                #                }]
+#                    attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
+#                        "callback_id": "notification_form",
+#                        "attachment_type": "default",
+#                    }]
                 else:
                     attachments += [{
                                         "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
