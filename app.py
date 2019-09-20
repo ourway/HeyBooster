@@ -622,7 +622,7 @@ def message_actions():
                                 "label": "Dimension",
                                 "type": "select",
                                 "name": "dimension",
-                                "placeholder": "Select a dimension (Optional)",
+                                "placeholder": "Select a dimension",
                                 "optional": True,
                                 "options": [
                                     {
@@ -643,7 +643,7 @@ def message_actions():
                                 "label": "Operator",
                                 "type": "select",
                                 "name": "operator",
-                                "placeholder": "Select an operator (Optional)",
+                                "placeholder": "Select an operator",
                                 "optional": True,
                                 "options": [
                                     {
@@ -668,7 +668,7 @@ def message_actions():
                                 "label": "Expression",
                                 "type": "text",
                                 "name": "expression",
-                                "placeholder": "Enter an expression (Optional)",
+                                "placeholder": "Enter an expression",
                                 "optional": True
                             },
                             {
@@ -787,8 +787,10 @@ def message_actions():
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
-            filterExpression = submission['dimension']+submission['operator']+submission['expression']
-
+            if( submission['dimension'] != "" and submission['operator'] != "" and submission['expression'] != "" ):
+                filterExpression = submission['dimension']+submission['operator']+submission['expression']
+            else:
+                filterExpression = ''
             try:
                 metricindex = module['metric'].index(submission['metric'])
                 db.DATABASE['notification'].update(

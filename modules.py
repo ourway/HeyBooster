@@ -596,9 +596,19 @@ def performancegoaltracking(slack_token, task):
                 }]}).execute()
 
     for i in range(len(metrics)):
-        query = float(results['reports'][0]['data']['totals'][0]['values'][i])
         metricname = metricnames[i]
         target = targets[i]
+        filterExpression = filters[i]
+        results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'filtersExpression': filterExpression
+                }]}).execute()
+        query = float(results['reports'][0]['data']['totals'][0]['values'][i])
         if (str("%.2f" % (round(query, 2))).split('.')[1] == '00'):
             query = int(query)
         if (str("%.2f" % (round(target, 2))).split('.')[1] == '00'):
