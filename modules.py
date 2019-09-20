@@ -560,15 +560,15 @@ def performancegoaltracking(slack_token, task):
     metricdict = {'ga:ROAS': 'Adwords ROAS',
                   'ga:CPC': 'CPC',
                   'ga:sessions': 'Session',
-                  'ga:costPerTransaction', 'Cost Per Transaction',
+                  'ga:costPerTransaction': 'Cost Per Transaction',
                   'ga:transactionRevenue': 'Revenue'}
     metrics = []
     metricnames = []
     targets = []
     for i in range(len(task['metric'])):
-        metrics += [{'expression': task['metric'][i]})]
+        metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
-        targets += [task['target'][i]]
+        targets += [float(task['target'][i])]
         
         
     email = task['email']
