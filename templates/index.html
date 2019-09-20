@@ -46,8 +46,8 @@
                 <li class=""><a class="" href="/datasources">Data Sources</a></li>
                 {% if session['logged_in'] or session['auth_token'] %}
                     <li class=""><a class="" href="/logout">Logout</a></li>
-{#                {% else %}#}
-{#                    <li class=""><a class="" href="/login">Login</a></li>#}
+                    {#                {% else %}#}
+                    {#                    <li class=""><a class="" href="/login">Login</a></li>#}
                 {% endif %}
             </ul>
         </div>
@@ -66,7 +66,14 @@
                     <button class="btn btn-dark btn-lg" id="btn-3">Connect Your World</button>
                 </div>
             {% else %}
-                <li class=""><a class="" href="/login">Login</a></li>
+                <a href="../google/login">
+                    <button class="contact100-form-btn google">
+                    <span>
+                        <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+                            google ile Giriş Yap
+                    </span>
+                    </button>
+                </a>
             {% endif %}
         </form>
     </div>
