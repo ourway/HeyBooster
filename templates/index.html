@@ -60,7 +60,7 @@
         <img src="../static/img/slack.png" style="opacity: 0.9">
         <img src="../static/img/google-2.png">
         <!-- Ajax loaded content here -->
-        <form method="POST" action="/google/connect">
+        <form action="/google/connect">
             {% if session['logged_in'] or session['auth_token'] %}
                 <div class="ilk-button">
                     <button class="btn btn-dark btn-lg" id="btn-3">Connect Your World</button>
