@@ -1,67 +1,161 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en" class="no-js">
 
-{% block body %}
-    <div style="margin: 10%">
-        <form method="POST" action="/datasources">
-            {{ nForm.csrf_token }}
-            <br>Account<br>
-            {{ nForm.account }}
-            <br>Property<br>
-            {{ nForm.property }}
-            <br>View<br>
-            {{ nForm.view }}
-            <br>Channel<br>
-            {{ nForm.channel }}
-            <br><input type="submit" name="submit" value="Submit">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Sources</title>
+    <meta name="description" content="Blueprint: A basic template for a responsive multi-level menu"/>
+    <meta name="keywords" content="blueprint, template, html, css, menu, responsive, mobile-friendly"/>
+    <meta name="author" content="Codrops"/>
+    <link rel="shortcut icon" href="favicon.ico">
+    <!-- food icons -->
+    <link rel="stylesheet" type="text/css" href="css/organicfoodicons.css"/>
+    <!-- demo styles -->
+    <link rel="stylesheet" type="text/css" href="css/demo.css"/>
+    <!-- menu styles -->
+    <link rel="stylesheet" type="text/css" href="css/component.css"/>
+    <script src="js/modernizr-custom.js"></script>
+</head>
+
+<body>
+<!-- Main container -->
+<div class="container">
+    <!-- Blueprint header -->
+    <header class="bp-header cf">
+        <div class="dummy-logo">
+            <div class="dummy-icon foodicon png">
+                <img src="img/558x200-kopya.png">
+            </div>
+            <h2 class="dummy-heading">HeyBooster</h2>
+        </div>
+        <div class="bp-header__main">
+            <span class="bp-header__present">Hey Booster'ı istiyorsan alkışla<span data-content="bilgi"></span></span>
+
+        </div>
+
+    </header>
+    <button class="action action--open" aria-label="Open Menu"><span class="icon icon--menu"></span></button>
+    <nav id="ml-menu" class="menu">
+        <button class="action action--close" aria-label="Close Menu"><span class="icon icon--cross"></span></button>
+
+        <div class="">
+            <ul data-menu="main" class="" tabindex="-1" role="menu" aria-label="All">
+                <li class=""><a class="" href="/">Home</a></li>
+                <li class=""><a class="" href="/datasources">Data Sources</a></li>
+                <li class=""><a class="" href="/login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="content content-1">
+        <form>
+            <div class="connect-name">
+                <label for="validationTooltip01">
+                    <h4>Connection Name</h4>
+                </label>
+                <input type="text" class="form-control" id="validationTooltip01" placeholder="First name"
+                       value="Connection" required>
+            </div>
+
+
+            <div class="google-option">
+                <h4>Google Analytics</h4>
+
+                <h6>Property</h6>
+                <select class="custom-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <h6>View</h6>
+                <select class="custom-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+
+            </div>
+            <div class="slack-option" id="slack">
+
+                <h4>Slack</h4>
+                <h6>Channel</h6>
+                <select class="custom-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+
+
+                <button class="btn btn-dark btnn mt-3" type="submit">Submit form</button>
+            </div>
+
         </form>
 
-    <div style="background-color: bisque; margin-top: 2%">
-        {% if args %}
-            {% for arg in args %}
-                <h4 style="color: red"> {{ arg.sourceType }}  ---- </h4>
-                <h4 style="color: deepskyblue"> {{ arg.accountName }} ---- </h4>
-                <h4 style="color: green"> {{ arg.propertyName }} ---- </h4>
-                <h4 style="color: tomato"> {{ arg.viewName }} ---- </h4>
-                <h4 style="color: darkgoldenrod"> {{ arg.channelName }} </h4>
-            {% endfor %}
-        {% else %}
-            <h4 style="color: #9C1A1C">Veri yok submit et dene</h4>
-        {% endif %}
+        <div class="" style="text-align: center;margin-top:5%">
+            <button class="icon-btn add-btn">
+                <div class="add-icon"></div>
+                <div class="btn-txt">Add</div>
+            </button>
+        </div>
+
     </div>
-    </div>
-{% endblock %}
 
-{% block scripts %}
-    <script>
-        let account_select = document.getElementById("account");
-        let property_select = document.getElementById("property");
-        let view_select = document.getElementById("view");
-		let bellchar = '';
-        account_select.onchange = function () {
-            account = account_select.value.split(bellchar)[0];
-            fetch('/analytics/properties/' + account).then(function (response) {
-                response.json().then(function (data) {
-                    var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
-                    for (var property of data.properties) {
-                        optionHTML += '<option value="' + property.id + bellchar +  property.name + '">' + property.name + '</option>';
-                    }
-                    property_select.innerHTML = optionHTML;
-                })
-
+</div>
+<!-- /view -->
+<script src="js/classie.js"></script>
+<script src="js/dummydata.js"></script>
+<script src="js/main.js"></script>
+<script>
+    (function () {
+        var menuEl = document.getElementById('ml-menu'),
+            mlmenu = new MLMenu(menuEl, {
+                // breadcrumbsCtrl : true, // show breadcrumbs
+                // initialBreadcrumb : 'all', // initial breadcrumb text
+                backCtrl: false, // show back button
+                // itemsDelayInterval : 60, // delay between each menu item sliding animation
+                onItemClick: loadDummyData // callback: item that doesn´t have a submenu gets clicked - onItemClick([event], [inner HTML of the clicked item])
             });
-        }
-        property_select.onchange = function () {
-            property = property_select.value.split(bellchar)[0];
-            fetch('/analytics/views/' + account_select.value.split(bellchar)[0] + '/' + property).then(function (response) {
-                response.json().then(function (data) {
-                    var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
-                    for (var view of data.views) {
-                        optionHTML += '<option value="' + view.id + bellchar + view.name + '">' + view.name + '</option>';
-                    }
-                    view_select.innerHTML = optionHTML;
-                })
 
-            });
+        // mobile menu toggle
+        var openMenuCtrl = document.querySelector('.action--open'),
+            closeMenuCtrl = document.querySelector('.action--close');
+
+        openMenuCtrl.addEventListener('click', openMenu);
+        closeMenuCtrl.addEventListener('click', closeMenu);
+
+        function openMenu() {
+            classie.add(menuEl, 'menu--open');
+            closeMenuCtrl.focus();
         }
-    </script>
-{% endblock %}
+
+        function closeMenu() {
+            classie.remove(menuEl, 'menu--open');
+            openMenuCtrl.focus();
+        }
+
+        // simulate grid content loading
+        var gridWrapper = document.querySelector('.content');
+
+        function loadDummyData(ev, itemName) {
+            ev.preventDefault();
+
+            closeMenu();
+            gridWrapper.innerHTML = '';
+            classie.add(gridWrapper, 'content--loading');
+            setTimeout(function () {
+                classie.remove(gridWrapper, 'content--loading');
+                gridWrapper.innerHTML = '<ul class="products">' + dummyData[itemName] + '<ul>';
+            }, 700);
+        }
+    })();
+
+</script>
+</body>
+
+</html>

@@ -210,7 +210,7 @@ def datasources():
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
-    #        return render_template('datasources.html', nForm = nForm, args = args)
+    #        return render_template('oldDatasources.html', nForm = nForm, args = args)
     else:
         #        user_info = google_auth.get_user_info()
         nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
@@ -219,9 +219,9 @@ def datasources():
         nForm.channel.choices += [(channel['id'] + '\u0007' + '#' + channel['name'], '#' + channel['name']) for channel
                                   in channels]
         # incoming_webhook = slack.token['incoming_webhook']
-    #        return render_template('datasources.html', nForm = nForm, args = args)
+    #        return render_template('oldDatasources.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources.html', nForm=nForm, args=args)
+    return render_template('oldDatasources.html', nForm=nForm, args=args)
 
 
 @app.route("/gatest/<email>")

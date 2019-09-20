@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div style="margin: 10%">
+        <form method="POST" action="/datasources">
+            {{ nForm.csrf_token }}
+            <br>Account<br>
+            {{ nForm.account }}
+            <br>Property<br>
+            {{ nForm.property }}
+            <br>View<br>
+            {{ nForm.view }}
+            <br>Channel<br>
+            {{ nForm.channel }}
+            <br><input type="submit" name="submit" value="Submit">
+        </form>
+
+    <div style="background-color: bisque; margin-top: 2%">
+        {% if args %}
+            {% for arg in args %}
+                <h4 style="color: red"> {{ arg.sourceType }}  ---- </h4>
+                <h4 style="color: deepskyblue"> {{ arg.accountName }} ---- </h4>
+                <h4 style="color: green"> {{ arg.propertyName }} ---- </h4>
+                <h4 style="color: tomato"> {{ arg.viewName }} ---- </h4>
+                <h4 style="color: darkgoldenrod"> {{ arg.channelName }} </h4>
+            {% endfor %}
+        {% else %}
+            <h4 style="color: #9C1A1C">Veri yok submit et dene</h4>
+        {% endif %}
+    </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let account_select = document.getElementById("account");
+        let property_select = document.getElementById("property");
+        let view_select = document.getElementById("view");
+		let bellchar = '';
+        account_select.onchange = function () {
+            account = account_select.value.split(bellchar)[0];
+            fetch('/analytics/properties/' + account).then(function (response) {
+                response.json().then(function (data) {
+                    var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
+                    for (var property of data.properties) {
+                        optionHTML += '<option value="' + property.id + bellchar +  property.name + '">' + property.name + '</option>';
+                    }
+                    property_select.innerHTML = optionHTML;
+                })
+
+            });
+        }
+        property_select.onchange = function () {
+            property = property_select.value.split(bellchar)[0];
+            fetch('/analytics/views/' + account_select.value.split(bellchar)[0] + '/' + property).then(function (response) {
+                response.json().then(function (data) {
+                    var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
+                    for (var view of data.views) {
+                        optionHTML += '<option value="' + view.id + bellchar + view.name + '">' + view.name + '</option>';
+                    }
+                    view_select.innerHTML = optionHTML;
+                })
+
+            });
+        }
+    </script>
+{% endblock %}

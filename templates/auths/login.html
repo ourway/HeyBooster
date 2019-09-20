@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700' rel='stylesheet' type='text/css'>
-    <title>Form</title>
+    <title>Login</title>
     <meta name="description" content="Blueprint: A basic template for a responsive multi-level menu"/>
     <meta name="keywords" content="blueprint, template, html, css, menu, responsive, mobile-friendly"/>
     <link rel="shortcut icon" href="{{ url_for('static', filename='icon/favicon.ico') }}">
@@ -33,19 +33,21 @@
             </div>
             <h2 class="dummy-heading">HeyBooster</h2>
         </div>
+        <div class="bp-header__main">
+            <span class="bp-header__present">Hey Booster'ı istiyorsan alkışla<span data-content="bilgi"></span></span>
+
+        </div>
 
     </header>
     <button class="action action--open" aria-label="Open Menu"><span class="icon icon--menu"></span></button>
     <nav id="ml-menu" class="menu">
         <button class="action action--close" aria-label="Close Menu"><span class="icon icon--cross"></span></button>
-        <div class="menu__wrap">
-            <ul data-menu="main" class="menu__level" tabindex="-1" role="menu" aria-label="All">
-                <li class="menu__item_s"><a class="menu__link_s" href="/">Home</a></li>
-                <li class="menu__item_s"><a class="menu__link_s" href="/datasources">Data Source</a></li>
-                <li class="menu__item_s"><a class="menu__link_s" href="/login">Login</a></li>
-
+        <div class="">
+            <ul data-menu="main" class="" tabindex="-1" role="menu" aria-label="All">
+                <li class=""><a class="" href="/">Home</a></li>
+                <li class=""><a class="" href="/datasources">Data Sources</a></li>
+                <li class=""><a class="" href="/login">Login</a></li>
             </ul>
-
         </div>
     </nav>
     <div class="content content-1">
