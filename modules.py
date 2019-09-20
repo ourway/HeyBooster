@@ -543,14 +543,14 @@ def performancegoaltracking(slack_token, task):
     attachments = []
     actions = [
         {
-            "name": "setmybudget",
-            "text": "Set My Budget",
+            "name": "setmygoal",
+            "text": "Change My Goal",
             "type": "button",
-            "value": "setmybudget"
+            "value": "setmygoal"
         },
         {
             "name": "track",
-            "text": "Change Target Goal",
+            "text": "Reschedule",
             "type": "button",
             "value": "track"
         },
