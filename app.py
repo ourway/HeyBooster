@@ -1,7 +1,7 @@
 from flask import Flask, render_template, flash, redirect, request, session, url_for, make_response, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-#from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
+# from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
 from forms import LoginForm, RegisterForm, DataSourceForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 import google_auth
@@ -19,6 +19,7 @@ import time
 
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
+
 
 # Kullanıcı Giriş Decorator'ı
 
@@ -108,15 +109,15 @@ def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
         user = db.find_one('user', {'email': form.email.data})
-        
+
         if user:
-            if user['password']!= "":
+            if user['password'] != "":
                 if check_password_hash(user['password'], form.password.data):
                     flash("Başarıyla Giriş Yaptınız", category="success")
-    
+
                     session['logged_in'] = True
                     session['email'] = user['email']
-    
+
                     return redirect(url_for('home'))
                 else:
                     flash("Kullanıcı Adı veya Parola Yanlış", category="danger")
@@ -130,14 +131,15 @@ def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         user = db.find_one('user', {'email': form.email.data})
-        if(user):
-            flash('Bu kullanıcı zaten Google hesabı ile kayıtlı! Lütfen "Sign in with Google" butonuna basınız', category="danger")
+        if (user):
+            flash('Bu kullanıcı zaten Google hesabı ile kayıtlı! Lütfen "Sign in with Google" butonuna basınız',
+                  category="danger")
             return redirect(url_for('login'))
-        else:            
+        else:
             hashed_password = generate_password_hash(form.password.data, method='sha256')
             new_user = User(name=form.name.data, email=form.email.data, password=hashed_password)
             new_user.insert()
-    #        insertdefaultnotifications(email=form.email.data)
+            #        insertdefaultnotifications(email=form.email.data)
             return redirect(url_for('login'))
     else:
         return render_template('auths/register.html', form=form)
@@ -148,21 +150,23 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
+
 @app.route('/privacypolicy')
 def privacy():
     return render_template('privacy.html')
 
+
 @app.route("/connect")
 @login_required
 def connect():
-#    if not slack.authorized:
-#        return redirect(url_for("slack.login"))
-#    return redirect('/')
+    #    if not slack.authorized:
+    #        return redirect(url_for("slack.login"))
+    #    return redirect('/')
     return redirect(url_for("slack.login"))
 
 
 def get_channels():
-#    data = [('token', slack.token['access_token'])]
+    #    data = [('token', slack.token['access_token'])]
     if not 'sl_accesstoken' in session.keys():
         session['sl_accesstoken'] = db.find_one('user', query={'email': session['email']})['sl_accesstoken']
     data = [('token', session['sl_accesstoken'])]
@@ -177,45 +181,48 @@ def datasources():
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
-#    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False) 
-#    tForm = TimeForm(request.form)
+    #    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
+    #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-#        data = [('token', session['sl_accesstoken'])]
-#        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
+        #        data = [('token', session['sl_accesstoken'])]
+        #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
         uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
-        data= {
-        'email' : session['email'],
-        'sl_userid': uID,
-        'sourceType' : "Google Analytics",
-        'accountID' : nForm.account.data.split('\u0007')[0],
-        'accountName' : nForm.account.data.split('\u0007')[1],
-        'propertyID' : nForm.property.data.split('\u0007')[0],
-        'propertyName' : nForm.property.data.split('\u0007')[1],
-        'viewID' : nForm.view.data.split('\u0007')[0],
-        'viewName' : nForm.view.data.split('\u0007')[1],
-        'channelType' : "Slack",
-        'channelID' : nForm.channel.data.split('\u0007')[0],
-        'channelName' : nForm.channel.data.split('\u0007')[1],
-        'createdTS': ts
+        data = {
+            'email': session['email'],
+            'sl_userid': uID,
+            'sourceType': "Google Analytics",
+            'accountID': nForm.account.data.split('\u0007')[0],
+            'accountName': nForm.account.data.split('\u0007')[1],
+            'propertyID': nForm.property.data.split('\u0007')[0],
+            'propertyName': nForm.property.data.split('\u0007')[1],
+            'viewID': nForm.view.data.split('\u0007')[0],
+            'viewName': nForm.view.data.split('\u0007')[1],
+            'channelType': "Slack",
+            'channelID': nForm.channel.data.split('\u0007')[0],
+            'channelName': nForm.channel.data.split('\u0007')[1],
+            'createdTS': ts
         }
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
         unsortedargs.append(data)
-        insertdefaultnotifications(session['email'], userID = uID, 
-                                   dataSourceID = _id, 
-                                   channelID = nForm.channel.data.split('\u0007')[0])
-#        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
-#        return render_template('datasources.html', nForm = nForm, args = args)
+        insertdefaultnotifications(session['email'], userID=uID,
+                                   dataSourceID=_id,
+                                   channelID=nForm.channel.data.split('\u0007')[0])
+    #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
+    #        return render_template('datasources.html', nForm = nForm, args = args)
     else:
-#        user_info = google_auth.get_user_info()
-        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in google_analytics.get_accounts(session['email'])['accounts']]
+        #        user_info = google_auth.get_user_info()
+        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
+                                  google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
-        nForm.channel.choices += [(channel['id']+ '\u0007' + '#' + channel['name'], '#' + channel['name']) for channel in channels]
+        nForm.channel.choices += [(channel['id'] + '\u0007' + '#' + channel['name'], '#' + channel['name']) for channel
+                                  in channels]
         # incoming_webhook = slack.token['incoming_webhook']
-#        return render_template('datasources.html', nForm = nForm, args = args)
-    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources.html', nForm = nForm, args = args)
+    #        return render_template('datasources.html', nForm = nForm, args = args)
+    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    return render_template('datasources.html', nForm=nForm, args=args)
+
 
 @app.route("/gatest/<email>")
 def gatest(email):
@@ -234,7 +241,7 @@ def message_actions():
     message_action = json.loads(request.form["payload"])
     # Open a slack client
     sl_userid = message_action['user']['id']
-    channel = message_action['channel']['id']    
+    channel = message_action['channel']['id']
     user = db.find_one('user', {'sl_userid': sl_userid})
     slack_token = user['sl_accesstoken']
     email = user['email']
@@ -269,22 +276,22 @@ def message_actions():
                                     }
                                 ]
                             },
-#                            {
-#                                "label": "Schedule Type",
-#                                "type": "select",
-#                                "name": "schedule_types",
-#                                "placeholder": "Select a schedule type",
-#                                "options": [
-#                                    {
-#                                        "label": "Daily",
-#                                        "value": "daily"
-#                                    },
-#                                    {
-#                                        "label": "Weekly",
-#                                        "value": "weekly"
-#                                    }
-#                                ]
-#                            },
+                            #                            {
+                            #                                "label": "Schedule Type",
+                            #                                "type": "select",
+                            #                                "name": "schedule_types",
+                            #                                "placeholder": "Select a schedule type",
+                            #                                "options": [
+                            #                                    {
+                            #                                        "label": "Daily",
+                            #                                        "value": "daily"
+                            #                                    },
+                            #                                    {
+                            #                                        "label": "Weekly",
+                            #                                        "value": "weekly"
+                            #                                    }
+                            #                                ]
+                            #                            },
                             {
                                 "label": "Hour",
                                 "type": "select",
@@ -299,13 +306,13 @@ def message_actions():
                                 "placeholder": "Select a minute",
                                 "options": minuteoptions
                             },
-#                            {
-#                                "label": "Threshold (%)",
-#                                "name": "threshold",
-#                                "type": "text",
-#                                "subtype": "number",
-#                                "placeholder": "Enter a number"
-#                            }
+                            #                            {
+                            #                                "label": "Threshold (%)",
+                            #                                "name": "threshold",
+                            #                                "type": "text",
+                            #                                "subtype": "number",
+                            #                                "placeholder": "Enter a number"
+                            #                            }
                         ]
                     }
                 )
@@ -330,22 +337,22 @@ def message_actions():
                                     }
                                 ]
                             },
-#                            {
-#                                "label": "Schedule Type",
-#                                "type": "select",
-#                                "name": "schedule_types",
-#                                "placeholder": "Select a schedule type",
-#                                "options": [
-#                                    {
-#                                        "label": "Daily",
-#                                        "value": "daily"
-#                                    },
-#                                    {
-#                                        "label": "Weekly",
-#                                        "value": "weekly"
-#                                    }
-#                                ]
-#                            },
+                            #                            {
+                            #                                "label": "Schedule Type",
+                            #                                "type": "select",
+                            #                                "name": "schedule_types",
+                            #                                "placeholder": "Select a schedule type",
+                            #                                "options": [
+                            #                                    {
+                            #                                        "label": "Daily",
+                            #                                        "value": "daily"
+                            #                                    },
+                            #                                    {
+                            #                                        "label": "Weekly",
+                            #                                        "value": "weekly"
+                            #                                    }
+                            #                                ]
+                            #                            },
                             {
                                 "label": "Hour",
                                 "type": "select",
@@ -360,13 +367,13 @@ def message_actions():
                                 "placeholder": "Select a minute",
                                 "options": minuteoptions
                             },
-#                            {
-#                                "label": "Threshold (%)",
-#                                "name": "threshold",
-#                                "type": "text",
-#                                "subtype": "number",
-#                                "placeholder": "Enter a number"
-#                            }
+                            #                            {
+                            #                                "label": "Threshold (%)",
+                            #                                "name": "threshold",
+                            #                                "type": "text",
+                            #                                "subtype": "number",
+                            #                                "placeholder": "Enter a number"
+                            #                            }
                         ]
                     }
                 )
@@ -391,22 +398,22 @@ def message_actions():
                                     }
                                 ]
                             },
-#                            {
-#                                "label": "Schedule Type",
-#                                "type": "select",
-#                                "name": "schedule_types",
-#                                "placeholder": "Select a schedule type",
-#                                "options": [
-#                                    {
-#                                        "label": "Daily",
-#                                        "value": "daily"
-#                                    },
-#                                    {
-#                                        "label": "Weekly",
-#                                        "value": "weekly"
-#                                    }
-#                                ]
-#                            },
+                            #                            {
+                            #                                "label": "Schedule Type",
+                            #                                "type": "select",
+                            #                                "name": "schedule_types",
+                            #                                "placeholder": "Select a schedule type",
+                            #                                "options": [
+                            #                                    {
+                            #                                        "label": "Daily",
+                            #                                        "value": "daily"
+                            #                                    },
+                            #                                    {
+                            #                                        "label": "Weekly",
+                            #                                        "value": "weekly"
+                            #                                    }
+                            #                                ]
+                            #                            },
                             {
                                 "label": "Hour",
                                 "type": "select",
@@ -421,13 +428,13 @@ def message_actions():
                                 "placeholder": "Select a minute",
                                 "options": minuteoptions
                             },
-#                            {
-#                                "label": "Monthly Adwords Budget",
-#                                "name": "target",
-#                                "type": "text",
-#                                "subtype": "number",
-#                                "placeholder": "Enter a number"
-#                            }
+                            #                            {
+                            #                                "label": "Monthly Adwords Budget",
+                            #                                "name": "target",
+                            #                                "type": "text",
+                            #                                "subtype": "number",
+                            #                                "placeholder": "Enter a number"
+                            #                            }
                         ]
                     }
                 )
@@ -452,22 +459,22 @@ def message_actions():
                                     }
                                 ]
                             },
-#                            {
-#                                "label": "Schedule Type",
-#                                "type": "select",
-#                                "name": "schedule_types",
-#                                "placeholder": "Select a schedule type",
-#                                "options": [
-#                                    {
-#                                        "label": "Daily",
-#                                        "value": "daily"
-#                                    },
-#                                    {
-#                                        "label": "Weekly",
-#                                        "value": "weekly"
-#                                    }
-#                                ]
-#                            },
+                            #                            {
+                            #                                "label": "Schedule Type",
+                            #                                "type": "select",
+                            #                                "name": "schedule_types",
+                            #                                "placeholder": "Select a schedule type",
+                            #                                "options": [
+                            #                                    {
+                            #                                        "label": "Daily",
+                            #                                        "value": "daily"
+                            #                                    },
+                            #                                    {
+                            #                                        "label": "Weekly",
+                            #                                        "value": "weekly"
+                            #                                    }
+                            #                                ]
+                            #                            },
                             {
                                 "label": "Hour",
                                 "type": "select",
@@ -482,33 +489,33 @@ def message_actions():
                                 "placeholder": "Select a minute",
                                 "options": minuteoptions
                             },
-#                            {
-#                                "label": "Metric Type",
-#                                "type": "select",
-#                                "name": "metric",
-#                                "placeholder": "Select a metric type",
-#                                "options": [
-#                                    {
-#                                        "label": "ROAS",
-#                                        "value": "ga:ROAS"
-#                                    },
-#                                    {
-#                                        "label": "CPC",
-#                                        "value": "ga:CPC"
-#                                    },
-#                                    {
-#                                        "label": "Revenue",
-#                                        "value": "ga:transactionRevenue"
-#                                    }
-#                                ]
-#                            },
-#                            {
-#                                "label": "Goal",
-#                                "name": "target",
-#                                "type": "text",
-#                                "subtype": "number",
-#                                "placeholder": "Enter a number"
-#                            }
+                            #                            {
+                            #                                "label": "Metric Type",
+                            #                                "type": "select",
+                            #                                "name": "metric",
+                            #                                "placeholder": "Select a metric type",
+                            #                                "options": [
+                            #                                    {
+                            #                                        "label": "ROAS",
+                            #                                        "value": "ga:ROAS"
+                            #                                    },
+                            #                                    {
+                            #                                        "label": "CPC",
+                            #                                        "value": "ga:CPC"
+                            #                                    },
+                            #                                    {
+                            #                                        "label": "Revenue",
+                            #                                        "value": "ga:transactionRevenue"
+                            #                                    }
+                            #                                ]
+                            #                            },
+                            #                            {
+                            #                                "label": "Goal",
+                            #                                "name": "target",
+                            #                                "type": "text",
+                            #                                "subtype": "number",
+                            #                                "placeholder": "Enter a number"
+                            #                            }
                         ]
                     }
                 )
@@ -522,7 +529,7 @@ def message_actions():
         #        )
         elif (message_action['actions'][0]['value'] == 'ignore'):
             text = message_action['original_message']['attachments'][-1]['pretext']
-            datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 'channelID': channel})['_id']
+            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
             if (("performance" in text.lower()) and ("change" in text.lower())):
                 db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'performancechangetracking'},
@@ -598,10 +605,69 @@ def message_actions():
                                         "value": "ga:CPC"
                                     },
                                     {
+                                        "label": "Session",
+                                        "value": "ga:sessions",
+                                    },
+                                    {
+                                        "label": "Cost Per Transaction",
+                                        "label": "ga:costPerTransaction",
+                                    },
+                                    {
                                         "label": "Revenue",
                                         "value": "ga:transactionRevenue"
                                     }
                                 ]
+                            },
+                            {
+                                "label": "Dimension",
+                                "type": "select",
+                                "name": "dimension",
+                                "placeholder": "Select a dimension",
+                                "options": [
+                                    {
+                                        "label": "Campaign",
+                                        "value": "ga:campaign"
+                                    },
+                                    {
+                                        "label": "Source / Medium",
+                                        "value": "ga:sourceMedium"
+                                    },
+                                    {
+                                        "label": "Device Category",
+                                        "value": "ga:deviceCategory",
+                                    },
+                                ]
+                            },
+                            {
+                                "label": "Operator",
+                                "type": "select",
+                                "name": "operator",
+                                "placeholder": "Select an operator",
+                                "options": [
+                                    {
+                                        "label": "Exact Match",
+                                        "value": "=="
+                                    },
+                                    {
+                                        "label": "Does Not Match",
+                                        "value": "!="
+                                    },
+                                    {
+                                        "label": "Contains",
+                                        "value": "=@"
+                                    },
+                                    {
+                                        "label": "Does Not Contain",
+                                        "value": "!@",
+                                    },
+                                ]
+                            },
+                            {
+                                "label": "Expression",
+                                "type": "text",
+                                "name": "expression",
+                                "subtype": "text",
+                                "placeholder": "Enter an expression"
                             },
                             {
                                 "label": "Target",
@@ -637,7 +703,7 @@ def message_actions():
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
-        datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
+        datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                         'channelID': channel})['_id']
         if ('module_types' in submission.keys()):
             lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
@@ -652,53 +718,53 @@ def message_actions():
                 writtenhour = str(24 + (selectedhour - (usr_tz_offset - lc_tz_offset))).zfill(2)
             moduleType = submission['module_types']
             if (moduleType == 'performancechangetracking'):
-#                scheduleType = submission['schedule_types']
-#                threshold = float(submission['threshold'])
-                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                #                scheduleType = submission['schedule_types']
+                #                threshold = float(submission['threshold'])
+                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID,
                                                                      'type': moduleType
                                                                      },
-#                                                               scheduleType=scheduleType, 
-                                                               timeofDay="%s.%s" % (writtenhour, selectedminute),
-                                                               #threshold=threshold,
-                                                               #status='1'
-                                                               )
+                                   #                                                               scheduleType=scheduleType,
+                                   timeofDay="%s.%s" % (writtenhour, selectedminute),
+                                   # threshold=threshold,
+                                   # status='1'
+                                   )
             elif (moduleType == 'shoppingfunnelchangetracking'):
-#                scheduleType = submission['schedule_types']
-#                threshold = float(submission['threshold'])
-                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                #                scheduleType = submission['schedule_types']
+                #                threshold = float(submission['threshold'])
+                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID,
                                                                      'type': moduleType
                                                                      },
-#                                                               scheduleType=scheduleType, 
-                                                               timeofDay="%s.%s" % (writtenhour, selectedminute),
-                                                               #threshold=threshold, 
-                                                               #status='1'
-                                                               )
+                                   #                                                               scheduleType=scheduleType,
+                                   timeofDay="%s.%s" % (writtenhour, selectedminute),
+                                   # threshold=threshold,
+                                   # status='1'
+                                   )
             elif (moduleType == 'costprediction'):
-#                scheduleType = submission['schedule_types']
-#                target = float(submission['target'])
-                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                #                scheduleType = submission['schedule_types']
+                #                target = float(submission['target'])
+                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID,
                                                                      'type': moduleType
                                                                      },
-#                                                                   scheduleType=scheduleType, 
-                                                                   timeofDay="%s.%s" % (writtenhour, selectedminute),
-                                                                   #target=target,
-                                                                   #status='1'
-                                                                   )
+                                   #                                                                   scheduleType=scheduleType,
+                                   timeofDay="%s.%s" % (writtenhour, selectedminute),
+                                   # target=target,
+                                   # status='1'
+                                   )
             elif (moduleType == 'performancegoaltracking'):
-#                scheduleType = submission['schedule_types']
-#                target = float(submission['target'])
-#                metric = submission['metric']
-                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+                #                scheduleType = submission['schedule_types']
+                #                target = float(submission['target'])
+                #                metric = submission['metric']
+                db.find_and_modify(collection='notification', query={'datasourceID': datasourceID,
                                                                      'type': moduleType},
-#                                                                       scheduleType=scheduleType,
-                                                                       timeofDay="%s.%s" % (writtenhour, selectedminute),
-                                                                       #target=target, 
-                                                                       #metric=metric, 
-                                                                       #status='1'
-                                                                       )
-        elif('hour' in submission.keys() and 'minute' in submission.keys()):
-            datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
-                                                        'channelID': channel})['_id']
+                                   #                                                                       scheduleType=scheduleType,
+                                   timeofDay="%s.%s" % (writtenhour, selectedminute),
+                                   # target=target,
+                                   # metric=metric,
+                                   # status='1'
+                                   )
+        elif ('hour' in submission.keys() and 'minute' in submission.keys()):
+            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                            'channelID': channel})['_id']
             modules = db.find("notification", query={'datasourceID': datasourceID})
             lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
             #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
@@ -713,47 +779,55 @@ def message_actions():
             for module in modules:
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
-        elif('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys())==2):
-            datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
-                                                        'channelID': channel})['_id']
+        elif ('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys()) == 5):
+            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                            'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
-                                                    'type': 'performancegoaltracking'})
+                                                        'type': 'performancegoaltracking'})
             module_id = module['_id']
+            filterExpression = submission['dimension']+submission['operator']+submission['expression']
+
             try:
                 metricindex = module['metric'].index(submission['metric'])
                 db.DATABASE['notification'].update(
-                    {'_id' : module_id},
-                    {'$set' : {"target."+str(metricindex) : submission['target']}}
+                    {'_id': module_id},
+                    {'$set': {
+                        "target." + str(metricindex): submission['target'], "filterExpression." + str(metricindex): filterExpression}}
                 )
             except:
                 db.DATABASE['notification'].update(
-                    {'_id' : module_id},
-                    {'$push' : {'metric': submission['metric']}}
+                    {'_id': module_id},
+                    {'$push': {'metric': submission['metric']}}
                 )
                 db.DATABASE['notification'].update(
-                    {'_id' : module_id},
-                    {'$push' : {'target': submission['target']}}
+                    {'_id': module_id},
+                    {'$push': {'target': submission['target']}}
                 )
+                db.DATABASE['notification'].update(
+                    {'_id': module_id},
+                    {'$push': {'filterExpression': filterExpression}}
+                )
+
             db.find_and_modify("notification", query={'_id': module['_id']},
-                                   status='1')
-        elif('budget' in submission.keys() and len(submission.keys())==1):
-            datasourceID = db.find_one("datasource", query={'sl_userid':sl_userid, 
-                                                        'channelID': channel})['_id']
+                               status='1')
+        elif ('budget' in submission.keys() and len(submission.keys()) == 1):
+            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                            'channelID': channel})['_id']
             target = float(submission['budget'])
-            db.find_and_modify(collection='notification', query={'datasourceID': datasourceID, 
+            db.find_and_modify(collection='notification', query={'datasourceID': datasourceID,
                                                                  'type': 'costprediction'
                                                                  },
-                                                               target=target,
-                                                               status='1'
-                                                               )
-            
+                               target=target,
+                               status='1'
+                               )
+
     return make_response("", 200)
 
 
 def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     # Default Notifications will be inserted here
-#    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
-#    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
+    #    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
+    #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
     lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
     #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
     data = [('token', session['sl_accesstoken']),
@@ -817,11 +891,11 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         "attachments": [{
             # "title": "Blog Yazıları",
             # "title_link": "https://blog.boostroas.com/tr/"
-            },
+        },
             {
-                "text": "Welcome to Heybooster, I am your digital buddy to support"+
-"you to boost your website by analyzing your data with marketing perspective."+ 
-"You will get first insights tomorrow at 7 am",
+                "text": "Welcome to Heybooster, I am your digital buddy to support" +
+                        "you to boost your website by analyzing your data with marketing perspective." +
+                        "You will get first insights tomorrow at 7 am",
                 "callback_id": "notification_form",
                 "color": "#3AA3E3",
                 "attachment_type": "default",

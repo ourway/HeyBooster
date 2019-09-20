@@ -13,35 +13,32 @@ def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
 
-
-
 def performancechangetracking(slack_token, task):
-#    Performance Changes Tracking
+    #    Performance Changes Tracking
     text = "*Performance Changes Tracking*"
     attachments = []
-    
+
     metrics = [{'expression': 'ga:ROAS'},
                {'expression': 'ga:CPC'},
                {'expression': 'ga:costPerTransaction'},
                {'expression': 'ga:adCost'},
                ]
-    
-        
+
     metricnames = ['Adwords ROAS',
                    'Adwords CPC',
                    'Adwords Cost Per Transaction',
                    'Adwords Cost'
                    ]
-    
+
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
     channel = task['channel']
-    
+
     period = task['period']
-    
+
     tol = 0.20
-    
+
     filters = [
         {
             "dimensionName": "ga:sourceMedium",
@@ -70,63 +67,65 @@ def performancechangetracking(slack_token, task):
                         {
                             "filters": filters
                         }]}]}).execute()
-        
+
     actions = [{
-                        "name": "track",
-                        "text": "Reschedule",
-                        "type": "button",
-                        "value": "track"
-                    },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }]
-    
+        "name": "track",
+        "text": "Reschedule",
+        "type": "button",
+        "value": "track"
+    },
+        {
+            "name": "ignore",
+            "text": "Ignore",
+            "type": "button",
+            "value": "ignore"
+        }]
+
     for i in range(len(metrics)):
         metricname = metricnames[i]
-        
+
         # WARNING: When the number of metrics is increased, 
         # WARNING: obtain data for other metrics
         data_new = float(results['reports'][0]['data']['totals'][0]['values'][i])
-    
+
         # WARNING: When the number of metrics is increased, 
         # WARNING: obtain data for other metrics
         data_old = float(results['reports'][0]['data']['totals'][1]['values'][i])
-        
+
         try:
-            changerate = str(round(abs(data_old-data_new)/data_old*100,2)) + '%'
+            changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
         except:
-            changerate = abs(data_old-data_new)
-        if(data_new < data_old):
-            if ((data_old-data_new) <= (tol*data_old)):
+            changerate = abs(data_old - data_new)
+        if (data_new < data_old):
+            if ((data_old - data_new) <= (tol * data_old)):
                 pass
-#                attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
-#                    "callback_id": "notification_form",
-#                    "attachment_type": "default",
-#                }]
+            #                attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
+            #                    "callback_id": "notification_form",
+            #                    "attachment_type": "default",
+            #                }]
             else:
-                attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
-                    "callback_id": "notification_form",
-                    'color': "danger",
-                    "attachment_type": "default",
-                }]
+                attachments += [{
+                                    "text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new, 2)}\n",
+                                    "callback_id": "notification_form",
+                                    'color': "danger",
+                                    "attachment_type": "default",
+                                    }]
         else:
-            if((data_new-data_old) >= (tol*data_old)):
+            if ((data_new - data_old) >= (tol * data_old)):
                 pass
-#                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
-#                    "callback_id": "notification_form",
-#                    "attachment_type": "default",
-#                }]
+            #                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
+            #                    "callback_id": "notification_form",
+            #                    "attachment_type": "default",
+            #                }]
             else:
-                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
-                    "callback_id": "notification_form",
-                    'color': "good",
-                    "attachment_type": "default",
-                }]
-                    
-        if(len(attachments)!=0):
+                attachments += [{
+                                    "text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new, 2)}\n",
+                                    "callback_id": "notification_form",
+                                    'color': "good",
+                                    "attachment_type": "default",
+                                    }]
+
+        if (len(attachments) != 0):
             attachments[0]['pretext'] = text
             attachments[-1]['actions'] = actions
             slack_client = WebClient(token=slack_token)
@@ -135,8 +134,9 @@ def performancechangetracking(slack_token, task):
                 attachments=attachments)
 
             return resp['ts']
-        
-#def performancechangetracking(slack_token, task):
+
+
+# def performancechangetracking(slack_token, task):
 #    # Mobile Performance Changes Tracking
 #    text_m = "*Mobile Performance Changes Tracking*"
 #    attachments_m = []
@@ -255,7 +255,7 @@ def performancechangetracking(slack_token, task):
 #            attachments=attachments_m + attachments_d)
 #
 #        return resp['ts']
-#"""
+# """
 #    attachments_d += [{
 #        "pretext": "Click *_Track_* to configure *_Performance Changes Tracking_* notification",
 #        "callback_id": "notification_form",
@@ -281,7 +281,7 @@ def performancechangetracking(slack_token, task):
 #            attachments=attachments_m + attachments_d)
 #
 #        return resp['ts']
-#"""
+# """
 
 def shoppingfunnelchangetracking(slack_token, task):
     # Funnel Changes Tracking
@@ -291,32 +291,32 @@ def shoppingfunnelchangetracking(slack_token, task):
         {'expression': 'ga:sessions'}
     ]
     metricnames = [
-            'Session'
-            ]
-    dimensions = {'ALL_VISITS':'All Sessions',
-                   'PRODUCT_VIEW':'Sessions with product view',
-                   'ADD_TO_CART': 'Sessions with add to cart',
-                   'CHECKOUT': 'Sessions with checkout',
-                   'TRANSACTION': 'Sessions with transaction'
-                   }
+        'Session'
+    ]
+    dimensions = {'ALL_VISITS': 'All Sessions',
+                  'PRODUCT_VIEW': 'Sessions with product view',
+                  'ADD_TO_CART': 'Sessions with add to cart',
+                  'CHECKOUT': 'Sessions with checkout',
+                  'TRANSACTION': 'Sessions with transaction'
+                  }
     actions = [{
-                        "name": "track",
-                        "text": "Reschedule",
-                        "type": "button",
-                        "value": "track"
-                    },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }]
+        "name": "track",
+        "text": "Reschedule",
+        "type": "button",
+        "value": "track"
+    },
+        {
+            "name": "ignore",
+            "text": "Ignore",
+            "type": "button",
+            "value": "ignore"
+        }]
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
     channel = task['channel']
     period = task['period']
-    
+
     tol = 0.20
 
     if (period == 1):
@@ -333,15 +333,15 @@ def shoppingfunnelchangetracking(slack_token, task):
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
                                    {'startDate': start_date_2, 'endDate': end_date_2}],
                     'metrics': metrics,
-                    'dimensions': [{'name':'ga:shoppingStage'}]
+                    'dimensions': [{'name': 'ga:shoppingStage'}]
                 }]}).execute()
-    
+
     dims_new = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
     dims_old = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
-    
+
     datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
     datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows']]
-    
+
     for i in range(len(metrics)):
         metricname = metricnames[i]
         for dim in dimensions.keys():
@@ -350,48 +350,50 @@ def shoppingfunnelchangetracking(slack_token, task):
                 data_new = datas_new[j1]
             except:
                 data_new = 0
-                
+
             try:
                 j2 = dims_old.index(dim)
                 data_old = datas_old[j2]
             except:
                 data_old = 0
-                
+
             dimname = dimensions[dim]
 
-#            sessions_new = float(results['reports'][0]['data']['rows'][j]['metrics'][0]['values'][0])
-#            sessions_old = float(['reports'][0]['data']['rows'][j]['metrics'][1]['values'][0])
+            #            sessions_new = float(results['reports'][0]['data']['rows'][j]['metrics'][0]['values'][0])
+            #            sessions_old = float(['reports'][0]['data']['rows'][j]['metrics'][1]['values'][0])
             try:
-                changerate = str(round(abs(data_old-data_new)/data_old*100,2)) + '%'
+                changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
             except:
-                changerate = abs(data_old-data_new)
-            if(data_new < data_old):
-                if ((data_old-data_new) <= (tol*data_old)):
+                changerate = abs(data_old - data_new)
+            if (data_new < data_old):
+                if ((data_old - data_new) <= (tol * data_old)):
                     pass
-    #                attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {data_new}\n",
-    #                    "callback_id": "notification_form",
-    #                    "attachment_type": "default",
-    #                }]
+                #                attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {data_new}\n",
+                #                    "callback_id": "notification_form",
+                #                    "attachment_type": "default",
+                #                }]
                 else:
-                    
-                    attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {data_new}\n",
-                        "callback_id": "notification_form",
-                        'color': "danger",
-                        "attachment_type": "default",
-                    }]
+
+                    attachments += [{
+                                        "text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {data_new}\n",
+                                        "callback_id": "notification_form",
+                                        'color': "danger",
+                                        "attachment_type": "default",
+                                        }]
             else:
-                if((data_new-data_old) >= (tol*data_old)):
+                if ((data_new - data_old) >= (tol * data_old)):
                     pass
-    #                attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {data_new}\n",
-    #                    "callback_id": "notification_form",
-    #                    "attachment_type": "default",
-    #                }]
+                #                attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {data_new}\n",
+                #                    "callback_id": "notification_form",
+                #                    "attachment_type": "default",
+                #                }]
                 else:
-                    attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {data_new}\n",
-                        "callback_id": "notification_form",
-                        'color': "good",
-                        "attachment_type": "default",
-                    }]
+                    attachments += [{
+                                        "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {data_new}\n",
+                                        "callback_id": "notification_form",
+                                        'color': "good",
+                                        "attachment_type": "default",
+                                        }]
     if (len(attachments) > 0):
         attachments[0]['pretext'] = text
         attachments[-1]['actions'] = actions
@@ -407,28 +409,28 @@ def costprediction(slack_token, task):
     text = "*Cost Prediction*"
     attachments = []
     actions = [
-            {
-                "name": "setmybudget",
-                "text": "Set My Budget",
-                "type": "button",
-                "value": "setmybudget"
-            },
-                    {
-                "name": "track",
-                "text": "Reschedule",
-                "type": "button",
-                "value": "track"
-            },
-            {
-                "name": "ignore",
-                "text": "Ignore",
-                "type": "button",
-                "value": "ignore"
-            }]
+        {
+            "name": "setmybudget",
+            "text": "Set My Budget",
+            "type": "button",
+            "value": "setmybudget"
+        },
+        {
+            "name": "track",
+            "text": "Reschedule",
+            "type": "button",
+            "value": "track"
+        },
+        {
+            "name": "ignore",
+            "text": "Ignore",
+            "type": "button",
+            "value": "ignore"
+        }]
     metrics = [
         {'expression': 'ga:adCost'},
     ]
-    
+
     filters = [
         {
             "dimensionName": "ga:sourceMedium",
@@ -534,29 +536,30 @@ def costprediction(slack_token, task):
         attachments=attachments)
     return resp['ts']
 
+
 def performancegoaltracking(slack_token, task):
     # Funnel Changes Tracking
     text = "*Performance Goal Tracking*"
     attachments = []
     actions = [
-                {
-                    "name": "setmybudget",
-                    "text": "Set My Budget",
-                    "type": "button",
-                    "value": "setmybudget"
-                },
-                {
-                    "name": "track",
-                    "text": "Change Target Goal",
-                    "type": "button",
-                    "value": "track"
-                },
-                {
-                    "name": "ignore",
-                    "text": "Ignore",
-                    "type": "button",
-                    "value": "ignore"
-                }]
+        {
+            "name": "setmybudget",
+            "text": "Set My Budget",
+            "type": "button",
+            "value": "setmybudget"
+        },
+        {
+            "name": "track",
+            "text": "Change Target Goal",
+            "type": "button",
+            "value": "track"
+        },
+        {
+            "name": "ignore",
+            "text": "Ignore",
+            "type": "button",
+            "value": "ignore"
+        }]
     metricdict = {'ga:ROAS': 'Adwords ROAS',
                   'ga:CPC': 'CPC',
                   'ga:sessions': 'Session',
@@ -569,8 +572,7 @@ def performancegoaltracking(slack_token, task):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
         targets += [float(task['target'][i])]
-        
-        
+
     email = task['email']
     viewId = task['viewId']
     channel = task['channel']
@@ -580,7 +582,7 @@ def performancegoaltracking(slack_token, task):
 
     start_date_1 = dtimetostrf(start_date)  # Convert it to string format
     end_date_1 = 'yesterday'
-    
+
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     results = service.reports().batchGet(
         body={
@@ -595,27 +597,27 @@ def performancegoaltracking(slack_token, task):
         query = float(results['reports'][0]['data']['totals'][0]['values'][i])
         metricname = metricnames[i]
         target = targets[i]
-        if(str("%.2f"%(round(query,2))).split('.')[1]=='00'):
+        if (str("%.2f" % (round(query, 2))).split('.')[1] == '00'):
             query = int(query)
-        if(str("%.2f"%(round(target,2))).split('.')[1]=='00'):
+        if (str("%.2f" % (round(target, 2))).split('.')[1] == '00'):
             target = int(target)
         if (query < target):
             attachments += [{"text": f"This month, {metricname} is {query}, Your Target ROAS: {target}",
-                "color": "danger",
-                "callback_id": "notification_form",
-                "attachment_type": "default"
-            }]
+                             "color": "danger",
+                             "callback_id": "notification_form",
+                             "attachment_type": "default"
+                             }]
 
         else:
             attachments += [{"text": f"This month, {metricname} is {query}, Your Target ROAS: {target}",
-                "color": "good"
-            }]
-        
+                             "color": "good"
+                             }]
+
     attachments[0]['pretext'] = text
     attachments[-1]['actions'] = actions
 
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(
-            channel=channel,
-            attachments=attachments)
+        channel=channel,
+        attachments=attachments)
     return resp['ts']
