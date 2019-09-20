@@ -248,7 +248,7 @@ def message_actions():
     slack_client = WebClient(token=slack_token)
     print(message_action["type"])
     if message_action["type"] == "interactive_message":
-        if (message_action['actions'][0]['value'] == 'track'):
+        if (message_action['actions'][-1]['value'] == 'track'):
             houroptions = []
             for i in range(0, 24):
                 houroptions.append({'label': str(i), 'value': i})
@@ -528,7 +528,7 @@ def message_actions():
         #            text=message_action['original_message']['text'] + ":pencil: Taking your order...",
         #            attachments=[]
         #        )
-        elif (message_action['actions'][0]['value'] == 'ignore'):
+        elif (message_action['actions'][-1]['value'] == 'ignore'):
             text = message_action['original_message']['attachments'][0]['pretext']
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
             if (("performance" in text.lower()) and ("change" in text.lower())):
@@ -547,7 +547,7 @@ def message_actions():
                 db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'performancegoaltracking'},
                                    status='0')
-        elif (message_action['actions'][0]['value'] == 'change'):
+        elif (message_action['actions'][-1]['value'] == 'change'):
             text = message_action['original_message']['text']
             if (True):
                 houroptions = []
@@ -581,7 +581,7 @@ def message_actions():
                     }
                 )
 
-        elif (message_action['actions'][0]['value'] == 'setmygoal'):
+        elif (message_action['actions'][-1]['value'] == 'setmygoal'):
             text = message_action['original_message']['text']
             if (True):
                 slack_client.dialog_open(
@@ -683,7 +683,7 @@ def message_actions():
                     }
                 )
 
-        elif (message_action['actions'][0]['value'] == 'setmybudget'):
+        elif (message_action['actions'][-1]['value'] == 'setmybudget'):
             text = message_action['original_message']['text']
             if (True):
                 slack_client.dialog_open(
