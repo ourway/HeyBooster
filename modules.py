@@ -335,9 +335,14 @@ def shoppingfunnelchangetracking(slack_token, task):
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:shoppingStage'}]
                 }]}).execute()
-
-    dims_new = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
-    dims_old = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+    try:    
+        dims_new = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+    except:
+        dims_new = []
+    try:
+        dims_old = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+    except:
+        dims_old = []
 
     datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
     datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows']]
@@ -586,14 +591,6 @@ def performancegoaltracking(slack_token, task):
     end_date_1 = 'yesterday'
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
-            'reportRequests': [
-                {
-                    'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                    'metrics': metrics
-                }]}).execute()
 
     for i in range(len(metrics)):
         metricname = metricnames[i]
