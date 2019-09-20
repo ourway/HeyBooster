@@ -27,10 +27,10 @@ def performancechangetracking(slack_token, task):
                ]
     
         
-    metricnames = ['ROAS',
-                   'CPC',
-                   'Cost per Transaction',
-                   'Cost'
+    metricnames = ['Adwords ROAS',
+                   'Adwords CPC',
+                   'Adwords Cost Per Transaction',
+                   'Adwords Cost'
                    ]
     
     email = task['email']
@@ -406,6 +406,25 @@ def costprediction(slack_token, task):
     # Cost Prediction
     text = "*Cost Prediction*"
     attachments = []
+    actions = [
+            {
+                "name": "setmybudget",
+                "text": "Set My Budget",
+                "type": "button",
+                "value": "setmybudget"
+            },
+                    {
+                "name": "track",
+                "text": "Reschedule",
+                "type": "button",
+                "value": "track"
+            },
+            {
+                "name": "ignore",
+                "text": "Ignore",
+                "type": "button",
+                "value": "ignore"
+            }]
     metrics = [
         {'expression': 'ga:adCost'},
     ]
@@ -467,59 +486,22 @@ def costprediction(slack_token, task):
                 "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                     round(prediction, 2),
                     round(target, 2)),
-                "color": "00FF00",
+                "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [
-                            {
-                                "name": "setmybudget",
-                                "text": "Set My Budget",
-                                "type": "button",
-                                "value": "setmybudget"
-                            },
-                            {
-                                "name": "track",
-                                "text": "Reschedule",
-                                "type": "button",
-                                "value": "track"
-                            },
-                            {
-                                "name": "ignore",
-                                "text": "Ignore",
-                                "type": "button",
-                                "value": "ignore"
-                            }]
+                "actions": actions
             }]
         else:
             attachments += [{
                 "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                     round(prediction, 2),
                     round(target, 2)),
-                "color": "FF0000",
+                "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [
-                            {
-                                "name": "setmybudget",
-                                "text": "Set My Budget",
-                                "type": "button",
-                                "value": "setmybudget"
-                            },
-                        {
-                            "name": "track",
-                            "text": "Reschedule",
-                            "type": "button",
-                            "value": "track"
-                        },
-                        {
-                            "name": "ignore",
-                            "text": "Ignore",
-                            "type": "button",
-                            "value": "ignore"
-                        }
-                    ]
+                "actions": actions
             }]
     else:
         # Prediction is less than target
@@ -528,58 +510,22 @@ def costprediction(slack_token, task):
                 "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                     round(prediction, 2),
                     round(target, 2)),
-                "color": "00FF00",
+                "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [
-                            {
-                                "name": "setmybudget",
-                                "text": "Set My Budget",
-                                "type": "button",
-                                "value": "setmybudget"
-                            },
-                        {
-                    "name": "track",
-                    "text": "Reschedule",
-                    "type": "button",
-                    "value": "track"
-                },
-                    {
-                        "name": "ignore",
-                        "text": "Ignore",
-                        "type": "button",
-                        "value": "ignore"
-                    }]
+                "actions": actions
             }]
         else:
             attachments += [{
                 "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
                     round(prediction, 2),
                     round(target, 2)),
-                "color": "FF0000",
+                "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "actions": [
-                            {
-                                "name": "setmybudget",
-                                "text": "Set My Budget",
-                                "type": "button",
-                                "value": "setmybudget"
-                            },
-                        {
-                    "name": "track",
-                    "text": "Reschedule",
-                    "type": "button",
-                    "value": "track"
-                },
-                    {
-                        "name": "ignore",
-                        "text": "Ignore",
-                        "type": "button",
-                        "value": "ignore"
-                    }]
+                "actions": actions
             }]
 
     slack_client = WebClient(token=slack_token)
@@ -592,24 +538,50 @@ def performancegoaltracking(slack_token, task):
     # Funnel Changes Tracking
     text = "*Performance Goal Tracking*"
     attachments = []
-
-    metrics = [
-        {'expression': task['metric']},
-    ]
-
+    actions = [
+                {
+                    "name": "setmybudget",
+                    "text": "Set My Budget",
+                    "type": "button",
+                    "value": "setmybudget"
+                },
+                {
+                    "name": "track",
+                    "text": "Change Target Goal",
+                    "type": "button",
+                    "value": "track"
+                },
+                {
+                    "name": "ignore",
+                    "text": "Ignore",
+                    "type": "button",
+                    "value": "ignore"
+                }]
+    metricdict = {'ga:ROAS': 'Adwords ROAS',
+                  'ga:CPC': 'CPC',
+                  'ga:sessions': 'Session',
+                  'ga:costPerTransaction', 'Cost Per Transaction',
+                  'ga:transactionRevenue': 'Revenue'}
+    metrics = []
+    metricnames = []
+    targets = []
+    for i in range(len(task['metric'])):
+        metrics += [{'expression': task['metric'][i]})]
+        metricnames += [metricdict[task['metric'][i]]]
+        targets += [task['target'][i]]
+        
+        
     email = task['email']
-    service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
     channel = task['channel']
-
-    target = float(task['target'])
 
     today = datetime.today()
     start_date = datetime(today.year, today.month, 1)  # First day of current day
 
     start_date_1 = dtimetostrf(start_date)  # Convert it to string format
     end_date_1 = 'yesterday'
-
+    
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
     results = service.reports().batchGet(
         body={
             'reportRequests': [
@@ -619,48 +591,30 @@ def performancegoaltracking(slack_token, task):
                     'metrics': metrics
                 }]}).execute()
 
-    query = float(results['reports'][0]['data']['totals'][0]['values'][0])
-
-    if ('ROAS' in task['metric']):
+    for i in range(len(metrics)):
+        query = float(results['reports'][0]['data']['totals'][0]['values'][i])
+        metricname = metricnames[i]
+        target = targets[i]
+        if(str("%.2f"%(round(query,2))).split('.')[1]=='00'):
+            query = int(query)
+        if(str("%.2f"%(round(target,2))).split('.')[1]=='00'):
+            target = int(target)
         if (query < target):
-            attachments += [{"text": "This month, Adwords ROAS is {0}, Your Target ROAS: {1}".format(
-                round(query, 2),
-                round(target, 2)),
-                "color": "FF0000",
-                "pretext": text,
+            attachments += [{"text": f"This month, {metricname} is {query}, Your Target ROAS: {target}",
+                "color": "danger",
                 "callback_id": "notification_form",
-                "attachment_type": "default",
-                "actions": [
-                            {
-                                "name": "setmybudget",
-                                "text": "Set My Budget",
-                                "type": "button",
-                                "value": "setmybudget"
-                            },
-                            {
-                                "name": "track",
-                                "text": "Change Target Goal",
-                                "type": "button",
-                                "value": "track"
-                            },
-                            {
-                                "name": "ignore",
-                                "text": "Ignore",
-                                "type": "button",
-                                "value": "ignore"
-                            }]
+                "attachment_type": "default"
             }]
 
         else:
-            attachments += [{"text": "This month, Adwords ROAS is {0}, Your Target ROAS: {1}".format(
-                round(query, 2),
-                round(target, 2)),
-                "color": "00FF00",
-                "pretext": text
+            attachments += [{"text": f"This month, {metricname} is {query}, Your Target ROAS: {target}",
+                "color": "good"
             }]
+        
+    attachments[0]['pretext'] = text
+    attachments[-1]['actions'] = actions
 
     slack_client = WebClient(token=slack_token)
-
     resp = slack_client.chat_postMessage(
             channel=channel,
             attachments=attachments)
