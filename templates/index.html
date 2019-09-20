@@ -1,119 +1,119 @@
-<!DOCTYPE html>
-<html lang="en" class="no-js">
+    <!DOCTYPE html>
+    <html lang="en" class="no-js">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anasayfa</title>
-    <meta name="description" content="Blueprint: A basic template for a responsive multi-level menu" />
-    <meta name="keywords" content="blueprint, template, html, css, menu, responsive, mobile-friendly" />
-    <meta name="author" content="Codrops" />
-    <link rel="shortcut icon" href="favicon.ico">
-    <!-- food icons -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/organicfoodicons.css')}}" />
-    <!-- demo styles -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/demo.css')}}" />
-    <!-- menu styles -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/component.css')}}" />
-    <script src="js/modernizr-custom.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Anasayfa</title>
+        <meta name="description" content="Blueprint: A basic template for a responsive multi-level menu" />
+        <meta name="keywords" content="blueprint, template, html, css, menu, responsive, mobile-friendly" />
+        <meta name="author" content="Codrops" />
+        <link rel="shortcut icon" href="favicon.ico">
+        <!-- food icons -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/organicfoodicons.css')}}" />
+        <!-- demo styles -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/demo.css')}}" />
+        <!-- menu styles -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/component.css')}}" />
+        <script src="js/modernizr-custom.js"></script>
+    </head>
 
-<body>
-    <!-- Main container -->
-    <div class="container">
-        <!-- Blueprint header -->
-        <header class="bp-header cf">
-            <div class="dummy-logo">
-                <div class="dummy-icon foodicon png">
-                    <img src="../static/img/558x200-kopya.png">
-                </div>
-                <h2 class="dummy-heading">HeyBooster</h2>
-            </div>
-            <div class="bp-header__main">
-                <span class="bp-header__present">Hey Booster'ı istiyorsan alkışla<span data-content="bilgi"></span></span>
-                <h1 class="bp-header__title">&nbsp;</h1>
-
-            </div>
-        </header>
-        <button class="action action--open" aria-label="Open Menu"><span class="icon icon--menu"></span></button>
-        <nav id="ml-menu" class="menu">
-            <button class="action action--close" aria-label="Close Menu"><span class="icon icon--cross"></span></button>
-            <div class="menu__wrap">
-                <ul data-menu="main" class="menu__level" tabindex="-1" role="menu" aria-label="All">
-                    <li class="menu__item_s"><a class="menu__link_s" href="/">Home</a></li>
-                    <li class="menu__item_s"><a class="menu__link_s" href="/datasources">Data Sources</a></li>
-                    <li class="menu__item_s"><a class="menu__link_s" href="/login">Login</a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <div class="content content-x">
-            <span class="first-img">
-        <img src="../static/img/558x200-kopya.png">
-        </span>
-            <img src="../static/img/slack.png" style="opacity: 0.9">
-            <img src="../static/img/google-2.png">
-            <!-- Ajax loaded content here -->
-            <form method="POST" action="/google/connect">
-                {% if session['logged_in'] or session['auth_token']%}
-                    <div class="ilk-button">
-                        <button class="btn btn-dark btn-lg" id="btn-3">Connect Your World</button>
+    <body>
+        <!-- Main container -->
+        <div class="container">
+            <!-- Blueprint header -->
+            <header class="bp-header cf">
+                <div class="dummy-logo">
+                    <div class="dummy-icon foodicon png">
+                        <img src="../static/img/558x200-kopya.png">
                     </div>
-                {% endif %}
+                    <h2 class="dummy-heading">HeyBooster</h2>
+                </div>
+                <div class="bp-header__main">
+                    <span class="bp-header__present">Hey Booster'ı istiyorsan alkışla<span data-content="bilgi"></span></span>
+                    <h1 class="bp-header__title">&nbsp;</h1>
+
+                </div>
+            </header>
+            <button class="action action--open" aria-label="Open Menu"><span class="icon icon--menu"></span></button>
+            <nav id="ml-menu" class="menu">
+                <button class="action action--close" aria-label="Close Menu"><span class="icon icon--cross"></span></button>
+                <div class="menu__wrap">
+                    <ul data-menu="main" class="menu__level" tabindex="-1" role="menu" aria-label="All">
+                        <li class="menu__item_s"><a class="menu__link_s" href="/">Home</a></li>
+                        <li class="menu__item_s"><a class="menu__link_s" href="/datasources">Data Sources</a></li>
+                        <li class="menu__item_s"><a class="menu__link_s" href="/login">Login</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="content content-x">
+                <span class="first-img">
+            <img src="../static/img/558x200-kopya.png">
+            </span>
+                <img src="../static/img/slack.png" style="opacity: 0.9">
+                <img src="../static/img/google-2.png">
+                <!-- Ajax loaded content here -->
+                <form method="POST" action="/google/connect">
+                    {% if session['logged_in'] or session['auth_token']%}
+                        <div class="ilk-button">
+                            <button class="btn btn-dark btn-lg" id="btn-3">Connect Your World</button>
+                        </div>
+                    {% endif %}
+            </div>
+
         </div>
+        <!-- /view -->
+        <script src="js/classie.js"></script>
+        <script src="js/dummydata.js"></script>
+        <script src="js/main.js"></script>
+        <script>
+            (function() {
+                var menuEl = document.getElementById('ml-menu'),
+                    mlmenu = new MLMenu(menuEl, {
+                        // breadcrumbsCtrl : true, // show breadcrumbs
+                        // initialBreadcrumb : 'all', // initial breadcrumb text
+                        backCtrl: false, // show back button
+                        // itemsDelayInterval : 60, // delay between each menu item sliding animation
+                        onItemClick: loadDummyData // callback: item that doesn´t have a submenu gets clicked - onItemClick([event], [inner HTML of the clicked item])
+                    });
 
-    </div>
-    <!-- /view -->
-    <script src="js/classie.js"></script>
-    <script src="js/dummydata.js"></script>
-    <script src="js/main.js"></script>
-    <script>
-        (function() {
-            var menuEl = document.getElementById('ml-menu'),
-                mlmenu = new MLMenu(menuEl, {
-                    // breadcrumbsCtrl : true, // show breadcrumbs
-                    // initialBreadcrumb : 'all', // initial breadcrumb text
-                    backCtrl: false, // show back button
-                    // itemsDelayInterval : 60, // delay between each menu item sliding animation
-                    onItemClick: loadDummyData // callback: item that doesn´t have a submenu gets clicked - onItemClick([event], [inner HTML of the clicked item])
-                });
+                // mobile menu toggle
+                var openMenuCtrl = document.querySelector('.action--open'),
+                    closeMenuCtrl = document.querySelector('.action--close');
 
-            // mobile menu toggle
-            var openMenuCtrl = document.querySelector('.action--open'),
-                closeMenuCtrl = document.querySelector('.action--close');
+                openMenuCtrl.addEventListener('click', openMenu);
+                closeMenuCtrl.addEventListener('click', closeMenu);
 
-            openMenuCtrl.addEventListener('click', openMenu);
-            closeMenuCtrl.addEventListener('click', closeMenu);
+                function openMenu() {
+                    classie.add(menuEl, 'menu--open');
+                    closeMenuCtrl.focus();
+                }
 
-            function openMenu() {
-                classie.add(menuEl, 'menu--open');
-                closeMenuCtrl.focus();
-            }
+                function closeMenu() {
+                    classie.remove(menuEl, 'menu--open');
+                    openMenuCtrl.focus();
+                }
 
-            function closeMenu() {
-                classie.remove(menuEl, 'menu--open');
-                openMenuCtrl.focus();
-            }
+                // simulate grid content loading
+                var gridWrapper = document.querySelector('.content');
 
-            // simulate grid content loading
-            var gridWrapper = document.querySelector('.content');
+                function loadDummyData(ev, itemName) {
+                    ev.preventDefault();
 
-            function loadDummyData(ev, itemName) {
-                ev.preventDefault();
+                    closeMenu();
+                    gridWrapper.innerHTML = '';
+                    classie.add(gridWrapper, 'content--loading');
+                    setTimeout(function() {
+                        classie.remove(gridWrapper, 'content--loading');
+                        gridWrapper.innerHTML = '<ul class="products">' + dummyData[itemName] + '<ul>';
+                    }, 700);
+                }
+            })();
 
-                closeMenu();
-                gridWrapper.innerHTML = '';
-                classie.add(gridWrapper, 'content--loading');
-                setTimeout(function() {
-                    classie.remove(gridWrapper, 'content--loading');
-                    gridWrapper.innerHTML = '<ul class="products">' + dummyData[itemName] + '<ul>';
-                }, 700);
-            }
-        })();
+        </script>
+    </body>
 
-    </script>
-</body>
-
-</html>
+    </html>
