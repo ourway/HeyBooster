@@ -54,10 +54,10 @@ app.register_blueprint(google_analytics.app)
 @app.route('/', methods=['GET', 'POST'])
 def home():
     # slack_message()
-    if session['auth_token']:
+    if 'auth_token' in session.keys():
         return render_template('index.html')
     else:
-        return render_template('auths/login.html')
+        return redirect('/login')
 
 
 @app.route('/change', methods=['POST'])
