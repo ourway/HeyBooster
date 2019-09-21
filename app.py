@@ -54,7 +54,7 @@ app.register_blueprint(google_analytics.app)
 @app.route('/', methods=['GET', 'POST'])
 def home():
     # slack_message()
-    if session['logged_in'] == True:
+    if session['auth_token'] == True:
         return render_template('index.html')
     else:
         return render_template('login.html')
