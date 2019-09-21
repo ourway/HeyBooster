@@ -170,8 +170,15 @@ def get_channels():
     if not 'sl_accesstoken' in session.keys():
         session['sl_accesstoken'] = db.find_one('user', query={'email': session['email']})['sl_accesstoken']
     data = [('token', session['sl_accesstoken'])]
-    return requests.post(URL.format('channels.list'), data).json()['channels']
-
+    channels = []
+    conversationslist = requests.post(URL.format('conversations.list'), data).json()['channels']
+    for conv in conversationslist:
+        if(conv['is_channel']):
+            channels += [conv]
+    userslist = requests.post(URL.format('conversations.list'), data).json()['members']
+    for user in userslist:
+        if(not user['is_bot']):
+            channels += [user]
 
 @app.route("/datasources", methods=['GET', 'POST'])
 @login_required
