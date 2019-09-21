@@ -247,7 +247,7 @@ def removedatasources():
     email = session['email']
     dataSource = db.find_one("datasource", query={'email': email})
     datasourceID = dataSource['_id']
-    #db.DATABASE['datasource'].update({"_id": datasourceID}, {"$pull": {}})
+    db.DATABASE['datasource'].remove({"_id": datasourceID})
 
     return redirect('/datasourcesinfo')
 
