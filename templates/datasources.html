@@ -122,9 +122,53 @@
                             <div class="brand-logo">
                                 <img src="../static/images/ga.jpg" alt="Google Analytics">
                                 <img src="../static/images/slack.png" alt="Slack" style="float: right;">
+<h5><br>
+                                    Google Analytics</h5>
+                                <p>
+                                    Choose your account</p>
 
 
-                                <h5><br>
+                                <form class="pt-3" action="/datasources">
+                                    {{ nForm.csrf_token }}
+                                    <select class="js-example-basic-single w-100 select2-hidden-accessible"
+                                            data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                            <option value="WY">{{ nForm.account }}</option>
+                                    </select>
+
+                                    <div class="slack-option" id="slack">
+
+                                        <p style="margin-top:5px">
+                                            Property</p>
+
+                                        <select class="js-example-basic-single w-100 select2-hidden-accessible"
+                                                data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                <option value="WY">{{ nForm.property }}</option>
+                                        </select>
+
+
+                                        <p style="margin-top:5px">
+                                            View</p>
+
+
+                                        <select class="js-example-basic-single w-100 select2-hidden-accessible"
+                                                data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                            <option value="WY">{{ nForm.view }}</option>
+                                        </select>
+
+
+                                        <h5><br><br><br>
+                                            Slack</h5>
+                                        <p>
+                                            Choose your channel</p>
+
+
+                                        <select class="js-example-basic-single w-100 select2-hidden-accessible"
+                                                data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                            <option value="WY">{{ nForm.channel }}</option>
+                                        </select>
+                                </form>
+
+                                {#<h5><br>
                                     Google Analytics</h5>
                                 <p>
                                     Choose your account</p>
@@ -176,7 +220,7 @@
                                             <option value="WY">{{ i }}</option>
                                             {% endfor %}
                                         </select>
-                                </form>
+                                </form>#}
 
                                 <div style="margin-top:20px"
 
