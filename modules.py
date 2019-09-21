@@ -709,5 +709,5 @@ def performancegoaltracking(slack_token, task):
                                     "type": "button",
                                     "value": "change"
                                 }]
-                    }]
+                    }])
     return resp['ts']
