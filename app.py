@@ -175,10 +175,12 @@ def get_channels():
     for conv in conversationslist:
         if(conv['is_channel']):
             channels += [conv]
+            
     userslist = requests.post(URL.format('conversations.list'), data).json()['members']
     for user in userslist:
         if(not user['is_bot']):
             channels += [user]
+    return channels
 
 @app.route("/datasources", methods=['GET', 'POST'])
 @login_required
