@@ -573,7 +573,7 @@ def performancegoaltracking(slack_token, task):
             "text": "Track More/Change",
             "type": "button",
             "value": "setmygoal"
-        }
+        },
 #        {
 #            "name": "track",
 #            "text": "Reschedule",
@@ -591,7 +591,8 @@ def performancegoaltracking(slack_token, task):
 #                        "ok_text": "Yes",
 #                        "dismiss_text": "No"
 #                    }
-#        }]
+#        }
+    ]
     metricdict = {'ga:ROAS': 'Adwords ROAS',
                   'ga:CPC': 'Adwords CPC',
                   'ga:sessions': 'Session',
