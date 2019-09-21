@@ -117,7 +117,7 @@ def performancechangetracking(slack_token, task):
                                     "attachment_type": "default",
                                     }]
         else:
-            if ((data_new - data_old) >= (tol * data_old)):
+            if ((data_new - data_old) <= (tol * data_old)):
                 pass
             #                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
             #                    "callback_id": "notification_form",
