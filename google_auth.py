@@ -56,11 +56,12 @@ def build_credentials_woutSession(email):
     resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken']))
 
     if ('error' in resp.json().keys()):
-        data = [('client_id', CLIENT_ID),
-                ('client_secret', CLIENT_SECRET),
+        data = [('client_id', CLIENT_ID.strip()),
+                ('client_secret', CLIENT_SECRET.strip()),
                 ('refresh_token', user['ga_refreshtoken']),
                 ('grant_type', 'refresh_token')]
         resp = requests.post(ACCESS_TOKEN_URI, data).json()
+        print(resp)
         db.find_and_modify('user', query={'email': email}, ga_accesstoken=resp['access_token'])
         oauth2_tokens['access_token'] = resp['access_token']
     else:

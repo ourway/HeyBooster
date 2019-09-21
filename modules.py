@@ -622,7 +622,11 @@ def performancegoaltracking(slack_token, task):
         target = targets[i]
         filterExpression = filters[i]
         if('Adwords' in metricname):
-            filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
+            if filterExpression != '':
+                filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
+            else:
+                filterExpression = 'ga:sourceMedium==google / cpc'
+        
         results = service.reports().batchGet(
         body={
             'reportRequests': [
