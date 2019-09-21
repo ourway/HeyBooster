@@ -430,7 +430,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
         return resp['ts']
 
 
-def costprediction(slack_token, task, , dataSource):
+def costprediction(slack_token, task, dataSource):
     # Cost Prediction
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
@@ -533,7 +533,7 @@ def costprediction(slack_token, task, , dataSource):
         else:
             attachments += [{
                 "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
-                    task['currency']
+                    task['currency'],
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "danger",
@@ -546,7 +546,8 @@ def costprediction(slack_token, task, , dataSource):
         # Prediction is less than target
         if ((target - prediction < (tol * target))):
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
+                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
+                    task['currency'],
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "good",
@@ -557,7 +558,8 @@ def costprediction(slack_token, task, , dataSource):
             }]
         else:
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
+                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
+                    task['currency'],
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "danger",
