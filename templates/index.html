@@ -2,164 +2,174 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>heyBooster!</title>
-  <!-- base:css -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
-  <!-- endinject -->
-  <!-- plugin css for this page -->
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
-  <!-- endinject -->
-  <link rel="shortcut icon" href="../../static/images/heybooster-icon.png" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>heyBooster!</title>
+    <!-- base:css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 </head>
 
 <body>
-  <div class="container-scroller">
+<div class="container-scroller">
     <!-- partial:../../partials/_horizontal-navbar.html -->
     <div class="horizontal-menu">
-      <nav class="navbar top-navbar col-lg-12 col-12 p-0">
-        <div class="container">
-          <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
+        <nav class="navbar top-navbar col-lg-12 col-12 p-0">
+            <div class="container">
+                <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
 
-              <a class="navbar-brand brand-logo" href="/"><img src="../static/images/heyBooster.png" height="34px" alt="logo"/></a>
-              <a class="navbar-brand brand-logo-mini" href="/"><img src="../static/images/heyBooster.png"  alt="heyBooster!"/></a>
+                    <a class="navbar-brand brand-logo" href="/"><img src="../static/images/heyBooster.png" height="34px"
+                                                                     alt="logo"/></a>
+                    <a class="navbar-brand brand-logo-mini" href="/"><img src="../static/images/heyBooster.png"
+                                                                          alt="heyBooster!"/></a>
 
 
-          </div>
-          <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-
-            <ul class="navbar-nav navbar-nav-right">
-                 <ul class="navbar-nav ml-lg-3">
-              <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
-                <a class="dropdown-toggle btn btn-outline-secondary btn-fw"  href="#" data-toggle="dropdown" id="pagesDropdown">
-                <span class="nav-profile-name">Sahin Secil</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="pagesDropdown">
-                  <a class="dropdown-item">
-                  <i class="mdi mdi-settings text-primary"></i>
-                  Settings
-                  </a>
-                  <a class="dropdown-item">
-                  <i class="mdi mdi-logout text-primary"></i>
-                  Logout
-                  </a>
                 </div>
-              </li>
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
 
-            </ul>
+                    <ul class="navbar-nav navbar-nav-right">
+                        <ul class="navbar-nav ml-lg-3">
+                            <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
+                                <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#"
+                                   data-toggle="dropdown" id="pagesDropdown">
+                                    <span class="nav-profile-name">Sahin Secil</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                                     aria-labelledby="pagesDropdown">
+                                    <a class="dropdown-item">
+                                        <i class="mdi mdi-settings text-primary"></i>
+                                        Settings
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <i class="mdi mdi-logout text-primary"></i>
+                                        Logout
+                                    </a>
+                                </div>
+                            </li>
 
-                <li class="nav-item dropdown">
+                        </ul>
 
-                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                    <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
-                    <a class="dropdown-item preview-item">
-                      <div class="preview-thumbnail">
-                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                      </div>
-                      <div class="preview-item-content flex-grow">
-                        <h6 class="preview-subject ellipsis font-weight-normal">David Grey
-                        </h6>
-                        <p class="font-weight-light small-text text-muted mb-0">
-                          The meeting is cancelled
-                        </p>
-                      </div>
-                    </a>
-                    <a class="dropdown-item preview-item">
-                      <div class="preview-thumbnail">
-                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                      </div>
-                      <div class="preview-item-content flex-grow">
-                        <h6 class="preview-subject ellipsis font-weight-normal">Tim Cook
-                        </h6>
-                        <p class="font-weight-light small-text text-muted mb-0">
-                          New product launch
-                        </p>
-                      </div>
-                    </a>
-                    <a class="dropdown-item preview-item">
-                      <div class="preview-thumbnail">
-                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                      </div>
-                      <div class="preview-item-content flex-grow">
-                        <h6 class="preview-subject ellipsis font-weight-normal"> Johnson
-                        </h6>
-                        <p class="font-weight-light small-text text-muted mb-0">
-                          Upcoming board meeting
-                        </p>
-                      </div>
-                    </a>
-                  </div>
-                </li>
+                        <li class="nav-item dropdown">
 
-                <li class="nav-item nav-settings d-none d-lg-flex">
-                  <a class="nav-link" href="#">
-                  <i class="mdi mdi-dots-horizontal"></i>
-                  </a>
-                </li>
-            </ul>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                                 aria-labelledby="messageDropdown">
+                                <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
+                                    </div>
+                                    <div class="preview-item-content flex-grow">
+                                        <h6 class="preview-subject ellipsis font-weight-normal">David Grey
+                                        </h6>
+                                        <p class="font-weight-light small-text text-muted mb-0">
+                                            The meeting is cancelled
+                                        </p>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
+                                    </div>
+                                    <div class="preview-item-content flex-grow">
+                                        <h6 class="preview-subject ellipsis font-weight-normal">Tim Cook
+                                        </h6>
+                                        <p class="font-weight-light small-text text-muted mb-0">
+                                            New product launch
+                                        </p>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
+                                    </div>
+                                    <div class="preview-item-content flex-grow">
+                                        <h6 class="preview-subject ellipsis font-weight-normal"> Johnson
+                                        </h6>
+                                        <p class="font-weight-light small-text text-muted mb-0">
+                                            Upcoming board meeting
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </li>
 
-          </div>
-        </div>
-      </nav>
+                        <li class="nav-item nav-settings d-none d-lg-flex">
+                            <a class="nav-link" href="#">
+                                <i class="mdi mdi-dots-horizontal"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
 
     </div>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
 
 
+        <div class="main-panel">
+            <div class="content-wrapper d-flex align-items-center auth px-0">
+                <div class="row w-100 mx-0">
+                    <div class="col-lg-4 mx-auto">
+                        <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                            <div class="brand-logo">
+                                <img src="../static/images/ga.jpg" alt="Google Analytics">
+                                <img src="../static/images/slack.png" alt="Slack" style="float: right;">
+                            </div>
 
-    <div class="main-panel">
-        <div class="content-wrapper d-flex align-items-center auth px-0">
-          <div class="row w-100 mx-0">
-            <div class="col-lg-4 mx-auto">
-              <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-                <div class="brand-logo">
-                  <img src="../static/images/ga.jpg" alt="Google Analytics">
-                     <img src="../static/images/slack.png" alt="Slack" style="float: right;">
+
+                            <form class="pt-3">
+
+                                {% if session['logged_in'] or session['auth_token'] %}
+                                    <div class="mt-3">
+                                        <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                                           href="/google/connect">Make Data Connections</a>
+                                    </div>
+                                {% else %}
+                                    <div class="mt-3">
+                                        <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                                           href="/google/connect">Add Data Source</a>
+                                    </div>
+                                {% endif %}
+
+
+                            </form>
+                        </div>
+                    </div>
                 </div>
-
-
-                <form class="pt-3">
-
-                  {% if session['logged_in'] or session['auth_token'] %}
-                      <div class="mt-3">
-                        <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" href="/google/connect">Make Data Connections</a>
-                      </div>
-                  {% endif %}
-
-
-                </form>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-      <!-- main-panel ends -->
+        <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
-  </div>
-  <!-- container-scroller -->
-  <!-- base:js -->
-  <script src="./vendors/base/vendor.bundle.base.js"></script>
-  <!-- endinject -->
-  <!-- Plugin js for this page-->
-  <!-- End plugin js for this page-->
-  <!-- inject:js -->
-  <script src="./js/off-canvas.js"></script>
-  <script src="./js/hoverable-collapse.js"></script>
-  <script src="./js/template.js"></script>
-  <script src="./js/settings.js"></script>
-  <script src="./js/todolist.js"></script>
-  <!-- endinject -->
-  <!-- plugin js for this page -->
-  <!-- End plugin js for this page -->
-  <!-- Custom js for this page-->
-  <!-- End custom js for this page-->
+</div>
+<!-- container-scroller -->
+<!-- base:js -->
+<script src="./vendors/base/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page-->
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script src="./js/off-canvas.js"></script>
+<script src="./js/hoverable-collapse.js"></script>
+<script src="./js/template.js"></script>
+<script src="./js/settings.js"></script>
+<script src="./js/todolist.js"></script>
+<!-- endinject -->
+<!-- plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- Custom js for this page-->
+<!-- End custom js for this page-->
 </body>
 
 </html>
