@@ -642,7 +642,7 @@ def performancegoaltracking(slack_token, task):
                              "attachment_type": "default",
                              "actions": [{
                                             "name": "ignore",
-                                            "text": "Ignore",
+                                            "text": "Remove",
                                             "type": "button",
                                             "value": "ignoreone " + metrics[i]['expression'],
                                             "confirm": {
