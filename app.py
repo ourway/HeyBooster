@@ -250,6 +250,7 @@ def datasources():
 def removedatasources(datasourceID):
 
     db.DATABASE['datasource'].remove({"_id": ObjectId(datasourceID)})
+    db.DATABASE['notification'].remove({'_id': ObjectId(datasourceID)})
 
     return redirect('/datasourcesinfo')
 
