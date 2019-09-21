@@ -174,7 +174,7 @@ def get_channels():
     channels = []
     conversationslist = requests.post(URL.format('conversations.list'), data).json()['channels']
     for conv in conversationslist:
-        if(conv['is_channel']):
+        if(conv['is_channel'] or conv['is_group']):
             conv['name'] = '#' + conv['name']
             channels += [conv]
             
