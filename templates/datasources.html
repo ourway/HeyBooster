@@ -131,24 +131,24 @@
                                 <form class="pt-3" method="POST" action="/datasources">
                                     {{ nForm.csrf_token }}
 
-                                    <option value="WY">{{ nForm.account }}</option>
+                                    {{ nForm.account }}
 
                                     <p style="margin-top:5px">
                                         Property</p>
 
-                                    <option value="WY">{{ nForm.property }}</option>
+                                    {{ nForm.property }}
 
                                     <p style="margin-top:5px">
                                         View</p>
 
-                                    <option value="WY">{{ nForm.view }}</option>
+                                    {{ nForm.view }}
 
                                     <h5><br><br><br>
                                         Slack</h5>
                                     <p>
-                                        CCChoose your channel</p>
+                                        Choose your channel</p>
 
-                                    <option value="WY">{{ nForm.channel }}</option>
+                                    {{ nForm.channel }}
 
                                     <div style="margin-top:20px">
                                     </div>
