@@ -247,7 +247,8 @@ def datasources():
 @app.route("/removedatasources/<datasourceID>", methods=['GET', 'POST'])
 @login_required
 def removedatasources(datasourceID):
-    db.DATABASE['datasource'].remove({"_id": datasourceID.replace("'", '"')})
+
+    db.DATABASE['datasource'].remove({"_id": 'ObjectID("{}")'.format(datasourceID)})
 
     return redirect('/datasourcesinfo')
 
