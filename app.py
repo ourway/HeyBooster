@@ -241,6 +241,11 @@ def datasources():
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('datasources.html', nForm=nForm, args=args)
 
+@app.route("/removedatasources", methods=['GET', 'POST'])
+@login_required
+def removedatasources():
+    return redirect('/datasourcesinfo')
+
 @app.route("/datasourcesinfo", methods=['GET', 'POST'])
 @login_required
 def datasourcesinfo():

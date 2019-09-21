@@ -101,6 +101,7 @@
                                     <th>Connection Name</th>
                                     <th>Account</th>
                                     <th>Status</th>
+                                    <th>Remove</th>
 
                                 </tr>
                                 </thead>
@@ -111,6 +112,7 @@
                                             <td>{{ arg.viewName }} && {{ arg.channelName }}</td>
                                             <td>{{ arg.accountName }}</td>
                                             <td><label class="badge badge-success">Connected</label></td>
+                                            <td><label class="badge badge-danger">Remove</label></td>
                                         </tr>
                                         </tbody>
                                     {% endfor %}
