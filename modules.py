@@ -93,11 +93,11 @@ def performancechangetracking(slack_token, task):
         # WARNING: When the number of metrics is increased, 
         # WARNING: obtain data for other metrics
         data_new = float(results['reports'][0]['data']['totals'][0]['values'][i])
-
+        print(str(data_new))
         # WARNING: When the number of metrics is increased, 
         # WARNING: obtain data for other metrics
         data_old = float(results['reports'][0]['data']['totals'][1]['values'][i])
-
+        print(str(data_old))
         try:
             changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
         except:
