@@ -253,9 +253,10 @@ a:hover {
 }
 
 .content {
+    padding-top: 13%;
     position: relative;
     min-height: 300px;
-    margin: 0 0 0 300px;
+    margin: 0 0 0 0px;
     padding-left: 5%;
     background-color: #f3f5f7;
     border-top: 1px solid black;
@@ -498,7 +499,7 @@ a:hover {
      background-color: #547995;
      border-radius: 3px;
      margin: 10px;
-     
+
 
      font-family: sans-serif;
      font-size: 16px;
@@ -520,7 +521,7 @@ a:hover {
  .google {
      background-color: #df4e36;
      color: white;
-     width: 100%;
+     width: 51%;
      border: none;
      opacity: 0.9;
 
@@ -575,4 +576,8 @@ body #cdawrap a:hover.carbon-poweredby {
         height: auto;
         overflow: auto;
     }
+}
+
+.two_button{
+    padding-top: 10%;
 }
