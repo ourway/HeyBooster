@@ -130,40 +130,27 @@
 
                                 <form class="pt-3" action="/datasources">
                                     {{ nForm.csrf_token }}
-                                    <select class="js-example-basic-single w-100 select2-hidden-accessible"
-                                            data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                            <option value="WY">{{ nForm.account }}</option>
-                                    </select>
+
+                                    <option value="WY">{{ nForm.account }}</option>
 
                                     <div class="slack-option" id="slack">
 
                                         <p style="margin-top:5px">
                                             Property</p>
 
-                                        <select class="js-example-basic-single w-100 select2-hidden-accessible"
-                                                data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                                <option value="WY">{{ nForm.property }}</option>
-                                        </select>
-
+                                        <option value="WY">{{ nForm.property }}</option>
 
                                         <p style="margin-top:5px">
                                             View</p>
 
-
-                                        <select class="js-example-basic-single w-100 select2-hidden-accessible"
-                                                data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                            <option value="WY">{{ nForm.view }}</option>
-                                        </select>
-
+                                        <option value="WY">{{ nForm.view }}</option>
 
                                         <h5><br><br><br>
                                             Slack</h5>
                                         <p>
                                             Choose your channel</p>
 
-
-                                      
-                                            <option value="WY">{{ nForm.channel }}</option>
+                                        <option value="WY">{{ nForm.channel }}</option>
 
                                 </form>
 
