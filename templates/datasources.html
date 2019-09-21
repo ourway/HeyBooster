@@ -278,18 +278,3 @@
 </body>
 
 </html>
-
-
-    <div style="background-color: bisque; margin-top: 2%">
-        {% if args %}
-            {% for arg in args %}
-                <h4 style="color: red"> {{ arg.sourceType }}  ---- </h4>
-                <h4 style="color: deepskyblue"> {{ arg.accountName }} ---- </h4>
-                <h4 style="color: green"> {{ arg.propertyName }} ---- </h4>
-                <h4 style="color: tomato"> {{ arg.viewName }} ---- </h4>
-                <h4 style="color: darkgoldenrod"> {{ arg.channelName }} </h4>
-            {% endfor %}
-        {% else %}
-            <h4 style="color: #9C1A1C">Veri yok submit et dene</h4>
-        {% endif %}
-    </div>

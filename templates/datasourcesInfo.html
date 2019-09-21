@@ -39,7 +39,7 @@
                             <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
                                 <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#"
                                    data-toggle="dropdown" id="pagesDropdown">
-                                    <span class="nav-profile-name">Sahin Secil</span>
+                                    <span class="nav-profile-name"></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
                                      aria-labelledby="pagesDropdown">
@@ -121,31 +121,27 @@
                         <h4 class="card-title" style="margin:auto; width:200px">Connected Data Sources</h4>
 
                         <div class="table-responsive" style="padding-top:20px">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Connection Name</th>
-                                    <th>Account</th>
-                                    <th>Status</th>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Connection Name</th>
+                                            <th>Account</th>
+                                            <th>Status</th>
 
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>Connection 1</td>
-                                    <td>Master View & FLO Slack</td>
-                                    <td><label class="badge badge-success">Connected</label></td>
-                                </tr>
-                                </tbody>
-
-                                <tbody>
-                                <tr>
-                                    <td>Slack</td>
-                                    <td>FLO Slack</td>
-                                    <td><label class="badge badge-success">Connected</label></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                        </tr>
+                                        </thead>
+                                        {% if args %}
+                                            {% for arg in args %}
+                                                <tbody>
+                                                <tr>
+                                                    <td>{{ arg.sourceType }}</td>
+                                                    <td>{{ arg.accountName }}</td>
+                                                    <td><label class="badge badge-success">Connected</label></td>
+                                                </tr>
+                                                </tbody>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </table>
                         </div>
 
 
@@ -233,7 +229,8 @@
                                             </form>
 
 
-                                            <div style="margin-top:20px"
+                                            <div style="margin-top:20px">
+                                            </div>
 
                                             <div style=" width: 200px;">
                                                 <form method="get" action="/next3.html">
