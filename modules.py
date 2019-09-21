@@ -618,6 +618,7 @@ def performancegoaltracking(slack_token, task, dataSource):
     metricnames = []
     targets = []
     filters = []
+    tol = 0.05
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
@@ -660,9 +661,9 @@ def performancegoaltracking(slack_token, task, dataSource):
             query = int(query)
         if (str("%.2f" % (round(target, 2))).split('.')[1] == '00'):
             target = int(target)
-        if (query < target):
+        if ( (abs(query - target) / target) <= tol):
             attachments += [{"text": f"This month, {metricname} is {round(query,2)}, Your Target {metricname}: {target}",
-                             "color": "danger",
+                             "color": "good",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
                              "actions": [{
@@ -682,7 +683,7 @@ def performancegoaltracking(slack_token, task, dataSource):
 
         else:
             attachments += [{"text": f"This month, {metricname} is {round(query,2)}, Your Target {metricname}: {target}",
-                             "color": "good",
+                             "color": "danger",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
                              "actions": [{

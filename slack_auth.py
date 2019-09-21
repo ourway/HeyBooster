@@ -69,6 +69,7 @@ def authorized(self):
         )
         db.find_and_modify(collection='user', query={'email': google_auth.get_user_info()['email']},
                            sl_accesstoken=token['access_token'], sl_userid=token['user_id'])
+        flask.session['sl_accesstoken'] = token['access_token']
     except MissingCodeError as e:
         e.args = (
             e.args[0],
