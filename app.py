@@ -174,6 +174,7 @@ def get_channels():
     conversationslist = requests.post(URL.format('conversations.list'), data).json()['channels']
     for conv in conversationslist:
         if(conv['is_channel']):
+            conv['name'] = '#' + conv['name']
             channels += [conv]
             
     userslist = requests.post(URL.format('users.list'), data).json()['members']
@@ -225,7 +226,7 @@ def datasources():
         nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
                                   google_analytics.get_accounts(session['email'])['accounts']]
         channels = get_channels()
-        nForm.channel.choices += [(channel['id'] + '\u0007' + '#' + channel['name'], '#' + channel['name']) for channel
+        nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
                                   in channels]
         # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('oldDatasources.html', nForm = nForm, args = args)
