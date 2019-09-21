@@ -807,7 +807,8 @@ def message_actions():
              ('channel', channel),
              ('attachments', attachments),
              ('ts', message_ts)]
-            requests.post(URL.format('chat.update'), data)
+            resp = requests.post(URL.format('chat.update'), data)
+            print(str(resp))
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
