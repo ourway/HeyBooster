@@ -546,7 +546,7 @@ def costprediction(slack_token, task, dataSource):
         # Prediction is less than target
         if ((target - prediction < (tol * target))):
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
+                "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
                     task['currency'],
                     round(prediction, 2),
                     round(target, 2)),
@@ -558,7 +558,7 @@ def costprediction(slack_token, task, dataSource):
             }]
         else:
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
+                "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
                     task['currency'],
                     round(prediction, 2),
                     round(target, 2)),
