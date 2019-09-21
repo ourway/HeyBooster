@@ -78,7 +78,13 @@ def performancechangetracking(slack_token, task):
             "name": "ignore",
             "text": "Ignore",
             "type": "button",
-            "value": "ignore"
+            "value": "ignore",
+            "confirm": {
+                        "title": "Warning",
+                        "text": "Are you sure you want to close your Performance Change Tracking notifications?",
+                        "ok_text": "Yes",
+                        "dismiss_text": "No"
+                    }
         }]
 
     for i in range(len(metrics)):
@@ -309,7 +315,13 @@ def shoppingfunnelchangetracking(slack_token, task):
             "name": "ignore",
             "text": "Ignore",
             "type": "button",
-            "value": "ignore"
+            "value": "ignore",
+            "confirm": {
+                        "title": "Warning",
+                        "text": "Are you sure you want to close your Shopping Funnel Changes Tracking notifications?",
+                        "ok_text": "Yes",
+                        "dismiss_text": "No"
+                    }
         }]
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -431,7 +443,13 @@ def costprediction(slack_token, task):
             "name": "ignore",
             "text": "Ignore",
             "type": "button",
-            "value": "ignore"
+            "value": "ignore",
+            "confirm": {
+                        "title": "Warning",
+                        "text": "Are you sure you want to close your Cost Prediction notification?",
+                        "ok_text": "Yes",
+                        "dismiss_text": "No"
+                    }
         }]
     metrics = [
         {'expression': 'ga:adCost'},
@@ -550,7 +568,7 @@ def performancegoaltracking(slack_token, task):
     actions = [
         {
             "name": "setmygoal",
-            "text": "Change My Goal",
+            "text": "Track More/Change",
             "type": "button",
             "value": "setmygoal"
         },
@@ -564,7 +582,13 @@ def performancegoaltracking(slack_token, task):
             "name": "ignore",
             "text": "Ignore",
             "type": "button",
-            "value": "ignore"
+            "value": "ignore",
+            "confirm": {
+                        "title": "Warning",
+                        "text": "Are you sure you want to close your Performance Goal Tracking notifications?",
+                        "ok_text": "Yes",
+                        "dismiss_text": "No"
+                    }
         }]
     metricdict = {'ga:ROAS': 'Adwords ROAS',
                   'ga:CPC': 'CPC',
