@@ -241,12 +241,10 @@ def datasources():
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('datasources.html', nForm=nForm, args=args)
 
-@app.route("/removedatasources", methods=['GET', 'POST'])
+@app.route("/removedatasources/<datasourceID>", methods=['GET', 'POST'])
 @login_required
-def removedatasources():
-    email = session['email']
-    dataSource = db.find_one("datasource", query={'email': email})
-    datasourceID = dataSource['_id']
+def removedatasources(datasourceID):
+
     db.DATABASE['datasource'].remove({"_id": datasourceID})
 
     return redirect('/datasourcesinfo')
