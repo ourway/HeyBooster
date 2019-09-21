@@ -879,7 +879,7 @@ def message_actions():
                 )
                 module['metric'] = [module['metric'][metricindex]]
                 module['target'] = [module['target'][metricindex]]
-                module['filter'] = [module['filter'][metricindex]]
+                module['filterExpression'] = [module['filterExpression'][metricindex]]
                 performancegoaltracking(slack_token, module, dataSource)
             except:
                 db.DATABASE['notification'].update(
