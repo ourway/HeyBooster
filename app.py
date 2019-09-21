@@ -170,7 +170,8 @@ def get_channels():
     if not 'sl_accesstoken' in session.keys():
         session['sl_accesstoken'] = db.find_one('user', query={'email': session['email']})['sl_accesstoken']
     data = [('token', session['sl_accesstoken']),
-             ('types', 'public_channel, private_channel')]
+             ('types', 'public_channel, private_channel'),
+             ('limit', 200)]
     channels = []
     conversationslist = requests.post(URL.format('conversations.list'), data).json()['channels']
     for conv in conversationslist:
