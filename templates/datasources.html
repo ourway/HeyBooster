@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>heyBooster!</title>
     <!-- base:css -->
-    <link rel="stylesheet" href="./vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="./vendors/base/vendor.bundle.base.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
     <!-- endinject -->
     <!-- plugin css for this page -->
     <!-- End plugin css for this page -->
     <!-- inject:css -->
-    <link rel="stylesheet" href="./css/horizontal-layout-light/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
     <!-- endinject -->
-    <link rel="shortcut icon" href="./images/heybooster-icon.png"/>
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 </head>
 
 <body>
@@ -26,9 +26,9 @@
             <div class="container">
                 <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
 
-                    <a class="navbar-brand brand-logo" href="./index.html"><img src="./images/heyBooster.png"
+                    <a class="navbar-brand brand-logo" href="/"><img src="../static/images/heyBooster.png"
                                                                                 height="34px" alt="logo"/></a>
-                    <a class="navbar-brand brand-logo-mini" href="./index.html"><img src="./images/heyBooster.png"
+                    <a class="navbar-brand brand-logo-mini" href="/"><img src="../static/images/heyBooster.png"
                                                                                      alt="heyBooster!"/></a>
 
 
@@ -120,8 +120,8 @@
                     <div class="col-lg-4 mx-auto">
                         <div class="auth-form-light text-left py-5 px-4 px-sm-5">
                             <div class="brand-logo">
-                                <img src="./images/ga.jpg" alt="Google Analytics">
-                                <img src="./images/slack.png" alt="Slack" style="float: right;">
+                                <img src="../static/images/ga.jpg" alt="Google Analytics">
+                                <img src="../static/images/slack.png" alt="Slack" style="float: right;">
 
 
                                 <h5><br>
