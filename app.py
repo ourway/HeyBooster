@@ -235,6 +235,55 @@ def datasources():
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('datasources.html', nForm=nForm, args=args)
 
+@app.route("/datasourcesinfo", methods=['GET', 'POST'])
+@login_required
+def datasourcesinfo():
+    nForm = DataSourceForm(request.form)
+    datasources = db.find('datasource', query={'email': session['email']})
+    unsortedargs = []
+    for datasource in datasources:
+        unsortedargs.append(datasource)
+    #    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
+    #    tForm = TimeForm(request.form)
+    if request.method == 'POST':
+        #        data = [('token', session['sl_accesstoken'])]
+        #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
+        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
+        ts = time.time()
+        data = {
+            'email': session['email'],
+            'sl_userid': uID,
+            'sourceType': "Google Analytics",
+            'accountID': nForm.account.data.split('\u0007')[0],
+            'accountName': nForm.account.data.split('\u0007')[1],
+            'propertyID': nForm.property.data.split('\u0007')[0],
+            'propertyName': nForm.property.data.split('\u0007')[1],
+            'viewID': nForm.view.data.split('\u0007')[0],
+            'viewName': nForm.view.data.split('\u0007')[1],
+            'channelType': "Slack",
+            'channelID': nForm.channel.data.split('\u0007')[0],
+            'channelName': nForm.channel.data.split('\u0007')[1],
+            'createdTS': ts
+        }
+        _id = db.insert_one("datasource", data=data).inserted_id
+        data['_id'] = _id
+        unsortedargs.append(data)
+        insertdefaultnotifications(session['email'], userID=uID,
+                                   dataSourceID=_id,
+                                   channelID=nForm.channel.data.split('\u0007')[0])
+    #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
+    #        return render_template('datasourcesInfo.html', nForm = nForm, args = args)
+    else:
+        #        user_info = google_auth.get_user_info()
+        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
+                                  google_analytics.get_accounts(session['email'])['accounts']]
+        channels = get_channels()
+        nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
+                                  in channels]
+        # incoming_webhook = slack.token['incoming_webhook']
+    #        return render_template('datasourcesInfo.html', nForm = nForm, args = args)
+    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    return render_template('datasourcesinfo.html', nForm=nForm, args=args)
 
 @app.route("/gatest/<email>")
 def gatest(email):

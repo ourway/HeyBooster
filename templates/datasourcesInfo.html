@@ -1,67 +1,281 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block body %}
-    <div style="margin: 10%">
-        <form method="POST" action="/datasources">
-            {{ nForm.csrf_token }}
-            <br>Account<br>
-            {{ nForm.account }}
-            <br>Property<br>
-            {{ nForm.property }}
-            <br>View<br>
-            {{ nForm.view }}
-            <br>Channel<br>
-            {{ nForm.channel }}
-            <br><input type="submit" name="submit" value="Submit">
-        </form>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>heyBooster!</title>
+    <!-- base:css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+</head>
 
-    <div style="background-color: bisque; margin-top: 2%">
-        {% if args %}
-            {% for arg in args %}
-                <h4 style="color: red"> {{ arg.sourceType }}  ---- </h4>
-                <h4 style="color: deepskyblue"> {{ arg.accountName }} ---- </h4>
-                <h4 style="color: green"> {{ arg.propertyName }} ---- </h4>
-                <h4 style="color: tomato"> {{ arg.viewName }} ---- </h4>
-                <h4 style="color: darkgoldenrod"> {{ arg.channelName }} </h4>
-            {% endfor %}
-        {% else %}
-            <h4 style="color: #9C1A1C">Veri yok submit et dene</h4>
-        {% endif %}
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_horizontal-navbar.html -->
+    <div class="horizontal-menu">
+        <nav class="navbar top-navbar col-lg-12 col-12 p-0">
+            <div class="container">
+                <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
+                    <a class="navbar-brand brand-logo" href="./index.html"><img src="../static/images/heyBooster.png"
+                                                                                height="34px" alt="logo"/></a>
+                    <a class="navbar-brand brand-logo-mini" href="./index.html"><img src="../static/images/heyBooster.png"
+                                                                                     alt="heyBooster!"/></a>
+
+
+                </div>
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+
+                    <ul class="navbar-nav navbar-nav-right">
+                        <ul class="navbar-nav ml-lg-3">
+                            <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
+                                <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#"
+                                   data-toggle="dropdown" id="pagesDropdown">
+                                    <span class="nav-profile-name">Sahin Secil</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                                     aria-labelledby="pagesDropdown">
+                                    <a class="dropdown-item">
+                                        <i class="mdi mdi-logout text-primary"></i>
+                                        Logout
+                                    </a>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                        <li class="nav-item dropdown">
+
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                                 aria-labelledby="messageDropdown">
+                                <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
+                                    </div>
+                                    <div class="preview-item-content flex-grow">
+                                        <h6 class="preview-subject ellipsis font-weight-normal">David Grey
+                                        </h6>
+                                        <p class="font-weight-light small-text text-muted mb-0">
+                                            The meeting is cancelled
+                                        </p>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
+                                    </div>
+                                    <div class="preview-item-content flex-grow">
+                                        <h6 class="preview-subject ellipsis font-weight-normal">Tim Cook
+                                        </h6>
+                                        <p class="font-weight-light small-text text-muted mb-0">
+                                            New product launch
+                                        </p>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
+                                    </div>
+                                    <div class="preview-item-content flex-grow">
+                                        <h6 class="preview-subject ellipsis font-weight-normal"> Johnson
+                                        </h6>
+                                        <p class="font-weight-light small-text text-muted mb-0">
+                                            Upcoming board meeting
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item nav-settings d-none d-lg-flex">
+                            <a class="nav-link" href="#">
+                                <i class="mdi mdi-dots-horizontal"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
     </div>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+
+
+        <div class="main-panel">
+
+
+            <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title" style="margin:auto; width:200px">Connected Data Sources</h4>
+
+                        <div class="table-responsive" style="padding-top:20px">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Connection Name</th>
+                                    <th>Account</th>
+                                    <th>Status</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Connection 1</td>
+                                    <td>Master View & FLO Slack</td>
+                                    <td><label class="badge badge-success">Connected</label></td>
+                                </tr>
+                                </tbody>
+
+                                <tbody>
+                                <tr>
+                                    <td>Slack</td>
+                                    <td>FLO Slack</td>
+                                    <td><label class="badge badge-success">Connected</label></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="mt-4">
+                            <div class="accordion" id="accordion" role="tablist">
+
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="heading-2">
+                                        <h6 class="mb-0">
+                                            <a class="collapsed" data-toggle="collapse" href="#collapse-2"
+                                               aria-expanded="false" aria-controls="collapse-2">
+                                                Add Data Source
+                                            </a>
+
+                                        </h6>
+                                    </div>
+                                    <div id="collapse-2" class="collapse" role="tabpanel" aria-labelledby="heading-2"
+                                         data-parent="#accordion" style="">
+                                        <div class="card-body">
+
+                                            <h5><br>
+                                                Google Analytics</h5>
+                                            <p>
+                                                Choose your account</p>
+
+                                            <form class="pt-3">
+                                                <select class="js-example-basic-single w-100 select2-hidden-accessible"
+                                                        data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                    <option value="AL" data-select2-id="3">-- Select an option --
+                                                    </option>
+                                                    <option value="WY">Zappos</option>
+                                                    <option value="WY">FLO</option>
+                                                    <option value="WY">Migros</option>
+                                                </select>
+                                            </form>
+
+
+                                            <p style="margin-top:5px">
+                                                Property</p>
+
+
+                                            <form class="pt-3">
+                                                <select class="js-example-basic-single w-100 select2-hidden-accessible"
+                                                        data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                    <option value="AL" data-select2-id="3">-- Select an option --
+                                                    </option>
+                                                    <option value="WY">Zappos</option>
+                                                    <option value="WY">FLO</option>
+                                                    <option value="WY">Migros</option>
+                                                </select>
+                                            </form>
+
+
+                                            <p style="margin-top:5px">
+                                                View</p>
+
+
+                                            <form class="pt-3">
+                                                <select class="js-example-basic-single w-100 select2-hidden-accessible"
+                                                        data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                    <option value="AL" data-select2-id="3">-- Select an option --
+                                                    </option>
+                                                    <option value="WY">Zappos</option>
+                                                    <option value="WY">FLO</option>
+                                                    <option value="WY">Migros</option>
+                                                </select>
+                                            </form>
+
+
+                                            <h5><br><br><br>
+                                                Slack</h5>
+                                            <p>
+                                                Choose your channel</p>
+
+
+                                            <form class="pt-3">
+                                                <select class="js-example-basic-single w-100 select2-hidden-accessible"
+                                                        data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                    <option value="AL" data-select2-id="3">-- Select an option --
+                                                    </option>
+                                                    <option value="WY">Zappos</option>
+                                                    <option value="WY">FLO</option>
+                                                    <option value="WY">Migros</option>
+                                                </select>
+                                            </form>
+
+
+                                            <div style="margin-top:20px"
+
+                                            <div style=" width: 200px;">
+                                                <form method="get" action="/next3.html">
+                                                    <button type="submit" class="btn btn-primary mb-2">Add Data Source
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-{% endblock %}
+</div>
+</div>
+<!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- base:js -->
+<script src="./vendors/base/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page-->
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script src="./js/off-canvas.js"></script>
+<script src="./js/hoverable-collapse.js"></script>
+<script src="./js/template.js"></script>
+<script src="./js/settings.js"></script>
+<script src="./js/todolist.js"></script>
+<!-- endinject -->
+<!-- plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- Custom js for this page-->
+<!-- End custom js for this page-->
+</body>
 
-{% block scripts %}
-    <script>
-        let account_select = document.getElementById("account");
-        let property_select = document.getElementById("property");
-        let view_select = document.getElementById("view");
-		let bellchar = '';
-        account_select.onchange = function () {
-            account = account_select.value.split(bellchar)[0];
-            fetch('/analytics/properties/' + account).then(function (response) {
-                response.json().then(function (data) {
-                    var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
-                    for (var property of data.properties) {
-                        optionHTML += '<option value="' + property.id + bellchar +  property.name + '">' + property.name + '</option>';
-                    }
-                    property_select.innerHTML = optionHTML;
-                })
-
-            });
-        }
-        property_select.onchange = function () {
-            property = property_select.value.split(bellchar)[0];
-            fetch('/analytics/views/' + account_select.value.split(bellchar)[0] + '/' + property).then(function (response) {
-                response.json().then(function (data) {
-                    var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
-                    for (var view of data.views) {
-                        optionHTML += '<option value="' + view.id + bellchar + view.name + '">' + view.name + '</option>';
-                    }
-                    view_select.innerHTML = optionHTML;
-                })
-
-            });
-        }
-    </script>
-{% endblock %}
+</html>
