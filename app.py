@@ -773,8 +773,12 @@ def message_actions():
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
+            print("Message TS:", message_ts)
+            print("Attachment ID:", attachment_id)
+            print("First Attachments:",  message_action['original_message']['attachments'])
             del message_action['original_message']['attachments'][int(attachment_id)]
             attachments = message_action['original_message']['attachments']
+            print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
