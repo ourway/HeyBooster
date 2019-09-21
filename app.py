@@ -809,9 +809,9 @@ def message_actions():
                                                                                   "target": None,
                                                                                   "filterExpression": None}})
             data = [('token', slack_token),
-                    ('text', ""),
+                    ('text', "Deneme"),
                     ('channel', channel),
-                    ('attachments', attachments),
+                    ('attachments', []),
                     ('ts', message_ts)]
             resp = requests.post(URL.format('chat.update'), data)
             print(str(resp))
