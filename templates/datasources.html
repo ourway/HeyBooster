@@ -134,20 +134,13 @@
                                     {{ nForm.csrf_token }}
                                     <select class="js-example-basic-single w-100 select2-hidden-accessible"
                                             data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                        {% for i in nForm.account %}
                                         <option value="AL" data-select2-id="3">-- Select an option --</option>
-                                            <option value="WY">{{ i }}</option>
-                                            <option value="WY">{{ i }}</option>
+                                        {% for i in nForm.account %}
                                             <option value="WY">{{ i }}</option>
                                         {% endfor %}
                                     </select>
 
                                     <div class="slack-option" id="slack">
-
-                                        <h4>Slack</h4>
-                                        <h6>Channel</h6>
-                                        {{ nForm.channel }}
-
 
                                         <p style="margin-top:5px">
                                             Property</p>
@@ -182,10 +175,10 @@
 
                                         <select class="js-example-basic-single w-100 select2-hidden-accessible"
                                                 data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                            <option value="AL" data-select2-id="3">-- Select an option --</option>
-                                            <option value="WY">Zappos</option>
-                                            <option value="WY">FLO</option>
-                                            <option value="WY">Migros</option>
+                                        <option value="AL" data-select2-id="3">-- Select an option --</option>
+                                            {% for i in nform.channel %}
+                                            <option value="WY">{{ i }}</option>
+                                            {% endfor %}
                                         </select>
                                 </form>
 
