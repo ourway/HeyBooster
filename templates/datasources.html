@@ -134,7 +134,6 @@
                                     {{ nForm.csrf_token }}
                                     <select class="js-example-basic-single w-100 select2-hidden-accessible"
                                             data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                        <option value="AL" data-select2-id="3">-- Select an option --</option>
                                         {% for i in nForm.account %}
                                             <option value="WY">{{ i }}</option>
                                         {% endfor %}
@@ -147,10 +146,9 @@
 
                                         <select class="js-example-basic-single w-100 select2-hidden-accessible"
                                                 data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                            <option value="AL" data-select2-id="3">-- Select an option --</option>
-                                            <option value="WY">Zappos</option>
-                                            <option value="WY">FLO</option>
-                                            <option value="WY">Migros</option>
+                                            {% for i in nForm.property %}
+                                                <option value="WY">{{ i }}</option>
+                                            {% endfor %}
                                         </select>
 
 
@@ -160,10 +158,9 @@
 
                                         <select class="js-example-basic-single w-100 select2-hidden-accessible"
                                                 data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                            <option value="AL" data-select2-id="3">-- Select an option --</option>
-                                            <option value="WY">Zappos</option>
-                                            <option value="WY">FLO</option>
-                                            <option value="WY">Migros</option>
+                                            {% for i in nForm.view %}
+                                            <option value="WY">{{ i }}</option>
+                                            {% endfor %}
                                         </select>
 
 
@@ -175,7 +172,6 @@
 
                                         <select class="js-example-basic-single w-100 select2-hidden-accessible"
                                                 data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                        <option value="AL" data-select2-id="3">-- Select an option --</option>
                                             {% for i in nForm.channel %}
                                             <option value="WY">{{ i }}</option>
                                             {% endfor %}
