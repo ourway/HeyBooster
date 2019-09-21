@@ -54,7 +54,10 @@ app.register_blueprint(google_analytics.app)
 @app.route('/', methods=['GET', 'POST'])
 def home():
     # slack_message()
-    return render_template('index.html')
+    if session['logged_in'] == True:
+        return render_template('index.html')
+    else:
+        return render_template('login.html')
 
 
 @app.route('/change', methods=['POST'])
@@ -148,7 +151,7 @@ def register():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 
 @app.route('/privacypolicy')
