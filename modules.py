@@ -696,18 +696,18 @@ def performancegoaltracking(slack_token, task):
         channel=channel,
         attachments=attachments)
     
-    time.sleep(0.5)
-    slack_client.chat_postMessage(
-        channel=channel,
-        attachments=[{"text": "",
-                     "color": "FFFFFF",
-                     "callback_id": "notification_form",
-                     "attachment_type": "default",
-                     "actions": [{
-                                    "name": "change",
-                                    "text": "Reschedule",
-                                    "type": "button",
-                                    "value": "change"
-                                }]
-                    }])
+#    time.sleep(0.5)
+#    slack_client.chat_postMessage(
+#        channel=channel,
+#        attachments=[{"text": "",
+#                     "color": "FFFFFF",
+#                     "callback_id": "notification_form",
+#                     "attachment_type": "default",
+#                     "actions": [{
+#                                    "name": "change",
+#                                    "text": "Reschedule",
+#                                    "type": "button",
+#                                    "value": "change"
+#                                }]
+#                    }])
     return resp['ts']
