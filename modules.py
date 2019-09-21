@@ -709,7 +709,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                     "actions": actions}]
 
     slack_client = WebClient(token=slack_token)
-    resp = slack_client.chat_postMessage(
+    resp = slack_client.chat_postMessage(text="A",
         channel=channel,
         attachments=attachments)
     
