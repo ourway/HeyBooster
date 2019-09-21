@@ -36,30 +36,32 @@
     </div>
 
     <div class="content content-x">
-                <span class="first-img">
-            <img src="../static/img/558x200-kopya.png">
-            </span>
-        <img src="../static/img/slack.png" style="opacity: 0.9">
-        <img src="../static/img/google-2.png">
+        <span class="first-img">
+            <img src="img/558x200-kopya.png" width="200" height="150">
+        </span>
+        <img src="img/slack.png" style="opacity: 0.9" width="50" height="150">
+        <img src="img/google-2.png" width="150" height="90">
         <!-- Ajax loaded content here -->
-        {% if session['logged_in'] or session['auth_token'] %}
-            <form action="/google/connect">
+        <center>
+            {% if session['logged_in'] or session['auth_token'] %}
+                <form action="/google/connect">
 
-                <div class="ilk-button">
-                    <button class="btn btn-dark btn-lg" id="btn-3">Connect Your World</button>
-                </div>
-            </form>
+                    <div class="ilk-button">
+                        <button class="btn btn-dark btn-lg" id="btn-3">Connect Your World</button>
+                    </div>
+                </form>
 
-        {% else %}
-            <a href="../google/login">
-                <button class="contact100-form-btn google">
+            {% else %}
+                <a href="../google/login">
+                    <button class="contact100-form-btn google">
                     <span>
                         <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
-                            google ile Giriş Yap
+                            Sign in With Google
                     </span>
-                </button>
-            </a>
-        {% endif %}
+                    </button>
+                </a>
+            {% endif %}
+        </center>
     </div>
 
 </div>
