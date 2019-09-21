@@ -49,15 +49,26 @@
   </div>
   <!-- container-scroller -->
   <!-- base:js -->
-  <script src="./vendors/base/vendor.bundle.base.js"></script>
-  <!-- endinject -->
-  <!-- inject:js -->
-  <script src="./js/off-canvas.js"></script>
-  <script src="./js/hoverable-collapse.js"></script>
-  <script src="./js/template.js"></script>
-  <script src="./js/settings.js"></script>
-  <script src="./js/todolist.js"></script>
-  <!-- endinject -->
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/vendors/base/vendor.bundle.base.js') }}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page-->
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/off-canvas.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/hoverable-collapse.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/template.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/settings.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/todolist.js') }}"></script>
 </body>
 
 </html>
