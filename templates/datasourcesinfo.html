@@ -112,7 +112,9 @@
                                             <td>{{ arg.viewName }} && {{ arg.channelName }}</td>
                                             <td>{{ arg.accountName }}</td>
                                             <td><label class="badge badge-success">Connected</label></td>
-                                            <td><label class="badge badge-danger">Remove</label></td>
+                                            <form method="POST" action="/removedatasources">
+                                                <td><button type="submit" class="btn btn-outline-danger btn-fw">x</button></td>
+                                            </form>
                                         </tr>
                                         </tbody>
                                     {% endfor %}

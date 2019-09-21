@@ -244,6 +244,11 @@ def datasources():
 @app.route("/removedatasources", methods=['GET', 'POST'])
 @login_required
 def removedatasources():
+    email = session['email']
+    dataSource = db.find_one("datasource", query={'email': email})
+    datasourceID = dataSource['_id']
+    #db.DATABASE['datasource'].update({"_id": datasourceID}, {"$pull": {}})
+
     return redirect('/datasourcesinfo')
 
 @app.route("/datasourcesinfo", methods=['GET', 'POST'])
