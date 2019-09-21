@@ -770,6 +770,10 @@ def message_actions():
                 )
         elif ('ignoreone' in message_action['actions'][-1]['value']):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
+            message_ts = message_action['message_ts']
+            attachment_id = message_action['attachment_id']
+            del message_action['original_message']['attachments'][int(attachment_id)]
+            attachments = message_action['original_message']['attachments']
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
@@ -782,7 +786,12 @@ def message_actions():
             db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"metric" : None,
                                                                                   "target" : None,
                                                                                   "filterExpression" : None }})
-
+            data = [('token', slack_token),
+             ('text', ""),
+             ('channel', channel),
+             ('attachments', attachments),
+             ('ts', message_ts)]
+            requests.post(URL.format('chat.update'), data)
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
