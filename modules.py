@@ -37,7 +37,7 @@ def performancechangetracking(slack_token, task):
 
     period = task['period']
 
-    tol = 0.20
+    tol = 0.10
 
     filters = [
         {
@@ -329,7 +329,7 @@ def shoppingfunnelchangetracking(slack_token, task):
     channel = task['channel']
     period = task['period']
 
-    tol = 0.20
+    tol = 0.10
 
     if (period == 1):
         start_date_1 = 'yesterday'
