@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
     <!-- endinject -->
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
@@ -27,8 +29,9 @@
                 <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
                     <a class="navbar-brand brand-logo" href="./index.html"><img src="../static/images/heyBooster.png"
                                                                                 height="34px" alt="logo"/></a>
-                    <a class="navbar-brand brand-logo-mini" href="./index.html"><img src="../static/images/heyBooster.png"
-                                                                                     alt="heyBooster!"/></a>
+                    <a class="navbar-brand brand-logo-mini" href="./index.html"><img
+                            src="../static/images/heyBooster.png"
+                            alt="heyBooster!"/></a>
 
 
                 </div>
@@ -121,41 +124,39 @@
                         <h4 class="card-title" style="margin:auto; width:200px">Connected Data Sources</h4>
 
                         <div class="table-responsive" style="padding-top:20px">
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>Connection Name</th>
-                                            <th>Account</th>
-                                            <th>Status</th>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Connection Name</th>
+                                    <th>Account</th>
+                                    <th>Status</th>
 
+                                </tr>
+                                </thead>
+                                {% if args %}
+                                    {% for arg in args %}
+                                        <tbody>
+                                        <tr>
+                                            <td>{{ arg.sourceType }}</td>
+                                            <td>{{ arg.accountName }}</td>
+                                            <td><label class="badge badge-success">Connected</label></td>
                                         </tr>
-                                        </thead>
-                                        {% if args %}
-                                            {% for arg in args %}
-                                                <tbody>
-                                                <tr>
-                                                    <td>{{ arg.sourceType }}</td>
-                                                    <td>{{ arg.accountName }}</td>
-                                                    <td><label class="badge badge-success">Connected</label></td>
-                                                </tr>
-                                                </tbody>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </table>
+                                        </tbody>
+                                    {% endfor %}
+                                {% endif %}
+                            </table>
                         </div>
 
 
                         <div class="mt-4">
                             <div class="accordion" id="accordion" role="tablist">
-
                                 <div class="card">
                                     <div class="card-header" role="tab" id="heading-2">
                                         <h6 class="mb-0">
-                                                <div class="collapsed" data-toggle="collapse"
+                                            <a class="collapsed" data-toggle="collapse" href="#collapse-2"
                                                aria-expanded="false" aria-controls="collapse-2">
                                                 Add Data Source
-                                            </div>
-
+                                            </a>
                                         </h6>
                                     </div>
                                     <div id="collapse-2" class="collapse" role="tabpanel" aria-labelledby="heading-2"
@@ -275,6 +276,10 @@
 
 <script type="text/javascript"
         src="{{ url_for('static', filename='/js/todolist.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <!-- endinject -->
 <!-- plugin js for this page -->
