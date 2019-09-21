@@ -13,9 +13,12 @@ def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
 
-def performancechangetracking(slack_token, task):
+def performancechangetracking(slack_token, task, dataSource):
     #    Performance Changes Tracking
-    text = "Performance Changes Tracking"
+    task['channel'] = dataSource['channelID']
+    task['viewId'] = dataSource['viewID']
+    task['currency'] = dataSource['currency']
+    text = "*Performance Changes Tracking*"
     attachments = []
 
     metrics = [{'expression': 'ga:ROAS'},
@@ -290,9 +293,12 @@ def performancechangetracking(slack_token, task):
 #        return resp['ts']
 # """
 
-def shoppingfunnelchangetracking(slack_token, task):
+def shoppingfunnelchangetracking(slack_token, task, dataSource):
     # Funnel Changes Tracking
-    text = "Shopping Funnel Changes Tracking"
+    task['channel'] = dataSource['channelID']
+    task['viewId'] = dataSource['viewID']
+    task['currency'] = dataSource['currency']
+    text = "*Shopping Funnel Changes Tracking*"
     attachments = []
     metrics = [
         {'expression': 'ga:sessions'}
@@ -424,9 +430,12 @@ def shoppingfunnelchangetracking(slack_token, task):
         return resp['ts']
 
 
-def costprediction(slack_token, task):
+def costprediction(slack_token, task, , dataSource):
     # Cost Prediction
-    text = "Cost Prediction"
+    task['channel'] = dataSource['channelID']
+    task['viewId'] = dataSource['viewID']
+    task['currency'] = dataSource['currency']
+    text = "*Cost Prediction*"
     attachments = []
     actions = [
         {
@@ -511,7 +520,8 @@ def costprediction(slack_token, task):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
+                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
+                    task['currency'],
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "good",
@@ -522,7 +532,8 @@ def costprediction(slack_token, task):
             }]
         else:
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0} Monthly Budget: {1}".format(
+                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
+                    task['currency']
                     round(prediction, 2),
                     round(target, 2)),
                 "color": "danger",
@@ -563,9 +574,12 @@ def costprediction(slack_token, task):
     return resp['ts']
 
 
-def performancegoaltracking(slack_token, task):
+def performancegoaltracking(slack_token, task, dataSource):
     # Funnel Changes Tracking
-    text = "Performance Goal Tracking"
+    task['channel'] = dataSource['channelID']
+    task['viewId'] = dataSource['viewID']
+    task['currency'] = dataSource['currency']
+    text = "*Performance Goal Tracking*"
     attachments = []
     actions = [
         {
@@ -656,7 +670,7 @@ def performancegoaltracking(slack_token, task):
                                             "value": "ignoreone " + metrics[i]['expression'],
                                             "confirm": {
                                             "title": "Warning",
-                                            "text": f"Are you sure you want to remove {metricname} notification?",
+                                            "text": f"If you remove {{metricname}} notification, you will not track your {{metricname}} goal anymore. Are you still sure you want to remove it?",
                                             "ok_text": "Yes",
                                             "dismiss_text": "No"
                                         }
@@ -676,7 +690,7 @@ def performancegoaltracking(slack_token, task):
                                             "value": "ignoreone " + metrics[i]['expression'],
                                             "confirm": {
                                             "title": "Warning",
-                                            "text": f"Are you sure you want to remove {metricname} notification?",
+                                            "text": f"If you remove {{metricname}} notification, you will not track your {{metricname}} goal anymore. Are you still sure you want to remove it?",
                                             "ok_text": "Yes",
                                             "dismiss_text": "No"
                                         }

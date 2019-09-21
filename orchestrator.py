@@ -23,16 +23,14 @@ def do_job(tasks_to_accomplish):
             user = db.find_one('user', {'email': task['email']})
             slack_token = user['sl_accesstoken']
             dataSource = db.find_one('datasource', query={'_id': task['datasourceID']})
-            task['channel'] = dataSource['channelID']
-            task['viewId'] = dataSource['viewID']
             if (task['type'] == 'performancechangetracking'):
-                performancechangetracking(slack_token, task)
+                performancechangetracking(slack_token, task, dataSource)
             elif (task['type'] == 'shoppingfunnelchangetracking'):
-                shoppingfunnelchangetracking(slack_token, task)
+                shoppingfunnelchangetracking(slack_token, task, dataSource)
             elif (task['type'] == 'costprediction'):
-                costprediction(slack_token, task)
+                costprediction(slack_token, task, dataSource)
             elif (task['type'] == 'performancegoaltracking'):
-                performancegoaltracking(slack_token, task)
+                performancegoaltracking(slack_token, task, dataSource)
             db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']},
                                lastRunDate=time.time())
         except queue.Empty:

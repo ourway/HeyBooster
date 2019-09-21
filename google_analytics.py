@@ -66,7 +66,7 @@ def get_views(accountId, propertyId):
     if profiles.get('items'):
         # return the first view (profile) id.
         for prof in profiles.get('items'):
-            views.append({'id': prof.get('id'), 'name': prof.get('name')})
+            views.append({'id': prof.get('id')+'\u0007'+prof.get('currency'), 'name': prof.get('name')})
         return jsonify({'views': views})
 
 

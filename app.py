@@ -200,6 +200,7 @@ def datasources():
         #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
         uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
+        
         data = {
             'email': session['email'],
             'sl_userid': uID,
@@ -209,7 +210,8 @@ def datasources():
             'propertyID': nForm.property.data.split('\u0007')[0],
             'propertyName': nForm.property.data.split('\u0007')[1],
             'viewID': nForm.view.data.split('\u0007')[0],
-            'viewName': nForm.view.data.split('\u0007')[1],
+            'currency': nForm.view.data.split('\u0007')[1],
+            'viewName': nForm.view.data.split('\u0007')[2],
             'channelType': "Slack",
             'channelID': nForm.channel.data.split('\u0007')[0],
             'channelName': nForm.channel.data.split('\u0007')[1],
@@ -857,10 +859,10 @@ def message_actions():
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
         elif ('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys()) == 5):
-            datasource = db.find_one("datasource", query={'sl_userid': sl_userid,
+            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})
-            datasourceID = datasource['_id']
-            viewId = datasource['viewID']
+            datasourceID = dataSource['_id']
+            viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
@@ -875,12 +877,10 @@ def message_actions():
                     {'$set': {
                         "target." + str(metricindex): submission['target'], "filterExpression." + str(metricindex): filterExpression}}
                 )
-                module['viewId'] = viewId
-                module['channel'] = channel
                 module['metric'] = [module['metric'][metricindex]]
                 module['target'] = [module['target'][metricindex]]
                 module['filter'] = [module['filter'][metricindex]]
-                performancegoaltracking(slack_token, module)
+                performancegoaltracking(slack_token, module, dataSource)
             except:
                 db.DATABASE['notification'].update(
                     {'_id': module_id},
@@ -894,19 +894,17 @@ def message_actions():
                     {'_id': module_id},
                     {'$push': {'filterExpression': filterExpression}}
                 )
-                module['viewId'] = viewId
-                module['channel'] = channel
                 module['metric'] = [submission['metric']]
                 module['target'] = [submission['target']]
                 module['filter'] = [filterExpression]
-                performancegoaltracking(slack_token, module)
+                performancegoaltracking(slack_token, module, dataSource)
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
         elif ('budget' in submission.keys() and len(submission.keys()) == 1):
-            datasource = db.find_one("datasource", query={'sl_userid': sl_userid,
+            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                           'channelID': channel})
-            datasourceID = datasource['_id']
-            viewId = datasource['viewID']
+            datasourceID = dataSource['_id']
+            viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'costprediction'})
             module_id = module['_id']
@@ -918,7 +916,7 @@ def message_actions():
             module['viewId'] = viewId
             module['channel'] = channel
             module['target'] = target
-            costprediction(slack_token, module)
+            costprediction(slack_token, module, dataSource)
 
     return make_response("", 200)
 
