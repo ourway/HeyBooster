@@ -591,9 +591,9 @@ def performancegoaltracking(slack_token, task):
                     }
         }]
     metricdict = {'ga:ROAS': 'Adwords ROAS',
-                  'ga:CPC': 'CPC',
+                  'ga:CPC': 'Adwords CPC',
                   'ga:sessions': 'Session',
-                  'ga:costPerTransaction': 'Cost Per Transaction',
+                  'ga:costPerTransaction': 'Adwords Cost Per Transaction',
                   'ga:transactionRevenue': 'Revenue'}
     metrics = []
     metricnames = []
@@ -621,6 +621,8 @@ def performancegoaltracking(slack_token, task):
         metricname = metricnames[i]
         target = targets[i]
         filterExpression = filters[i]
+        if('Adwords' in metricname):
+            filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
         results = service.reports().batchGet(
         body={
             'reportRequests': [
