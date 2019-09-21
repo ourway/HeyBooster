@@ -128,12 +128,10 @@
                                     Choose your account</p>
 
 
-                                <form class="pt-3" action="/datasources">
+                                <form class="pt-3" method="POST" action="/datasources">
                                     {{ nForm.csrf_token }}
 
                                     <option value="WY">{{ nForm.account }}</option>
-
-                                    <div class="slack-option" id="slack">
 
                                         <p style="margin-top:5px">
                                             Property</p>
@@ -151,7 +149,11 @@
                                             Choose your channel</p>
 
                                         <option value="WY">{{ nForm.channel }}</option>
+                                        <div style=" width: 200px;">
+                                            <button type="submit" class="btn btn-primary mb-2">Add Data Source</button>
 
+                                        </div>
+                                </form>
 
                                         {#<h5><br>
                                     Google Analytics</h5>
@@ -207,13 +209,6 @@
                                         </select>
                                 </form>#}
 
-                                        <div style="margin-top:20px"
-
-                                        <div style=" width: 200px;">
-                                            <button type="submit" class="btn btn-primary mb-2">Add Data Source</button>
-
-                                        </div>
-                                </form>
                             </div>
 
                         </div>
