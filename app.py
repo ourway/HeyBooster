@@ -776,7 +776,7 @@ def message_actions():
             print("Message TS:", message_ts)
             print("Attachment ID:", attachment_id)
             print("First Attachments:",  message_action['original_message']['attachments'])
-            del message_action['original_message']['attachments'][int(attachment_id)]
+            del message_action['original_message']['attachments'][int(attachment_id)-1]
             attachments = message_action['original_message']['attachments']
             print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
