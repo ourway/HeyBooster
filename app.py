@@ -924,7 +924,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
             # "title_link": "https://blog.boostroas.com/tr/"
         },
             {
-                "text": "Welcome to Heybooster, I am your digital buddy to support" +
+                "text": "Welcome to Heybooster, I am your digital buddy to support " +
                         "you to boost your website by analyzing your data with marketing perspective." +
                         "You will get first insights tomorrow at 7 am",
                 "callback_id": "notification_form",
