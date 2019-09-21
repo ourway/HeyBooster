@@ -616,12 +616,12 @@ def performancegoaltracking(slack_token, task):
                              "color": "danger",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
-                             "actions": {
+                             "actions": [{
                                             "name": "ignore",
                                             "text": "Ignore",
                                             "type": "button",
-                                            "value": "ignoreone_" + metrics[i]['expression']
-                                        }
+                                            "value": "ignoreone " + metrics[i]['expression']
+                                        }]
                              }]
 
         else:
@@ -629,12 +629,12 @@ def performancegoaltracking(slack_token, task):
                              "color": "good",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
-                             "actions": {
+                             "actions": [{
                                             "name": "ignore",
                                             "text": "Remove",
                                             "type": "button",
-                                            "value": "ignoreOne"
-                                        }
+                                            "value": "ignoreone " + metrics[i]['expression']
+                                        }]
                              }]
 
     attachments[0]['pretext'] = text
