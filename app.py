@@ -17,6 +17,7 @@ import os
 import requests
 import time
 from modules import performancegoaltracking, costprediction
+
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
 
@@ -174,20 +175,21 @@ def get_channels():
     if not 'sl_accesstoken' in session.keys():
         session['sl_accesstoken'] = db.find_one('user', query={'email': session['email']})['sl_accesstoken']
     data = [('token', session['sl_accesstoken']),
-             ('types', 'public_channel, private_channel'),
-             ('limit', 200)]
+            ('types', 'public_channel, private_channel'),
+            ('limit', 200)]
     channels = []
     conversationslist = requests.post(URL.format('conversations.list'), data).json()['channels']
     for conv in conversationslist:
-        if(conv['is_channel'] or conv['is_group']):
+        if (conv['is_channel'] or conv['is_group']):
             conv['name'] = '#' + conv['name']
             channels += [conv]
-            
+
     userslist = requests.post(URL.format('users.list'), data).json()['members']
     for user in userslist:
-        if(not user['is_bot']):
+        if (not user['is_bot']):
             channels += [user]
     return channels
+
 
 @app.route("/datasources", methods=['GET', 'POST'])
 @login_required
@@ -204,7 +206,7 @@ def datasources():
         #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
         uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
-        
+
         data = {
             'email': session['email'],
             'sl_userid': uID,
@@ -241,13 +243,14 @@ def datasources():
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('datasources.html', nForm=nForm, args=args)
 
+
 @app.route("/removedatasources/<datasourceID>", methods=['GET', 'POST'])
 @login_required
 def removedatasources(datasourceID):
-
-    db.DATABASE['datasource'].remove({"_id": datasourceID})
+    db.DATABASE['datasource'].remove({"_id": datasourceID.replace("'", '"')})
 
     return redirect('/datasourcesinfo')
+
 
 @app.route("/datasourcesinfo", methods=['GET', 'POST'])
 @login_required
@@ -299,6 +302,7 @@ def datasourcesinfo():
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('datasourcesinfo.html', nForm=nForm, args=args)
+
 
 @app.route("/gatest/<email>")
 def gatest(email):
@@ -784,8 +788,8 @@ def message_actions():
             attachment_id = message_action['attachment_id']
             print("Message TS:", message_ts)
             print("Attachment ID:", attachment_id)
-            print("First Attachments:",  message_action['original_message']['attachments'])
-            del message_action['original_message']['attachments'][int(attachment_id)-1]
+            print("First Attachments:", message_action['original_message']['attachments'])
+            del message_action['original_message']['attachments'][int(attachment_id) - 1]
             attachments = message_action['original_message']['attachments']
             print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
@@ -794,17 +798,18 @@ def message_actions():
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
             metricindex = module['metric'].index(metric)
-            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$unset" : {"metric."+ str(metricindex): 1, 
-                                                                                   "target."+ str(metricindex): 1,
-                                                                                   "filterExpression."+ str(metricindex): 1 }}) 
-            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"metric" : None,
-                                                                                  "target" : None,
-                                                                                  "filterExpression" : None }})
+            db.DATABASE['notification'].update({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
+                                                                                   "target." + str(metricindex): 1,
+                                                                                   "filterExpression." + str(
+                                                                                       metricindex): 1}})
+            db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
+                                                                                  "target": None,
+                                                                                  "filterExpression": None}})
             data = [('token', slack_token),
-             ('text', ""),
-             ('channel', channel),
-             ('attachments', attachments),
-             ('ts', message_ts)]
+                    ('text', ""),
+                    ('channel', channel),
+                    ('attachments', attachments),
+                    ('ts', message_ts)]
             resp = requests.post(URL.format('chat.update'), data)
             print(str(resp))
     elif message_action["type"] == "dialog_submission":
@@ -887,14 +892,15 @@ def message_actions():
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
         elif ('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys()) == 5):
             dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                            'channelID': channel})
+                                                          'channelID': channel})
             datasourceID = dataSource['_id']
             viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
-            if( submission['dimension'] != None and submission['operator'] != None and submission['expression'] != None ):
-                filterExpression = submission['dimension']+submission['operator']+submission['expression']
+            if (submission['dimension'] != None and submission['operator'] != None and submission[
+                'expression'] != None):
+                filterExpression = submission['dimension'] + submission['operator'] + submission['expression']
             else:
                 filterExpression = ''
             try:
@@ -902,7 +908,8 @@ def message_actions():
                 db.DATABASE['notification'].update(
                     {'_id': module_id},
                     {'$set': {
-                        "target." + str(metricindex): submission['target'], "filterExpression." + str(metricindex): filterExpression}}
+                        "target." + str(metricindex): submission['target'],
+                        "filterExpression." + str(metricindex): filterExpression}}
                 )
                 module['metric'] = [module['metric'][metricindex]]
                 module['target'] = [module['target'][metricindex]]
@@ -937,9 +944,9 @@ def message_actions():
             module_id = module['_id']
             target = float(submission['budget'])
             db.find_and_modify(collection='notification', query={'_id': module['_id']},
-                                                           target=target,
-                                                           status='1'
-                                                           )
+                               target=target,
+                               status='1'
+                               )
             module['viewId'] = viewId
             module['channel'] = channel
             module['target'] = target
