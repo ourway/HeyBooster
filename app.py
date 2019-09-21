@@ -270,7 +270,8 @@ def datasourcesinfo():
             'propertyID': nForm.property.data.split('\u0007')[0],
             'propertyName': nForm.property.data.split('\u0007')[1],
             'viewID': nForm.view.data.split('\u0007')[0],
-            'viewName': nForm.view.data.split('\u0007')[1],
+            'currency': nForm.view.data.split('\u0007')[1],
+            'viewName': nForm.view.data.split('\u0007')[2],
             'channelType': "Slack",
             'channelID': nForm.channel.data.split('\u0007')[0],
             'channelName': nForm.channel.data.split('\u0007')[1],
@@ -781,7 +782,7 @@ def message_actions():
             print("Message TS:", message_ts)
             print("Attachment ID:", attachment_id)
             print("First Attachments:",  message_action['original_message']['attachments'])
-            del message_action['original_message']['attachments'][int(attachment_id)]
+            del message_action['original_message']['attachments'][int(attachment_id)-1]
             attachments = message_action['original_message']['attachments']
             print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
