@@ -633,7 +633,7 @@ def performancegoaltracking(slack_token, task):
                                             "name": "ignore",
                                             "text": "Remove",
                                             "type": "button",
-                                            "value": "ignoreone_" + metrics[i]['expression']
+                                            "value": "ignoreOne"
                                         }
                              }]
 
