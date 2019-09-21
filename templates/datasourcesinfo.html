@@ -28,9 +28,9 @@
         <nav class="navbar top-navbar col-lg-12 col-12 p-0">
             <div class="container">
                 <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-                    <a class="navbar-brand brand-logo" href="./index.html"><img src="../static/images/heyBooster.png"
+                    <a class="navbar-brand brand-logo" href="/"><img src="../static/images/heyBooster.png"
                                                                                 height="34px" alt="logo"/></a>
-                    <a class="navbar-brand brand-logo-mini" href="./index.html"><img
+                    <a class="navbar-brand brand-logo-mini" href="/"><img
                             src="../static/images/heyBooster.png"
                             alt="heyBooster!"/></a>
 
@@ -43,7 +43,7 @@
                             <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
                                 <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#"
                                    data-toggle="dropdown" id="pagesDropdown">
-                                    <span class="nav-profile-name"></span>
+                                    <span class="nav-profile-name">{{ session['email'] }}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
                                      aria-labelledby="pagesDropdown">
