@@ -721,13 +721,12 @@ def message_actions():
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
             metricindex = module['metric'].index(metric)
-            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$unset" : {"metric."+ str(metricindex): 1 }}) 
-            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"metric" : "null"}})
-            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$unset" : {"target."+ str(metricindex): 1 }}) 
-            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"target" : "null"}})
-            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$unset" : {"filterExpression."+ str(metricindex): 1 }}) 
-            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"filterExpression" : null}})
-        
+            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$unset" : {"metric."+ str(metricindex): 1, 
+                                                                                   "target."+ str(metricindex): 1,
+                                                                                   "filterExpression."+ str(metricindex): 1 }}) 
+            db.DATABASE['notification'].update({"_id":module["_id"]}, {"$pull" : {"metric" : None,
+                                                                                  "target" : None,
+                                                                                  "filterExpression" : None }})
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
