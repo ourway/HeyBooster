@@ -176,7 +176,7 @@ def get_channels():
         if(conv['is_channel']):
             channels += [conv]
             
-    userslist = requests.post(URL.format('conversations.list'), data).json()['members']
+    userslist = requests.post(URL.format('users.list'), data).json()['members']
     for user in userslist:
         if(not user['is_bot']):
             channels += [user]
