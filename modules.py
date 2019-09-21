@@ -644,8 +644,15 @@ def performancegoaltracking(slack_token, task):
                                             "name": "ignore",
                                             "text": "Ignore",
                                             "type": "button",
-                                            "value": "ignoreone " + metrics[i]['expression']
-                                        }]
+                                            "value": "ignoreone " + metrics[i]['expression'],
+                                            "confirm": {
+                                            "title": "Warning",
+                                            "text": f"Are you sure you want to remove {metricname} notification?",
+                                            "ok_text": "Yes",
+                                            "dismiss_text": "No"
+                                        }
+                                        }],
+                            
                              }]
 
         else:
@@ -657,7 +664,13 @@ def performancegoaltracking(slack_token, task):
                                             "name": "ignore",
                                             "text": "Remove",
                                             "type": "button",
-                                            "value": "ignoreone " + metrics[i]['expression']
+                                            "value": "ignoreone " + metrics[i]['expression'],
+                                            "confirm": {
+                                            "title": "Warning",
+                                            "text": f"Are you sure you want to remove {metricname} notification?",
+                                            "ok_text": "Yes",
+                                            "dismiss_text": "No"
+                                        }
                                         }]
                              }]
 
