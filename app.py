@@ -17,6 +17,7 @@ import os
 import requests
 import time
 from modules import performancegoaltracking, costprediction
+from bson.objectid import ObjectId
 
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
@@ -248,7 +249,7 @@ def datasources():
 @login_required
 def removedatasources(datasourceID):
 
-    db.DATABASE['datasource'].remove({"_id": datasourceID.replace("'", '"')})
+    db.DATABASE['datasource'].remove({"_id": ObjectId(datasourceID)})
 
     return redirect('/datasourcesinfo')
 
