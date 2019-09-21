@@ -672,7 +672,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                                             "value": "ignoreone " + metrics[i]['expression'],
                                             "confirm": {
                                             "title": "Warning",
-                                            "text": f"If you remove {{metricname}} notification, you will not track your {{metricname}} goal anymore. Are you still sure you want to remove it?",
+                                            "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
                                             "ok_text": "Yes",
                                             "dismiss_text": "No"
                                         }
@@ -692,7 +692,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                                             "value": "ignoreone " + metrics[i]['expression'],
                                             "confirm": {
                                             "title": "Warning",
-                                            "text": f"If you remove {{metricname}} notification, you will not track your {{metricname}} goal anymore. Are you still sure you want to remove it?",
+                                            "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
                                             "ok_text": "Yes",
                                             "dismiss_text": "No"
                                         }
