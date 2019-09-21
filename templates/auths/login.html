@@ -1,112 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700' rel='stylesheet' type='text/css'>
-    <title>Login</title>
-    <meta name="description" content="Blueprint: A basic template for a responsive multi-level menu"/>
-    <meta name="keywords" content="blueprint, template, html, css, menu, responsive, mobile-friendly"/>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='icon/favicon.ico') }}">
-    <!-- food icons -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/organicfoodicons.css') }}"/>
-    <!-- demo styles -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/demo.css') }}"/>
-    <!-- menu styles -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/component.css') }}"/>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/modernizr-custom.js') }}"></script>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>heyBooster!</title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='../vendors/mdi/css/materialdesignicons.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/vendors/base/vendor.bundle.base.css') }}">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='./css/horizontal-layout-light/style.css') }}">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../images/heybooster-icon.png" />
 </head>
 
 <body>
-<!-- Main container -->
-<div class="container">
-    <!-- Blueprint header -->
-    <div class="two_button">
-        <center>
-            <a href="/logout">
-                <button class="btn btn-dark btn-lg">Logout</button>
-            </a>
-            <a href="/datasources">
-                <button class="btn btn-dark btn-lg">Data Source</button>
-            </a>
-        </center>
-    </div>
-    <div class="content content-1">
+  <div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+      <div class="main-panel">
+        <div class="content-wrapper d-flex align-items-center auth px-0">
+          <div class="row w-100 mx-0">
+            <div class="col-lg-4 mx-auto">
+              <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                <div class="brand-logo">
+                  <img src="../images/heyBooster.png" alt="logo">
+                </div>
 
-        <div class="container-contact100-form-btn">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit minima quis numquam repellendus error
-                maxime itaque, eum. Molestias vitae, quibusdam voluptates, quos nam minima doloremque nostrum facere at
-                amet, architecto.</p>
-            <a href="../google/login">
-                <button class="contact100-form-btn google">
-                    <span>
-                        <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
-                            google ile Giriş Yap
-                    </span>
-                </button>
-            </a>
-
-
+                <form class="pt-3" action="../google/login">
+                  <center>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-social-icon-text btn-google"><i class="mdi mdi-google-plus"></i>Sign in With Google</button>
+                    </div>
+                </center>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-
+      </div>
+      <!-- content-wrapper ends -->
     </div>
-
-</div>
-<!-- /view -->
-<script src="js/classie.js"></script>
-<script src="js/dummydata.js"></script>
-<script src="js/main.js"></script>
-
-<script>
-    (function () {
-        var menuEl = document.getElementById('ml-menu'),
-            mlmenu = new MLMenu(menuEl, {
-                // breadcrumbsCtrl : true, // show breadcrumbs
-                // initialBreadcrumb : 'all', // initial breadcrumb text
-                backCtrl: false, // show back button
-                // itemsDelayInterval : 60, // delay between each menu item sliding animation
-                onItemClick: loadDummyData // callback: item that doesn´t have a submenu gets clicked - onItemClick([event], [inner HTML of the clicked item])
-            });
-
-        // mobile menu toggle
-        var openMenuCtrl = document.querySelector('.action--open'),
-            closeMenuCtrl = document.querySelector('.action--close');
-
-        openMenuCtrl.addEventListener('click', openMenu);
-        closeMenuCtrl.addEventListener('click', closeMenu);
-
-        function openMenu() {
-            classie.add(menuEl, 'menu--open');
-            closeMenuCtrl.focus();
-        }
-
-        function closeMenu() {
-            classie.remove(menuEl, 'menu--open');
-            openMenuCtrl.focus();
-        }
-
-        // simulate grid content loading
-        var gridWrapper = document.querySelector('.content');
-
-        function loadDummyData(ev, itemName) {
-            ev.preventDefault();
-
-            closeMenu();
-            gridWrapper.innerHTML = '';
-            classie.add(gridWrapper, 'content--loading');
-            setTimeout(function () {
-                classie.remove(gridWrapper, 'content--loading');
-                gridWrapper.innerHTML = '<ul class="products">' + dummyData[itemName] + '<ul>';
-            }, 700);
-        }
-    })();
-
-</script>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- base:js -->
+  <script src="./vendors/base/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- inject:js -->
+  <script src="./js/off-canvas.js"></script>
+  <script src="./js/hoverable-collapse.js"></script>
+  <script src="./js/template.js"></script>
+  <script src="./js/settings.js"></script>
+  <script src="./js/todolist.js"></script>
+  <!-- endinject -->
 </body>
 
 </html>
