@@ -868,6 +868,7 @@ def message_actions():
                                                            )
             module['viewId'] = viewId
             module['channel'] = channel
+            module['target'] = target
             costprediction(slack_token, module)
 
     return make_response("", 200)
