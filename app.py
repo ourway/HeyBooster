@@ -248,7 +248,7 @@ def datasources():
 @login_required
 def removedatasources(datasourceID):
 
-    db.DATABASE['datasource'].remove({"_id": 'ObjectID("{}")'.format(datasourceID)})
+    db.DATABASE['datasource'].remove({"_id": 'ObjectId("{}")'.format(datasourceID)})
 
     return redirect('/datasourcesinfo')
 
