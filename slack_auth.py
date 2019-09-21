@@ -131,4 +131,4 @@ def authorized(self):
 #    for module in modules:
 #        db.find_and_modify("notification", query={'_id': module['_id']}, timeofDay="%s.00" % (default_time))
             
-    return redirect('/datasources')
+    return redirect(next_url)
