@@ -7,7 +7,7 @@ Created on Mon Aug 19 20:49:15 2019
 import google_analytics
 from datetime import datetime, timedelta
 from slack import WebClient
-
+import time
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
@@ -68,12 +68,13 @@ def performancechangetracking(slack_token, task):
                             "filters": filters
                         }]}]}).execute()
 
-    actions = [{
-        "name": "track",
-        "text": "Reschedule",
-        "type": "button",
-        "value": "track"
-    },
+    actions = [
+#        {
+#        "name": "track",
+#        "text": "Reschedule",
+#        "type": "button",
+#        "value": "track"
+#    },
         {
             "name": "ignore",
             "text": "Ignore",
@@ -305,12 +306,13 @@ def shoppingfunnelchangetracking(slack_token, task):
                   'CHECKOUT': 'Number of session with checkout',
                   'TRANSACTION': 'Number of session with transaction'
                   }
-    actions = [{
-        "name": "track",
-        "text": "Reschedule",
-        "type": "button",
-        "value": "track"
-    },
+    actions = [
+#            {
+#        "name": "track",
+#        "text": "Reschedule",
+#        "type": "button",
+#        "value": "track"
+#    },
         {
             "name": "ignore",
             "text": "Ignore",
@@ -433,12 +435,12 @@ def costprediction(slack_token, task):
             "type": "button",
             "value": "setmybudget"
         },
-        {
-            "name": "track",
-            "text": "Reschedule",
-            "type": "button",
-            "value": "track"
-        },
+#        {
+#            "name": "track",
+#            "text": "Reschedule",
+#            "type": "button",
+#            "value": "track"
+#        },
         {
             "name": "ignore",
             "text": "Ignore",
@@ -571,25 +573,25 @@ def performancegoaltracking(slack_token, task):
             "text": "Track More/Change",
             "type": "button",
             "value": "setmygoal"
-        },
-        {
-            "name": "track",
-            "text": "Reschedule",
-            "type": "button",
-            "value": "track"
-        },
-        {
-            "name": "ignore",
-            "text": "Ignore",
-            "type": "button",
-            "value": "ignore",
-            "confirm": {
-                        "title": "Warning",
-                        "text": "Are you sure you want to close your Performance Goal Tracking notifications?",
-                        "ok_text": "Yes",
-                        "dismiss_text": "No"
-                    }
-        }]
+        }
+#        {
+#            "name": "track",
+#            "text": "Reschedule",
+#            "type": "button",
+#            "value": "track"
+#        }
+#        {
+#            "name": "ignore",
+#            "text": "Ignore",
+#            "type": "button",
+#            "value": "ignore",
+#            "confirm": {
+#                        "title": "Warning",
+#                        "text": "Are you sure you want to close your Performance Goal Tracking notifications?",
+#                        "ok_text": "Yes",
+#                        "dismiss_text": "No"
+#                    }
+#        }]
     metricdict = {'ga:ROAS': 'Adwords ROAS',
                   'ga:CPC': 'Adwords CPC',
                   'ga:sessions': 'Session',
@@ -692,4 +694,19 @@ def performancegoaltracking(slack_token, task):
     resp = slack_client.chat_postMessage(
         channel=channel,
         attachments=attachments)
+    
+    time.sleep(0.5)
+    slack_client.chat_postMessage(
+        channel=channel,
+        attachments=[{"text": "",
+                     "color": "FFFFFF",
+                     "callback_id": "notification_form",
+                     "attachment_type": "default",
+                     "actions": [{
+                                    "name": "change",
+                                    "text": "Reschedule",
+                                    "type": "button",
+                                    "value": "change"
+                                }]
+                    }]
     return resp['ts']

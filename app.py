@@ -16,7 +16,7 @@ from slack import WebClient
 import os
 import requests
 import time
-
+from modules import performancegoaltracking
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
 
@@ -808,8 +808,10 @@ def message_actions():
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
         elif ('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys()) == 5):
-            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                            'channelID': channel})['_id']
+            datasource = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                            'channelID': channel})
+            datasourceID = datasource['_id']
+            viewId = datasource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
@@ -824,6 +826,12 @@ def message_actions():
                     {'$set': {
                         "target." + str(metricindex): submission['target'], "filterExpression." + str(metricindex): filterExpression}}
                 )
+                module['viewId'] = viewId
+                module['channel'] = channel
+                module['metric'] = [module['metric'][metricindex]]
+                module['target'] = [module['target'][metricindex]]
+                module['filter'] = [module['filter'][metricindex]]
+                performancegoaltracking(slack_token, module)
             except:
                 db.DATABASE['notification'].update(
                     {'_id': module_id},
@@ -837,7 +845,12 @@ def message_actions():
                     {'_id': module_id},
                     {'$push': {'filterExpression': filterExpression}}
                 )
-
+                module['viewId'] = viewId
+                module['channel'] = channel
+                module['metric'] = [submission['metric']]
+                module['target'] = [submission['target']]
+                module['filter'] = [filterExpression]
+                performancegoaltracking(slack_token, module)
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
         elif ('budget' in submission.keys() and len(submission.keys()) == 1):
