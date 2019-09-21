@@ -908,7 +908,7 @@ def message_actions():
                 )
                 module['metric'] = [submission['metric']]
                 module['target'] = [submission['target']]
-                module['filter'] = [filterExpression]
+                module['filterExpression'] = [filterExpression]
                 performancegoaltracking(slack_token, module, dataSource)
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
