@@ -16,7 +16,7 @@ from slack import WebClient
 import os
 import requests
 import time
-from modules import performancegoaltracking
+from modules import performancegoaltracking, costprediction
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
 
@@ -854,15 +854,21 @@ def message_actions():
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
         elif ('budget' in submission.keys() and len(submission.keys()) == 1):
-            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                            'channelID': channel})['_id']
+            datasource = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                          'channelID': channel})
+            datasourceID = datasource['_id']
+            viewId = datasource['viewID']
+            module = db.find_one("notification", query={'datasourceID': datasourceID,
+                                                        'type': 'costprediction'})
+            module_id = module['_id']
             target = float(submission['budget'])
-            db.find_and_modify(collection='notification', query={'datasourceID': datasourceID,
-                                                                 'type': 'costprediction'
-                                                                 },
-                               target=target,
-                               status='1'
-                               )
+            db.find_and_modify(collection='notification', query={'_id': module['_id']},
+                                                           target=target,
+                                                           status='1'
+                                                           )
+            module['viewId'] = viewId
+            module['channel'] = channel
+            costprediction(slack_token, module)
 
     return make_response("", 200)
 
