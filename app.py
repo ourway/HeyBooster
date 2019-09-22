@@ -821,7 +821,7 @@ def message_actions():
 #                    ('ts', message_ts)]
 #            resp = requests.post(URL.format('chat.update'), data)
             data = [('token', slack_token),
-                    ('channel', channel)
+                    ('channel', channel),
                     ('ts', message_ts)]
             resp = requests.post(URL.format('chat.delete'), data)       
             print(str(resp.items()))
