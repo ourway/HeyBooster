@@ -801,7 +801,7 @@ def message_actions():
             del message_action['original_message']['attachments'][int(attachment_id) - 1]
             attachments = message_action['original_message']['attachments']
             for att in attachments:
-                for act in attachments["actions"]:
+                for act in att["actions"]:
                     del act["id"]
                 del att["id"]
                 del att["fallback"]
