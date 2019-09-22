@@ -796,10 +796,15 @@ def message_actions():
                 if(att['id'] == attachment_id):
                     del message_action['original_message']['attachments'][i]
                     break
-                i += 1          
+                i += 1
             print("First Attachments:", message_action['original_message']['attachments'])
             del message_action['original_message']['attachments'][int(attachment_id) - 1]
             attachments = message_action['original_message']['attachments']
+            for att in attachments:
+                for act in attachments["actions"]:
+                    del act["id"]
+                del att["id"]
+                del att["fallback"]
             print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})['_id']
@@ -817,7 +822,7 @@ def message_actions():
             slack_client.chat_update(channel = channel,
                                    ts = message_ts,
                                    text = "Deneme123",
-                                   attachments = [])       
+                                   attachments = attachments)       
 #            data = [('token', slack_token),
 #                    ('channel', channel),
 #                    ('ts', message_ts),
