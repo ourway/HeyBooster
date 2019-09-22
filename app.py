@@ -791,9 +791,26 @@ def message_actions():
             attachment_id = message_action['attachment_id']
             print("Message TS:", message_ts)
             print("Attachment ID:", attachment_id)
-            print("First Attachments:", message_action['original_message']['attachments'])
-            del message_action['original_message']['attachments'][int(attachment_id) - 1]
+            i = 0
             attachments = message_action['original_message']['attachments']
+            for att in attachments:
+                if(att['id'] == attachment_id):
+                    del attachments[i]
+                    break
+                i += 1
+            print("First Attachments:", attachments)
+            if(i==0):
+                attachments[1]["pretext"] = attachments[0]["pretext"]
+            del attachments[int(attachment_id) - 1]
+            for att in attachments:
+                for act in att["actions"]:
+                    del act["id"]
+                    del act["style"]
+                del att["id"]
+                del att["fallback"]
+                if (not "text" in att.keys()):
+                    att["text"] = ""
+                
             print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})['_id']
@@ -808,13 +825,21 @@ def message_actions():
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "target": None,
                                                                                   "filterExpression": None}})
-            data = [('token', slack_token),
-                    ('text', ""),
-                    ('channel', channel),
-                    ('attachments', attachments),
-                    ('ts', message_ts)]
-            resp = requests.post(URL.format('chat.update'), data)
-            print(str(resp))
+            slack_client.chat_update(channel = channel,
+                                   ts = message_ts,
+                                   text = "",
+                                   attachments = attachments)       
+#            data = [('token', slack_token),
+#                    ('channel', channel),
+#                    ('ts', message_ts),
+#                    ('text', "Deneme"),
+#                    ('attachments', [])]
+#            resp = requests.post(URL.format('chat.update'), data)
+#            data = [('token', slack_token),
+#                    ('channel', channel),
+#                    ('ts', message_ts)]
+#            resp = requests.post(URL.format('chat.delete'), data)       
+#            print(str(resp.json().items()))
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
