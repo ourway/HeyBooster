@@ -827,7 +827,7 @@ def message_actions():
                                                                                   "filterExpression": None}})
             slack_client.chat_update(channel = channel,
                                    ts = message_ts,
-                                   text = "Deneme123",
+                                   text = "",
                                    attachments = attachments)       
 #            data = [('token', slack_token),
 #                    ('channel', channel),
