@@ -109,13 +109,13 @@ def performancechangetracking(slack_token, task, dataSource):
         if (data_new < data_old):
             if ((data_old - data_new) <= (tol * data_old)):
                 pass
-            #                attachments += [{"text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new,2)}\n",
+            #                attachments += [{"text": f"Yesterday you got {changerate} less {metricname} than previous day. {metricname} : {round(data_new,2)}\n",
             #                    "callback_id": "notification_form",
             #                    "attachment_type": "default",
             #                }]
             else:
                 attachments += [{
-                                    "text": f"Yesterday you got {changerate} {metricname} less than previous day. {metricname} : {round(data_new, 2)}\n",
+                                    "text": f"Yesterday you got {changerate} less {metricname} than previous day. {metricname} : {round(data_new, 2)}\n",
                                     "callback_id": "notification_form",
                                     'color': "danger",
                                     "attachment_type": "default",
@@ -123,13 +123,13 @@ def performancechangetracking(slack_token, task, dataSource):
         else:
             if ((data_new - data_old) <= (tol * data_old)):
                 pass
-            #                attachments += [{"text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new,2)}\n",
+            #                attachments += [{"text": f"Yesterday you got {changerate} more {metricname} than previous day. {metricname} : {round(data_new,2)}\n",
             #                    "callback_id": "notification_form",
             #                    "attachment_type": "default",
             #                }]
             else:
                 attachments += [{
-                                    "text": f"Yesterday you got {changerate} {metricname} more than previous day. {metricname} : {round(data_new, 2)}\n",
+                                    "text": f"Yesterday you got {changerate} more {metricname} than previous day. {metricname} : {round(data_new, 2)}\n",
                                     "callback_id": "notification_form",
                                     'color': "good",
                                     "attachment_type": "default",
