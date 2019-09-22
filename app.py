@@ -814,12 +814,17 @@ def message_actions():
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "target": None,
                                                                                   "filterExpression": None}})
-            data = [('token', slack_token),
-                    ('channel', channel),
-                    ('ts', message_ts),
-                    ('text', "Deneme"),
-                    ('attachments', [])]
-            resp = requests.post(URL.format('chat.update'), data)
+             slack_client.api_call("chat.update", 
+                                   channel = channel,
+                                   ts = message_ts,
+                                   text = "Deneme123",
+                                   attachments = [])       
+#            data = [('token', slack_token),
+#                    ('channel', channel),
+#                    ('ts', message_ts),
+#                    ('text', "Deneme"),
+#                    ('attachments', [])]
+#            resp = requests.post(URL.format('chat.update'), data)
 #            data = [('token', slack_token),
 #                    ('channel', channel),
 #                    ('ts', message_ts)]
