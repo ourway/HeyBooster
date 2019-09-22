@@ -814,8 +814,7 @@ def message_actions():
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "target": None,
                                                                                   "filterExpression": None}})
-            slack_client.api_call("chat.update", 
-                                   channel = channel,
+            slack_client.chat_update(channel = channel,
                                    ts = message_ts,
                                    text = "Deneme123",
                                    attachments = [])       
