@@ -821,9 +821,10 @@ def message_actions():
 #                    ('ts', message_ts)]
 #            resp = requests.post(URL.format('chat.update'), data)
             data = [('token', slack_token),
+                    ('channel', channel)
                     ('ts', message_ts)]
             resp = requests.post(URL.format('chat.delete'), data)       
-            print(str(resp))
+            print(str(resp.items()))
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
