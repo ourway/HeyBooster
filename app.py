@@ -791,6 +791,12 @@ def message_actions():
             attachment_id = message_action['attachment_id']
             print("Message TS:", message_ts)
             print("Attachment ID:", attachment_id)
+            i = 0
+            for att in message_action['original_message']['attachments']:
+                if(att['id'] == attachment_id):
+                    del message_action['original_message']['attachments'][i]
+                    break
+                i += 1          
             print("First Attachments:", message_action['original_message']['attachments'])
             del message_action['original_message']['attachments'][int(attachment_id) - 1]
             attachments = message_action['original_message']['attachments']
@@ -808,12 +814,15 @@ def message_actions():
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "target": None,
                                                                                   "filterExpression": None}})
+#            data = [('token', slack_token),
+#                    ('text', "Deneme"),
+#                    ('channel', channel),
+#                    ('attachments', []),
+#                    ('ts', message_ts)]
+#            resp = requests.post(URL.format('chat.update'), data)
             data = [('token', slack_token),
-                    ('text', "Deneme"),
-                    ('channel', channel),
-                    ('attachments', []),
                     ('ts', message_ts)]
-            resp = requests.post(URL.format('chat.update'), data)
+            resp = requests.post(URL.format('chat.delete'), data)       
             print(str(resp))
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
