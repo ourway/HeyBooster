@@ -803,8 +803,10 @@ def message_actions():
             for att in attachments:
                 for act in att["actions"]:
                     del act["id"]
+                    del act["style"]
                 del att["id"]
                 del att["fallback"]
+            attachments[-1]["text"] = ""
             print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})['_id']
@@ -833,7 +835,7 @@ def message_actions():
 #                    ('channel', channel),
 #                    ('ts', message_ts)]
 #            resp = requests.post(URL.format('chat.delete'), data)       
-            print(str(resp.json().items()))
+#            print(str(resp.json().items()))
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
