@@ -792,21 +792,25 @@ def message_actions():
             print("Message TS:", message_ts)
             print("Attachment ID:", attachment_id)
             i = 0
-            for att in message_action['original_message']['attachments']:
+            attachments = message_action['original_message']['attachments']
+            for att in attachments:
                 if(att['id'] == attachment_id):
-                    del message_action['original_message']['attachments'][i]
+                    del attachments[i]
                     break
                 i += 1
-            print("First Attachments:", message_action['original_message']['attachments'])
-            del message_action['original_message']['attachments'][int(attachment_id) - 1]
-            attachments = message_action['original_message']['attachments']
+            print("First Attachments:", attachments)
+            if(i==0):
+                attachments[1]["pretext"] = attachments[0]["pretext"]
+            del attachments[int(attachment_id) - 1]
             for att in attachments:
                 for act in att["actions"]:
                     del act["id"]
                     del act["style"]
                 del att["id"]
                 del att["fallback"]
-            attachments[-1]["text"] = ""
+                if (not "text" in att.keys()):
+                    att["text"] = ""
+                
             print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})['_id']
