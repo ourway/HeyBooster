@@ -46,7 +46,7 @@ app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
-    scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read"])
+    scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read"], redirect_url="/datasources")
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
