@@ -824,7 +824,7 @@ def message_actions():
 #                    ('channel', channel),
 #                    ('ts', message_ts)]
 #            resp = requests.post(URL.format('chat.delete'), data)       
-            print(str(resp.items()))
+            print(str(resp.json().items()))
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
