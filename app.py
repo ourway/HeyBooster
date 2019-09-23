@@ -46,7 +46,7 @@ app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
-    scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read"], redirect_url="/datasources")
+    scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"], redirect_url="/datasources")
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -184,11 +184,22 @@ def get_channels():
         if (conv['is_channel'] or conv['is_group']):
             conv['name'] = '#' + conv['name']
             channels += [conv]
-
-#    userslist = requests.post(URL.format('users.list'), data).json()['members']
-#    for user in userslist:
-#        if (not user['is_bot']):
-#            channels += [user]
+    try:
+        data = [('token', session['sl_accesstoken']),
+                 ('limit', 200)]
+        userslist = requests.post(URL.format('users.list'), data).json()['members']
+        imlist = requests.post(URL.format('im.list'), data).json()['ims']
+        
+        for user in userslist:
+            if (not user['is_bot']):
+                for im in imlist:
+                    if(user['id']==im['user']):
+    #                    print("User ID:", user['id'], '\n', "User Name:", user['name'], '\n', "IM ID:", im['id'])
+                        user['id'] = im['id']
+                        channels += [user]
+                        break    
+    except:
+        pass
     return channels
 
 
