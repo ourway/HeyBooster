@@ -185,10 +185,10 @@ def get_channels():
             conv['name'] = '#' + conv['name']
             channels += [conv]
 
-    userslist = requests.post(URL.format('users.list'), data).json()['members']
-    for user in userslist:
-        if (not user['is_bot']):
-            channels += [user]
+#    userslist = requests.post(URL.format('users.list'), data).json()['members']
+#    for user in userslist:
+#        if (not user['is_bot']):
+#            channels += [user]
     return channels
 
 
