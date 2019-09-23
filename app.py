@@ -112,6 +112,8 @@ def about():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+    if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
+        return redirect('/datasourcesinfo')
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
         user = db.find_one('user', {'email': form.email.data})
