@@ -260,7 +260,7 @@ def datasources():
             nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
                                   in channels]
         except:
-            nForm.channel.choices == [('', 'User does not have Slack Connection')]
+            nForm.channel.choices = [('', 'User does not have Slack Connection')]
         # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
@@ -318,11 +318,20 @@ def datasourcesinfo():
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     else:
         #        user_info = google_auth.get_user_info()
-        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                  google_analytics.get_accounts(session['email'])['accounts']]
-        channels = get_channels()
-        nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
+        useraccounts = google_analytics.get_accounts(session['email'])['accounts']
+        if(useraccounts):
+            nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
+                                      useraccounts]
+        else:
+            nForm.account.choices = [('', 'User does not have Google Analytics Account')]
+            nForm.property.choices = [('', 'User does not have Google Analytics Account')]
+            nForm.view.choices = [('', 'User does not have Google Analytics Account')]
+        try:    
+            channels = get_channels()
+            nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
                                   in channels]
+        except:
+            nForm.channel.choices = [('', 'User does not have Slack Connection')]
         # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
