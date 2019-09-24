@@ -32,11 +32,14 @@ def get_accounts(email):
     service = build_management_api_v3_woutSession(email)
     # Use the Analytics service object to get the first profile id.
     # Get a list of all Google Analytics accounts for this user
-    accs = service.management().accounts().list().execute()
-    accounts = []
-    if accs.get('items'):
-        for acc in accs.get('items'):
-            accounts.append({'id': acc.get('id'), 'name': acc.get('name')})
+    try:
+        accs = service.management().accounts().list().execute()
+        accounts = []
+        if accs.get('items'):
+            for acc in accs.get('items'):
+                accounts.append({'id': acc.get('id'), 'name': acc.get('name')})
+    except:
+        accounts = []
     return {'accounts': accounts}
 
 @app.route("/analytics/properties/<accountId>")

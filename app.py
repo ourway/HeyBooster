@@ -247,8 +247,14 @@ def datasources():
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     else:
         #        user_info = google_auth.get_user_info()
-        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                  google_analytics.get_accounts(session['email'])['accounts']]
+        useraccounts = google_analytics.get_accounts(session['email'])['accounts']
+        if(useraccounts):
+            nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
+                                      useraccounts]
+        else:
+            nForm.account.choices = [('', 'User does not have Google Analytics Account')]
+            nForm.property.choices = [('', 'User does not have Google Analytics Account')]
+            nForm.view.choices = [('', 'User does not have Google Analytics Account')]
         channels = get_channels()
         nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
                                   in channels]
@@ -720,6 +726,7 @@ def message_actions():
                                 "name": "dimension",
                                 "placeholder": "Select a dimension",
                                 "optional": True,
+                                "hint": "This will be used for filtering",
                                 "options": [
                                     {
                                         "label": "Campaign",
@@ -741,6 +748,7 @@ def message_actions():
                                 "name": "operator",
                                 "placeholder": "Select an operator",
                                 "optional": True,
+                                "hint": "This will be used for filtering",
                                 "options": [
                                     {
                                         "label": "Exact Match",
@@ -765,10 +773,11 @@ def message_actions():
                                 "type": "text",
                                 "name": "expression",
                                 "placeholder": "Enter an expression",
+                                "hint": "This will be used for filtering",
                                 "optional": True
                             },
                             {
-                                "label": "Target",
+                                "label": "Monthly Target",
                                 "type": "text",
                                 "name": "target",
                                 "subtype": "number",
