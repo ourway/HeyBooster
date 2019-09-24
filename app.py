@@ -752,6 +752,19 @@ def message_actions():
                                         "label": "Device Category",
                                         "value": "ga:deviceCategory",
                                     },
+                                    {
+                                        "label": "Event Category",
+                                        "value": "ga:eventCategory",
+                                    },
+                                    {
+                                        "label": "Event Action",
+                                        "value": "ga:eventAction",
+                                    },
+                                    {
+                                        "label": "Event Label",
+                                        "value": "ga:eventLabel",
+                                    },                                            
+                                    
                                 ]
                             },
                             {
@@ -967,17 +980,35 @@ def message_actions():
                 filterExpression = ''
             try:
                 metricindex = module['metric'].index(submission['metric'])
+                module['metric'] = [module['metric'][metricindex]]
+                module['target'] = [module['target'][metricindex]]
+                module['filterExpression'] = [module['filterExpression'][metricindex]]
+                try:
+                    performancegoaltracking(slack_token, module, dataSource)
+                except Exception as ex:
+                    if "Selected dimensions and metrics cannot be queried together" in str(ex):
+                        slack_client.chat_postMessage(channel = channel,
+                                                      text = ":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
+                        return make_response("", 400)
+                    raise ex
                 db.DATABASE['notification'].update(
                     {'_id': module_id},
                     {'$set': {
                         "target." + str(metricindex): submission['target'],
                         "filterExpression." + str(metricindex): filterExpression}}
                 )
-                module['metric'] = [module['metric'][metricindex]]
-                module['target'] = [module['target'][metricindex]]
-                module['filterExpression'] = [module['filterExpression'][metricindex]]
-                performancegoaltracking(slack_token, module, dataSource)
             except:
+                module['metric'] = [submission['metric']]
+                module['target'] = [submission['target']]
+                module['filterExpression'] = [filterExpression]
+                try:
+                    performancegoaltracking(slack_token, module, dataSource)
+                except Exception as ex:
+                    if "Selected dimensions and metrics cannot be queried together" in str(ex):
+                        slack_client.chat_postMessage(channel = channel,
+                                                      text = ":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
+                        return make_response("", 400)
+                    raise ex
                 db.DATABASE['notification'].update(
                     {'_id': module_id},
                     {'$push': {'metric': submission['metric']}}
@@ -990,10 +1021,6 @@ def message_actions():
                     {'_id': module_id},
                     {'$push': {'filterExpression': filterExpression}}
                 )
-                module['metric'] = [submission['metric']]
-                module['target'] = [submission['target']]
-                module['filterExpression'] = [filterExpression]
-                performancegoaltracking(slack_token, module, dataSource)
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
         elif ('budget' in submission.keys() and len(submission.keys()) == 1):
