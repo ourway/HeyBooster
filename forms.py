@@ -3,20 +3,21 @@ from wtforms.fields.html5 import DateField
 
 
 # Notification Formu
-dsforminvalidvalues = ['-- Select an Option --', 'User does not have Google Analytics Account', '']
+
 class DataSourceForm(Form):
+    invalidvalues = dsforminvalidvalues = ['-- Select an Option --', 'User does not have Google Analytics Account', '']
     account = SelectField("account", choices=[('', '-- Select an Option --')],
-                          validators=[validators.NoneOf(dsforminvalidvalues, message=u"Invalid value")])
+                          validators=[validators.NoneOf(invalidvalues, message=u"Invalid value")])
     property = SelectField("property", choices=[('', '-- Select an Option --')],
-                          validators=[validators.NoneOf(dsforminvalidvalues, message=u"Invalid value")])
+                          validators=[validators.NoneOf(invalidvalues, message=u"Invalid value")])
     view = SelectField("view", choices=[('', '-- Select an Option --')],
-                          validators=[validators.NoneOf(dsforminvalidvalues, message=u"Invalid value")])
+                          validators=[validators.NoneOf(invalidvalues, message=u"Invalid value")])
 #    metric = SelectField('metric', choices=[('ga:users', 'users')])
 #    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
 #    start_date = DateField('start_date', format="%Y-%m-%d")
 #    end_date = DateField('end_date', format="%Y-%m-%d")
     channel = SelectField('channel', choices=[('', '-- Select a Channel --')],
-                          validators=[validators.NoneOf(dsforminvalidvalues, message=u"Invalid value")])
+                          validators=[validators.NoneOf(invalidvalues, message=u"Invalid value")])
 
 
 # Time Formu
