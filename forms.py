@@ -5,14 +5,14 @@ from wtforms.fields.html5 import DateField
 # Notification Formu
 
 class DataSourceForm(Form):
-    account = SelectField("account", choices=[('', '-- Select an Option --')])
-    property = SelectField("property", choices=[('', '-- Select an Option --')])
-    view = SelectField("view", choices=[('', '-- Select an Option --')])
+    account = SelectField("account", choices=[('', '-- Select an Option --')], validators=[validators.DataRequired(message="This field is required.")])
+    property = SelectField("property", choices=[('', '-- Select an Option --')], validators=[validators.DataRequired(message="This field is required.")])
+    view = SelectField("view", choices=[('', '-- Select an Option --')], validators=[validators.DataRequired(message="This field is required.")])
 #    metric = SelectField('metric', choices=[('ga:users', 'users')])
 #    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
 #    start_date = DateField('start_date', format="%Y-%m-%d")
 #    end_date = DateField('end_date', format="%Y-%m-%d")
-    channel = SelectField('channel', choices=[('', '-- Select a Channel --')])
+    channel = SelectField('channel', choices=[('', '-- Select a Channel --')], validators=[validators.DataRequired(message="This field is required.")])
 
 
 # Time Formu
