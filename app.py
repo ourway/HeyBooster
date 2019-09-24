@@ -255,9 +255,12 @@ def datasources():
             nForm.account.choices = [('', 'User does not have Google Analytics Account')]
             nForm.property.choices = [('', 'User does not have Google Analytics Account')]
             nForm.view.choices = [('', 'User does not have Google Analytics Account')]
-        channels = get_channels()
-        nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
+        try:    
+            channels = get_channels()
+            nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
                                   in channels]
+        except:
+            nForm.channel.choices == [('', 'User does not have Slack Connection')]
         # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
@@ -721,7 +724,7 @@ def message_actions():
                                 ]
                             },
                             {
-                                "label": "Dimension",
+                                "label": "Filter : Dimension",
                                 "type": "select",
                                 "name": "dimension",
                                 "placeholder": "Select a dimension",
