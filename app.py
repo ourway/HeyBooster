@@ -980,9 +980,9 @@ def message_actions():
                 filterExpression = ''
             try:
                 metricindex = module['metric'].index(submission['metric'])
-                module['metric'] = [module['metric'][metricindex]]
-                module['target'] = [module['target'][metricindex]]
-                module['filterExpression'] = [module['filterExpression'][metricindex]]
+                module['metric'] = [submission['metric']]
+                module['target'] = [submission['target']]
+                module['filterExpression'] = [filterExpression]
                 try:
                     performancegoaltracking(slack_token, module, dataSource)
                 except Exception as ex:
