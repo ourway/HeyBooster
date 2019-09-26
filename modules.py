@@ -674,7 +674,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                              "color": "good",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
-#                             "image_url": imageurl.format(imageId),
+                             "image_url": imageurl.format(imageId),
                              "actions": [{
                                             "name": "ignore",
                                             "text": "Remove",
@@ -695,7 +695,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                              "color": "danger",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
-#                             "image_url": imageurl.format(imageId),
+                             "image_url": imageurl.format(imageId),
                              "actions": [{
                                             "name": "ignore",
                                             "text": "Remove",
