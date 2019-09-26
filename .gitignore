@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 #Ignore images obtained from Google Analytics
-slackdb/
+slackdb/images/*.jpg
 
 # C extensions
 *.so
