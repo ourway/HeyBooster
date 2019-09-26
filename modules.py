@@ -488,7 +488,7 @@ def costprediction(slack_token, task, dataSource):
     viewId = task['viewId']
     channel = task['channel']
 
-    target = float(task['target'].replace(',','.'))
+    target = float(str(task['target']).replace(',','.'))
 
     today = datetime.today()
     start_date = datetime(today.year, today.month, 1)
@@ -620,7 +620,7 @@ def performancegoaltracking(slack_token, task, dataSource):
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
-        targets += [float(task['target'][i].replace(',','.'))]
+        targets += [float(str(task['target'][i]).replace(',','.'))]
         filters += [task['filterExpression'][i]]
 
     email = task['email']
