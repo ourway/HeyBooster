@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, request, session, url_for, make_response, jsonify
+from flask import Flask, render_template, flash, redirect, request, session, url_for, make_response, jsonify, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 # from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
@@ -52,6 +52,10 @@ app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
+
+@app.route('/images/<pid>.jpg')
+def get_image(pid):
+    return send_file('slackdb/images/%s.jpg' % pid, mimetype='image/gif')
 
 @app.route('/', methods=['GET', 'POST'])
 def home():

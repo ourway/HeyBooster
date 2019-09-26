@@ -8,6 +8,11 @@ import google_analytics
 from datetime import datetime, timedelta
 from slack import WebClient
 import time
+from matplotlib import pyplot as plt
+import uuid
+
+imagefile = "slackdb/images/{}.jpg"
+imageurl = "https://app.heybooster.ai/images/{}.jpg"
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
@@ -654,18 +659,29 @@ def performancegoaltracking(slack_token, task, dataSource):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'filtersExpression': filterExpression
+                    'filtersExpression': filterExpression,
+                    'dimensions': [{'name': 'ga:day'}],
+                    'includeEmptyRows': True
                 }]}).execute()
-        query = float(results['reports'][0]['data']['totals'][0]['values'][i])
-        if (str("%.2f" % (round(query, 2))).split('.')[1] == '00'):
-            query = int(query)
+        querytotal = float(results['reports'][0]['data']['totals'][0]['values'][i])
+        if (str("%.2f" % (round(querytotal, 2))).split('.')[1] == '00'):
+            querytotal = int(querytotal)
         if (str("%.2f" % (round(target, 2))).split('.')[1] == '00'):
             target = int(target)
-        if ( (abs(query - target) / target) <= tol):
-            attachments += [{"text": f"This month, {metricname} is {round(query,2)}, Your Target {metricname}: {target}",
+        xval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
+        yval = list(range(1,today.day))
+        plt.plot(yval,xval)
+        plt.xlabel('Days')
+        plt.ylabel(metricname)
+        imageId = uuid.uuid4().hex
+        plt.savefig(imagefile.format(imageId))
+        plt.clf()
+        if ( (abs(querytotal - target) / target) <= tol):
+            attachments += [{"text": f"This month, {metricname} is {round(querytotal,2)}, Your Target {metricname}: {target}",
                              "color": "good",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
+                             "image_url": imageurl.format(imageId),
                              "actions": [{
                                             "name": "ignore",
                                             "text": "Remove",
@@ -682,10 +698,11 @@ def performancegoaltracking(slack_token, task, dataSource):
                              }]
 
         else:
-            attachments += [{"text": f"This month, {metricname} is {round(query,2)}, Your Target {metricname}: {target}",
+            attachments += [{"text": f"This month, {metricname} is {round(querytotal,2)}, Your Target {metricname}: {target}",
                              "color": "danger",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
+                             "image_url": imageurl.format(imageId),
                              "actions": [{
                                             "name": "ignore",
                                             "text": "Remove",
@@ -699,7 +716,8 @@ def performancegoaltracking(slack_token, task, dataSource):
                                         }
                                         }]
                              }]
-
+        
+        
     attachments[0]['pretext'] = text
 #    attachments[-1]['actions'] = actions
     attachments += [{"text": "",
@@ -727,3 +745,5 @@ def performancegoaltracking(slack_token, task, dataSource):
 #                                }]
 #                    }])
     return resp['ts']
+
+
