@@ -57,6 +57,7 @@ app.register_blueprint(google_analytics.app)
 def get_image(pid):
     return send_file('slackdb/images/%s.jpg' % pid, mimetype='image/gif')
 
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
