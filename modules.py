@@ -651,19 +651,19 @@ def performancegoaltracking(slack_token, task, dataSource):
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                    'metrics': metrics,
+                    'metrics': metrics[i],
                     'filtersExpression': filterExpression,
                     'dimensions': [{'name': 'ga:day'}],
                     'includeEmptyRows': True
                 }]}).execute()
-        querytotal = float(results['reports'][0]['data']['totals'][0]['values'][i])
+        querytotal = float(results['reports'][0]['data']['totals'][0]['values'][0])
         if (str("%.2f" % (round(querytotal, 2))).split('.')[1] == '00'):
             querytotal = int(querytotal)
         if (str("%.2f" % (round(target, 2))).split('.')[1] == '00'):
             target = int(target)
-        xval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
-        yval = list(range(1,today.day))
-        plt.plot(yval,xval)
+        yval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
+        xval = list(range(1,today.day))
+        plt.plot(xval,yval)
         plt.xlabel('Day')
         plt.ylabel(metricname)
         imageId = uuid.uuid4().hex
