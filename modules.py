@@ -10,6 +10,9 @@ from slack import WebClient
 import time
 from matplotlib import pyplot as plt
 import uuid
+import decimal
+import babel.numbers
+
 
 imagefile = "slackdb/images/{}.png"
 imageurl = "https://app.heybooster.ai/images/{}.png"
@@ -485,7 +488,7 @@ def costprediction(slack_token, task, dataSource):
     viewId = task['viewId']
     channel = task['channel']
 
-    target = float(task['target'])
+    target = float(task['target'].replace(',','.'))
 
     today = datetime.today()
     start_date = datetime(today.year, today.month, 1)
@@ -519,16 +522,15 @@ def costprediction(slack_token, task, dataSource):
     subquery1 = float(results['reports'][0]['data']['totals'][0]['values'][0])
     subquery2 = float(results['reports'][0]['data']['totals'][1]['values'][0])
     prediction = subquery2 * days + subquery1
-    print("Target:", target)
-    print("Prediction:", prediction)
+    targettext = babel.numbers.format_currency(decimal.Decimal(str(target)), task['currency'])
+    predtext = babel.numbers.format_currency(decimal.Decimal(str(prediction)), task['currency'])
+    print("Target:", targettext)
+    print("Prediction:", predtext)
     if (prediction > target):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
-                    task['currency'],
-                    round(prediction, 2),
-                    round(target, 2)),
+                "text": f"Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {targettext} Monthly Budget: {predtext}",
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -537,10 +539,7 @@ def costprediction(slack_token, task, dataSource):
             }]
         else:
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
-                    task['currency'],
-                    round(prediction, 2),
-                    round(target, 2)),
+                "text": f"Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {targettext} Monthly Budget: {predtext}",
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -551,10 +550,7 @@ def costprediction(slack_token, task, dataSource):
         # Prediction is less than target
         if ((target - prediction < (tol * target))):
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
-                    task['currency'],
-                    round(prediction, 2),
-                    round(target, 2)),
+                "text": f"Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {targettext} Monthly Budget: {predtext}",
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -563,10 +559,7 @@ def costprediction(slack_token, task, dataSource):
             }]
         else:
             attachments += [{
-                "text": "Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {0}{1} Monthly Budget: {2}".format(
-                    task['currency'],
-                    round(prediction, 2),
-                    round(target, 2)),
+                "text": f"Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {targettext} Monthly Budget: {predtext}",
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -627,7 +620,7 @@ def performancegoaltracking(slack_token, task, dataSource):
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
-        targets += [float(task['target'][i])]
+        targets += [float(task['target'][i]).replace(',','.')]
         filters += [task['filterExpression'][i]]
 
     email = task['email']
