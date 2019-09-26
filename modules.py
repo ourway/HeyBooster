@@ -620,7 +620,7 @@ def performancegoaltracking(slack_token, task, dataSource):
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
-        targets += [float(task['target'][i]).replace(',','.')]
+        targets += [float(task['target'][i].replace(',','.'))]
         filters += [task['filterExpression'][i]]
 
     email = task['email']
@@ -664,7 +664,7 @@ def performancegoaltracking(slack_token, task, dataSource):
         xval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
         yval = list(range(1,today.day))
         plt.plot(yval,xval)
-        plt.xlabel('Days')
+        plt.xlabel('Day')
         plt.ylabel(metricname)
         imageId = uuid.uuid4().hex
         plt.savefig(imagefile.format(imageId))
