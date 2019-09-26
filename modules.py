@@ -11,8 +11,8 @@ import time
 from matplotlib import pyplot as plt
 import uuid
 
-imagefile = "slackdb/images/{}.jpg"
-imageurl = "https://app.heybooster.ai/images/{}.jpg"
+imagefile = "slackdb/images/{}.png"
+imageurl = "https://app.heybooster.ai/images/{}.png"
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
