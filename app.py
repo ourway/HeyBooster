@@ -72,10 +72,7 @@ def home():
 @app.route('/test', methods=['GET', 'POST'])
 @login_required
 def test():
-    user = session['auth_token']
-    slack_confirm = db.find_one('user', {'sl_accesstoken': user['sl_accesstoken']})
-    print(slack_confirm)
-    if slack_confirm:
+    if 'sl_accesstoken' in session.keys():
         a = 1
         return render_template('test.html', a)
     return render_template('test.html')
