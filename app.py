@@ -69,7 +69,7 @@ def home():
         return redirect('/login')
 
 
-@app.route('/test', methods=['GET'])
+@app.route('/test', methods=['GET', 'POST'])
 @login_required
 def test():
     user = session['auth_token']
