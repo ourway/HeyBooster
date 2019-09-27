@@ -57,12 +57,16 @@ def performancechangetracking(slack_token, task, dataSource):
             "expressions": ["google / cpc"]
         }
     ]
-
+    
+    today = datetime.today()
+    
     if (period == 1):
-        start_date_1 = 'yesterday'
+        yesterday = today - timedelta(days=1)
+        start_date_1 = dtimetostrf(yesterday)
         str_start_date_1 = 'Yesterday'
         end_date_1 = start_date_1
-        start_date_2 = '2daysAgo'
+        twodaysAgo = today - timedelta(days=2)
+        start_date_2 = dtimetostrf(twodaysAgo)
         str_start_date_2 = 'previous day'
         end_date_2 = start_date_2
 
@@ -346,11 +350,15 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
     period = task['period']
 
     tol = 0.10
-
+    
+    today = datetime.today()
+    
     if (period == 1):
-        start_date_1 = 'yesterday'
+        yesterday = today - timedelta(days = 1)
+        start_date_1 = dtimetostrf(yesterday)
         end_date_1 = start_date_1
-        start_date_2 = '2daysAgo'
+        twodaysAgo = today - timedelta(days = 2)
+        start_date_2 = dtimetostrf(twodaysAgo)
         end_date_2 = start_date_2
 
     results = service.reports().batchGet(
@@ -500,10 +508,12 @@ def costprediction(slack_token, task, dataSource):
     days = (end_date - today + timedelta(days=1)).days
 
     start_date_1 = dtimetostrf(start_date)
-    end_date_1 = 'yesterday'
+    
+    yesterday = today - timedelta(days=1)
+    end_date_1 = dtimetostrf(yesterday)
 
-    start_date_2 = 'yesterday'
-    end_date_2 = 'yesterday'
+    start_date_2 = dtimetostrf(yesterday)
+    end_date_2 = dtimetostrf(yesterday)
 
     results = service.reports().batchGet(
         body={
@@ -631,7 +641,7 @@ def performancegoaltracking(slack_token, task, dataSource):
     start_date = datetime(today.year, today.month, 1)  # First day of current day
 
     start_date_1 = dtimetostrf(start_date)  # Convert it to string format
-    end_date_1 = 'yesterday'
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
 
@@ -662,8 +672,9 @@ def performancegoaltracking(slack_token, task, dataSource):
         if (str("%.2f" % (round(target, 2))).split('.')[1] == '00'):
             target = int(target)
         yval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
-        xval = list(range(1,today.day))
-        plt.plot(xval,yval)
+#        xval = list(range(1, today.day)) #It is applied for preventing graph dimension error
+        xval = list(range(1, len(yval)))
+        plt.plot(xval, yval, marker = 'o')
         plt.xlabel('Day')
         plt.ylabel(metricname)
         imageId = uuid.uuid4().hex
