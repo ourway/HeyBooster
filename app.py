@@ -76,7 +76,7 @@ def test():
     if useraccounts:
         analytics_confirm = True
         return render_template('test.html', analytics_confirm=analytics_confirm)
-    elif 'sl_accestoken' in session.keys():
+    elif session['sl_accesstoken']:
         slack_confirm = True
         return render_template('test.html', slack_confirm=slack_confirm)
     return render_template('test.html')
