@@ -46,7 +46,8 @@ app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
-    scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"], redirect_url="/datasources")
+    scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"],
+    redirect_url="/datasources")
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -67,9 +68,16 @@ def home():
     else:
         return redirect('/login')
 
+
 @app.route('/test', methods=['GET', 'POST'])
+@login_required
 def test():
+    slack_confirm = db.find_one('user', {'sl_userid': 'sl_userid'})
+    if slack_confirm:
+        a = 1
+        return render_template('test.html', a)
     return render_template('test.html')
+
 
 @app.route('/change', methods=['POST'])
 def change():
@@ -196,18 +204,18 @@ def get_channels():
             channels += [conv]
     try:
         data = [('token', session['sl_accesstoken']),
-                 ('limit', 200)]
+                ('limit', 200)]
         userslist = requests.post(URL.format('users.list'), data).json()['members']
         imlist = requests.post(URL.format('im.list'), data).json()['ims']
-        
+
         for user in userslist:
             if (not user['is_bot']):
                 for im in imlist:
-                    if(user['id']==im['user']):
-    #                    print("User ID:", user['id'], '\n', "User Name:", user['name'], '\n', "IM ID:", im['id'])
+                    if (user['id'] == im['user']):
+                        #                    print("User ID:", user['id'], '\n', "User Name:", user['name'], '\n', "IM ID:", im['id'])
                         user['id'] = im['id']
                         channels += [user]
-                        break    
+                        break
     except:
         pass
     return channels
@@ -256,17 +264,17 @@ def datasources():
     else:
         #        user_info = google_auth.get_user_info()
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-        if(useraccounts):
+        if (useraccounts):
             nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
                                       useraccounts]
         else:
             nForm.account.choices = [('', 'User does not have Google Analytics Account')]
             nForm.property.choices = [('', 'User does not have Google Analytics Account')]
             nForm.view.choices = [('', 'User does not have Google Analytics Account')]
-        try:    
+        try:
             channels = get_channels()
             nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
-                                  in channels]
+                                      in channels]
         except:
             nForm.channel.choices = [('', 'User does not have Slack Connection')]
         # incoming_webhook = slack.token['incoming_webhook']
@@ -278,7 +286,6 @@ def datasources():
 @app.route("/removedatasources/<datasourceID>", methods=['GET', 'POST'])
 @login_required
 def removedatasources(datasourceID):
-
     db.DATABASE['datasource'].remove({"_id": ObjectId(datasourceID)})
     db.DATABASE['notification'].remove({'datasourceID': ObjectId(datasourceID)})
 
@@ -327,17 +334,17 @@ def datasourcesinfo():
     else:
         #        user_info = google_auth.get_user_info()
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-        if(useraccounts):
+        if (useraccounts):
             nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
                                       useraccounts]
         else:
             nForm.account.choices = [('', 'User does not have Google Analytics Account')]
             nForm.property.choices = [('', 'User does not have Google Analytics Account')]
             nForm.view.choices = [('', 'User does not have Google Analytics Account')]
-        try:    
+        try:
             channels = get_channels()
             nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
-                                  in channels]
+                                      in channels]
         except:
             nForm.channel.choices = [('', 'User does not have Slack Connection')]
         # incoming_webhook = slack.token['incoming_webhook']
@@ -771,8 +778,8 @@ def message_actions():
                                     {
                                         "label": "Event Label",
                                         "value": "ga:eventLabel",
-                                    },                                            
-                                    
+                                    },
+
                                 ]
                             },
                             {
@@ -849,12 +856,12 @@ def message_actions():
             i = 0
             attachments = message_action['original_message']['attachments']
             for att in attachments:
-                if(att['id'] == attachment_id):
+                if (att['id'] == attachment_id):
                     del attachments[i]
                     break
                 i += 1
             print("First Attachments:", attachments)
-            if(i==0):
+            if (i == 0):
                 attachments[1]["pretext"] = attachments[0]["pretext"]
             del attachments[int(attachment_id) - 1]
             for att in attachments:
@@ -865,7 +872,7 @@ def message_actions():
                 del att["fallback"]
                 if (not "text" in att.keys()):
                     att["text"] = ""
-                
+
             print("Last Attachments:", attachments)
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                             'channelID': channel})['_id']
@@ -880,21 +887,21 @@ def message_actions():
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "target": None,
                                                                                   "filterExpression": None}})
-            slack_client.chat_update(channel = channel,
-                                   ts = message_ts,
-                                   text = "",
-                                   attachments = attachments)       
-#            data = [('token', slack_token),
-#                    ('channel', channel),
-#                    ('ts', message_ts),
-#                    ('text', "Deneme"),
-#                    ('attachments', [])]
-#            resp = requests.post(URL.format('chat.update'), data)
-#            data = [('token', slack_token),
-#                    ('channel', channel),
-#                    ('ts', message_ts)]
-#            resp = requests.post(URL.format('chat.delete'), data)       
-#            print(str(resp.json().items()))
+            slack_client.chat_update(channel=channel,
+                                     ts=message_ts,
+                                     text="",
+                                     attachments=attachments)
+        #            data = [('token', slack_token),
+    #                    ('channel', channel),
+    #                    ('ts', message_ts),
+    #                    ('text', "Deneme"),
+    #                    ('attachments', [])]
+    #            resp = requests.post(URL.format('chat.update'), data)
+    #            data = [('token', slack_token),
+    #                    ('channel', channel),
+    #                    ('ts', message_ts)]
+    #            resp = requests.post(URL.format('chat.delete'), data)
+    #            print(str(resp.json().items()))
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
@@ -995,8 +1002,8 @@ def message_actions():
                     performancegoaltracking(slack_token, module, dataSource)
                 except Exception as ex:
                     if "Selected dimensions and metrics cannot be queried together" in str(ex):
-                        slack_client.chat_postMessage(channel = channel,
-                                                      text = ":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
+                        slack_client.chat_postMessage(channel=channel,
+                                                      text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
                 db.DATABASE['notification'].update(
@@ -1013,8 +1020,8 @@ def message_actions():
                     performancegoaltracking(slack_token, module, dataSource)
                 except Exception as ex:
                     if "Selected dimensions and metrics cannot be queried together" in str(ex):
-                        slack_client.chat_postMessage(channel = channel,
-                                                      text = ":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
+                        slack_client.chat_postMessage(channel=channel,
+                                                      text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
                 db.DATABASE['notification'].update(
