@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>heyBooster!</title>
+    <!-- base:css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');</script>
+    <!-- End Google Tag Manager -->
+
+
+</head>
+
+<body>
+<div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper d-flex align-items-center auth px-0">
+                <div class="row w-100 mx-0">
+                    <div class="col-lg-4 mx-auto">
+                        <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                            <div class="brand-logo">
+                                <img src="../../static/images/heyBooster.png" alt="logo">
+                            </div>
+                            <div class="mt-2 card-text" style="padding-top:10px">Keep calm and complete the below
+                                tontish issues :)
+                            </div>
+
+
+                            <div class="card-body">
+
+
+                                <div class="list-wrapper">
+                                    <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
+
+
+                                        <li>
+                                            <div class="form-check form-check-flat">
+                                                <label class="form-check-label">
+                                                    <input class="checkbox" type="checkbox">
+                                                    Add Data Source
+                                                    <i class="input-helper"></i></label>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <div class="form-check form-check-flat">
+                                                <label class="form-check-label">
+                                                    <input class="checkbox" type="checkbox">
+                                                    Make Slack Connections
+                                                    <i class="input-helper"></i></label>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <div class="form-check form-check-flat">
+                                                <label class="form-check-label">
+                                                    <input class="checkbox" type="checkbox">
+                                                    Make Google Analytics Connections
+                                                    <i class="input-helper"></i></label>
+                                            </div>
+                                        </li>
+
+                                        <li class="completed">
+                                            <div class="form-check form-check-flat">
+                                                <label class="form-check-label">
+                                                    <input class="checkbox" type="checkbox" checked="">
+                                                    Sign in with Google
+                                                    <i class="input-helper"></i></label>
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                    {% if session['logged_in'] or session['auth_token'] %}
+                                        <a href="/google/connect">
+                                            Make Google Analytics Connections
+                                            <img src="../static/images/google_login.png">
+                                        </a>
+                                        <form method="POST" action="/connect">
+                                            Make Slack Connections
+                                            <img src="../static/images/slack.png">
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- base:js -->
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/vendors/base/vendor.bundle.base.js') }}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page-->
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/off-canvas.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/hoverable-collapse.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/template.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/settings.js') }}"></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/todolist.js') }}"></script>
+</body>
+
+</html>

@@ -62,6 +62,9 @@ def home():
     else:
         return redirect('/login')
 
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    return redirect('test.html')
 
 @app.route('/change', methods=['POST'])
 def change():
