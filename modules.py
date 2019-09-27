@@ -673,7 +673,7 @@ def performancegoaltracking(slack_token, task, dataSource):
             target = int(target)
         yval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
 #        xval = list(range(1, today.day)) #It is applied for preventing graph dimension error
-        xval = list(range(1, len(yval)))
+        xval = list(range(1, len(yval)+1))
         plt.plot(xval, yval, marker = 'o')
         plt.xlabel('Day')
         plt.ylabel(metricname)
