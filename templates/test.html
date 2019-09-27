@@ -54,42 +54,48 @@
 
                             <div class="card-body">
 
-                            {% if a %}
-                                <p>Deneme</p>
-                            {% else %}
-                                <p>Denememe</p>
-                            {% endif %}
-
                                 <div class="list-wrapper">
                                     <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
 
+                                        {% if slack_confirm %}
+                                            <li class="completed">
+                                                <div class="form-check form-check-flat">
+                                                    <label class="form-check-label">
+                                                        <input class="checkbox" type="checkbox" checked="checked" onclick="return false;"/>
+                                                            Make Slack Connections
+                                                            <i class="input-helper"></i></label>
+                                                </div>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <div class="form-check form-check-flat">
+                                                    <label class="form-check-label">
+                                                        <input class="checkbox" type="checkbox" onclick="return false;"/>
+                                                            Make Slack Connections
+                                                            <i class="input-helper"></i></label>
+                                                </div>
+                                            </li>
+                                        {% endif %}
 
-{#                                        <li>#}
-{#                                            <div class="form-check form-check-flat">#}
-{#                                                <label class="form-check-label">#}
-{#                                                    <input class="checkbox" type="checkbox">#}
-{#                                                    Add Data Source#}
-{#                                                    <i class="input-helper"></i></label>#}
-{#                                            </div>#}
-{#                                        </li>#}
-
-                                        <li>
-                                            <div class="form-check form-check-flat">
-                                                <label class="form-check-label">
-                                                    <input class="checkbox" type="checkbox" onclick="return false;"/>
-                                                    Make Slack Connections
-                                                    <i class="input-helper"></i></label>
-                                            </div>
-                                        </li>
-
-                                        <li>
-                                            <div class="form-check form-check-flat">
-                                                <label class="form-check-label">
-                                                    <input class="checkbox" type="checkbox" onclick="return false;"/>
-                                                    Make Google Analytics Connections
-                                                    <i class="input-helper"></i></label>
-                                            </div>
-                                        </li>
+                                        {% if analytics_confirm %}
+                                            <li class="completed">
+                                                <div class="form-check form-check-flat">
+                                                    <label class="form-check-label">
+                                                        <input class="checkbox" type="checkbox" checked="checked" onclick="return false;"/>
+                                                        Make Google Analytics Connections
+                                                        <i class="input-helper"></i></label>
+                                                </div>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <div class="form-check form-check-flat">
+                                                    <label class="form-check-label">
+                                                        <input class="checkbox" type="checkbox" onclick="return false;"/>
+                                                        Make Google Analytics Connections
+                                                        <i class="input-helper"></i></label>
+                                                </div>
+                                            </li>
+                                        {% endif %}
 
                                         <li class="completed">
                                             <div class="form-check form-check-flat">
