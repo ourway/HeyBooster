@@ -69,7 +69,7 @@ def home():
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
-    return redirect('test.html')
+    return render_template('test.html')
 
 @app.route('/change', methods=['POST'])
 def change():
