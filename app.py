@@ -69,10 +69,11 @@ def home():
         return redirect('/login')
 
 
-@app.route('/test', methods=['GET', 'POST'])
+@app.route('/test', methods=['GET'])
 @login_required
 def test():
-    slack_confirm = db.find_one('user', {'sl_accesstoken': 'sl_accesstoken'})
+    user = session['auth_token']
+    slack_confirm = db.find_one('user', {'sl_accesstoken': user['sl_accesstoken']})
     print(slack_confirm)
     if slack_confirm:
         a = 1
