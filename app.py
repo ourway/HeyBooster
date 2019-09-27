@@ -73,8 +73,8 @@ def home():
 @login_required
 def test():
     if 'sl_accesstoken' in session.keys():
-        a = 1
-        return render_template('test.html', a)
+        a=1
+        return render_template('test.html', a=a)
     return render_template('test.html')
 
 
