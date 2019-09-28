@@ -996,7 +996,7 @@ def message_actions():
                 filterExpression = submission['dimension'] + submission['operator'] + submission['expression']
             else:
                 filterExpression = ''
-            try:
+            if(submission['metric'] in module['metric']):
                 metricindex = module['metric'].index(submission['metric'])
                 module['metric'] = [submission['metric']]
                 module['target'] = [submission['target']]
@@ -1015,7 +1015,7 @@ def message_actions():
                         "target." + str(metricindex): submission['target'],
                         "filterExpression." + str(metricindex): filterExpression}}
                 )
-            except:
+            else:
                 module['metric'] = [submission['metric']]
                 module['target'] = [submission['target']]
                 module['filterExpression'] = [filterExpression]
