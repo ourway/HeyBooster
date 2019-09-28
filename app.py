@@ -74,10 +74,15 @@ def home():
 def test():
     analytics_confirm = False
     slack_confirm = False
-    # if google_analytics.get_accounts(session['email'])['accounts']:
-    #     analytics_confirm = True
-    # if 'sl_accesstoken' in session.keys():
-    #     slack_confirm = True
+
+    if google_analytics.get_accounts(session['email'])['accounts']:
+        analytics_confirm = True
+
+    elif 'sl_accesstoken' in session.keys():
+        slack_confirm = True
+
+    else:
+        return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
     return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
 
 
@@ -995,7 +1000,7 @@ def message_actions():
                 filterExpression = submission['dimension'] + submission['operator'] + submission['expression']
             else:
                 filterExpression = ''
-            if(submission['metric'] in module['metric']):
+            if (submission['metric'] in module['metric']):
                 metricindex = module['metric'].index(submission['metric'])
                 module['metric'] = [submission['metric']]
                 module['target'] = [submission['target']]
