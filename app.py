@@ -72,14 +72,14 @@ def home():
 @app.route('/test', methods=['GET', 'POST'])
 @login_required
 def test():
+    analytics_confirm = False
+    slack_confirm = False
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
     if useraccounts:
         analytics_confirm = True
-        return render_template('test.html', analytics_confirm=analytics_confirm)
-    elif session['sl_accesstoken']:
+    if 'sl_accesstoken' in session.keys():
         slack_confirm = True
-        return render_template('test.html', slack_confirm=slack_confirm)
-    return render_template('test.html')
+    return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
 
 
 @app.route('/change', methods=['POST'])
