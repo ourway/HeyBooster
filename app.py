@@ -77,10 +77,11 @@ def test():
 
     try:
         useraccount = google_analytics.get_accounts(session['email'])['accounts']
-        analytics_confirm = True
-    except:
+        if useraccount:
+            analytics_confirm = True
         if 'sl_accesstoken' in session.keys():
             slack_confirm = True
+    except:
         return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
     return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
 
