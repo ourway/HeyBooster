@@ -74,8 +74,7 @@ def home():
 def test():
     analytics_confirm = False
     slack_confirm = False
-    useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-    if useraccounts:
+    if google_analytics.get_accounts(session['email'])['accounts']:
         analytics_confirm = True
     if 'sl_accesstoken' in session.keys():
         slack_confirm = True
