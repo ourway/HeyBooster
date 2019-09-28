@@ -82,6 +82,7 @@ def test():
         if 'sl_accesstoken' in session.keys():
             slack_confirm = True
         return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+    return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
 
 
 @app.route('/change', methods=['POST'])
