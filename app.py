@@ -74,10 +74,10 @@ def home():
 def test():
     analytics_confirm = False
     slack_confirm = False
-    if google_analytics.get_accounts(session['email'])['accounts']:
-        analytics_confirm = True
-    if 'sl_accesstoken' in session.keys():
-        slack_confirm = True
+    # if google_analytics.get_accounts(session['email'])['accounts']:
+    #     analytics_confirm = True
+    # if 'sl_accesstoken' in session.keys():
+    #     slack_confirm = True
     return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
 
 
