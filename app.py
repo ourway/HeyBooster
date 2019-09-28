@@ -75,15 +75,13 @@ def test():
     analytics_confirm = False
     slack_confirm = False
 
-    if google_analytics.get_accounts(session['email'])['accounts']:
+    try:
+        useraccount = google_analytics.get_accounts(session['email'])['accounts']
         analytics_confirm = True
-
-    elif 'sl_accesstoken' in session.keys():
-        slack_confirm = True
-
-    else:
+    except:
+        if 'sl_accesstoken' in session.keys():
+            slack_confirm = True
         return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
-    return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
 
 
 @app.route('/change', methods=['POST'])
