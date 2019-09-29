@@ -1209,6 +1209,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
+#                module['period'] = [int(submission['period'])]
+                module['period'] = [1] ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1221,12 +1223,15 @@ def message_actions():
                     {'_id': module_id},
                     {'$set': {
                         "threshold." + str(metricindex): submission['threshold'],
-                        "filterExpression." + str(metricindex): filterExpression}}
+                        "filterExpression." + str(metricindex): filterExpression,
+                        "period." + str(metricindex): 1}}
                 )
             else:
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
+#                module['period'] = [submission['period']]
+                module['period'] = [1] ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1246,6 +1251,10 @@ def message_actions():
                 db.DATABASE['notification'].update(
                     {'_id': module_id},
                     {'$push': {'filterExpression': filterExpression}}
+                )
+                db.DATABASE['notification'].update(
+                    {'_id': module_id},
+                    {'$push': {'period': 1}}  
                 )
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')

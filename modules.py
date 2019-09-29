@@ -208,7 +208,7 @@ def performancechangealert(slack_token, task, dataSource):
         metricnames += [metricdict[task['metric'][i]]]
         thresholds += [float(str(task['threshold'][i]).replace(',','.'))]
         filters += [task['filterExpression'][i]]
-        periods += [task['period'][i]]
+        periods += [int(task['period'][i])]
 
     email = task['email']
     viewId = task['viewId']
