@@ -1065,7 +1065,7 @@ def message_actions():
                                                                                    "filterExpression." + str(metricindex): 1,
                                                                                    "period." + str(metricindex): 1}})
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
-                                                                                  "target": None,
+                                                                                  "threshold": None,
                                                                                   "filterExpression": None,
                                                                                   "period": None}})
             slack_client.chat_update(channel=channel,
