@@ -178,18 +178,18 @@ def performancechangealert(slack_token, task, dataSource):
 #            "type": "button",
 #            "value": "track"
 #        }
-        {
-            "name": "ignore",
-            "text": "Ignore",
-            "type": "button",
-            "value": "ignore",
-            "confirm": {
-                        "title": "Warning",
-                        "text": "Are you sure you want to close your Custom Performance Changes Alerts?",
-                        "ok_text": "Yes",
-                        "dismiss_text": "No"
-                    }
-        }
+#        {
+#            "name": "ignore",
+#            "text": "Ignore",
+#            "type": "button",
+#            "value": "ignore",
+#            "confirm": {
+#                        "title": "Warning",
+#                        "text": "Are you sure you want to close your Custom Performance Changes Alerts?",
+#                        "ok_text": "Yes",
+#                        "dismiss_text": "No"
+#                    }
+#        }
     ]
         
     metricdict = {'ga:ROAS': 'Adwords ROAS',
@@ -317,7 +317,11 @@ def performancechangealert(slack_token, task, dataSource):
         
     if (len(attachments) != 0):
             attachments[0]['pretext'] = text
-            attachments[-1]['actions'] = actions
+            attachments += [{"text": "",
+                    "color": "FFFFFF",
+                    "callback_id": "notification_form",
+                    "attachment_type": "default",
+                    "actions": actions}]
             slack_client = WebClient(token=slack_token)
             resp = slack_client.chat_postMessage(
                 channel=channel,
