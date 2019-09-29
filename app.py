@@ -16,7 +16,7 @@ from slack import WebClient
 import os
 import requests
 import time
-from modules import performancegoaltracking, costprediction
+from modules import performancegoaltracking, costprediction, performancechangealert
 from bson.objectid import ObjectId
 
 OAuth2ConsumerBlueprint.authorized = authorized
@@ -678,9 +678,13 @@ def message_actions():
         elif (message_action['actions'][-1]['value'] == 'ignore'):
             text = message_action['original_message']['attachments'][0]['pretext']
             datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
-            if (("performance" in text.lower()) and ("change" in text.lower())):
+            if (("performance" in text.lower()) and ("tracking" in text.lower())):
                 db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'performancechangetracking'},
+                                   status='0')
+            elif (("performance" in text.lower()) and ("alert" in text.lower())):
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                          'type': 'performancechangealert'},
                                    status='0')
             elif (("funnel" in text.lower()) and ("change" in text.lower())):
                 db.find_and_modify('notification', query={'datasourceID': datasourceID,
@@ -951,7 +955,7 @@ def message_actions():
                             {
                                 "label": "Threshold",
                                 "type": "text",
-                                "name": "target",
+                                "name": "threshold",
                                 "subtype": "number",
                                 "placeholder": "Enter a threshold"
                             }
@@ -1187,6 +1191,64 @@ def message_actions():
             module['channel'] = channel
             module['target'] = target
             costprediction(slack_token, module, dataSource)
+        elif ('threshold' in submission.keys()):
+            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                          'channelID': channel})
+            datasourceID = dataSource['_id']
+            viewId = dataSource['viewID']
+            module = db.find_one("notification", query={'datasourceID': datasourceID,
+                                                        'type': 'performancechangealert'})
+            module_id = module['_id']
+            if (submission['dimension'] != None and submission['operator'] != None and submission[
+                'expression'] != None):
+                filterExpression = submission['dimension'] + submission['operator'] + submission['expression']
+            else:
+                filterExpression = ''
+            if (submission['metric'] in module['metric']):
+                metricindex = module['metric'].index(submission['metric'])
+                module['metric'] = [submission['metric']]
+                module['threshold'] = [submission['threshold']]
+                module['filterExpression'] = [filterExpression]
+                try:
+                    performancechangealert(slack_token, module, dataSource)
+                except Exception as ex:
+                    if "Selected dimensions and metrics cannot be queried together" in str(ex):
+                        slack_client.chat_postMessage(channel=channel,
+                                                      text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
+                        return make_response("", 200)
+                    raise ex
+                db.DATABASE['notification'].update(
+                    {'_id': module_id},
+                    {'$set': {
+                        "threshold." + str(metricindex): submission['threshold'],
+                        "filterExpression." + str(metricindex): filterExpression}}
+                )
+            else:
+                module['metric'] = [submission['metric']]
+                module['threshold'] = [submission['threshold']]
+                module['filterExpression'] = [filterExpression]
+                try:
+                    performancechangealert(slack_token, module, dataSource)
+                except Exception as ex:
+                    if "Selected dimensions and metrics cannot be queried together" in str(ex):
+                        slack_client.chat_postMessage(channel=channel,
+                                                      text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
+                        return make_response("", 200)
+                    raise ex
+                db.DATABASE['notification'].update(
+                    {'_id': module_id},
+                    {'$push': {'metric': submission['metric']}}
+                )
+                db.DATABASE['notification'].update(
+                    {'_id': module_id},
+                    {'$push': {'threshold': submission['threshold']}}
+                )
+                db.DATABASE['notification'].update(
+                    {'_id': module_id},
+                    {'$push': {'filterExpression': filterExpression}}
+                )
+            db.find_and_modify("notification", query={'_id': module['_id']},
+                               status='1')
 
     return make_response("", 200)
 
@@ -1252,6 +1314,20 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'lastRunDate': '',
         'datasourceID': dataSourceID
     })
+#    db.insert('notification', data={
+#        'type': 'performancechangealert',
+#        'email': email,
+#        'metric': [],
+#        'threshold': [],
+#        'filterExpression': [],
+#        'period': [],
+#        'scheduleType': 'daily',
+#        'frequency': 0,
+#        'timeofDay': "%s.00" % (default_time),
+#        'status': '0',
+#        'lastRunDate': '',
+#        'datasourceID': dataSourceID
+#    })
     # When the slack connection is completed send notification user to set time
     headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
     data = {
@@ -1285,7 +1361,13 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
                         "text": "Set My Budget",
                         "type": "button",
                         "value": "setmybudget"
-                    }
+                    },
+#                    {
+#                        "name": "setmyalert",
+#                        "text": "Set My Alert",
+#                        "type": "button",
+#                        "value": "setmyalert"
+#                    },
                 ]
             }]}
     requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)

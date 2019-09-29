@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 import queue  # imported for using queue.Empty exception
 from database import db
-from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction, performancegoaltracking
+from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction, performancegoaltracking, performancechangealert
 
 
 def dtimetostrf(x):
