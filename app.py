@@ -845,7 +845,120 @@ def message_actions():
                         ]
                     }
                 )
+        elif (message_action['actions'][-1]['value'] == 'setmyalert'):
+            text = message_action['original_message']['text']
+            if (True):
+                slack_client.dialog_open(
+                    trigger_id=message_action["trigger_id"],
+                    dialog={
+                        "title": "Set My Daily Alert",
+                        "submit_label": "Submit",
+                        "callback_id": "notification_form",
+                        "elements": [
+                            {
+                                "label": "Metric",
+                                "type": "select",
+                                "name": "metric",
+                                "placeholder": "Select a metric",
+                                "options": [
+                                    {
+                                        "label": "ROAS",
+                                        "value": "ga:ROAS"
+                                    },
+                                    {
+                                        "label": "CPC",
+                                        "value": "ga:CPC"
+                                    },
+                                    {
+                                        "label": "Cost Per Transaction",
+                                        "value": "ga:costPerTransaction",
+                                    },
+                                    {
+                                        "label": "Cost",
+                                        "value": "ga:adCost"
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Filter : Dimension",
+                                "type": "select",
+                                "name": "dimension",
+                                "placeholder": "Select a dimension",
+                                "optional": True,
+                                "hint": "This will be used for filtering",
+                                "options": [
+                                    {
+                                        "label": "Campaign",
+                                        "value": "ga:campaign"
+                                    },
+                                    {
+                                        "label": "Source / Medium",
+                                        "value": "ga:sourceMedium"
+                                    },
+                                    {
+                                        "label": "Device Category",
+                                        "value": "ga:deviceCategory",
+                                    },
+                                    {
+                                        "label": "Event Category",
+                                        "value": "ga:eventCategory",
+                                    },
+                                    {
+                                        "label": "Event Action",
+                                        "value": "ga:eventAction",
+                                    },
+                                    {
+                                        "label": "Event Label",
+                                        "value": "ga:eventLabel",
+                                    },
 
+                                ]
+                            },
+                            {
+                                "label": "Operator",
+                                "type": "select",
+                                "name": "operator",
+                                "placeholder": "Select an operator",
+                                "optional": True,
+                                "hint": "This will be used for filtering",
+                                "options": [
+                                    {
+                                        "label": "Exact Match",
+                                        "value": "=="
+                                    },
+                                    {
+                                        "label": "Does Not Match",
+                                        "value": "!="
+                                    },
+                                    {
+                                        "label": "Contains",
+                                        "value": "=@"
+                                    },
+                                    {
+                                        "label": "Does Not Contain",
+                                        "value": "!@",
+                                    },
+                                ]
+                            },
+                            {
+                                "label": "Expression",
+                                "type": "text",
+                                "name": "expression",
+                                "placeholder": "Enter an expression",
+                                "hint": "This will be used for filtering",
+                                "optional": True
+                            },
+                            {
+                                "label": "Threshold",
+                                "type": "text",
+                                "name": "target",
+                                "subtype": "number",
+                                "placeholder": "Enter a threshold"
+                            }
+                        ]
+                    }
+                )
+    
         elif (message_action['actions'][-1]['value'] == 'setmybudget'):
             text = message_action['original_message']['text']
             if (True):
