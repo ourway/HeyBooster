@@ -103,7 +103,15 @@
 
                                 <div class="list-wrapper">
                                     <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-
+                                        <li>
+                                            <div class="form-check form-check-flat">
+                                                <label class="form-check-label">
+                                                    <input class="checkbox" type="checkbox" checked="checked"
+                                                           onclick="return false;"/>
+                                                    Add Data Source
+                                                    <i class="input-helper"></i></label>
+                                            </div>
+                                        </li>
                                         {% if slack_confirm %}
                                             <li class="completed">
                                                 <div class="form-check form-check-flat">
