@@ -31,7 +31,7 @@ def do_job(tasks_to_accomplish):
                 costprediction(slack_token, task, dataSource)
             elif (task['type'] == 'performancegoaltracking'):
                 performancegoaltracking(slack_token, task, dataSource)
-            elif (task['type'] == 'performancegoaltracking'):
+            elif (task['type'] == 'performancechangealert'):
                 performancechangealert(slack_token, task, dataSource)
             db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']},
                                lastRunDate=time.time())
