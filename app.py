@@ -1027,7 +1027,7 @@ def message_actions():
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
-    elif ('ignoreanalert' in message_action['actions'][-1]['value']):
+        elif ('ignoreanalert' in message_action['actions'][-1]['value']):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
