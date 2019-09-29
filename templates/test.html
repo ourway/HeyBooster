@@ -38,6 +38,53 @@
 
 <body>
 <div class="container-scroller">
+    <div class="horizontal-menu">
+        <nav class="navbar top-navbar col-lg-12 col-12 p-0">
+            <div class="container">
+                <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
+
+                    <a class="navbar-brand brand-logo" href="/"><img src="../static/images/heyBooster.png"
+                                                                     height="34px" alt="logo"/></a>
+                    <a class="navbar-brand brand-logo-mini" href="/"><img src="../static/images/heyBooster.png"
+                                                                          alt="heyBooster!"/></a>
+
+
+                </div>
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+
+                    <ul class="navbar-nav navbar-nav-right">
+                        <ul class="navbar-nav ml-lg-3">
+                            <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
+                                <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#"
+                                   data-toggle="dropdown" id="pagesDropdown">
+                                    <span class="nav-profile-name">{{ session['email'] }}</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                                     aria-labelledby="pagesDropdown">
+
+                                    <a class="dropdown-item" href="/datasources">
+                                        <i class="mdi mdi-logout text-primary"></i>
+                                        Data Sources
+                                    </a>
+                                    <a class="dropdown-item" href="/datasourcesinfo">
+                                        <i class="mdi mdi-logout text-primary"></i>
+                                        Data Sources Info
+                                    </a>
+                                    <a class="dropdown-item" href="/logout">
+                                        <i class="mdi mdi-logout text-primary"></i>
+                                        Logout
+                                    </a>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+    </div>
     <div class="container-fluid page-body-wrapper full-page-wrapper">
         <div class="main-panel">
             <div class="content-wrapper d-flex align-items-center auth px-0">
@@ -61,18 +108,20 @@
                                             <li class="completed">
                                                 <div class="form-check form-check-flat">
                                                     <label class="form-check-label">
-                                                        <input class="checkbox" type="checkbox" checked="checked" onclick="return false;"/>
-                                                            Connect Your Slack
-                                                            <i class="input-helper"></i></label>
+                                                        <input class="checkbox" type="checkbox" checked="checked"
+                                                               onclick="return false;"/>
+                                                        Connect Your Slack
+                                                        <i class="input-helper"></i></label>
                                                 </div>
                                             </li>
                                         {% else %}
                                             <li>
                                                 <div class="form-check form-check-flat">
                                                     <label class="form-check-label">
-                                                        <input class="checkbox" type="checkbox" onclick="return false;"/>
-                                                            Connect Your Slack
-                                                            <i class="input-helper"></i></label>
+                                                        <input class="checkbox" type="checkbox"
+                                                               onclick="return false;"/>
+                                                        Connect Your Slack
+                                                        <i class="input-helper"></i></label>
                                                 </div>
                                             </li>
                                         {% endif %}
@@ -81,7 +130,8 @@
                                             <li class="completed">
                                                 <div class="form-check form-check-flat">
                                                     <label class="form-check-label">
-                                                        <input class="checkbox" type="checkbox" checked="checked" onclick="return false;"/>
+                                                        <input class="checkbox" type="checkbox" checked="checked"
+                                                               onclick="return false;"/>
                                                         Connect Your Analytics
                                                         <i class="input-helper"></i></label>
                                                 </div>
@@ -90,7 +140,8 @@
                                             <li>
                                                 <div class="form-check form-check-flat">
                                                     <label class="form-check-label">
-                                                        <input class="checkbox" type="checkbox" onclick="return false;"/>
+                                                        <input class="checkbox" type="checkbox"
+                                                               onclick="return false;"/>
                                                         Connect Your Analytics
                                                         <i class="input-helper"></i></label>
                                                 </div>
@@ -100,7 +151,8 @@
                                         <li class="completed">
                                             <div class="form-check form-check-flat">
                                                 <label class="form-check-label">
-                                                    <input class="checkbox" type="checkbox" checked="checked"  onclick="return false;"/>
+                                                    <input class="checkbox" type="checkbox" checked="checked"
+                                                           onclick="return false;"/>
                                                     Sign in with Google
                                                     <i class="input-helper"></i></label>
                                             </div>
@@ -110,7 +162,8 @@
                                     {% if session['logged_in'] or session['auth_token'] %}
                                         {% if analytics_confirm and slack_confirm %}
                                             <div class="mt-3">
-                                                <center><h4>Completed!!</h4></center><br>
+                                                <center><h4>Completed!!</h4></center>
+                                                <br>
                                                 <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
                                                    href="/datasource">Add Data Source</a>
                                             </div>
