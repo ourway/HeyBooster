@@ -252,11 +252,11 @@ def performancechangealert(slack_token, task, dataSource):
                     'includeEmptyRows': True
                 }]}).execute()
         
-        data_new = float(results['reports'][0]['data']['totals'][0]['values'][i])
+        data_new = float(results['reports'][0]['data']['totals'][0]['values'][0])
         print(str(data_new))
         # WARNING: When the number of metrics is increased, 
         # WARNING: obtain data for other metrics
-        data_old = float(results['reports'][0]['data']['totals'][1]['values'][i])
+        data_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
         print(str(data_old))
         try:
             changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
