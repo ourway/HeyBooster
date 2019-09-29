@@ -62,7 +62,7 @@ def get_image(pid):
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
+    if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys() and 'sourceType' in session.keys():
         return redirect('/datasourcesinfo')
     elif 'auth_token' in session.keys() and not 'sl_accesstoken' in session.keys():
         analytics_confirm = False
