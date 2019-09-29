@@ -49,7 +49,7 @@ slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"],
     redirect_url="/datasources")
 slack_bp.authorized = authorized
-app.register_blueprint(slack_bp, url_prefix="/login")
+app.register_blueprint(slack_bp, url_prefix="/login", redirect_url="/")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
