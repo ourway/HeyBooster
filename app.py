@@ -953,7 +953,7 @@ def message_actions():
                                 "optional": True
                             },
                             {
-                                "label": "Threshold",
+                                "label": "Threshold (%)",
                                 "type": "text",
                                 "name": "threshold",
                                 "subtype": "number",

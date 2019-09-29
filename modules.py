@@ -206,7 +206,7 @@ def performancechangealert(slack_token, task, dataSource):
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
-        thresholds += [float(str(task['threshold'][i]).replace(',','.'))]
+        thresholds += [float(str(task['threshold'][i]).replace(',','.'))/100]
         filters += [task['filterExpression'][i]]
         periods += [int(task['period'][i])]
 
