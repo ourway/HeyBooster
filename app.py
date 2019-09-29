@@ -47,7 +47,7 @@ app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"],
-    redirect_url="/")
+    redirect_url="/datasources")
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -63,7 +63,7 @@ def get_image(pid):
 @login_required
 def home():
     if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
-        return redirect('/')
+        return redirect('/datasourcesinfo')
     elif 'auth_token' in session.keys() and not 'sl_accesstoken' in session.keys():
         analytics_confirm = False
         slack_confirm = False
