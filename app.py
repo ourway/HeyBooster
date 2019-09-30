@@ -70,13 +70,16 @@ def home():
 
         try:
             useraccount = google_analytics.get_accounts(session['email'])['accounts']
+            datasources = db.find('datasource', query={'email': session['email']})
             if useraccount:
                 analytics_confirm = True
             if 'sl_accesstoken' in session.keys():
                 slack_confirm = True
+            if datasources:
+                datasources_confirm = True
         except:
-            return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
-        return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+            return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm, datasources_confirm=datasources_confirm)
+        return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm, datasources_confirm=datasources_confirm)
     else:
         return redirect('/login')
 
@@ -299,7 +302,7 @@ def datasources():
         # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources.html', nForm=nForm, args=args)
+    return render_template('datasources.html', nForm=nForm, args=args, datasources=datasources)
 
 
 @app.route("/removedatasources/<datasourceID>", methods=['GET', 'POST'])
