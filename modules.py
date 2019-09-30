@@ -353,7 +353,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
 #        "text": "Reschedule",
 #        "type": "button",
 #        "value": "track"
-#    },
+#     },
         {
             "name": "ignore",
             "text": "Ignore",
