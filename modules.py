@@ -353,7 +353,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
 #        "text": "Reschedule",
 #        "type": "button",
 #        "value": "track"
-#     },
+#    },
         {
             "name": "ignore",
             "text": "Ignore",
@@ -373,7 +373,6 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
     period = task['period']
 
     tol = 0.20
-    
     today = datetime.today()
     
     if (period == 1):
