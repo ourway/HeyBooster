@@ -62,9 +62,9 @@ def get_image(pid):
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
+    if 'auth_token' in session.keys() and session['sl_accesstoken']:
         return redirect('/datasourcesinfo')
-    elif 'auth_token' in session.keys() and not 'sl_accesstoken' in session.keys():
+    elif 'auth_token' in session.keys() and not session['sl_accesstoken']:
         analytics_confirm = False
         slack_confirm = False
 
@@ -72,30 +72,13 @@ def home():
             useraccount = google_analytics.get_accounts(session['email'])['accounts']
             if useraccount:
                 analytics_confirm = True
-            if 'sl_accesstoken' in session.keys():
+            if session['sl_accesstoken']:
                 slack_confirm = True
         except:
             return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
         return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
     else:
         return redirect('/login')
-
-
-# @app.route('/test', methods=['GET', 'POST'])
-# @login_required
-# def test():
-#     analytics_confirm = False
-#     slack_confirm = False
-#
-#     try:
-#         useraccount = google_analytics.get_accounts(session['email'])['accounts']
-#         if useraccount:
-#             analytics_confirm = True
-#         if 'sl_accesstoken' in session.keys():
-#             slack_confirm = True
-#     except:
-#         return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
-#     return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
 
 
 @app.route('/change', methods=['POST'])
