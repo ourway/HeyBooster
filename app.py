@@ -62,15 +62,9 @@ def get_image(pid):
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    slAccesstokenQuery = {'sl_accesstoken': session['auth_token']}
-    try:
-        slAccesstoken = db.find_one('user', {slAccesstokenQuery})
-    except:
-        slAccesstoken = False
-
-    if 'auth_token' in session.keys() and slAccesstoken == True:
+    if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
         return redirect('/datasourcesinfo')
-    elif 'auth_token' in session.keys() and slAccesstoken == False:
+    elif 'auth_token' in session.keys() and not 'sl_accesstoken' in session.keys():
         analytics_confirm = False
         slack_confirm = False
 
@@ -78,7 +72,7 @@ def home():
             useraccount = google_analytics.get_accounts(session['email'])['accounts']
             if useraccount:
                 analytics_confirm = True
-            if slAccesstoken:
+            if 'sl_accesstoken' in session.keys():
                 slack_confirm = True
         except:
             return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
@@ -1072,8 +1066,7 @@ def message_actions():
             metricindex = module['metric'].index(metric)
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
                                                                                    "threshold." + str(metricindex): 1,
-                                                                                   "filterExpression." + str(
-                                                                                       metricindex): 1,
+                                                                                   "filterExpression." + str(metricindex): 1,
                                                                                    "period." + str(metricindex): 1}})
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "threshold": None,
@@ -1254,8 +1247,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-                #                module['period'] = [int(submission['period'])]
-                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
+#                module['period'] = [int(submission['period'])]
+                module['period'] = [1] ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1275,8 +1268,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-                #                module['period'] = [submission['period']]
-                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
+#                module['period'] = [submission['period']]
+                module['period'] = [1] ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1368,20 +1361,20 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'lastRunDate': '',
         'datasourceID': dataSourceID
     })
-    #    db.insert('notification', data={
-    #        'type': 'performancechangealert',
-    #        'email': email,
-    #        'metric': [],
-    #        'threshold': [],
-    #        'filterExpression': [],
-    #        'period': [],
-    #        'scheduleType': 'daily',
-    #        'frequency': 0,
-    #        'timeofDay': "%s.00" % (default_time),
-    #        'status': '0',
-    #        'lastRunDate': '',
-    #        'datasourceID': dataSourceID
-    #    })
+#    db.insert('notification', data={
+#        'type': 'performancechangealert',
+#        'email': email,
+#        'metric': [],
+#        'threshold': [],
+#        'filterExpression': [],
+#        'period': [],
+#        'scheduleType': 'daily',
+#        'frequency': 0,
+#        'timeofDay': "%s.00" % (default_time),
+#        'status': '0',
+#        'lastRunDate': '',
+#        'datasourceID': dataSourceID
+#    })
     # When the slack connection is completed send notification user to set time
     headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
     data = {
@@ -1416,12 +1409,12 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
                         "type": "button",
                         "value": "setmybudget"
                     },
-                    #                    {
-                    #                        "name": "setmyalert",
-                    #                        "text": "Set My Alert",
-                    #                        "type": "button",
-                    #                        "value": "setmyalert"
-                    #                    },
+#                    {
+#                        "name": "setmyalert",
+#                        "text": "Set My Alert",
+#                        "type": "button",
+#                        "value": "setmyalert"
+#                    },
                 ]
             }]}
     requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
