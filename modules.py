@@ -335,13 +335,8 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
-    text = {}
-    text['desktop'] = "*Desktop Shopping Funnel Changes Tracking*"
-    text['mobile'] = "* Mobile Shopping Funnel Changes Tracking*"
-    attachments = {}
-    totalattachments = []
-    attachments['mobile'] = []
-    attachments['desktop'] = []
+    text = "*Shopping Funnel Changes Tracking*"
+    attachments = []
     metrics = [
         {'expression': 'ga:sessions'}
     ]
@@ -396,86 +391,79 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
                                    {'startDate': start_date_2, 'endDate': end_date_2}],
                     'metrics': metrics,
-                    'dimensions': [{'name': 'ga:shoppingStage'},
-                                   {'name': 'ga:deviceCategory'}]
+                    'dimensions': [{'name': 'ga:shoppingStage'}]
                 }]}).execute()
-    
-    for seg in ['desktop', 'mobile']:
-        try:    
-            dims_new = [row['dimensions'][0] for row in results['reports'][0]['data']['rows'] if row['dimensions'][1] == seg]
-            datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows'] if row['dimensions'][1] == seg]
-        except:
-            dims_new = []
-            datas_new = []
-        try:
-            dims_old = [row['dimensions'][0] for row in results['reports'][0]['data']['rows'] if row['dimensions'][1] == seg]
-            datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows'] if row['dimensions'][1] == seg]
-        except:
-            dims_old = []
-            datas_old = []
-            
-        for i in range(len(metrics)):
-            for dim in dimensions.keys():
-                try:
-                    j1 = dims_new.index(dim)
-                    data_new = datas_new[j1]
-                except:
-                    data_new = 0
-    
-                try:
-                    j2 = dims_old.index(dim)
-                    data_old = datas_old[j2]
-                except:
-                    data_old = 0
-    
-                dimname = dimensions[dim]
-    
-                #            sessions_new = float(results['reports'][0]['data']['rows'][j]['metrics'][0]['values'][0])
-                #            sessions_old = float(['reports'][0]['data']['rows'][j]['metrics'][1]['values'][0])
-                try:
-                    changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
-                except:
-                    changerate = abs(data_old - data_new)
-                if (data_new < data_old):
-                    if ((data_old - data_new) <= (tol * data_old)):
-                        pass
-    #                    attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
-    #                        "callback_id": "notification_form",
-    #                        "attachment_type": "default",
-    #                    }]
-                    else:
-    
-                        attachments[seg] += [{
-                                            "text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
-                                            "callback_id": "notification_form",
-                                            'color': "danger",
-                                            "attachment_type": "default",
-                                            }]
+    try:    
+        dims_new = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+        datas_new = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
+    except:
+        dims_new = []
+        datas_new = []
+    try:
+        dims_old = [row['dimensions'][0] for row in results['reports'][0]['data']['rows']]
+        datas_old = [float(row['metrics'][1]['values'][0]) for row in results['reports'][0]['data']['rows']]
+    except:
+        dims_old = []
+        datas_old = []
+
+    for i in range(len(metrics)):
+        for dim in dimensions.keys():
+            try:
+                j1 = dims_new.index(dim)
+                data_new = datas_new[j1]
+            except:
+                data_new = 0
+
+            try:
+                j2 = dims_old.index(dim)
+                data_old = datas_old[j2]
+            except:
+                data_old = 0
+
+            dimname = dimensions[dim]
+
+            #            sessions_new = float(results['reports'][0]['data']['rows'][j]['metrics'][0]['values'][0])
+            #            sessions_old = float(['reports'][0]['data']['rows'][j]['metrics'][1]['values'][0])
+            try:
+                changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
+            except:
+                changerate = abs(data_old - data_new)
+            if (data_new < data_old):
+                if ((data_old - data_new) <= (tol * data_old)):
+                    pass
+#                    attachments += [{"text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
+#                        "callback_id": "notification_form",
+#                        "attachment_type": "default",
+#                    }]
                 else:
-                    if ((data_new - data_old) <= (tol * data_old)):
-                        pass
-    #                    attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
-    #                        "callback_id": "notification_form",
-    #                        "attachment_type": "default",
-    #                    }]
-                    else:
-                        attachments[seg] += [{
-                                            "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
-                                            "callback_id": "notification_form",
-                                            'color': "good",
-                                            "attachment_type": "default",
-                                            }]
-        if(len(attachments[seg])>0):
-            attachments[seg][0]['pretext'] = text[seg]
-        
-        totalattachments += attachments[seg]
-        
-    if (len(totalattachments) > 0):
-        totalattachments[-1]['actions'] = actions
+
+                    attachments += [{
+                                        "text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
+                                        "callback_id": "notification_form",
+                                        'color': "danger",
+                                        "attachment_type": "default",
+                                        }]
+            else:
+                if ((data_new - data_old) <= (tol * data_old)):
+                    pass
+#                    attachments += [{"text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
+#                        "callback_id": "notification_form",
+#                        "attachment_type": "default",
+#                    }]
+                else:
+                    attachments += [{
+                                        "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
+                                        "callback_id": "notification_form",
+                                        'color': "good",
+                                        "attachment_type": "default",
+                                        }]
+    if (len(attachments) > 0):
+        attachments[0]['pretext'] = text
+        attachments[-1]['actions'] = actions
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(
             channel=channel,
-            attachments=totalattachments)
+            attachments=attachments)
         return resp['ts']
 
 
@@ -569,6 +557,17 @@ def costprediction(slack_token, task, dataSource):
     predtext = babel.numbers.format_currency(decimal.Decimal(str(prediction)), task['currency'])
     print("Target:", targettext)
     print("Prediction:", predtext)
+
+    yval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
+    #        xval = list(range(1, today.day)) #It is applied for preventing graph dimension error
+    xval = list(range(1, len(yval) + 1))
+    plt.plot(xval, yval, marker='o')
+    plt.xlabel('Day')
+    plt.ylabel(metrics)
+    imageId = uuid.uuid4().hex
+    plt.savefig(imagefile.format(imageId))
+    plt.clf()
+
     if (prediction > target):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
@@ -578,6 +577,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
+                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
         else:
@@ -587,6 +587,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
+                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
     else:
@@ -598,6 +599,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
+                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
         else:
@@ -607,6 +609,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
+                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
 
