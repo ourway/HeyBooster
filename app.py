@@ -1008,11 +1008,11 @@ def message_actions():
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
             metricindex = module['metric'].index(metric)
-            db.DATABASE['notification'].update({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
+            db.DATABASE['notification'].updateOne({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
                                                                                    "target." + str(metricindex): 1,
                                                                                    "filterExpression." + str(
                                                                                        metricindex): 1}})
-            db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
+            db.DATABASE['notification'].updateOne({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "target": None,
                                                                                   "filterExpression": None}})
             slack_client.chat_update(channel=channel,
@@ -1052,12 +1052,11 @@ def message_actions():
                                                         'type': 'performancechangealert'})
             module_id = module['_id']
             metricindex = module['metric'].index(metric)
-            db.DATABASE['notification'].update({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
+            db.DATABASE['notification'].updateOne({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
                                                                                    "threshold." + str(metricindex): 1,
-                                                                                   "filterExpression." + str(
-                                                                                       metricindex): 1,
+                                                                                   "filterExpression." + str(metricindex): 1,
                                                                                    "period." + str(metricindex): 1}})
-            db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
+            db.DATABASE['notification'].updateOne({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "threshold": None,
                                                                                   "filterExpression": None,
                                                                                   "period": None}})
@@ -1169,7 +1168,7 @@ def message_actions():
                                                       text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
-                db.DATABASE['notification'].update(
+                db.DATABASE['notification'].updateOne(
                     {'_id': module_id},
                     {'$set': {
                         "target." + str(metricindex): submission['target'],
@@ -1187,17 +1186,23 @@ def message_actions():
                                                       text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
-                db.DATABASE['notification'].update(
+#                db.DATABASE['notification'].update(
+#                    {'_id': module_id},
+#                    {'$push': {'metric': submission['metric']}}
+#                )
+#                db.DATABASE['notification'].update(
+#                    {'_id': module_id},
+#                    {'$push': {'target': submission['target']}}
+#                )
+#                db.DATABASE['notification'].update(
+#                    {'_id': module_id},
+#                    {'$push': {'filterExpression': filterExpression}}
+#                )
+                db.DATABASE['notification'].updateOne(
                     {'_id': module_id},
-                    {'$push': {'metric': submission['metric']}}
-                )
-                db.DATABASE['notification'].update(
-                    {'_id': module_id},
-                    {'$push': {'target': submission['target']}}
-                )
-                db.DATABASE['notification'].update(
-                    {'_id': module_id},
-                    {'$push': {'filterExpression': filterExpression}}
+                    {'$push': {'metric': submission['metric'],
+                               'target': submission['target'],
+                               'filterExpression': filterExpression}}
                 )
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
@@ -1246,7 +1251,7 @@ def message_actions():
                                                       text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
-                db.DATABASE['notification'].update(
+                db.DATABASE['notification'].updateOne(
                     {'_id': module_id},
                     {'$set': {
                         "threshold." + str(metricindex): submission['threshold'],
@@ -1267,21 +1272,28 @@ def message_actions():
                                                       text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
-                db.DATABASE['notification'].update(
+#                db.DATABASE['notification'].update(
+#                    {'_id': module_id},
+#                    {'$push': {'metric': submission['metric']}}
+#                )
+#                db.DATABASE['notification'].update(
+#                    {'_id': module_id},
+#                    {'$push': {'threshold': submission['threshold']}}
+#                )
+#                db.DATABASE['notification'].update(
+#                    {'_id': module_id},
+#                    {'$push': {'filterExpression': filterExpression}}
+#                )
+#                db.DATABASE['notification'].update(
+#                    {'_id': module_id},
+#                    {'$push': {'period': 1}}
+#                )
+                db.DATABASE['notification'].updateOne(
                     {'_id': module_id},
-                    {'$push': {'metric': submission['metric']}}
-                )
-                db.DATABASE['notification'].update(
-                    {'_id': module_id},
-                    {'$push': {'threshold': submission['threshold']}}
-                )
-                db.DATABASE['notification'].update(
-                    {'_id': module_id},
-                    {'$push': {'filterExpression': filterExpression}}
-                )
-                db.DATABASE['notification'].update(
-                    {'_id': module_id},
-                    {'$push': {'period': 1}}
+                    {'$push': {'metric': submission['metric'],
+                               'threshold': submission['threshold'],
+                               'filterExpression': filterExpression,
+                               'period': 1}}
                 )
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
