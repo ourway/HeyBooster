@@ -62,21 +62,26 @@ def get_image(pid):
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    if 'auth_token' in session.keys() and session['sl_accesstoken']:
-        return redirect('/datasourcesinfo')
-    elif 'auth_token' in session.keys() and not session['sl_accesstoken']:
-        analytics_confirm = False
-        slack_confirm = False
+    if 'auth_token' in session.keys():
+        if session['ga_accesstoken'] and session['sl_accesstoken']:
+            return redirect('/datasourcesinfo')
+        elif not session['ga_accesstoken'] and not session['sl_accesstoken']:
+            analytics_confirm = False
+            slack_confirm = False
 
-        try:
-            useraccount = google_analytics.get_accounts(session['email'])['accounts']
-            if useraccount:
-                analytics_confirm = True
-            if session['sl_accesstoken']:
-                slack_confirm = True
-        except:
+            try:
+                useraccount = google_analytics.get_accounts(session['email'])['accounts']
+                if useraccount:
+                    analytics_confirm = True
+                if session['sl_accesstoken']:
+                    slack_confirm = True
+            except:
+                return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
             return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
-        return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+        elif session['ga_accesstoken'] and not session['sl_accesstoken']:
+            analytics_confirm = True
+            slack_confirm = False
+            return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
     else:
         return redirect('/login')
 
@@ -1049,7 +1054,8 @@ def message_actions():
             metricindex = module['metric'].index(metric)
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
                                                                                    "threshold." + str(metricindex): 1,
-                                                                                   "filterExpression." + str(metricindex): 1,
+                                                                                   "filterExpression." + str(
+                                                                                       metricindex): 1,
                                                                                    "period." + str(metricindex): 1}})
             db.DATABASE['notification'].update({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "threshold": None,
@@ -1230,8 +1236,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-#                module['period'] = [int(submission['period'])]
-                module['period'] = [1] ## FOR TESTING, PERIOD NOT ADDED YET
+                #                module['period'] = [int(submission['period'])]
+                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1251,8 +1257,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-#                module['period'] = [submission['period']]
-                module['period'] = [1] ## FOR TESTING, PERIOD NOT ADDED YET
+                #                module['period'] = [submission['period']]
+                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1344,20 +1350,20 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'lastRunDate': '',
         'datasourceID': dataSourceID
     })
-#    db.insert('notification', data={
-#        'type': 'performancechangealert',
-#        'email': email,
-#        'metric': [],
-#        'threshold': [],
-#        'filterExpression': [],
-#        'period': [],
-#        'scheduleType': 'daily',
-#        'frequency': 0,
-#        'timeofDay': "%s.00" % (default_time),
-#        'status': '0',
-#        'lastRunDate': '',
-#        'datasourceID': dataSourceID
-#    })
+    #    db.insert('notification', data={
+    #        'type': 'performancechangealert',
+    #        'email': email,
+    #        'metric': [],
+    #        'threshold': [],
+    #        'filterExpression': [],
+    #        'period': [],
+    #        'scheduleType': 'daily',
+    #        'frequency': 0,
+    #        'timeofDay': "%s.00" % (default_time),
+    #        'status': '0',
+    #        'lastRunDate': '',
+    #        'datasourceID': dataSourceID
+    #    })
     # When the slack connection is completed send notification user to set time
     headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
     data = {
@@ -1392,12 +1398,12 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
                         "type": "button",
                         "value": "setmybudget"
                     },
-#                    {
-#                        "name": "setmyalert",
-#                        "text": "Set My Alert",
-#                        "type": "button",
-#                        "value": "setmyalert"
-#                    },
+                    #                    {
+                    #                        "name": "setmyalert",
+                    #                        "text": "Set My Alert",
+                    #                        "type": "button",
+                    #                        "value": "setmyalert"
+                    #                    },
                 ]
             }]}
     requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
