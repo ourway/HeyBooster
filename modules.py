@@ -471,7 +471,11 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
         totalattachments += attachments[seg]
         
     if (len(totalattachments) > 0):
-        totalattachments[-1]['actions'] = actions
+        totalattachments += [{"text": "",
+                    "color": "FFFFFF",
+                    "callback_id": "notification_form",
+                    "attachment_type": "default",
+                    "actions": actions}]
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(
             channel=channel,
