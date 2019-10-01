@@ -4,6 +4,8 @@
 * **Framework**: Flask==1.1.1
 * **Veritabanı**: MongoDB
 
+---
+
 **Kurulum ve Çalıştırma**
 
 * Çalıştırmadan önce Slack ve Google Token bilgilerinizi elde etmeli kodda 
