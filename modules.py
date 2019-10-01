@@ -557,6 +557,17 @@ def costprediction(slack_token, task, dataSource):
     predtext = babel.numbers.format_currency(decimal.Decimal(str(prediction)), task['currency'])
     print("Target:", targettext)
     print("Prediction:", predtext)
+
+    yval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
+    #        xval = list(range(1, today.day)) #It is applied for preventing graph dimension error
+    xval = list(range(1, len(yval) + 1))
+    plt.plot(xval, yval, marker='o')
+    plt.xlabel('Day')
+    plt.ylabel(metrics)
+    imageId = uuid.uuid4().hex
+    plt.savefig(imagefile.format(imageId))
+    plt.clf()
+
     if (prediction > target):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
@@ -566,6 +577,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
+                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
         else:
@@ -575,6 +587,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
+                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
     else:
@@ -586,6 +599,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
+                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
         else:
@@ -595,6 +609,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
+                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
 
