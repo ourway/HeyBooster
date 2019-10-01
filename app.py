@@ -81,7 +81,7 @@ def home():
                 #Fill the boxes for the value of slack_confirm and analytics_confirm
                 return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
         except:
-            redirect('/logout')
+            return redirect('/logout')
     else:
         return redirect('/login')
 
