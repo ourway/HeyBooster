@@ -765,6 +765,10 @@ def message_actions():
                                         "value": "ga:costPerTransaction",
                                     },
                                     {
+                                        "label": "Adwords Cost",
+                                        "value": "ga:adCost",
+                                    },
+                                    {
                                         "label": "Revenue",
                                         "value": "ga:transactionRevenue"
                                     }
