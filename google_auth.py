@@ -176,6 +176,7 @@ def google_connectauth_redirect():
     db.find_and_modify(collection='user', query={'email': flask.session['email']},
                        ga_accesstoken=oauth2_tokens['access_token'],
                        ga_refreshtoken=oauth2_tokens['refresh_token'])
+    flask.session['ga_accesstoken'] = oauth2_tokens['access_token']
 #    viewId = google_analytics.get_first_profile_id()
 #    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
     
