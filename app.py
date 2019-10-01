@@ -65,22 +65,19 @@ def home():
     if 'auth_token' in session.keys():
         if session['ga_accesstoken'] and session['sl_accesstoken']:
             return redirect('/datasourcesinfo')
-        elif not session['ga_accesstoken'] and not session['sl_accesstoken']:
-            analytics_confirm = False
-            slack_confirm = False
-
-            try:
-                useraccount = google_analytics.get_accounts(session['email'])['accounts']
-                if useraccount:
-                    analytics_confirm = True
-                if session['sl_accesstoken']:
-                    slack_confirm = True
-            except:
-                return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
-            return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
-        elif session['ga_accesstoken'] and not session['sl_accesstoken']:
-            analytics_confirm = True
-            slack_confirm = False
+        else:
+            # Check if user has slack connection
+            if session['sl_accesstoken']:
+                slack_confirm = True
+            else:
+                slack_confirm = False
+                
+            # Check if user has analytics connection    
+            if session['ga_accesstoken']:
+                analytics_confirm = True
+            else:
+                analytics_confirm = False
+            #Fill the boxes for the value of slack_confirm and analytics_confirm
             return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
     else:
         return redirect('/login')
