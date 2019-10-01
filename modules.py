@@ -640,6 +640,7 @@ def performancegoaltracking(slack_token, task, dataSource):
     ]
     metricdict = {'ga:ROAS': 'Adwords ROAS',
                   'ga:CPC': 'Adwords CPC',
+                  'ga:adCost': 'Adwords Cost',
                   'ga:sessions': 'Session',
                   'ga:costPerTransaction': 'Adwords Cost Per Transaction',
                   'ga:transactionRevenue': 'Revenue'}
