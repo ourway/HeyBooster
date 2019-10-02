@@ -599,8 +599,11 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "image_url": imageurl.format(imageId),
-                "actions": actions
+#                "image_url": imageurl.format(imageId),
+                "actions": actions.append({"name": "showgraph",
+                                             "text": "Show Graph",
+                                             "type": "button",
+                                              "value": f"{imageId}"})
             }]
         else:
             attachments += [{
@@ -609,8 +612,11 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "image_url": imageurl.format(imageId),
-                "actions": actions
+#                "image_url": imageurl.format(imageId),
+                "actions": actions.append({"name": "showgraph",
+                                             "text": "Show Graph",
+                                             "type": "button",
+                                              "value": f"{imageId}"})
             }]
     else:
         # Prediction is less than target
@@ -621,8 +627,11 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "image_url": imageurl.format(imageId),
-                "actions": actions
+#                "image_url": imageurl.format(imageId),
+                "actions": actions.append({"name": "showgraph",
+                                             "text": "Show Graph",
+                                             "type": "button",
+                                              "value": f"{imageId}"})
             }]
         else:
             attachments += [{
@@ -631,8 +640,11 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "image_url": imageurl.format(imageId),
-                "actions": actions
+#                "image_url": imageurl.format(imageId),
+                "actions": actions.append({"name": "showgraph",
+                                             "text": "Show Graph",
+                                             "type": "button",
+                                              "value": f"{imageId}"})
             }]
 
     slack_client = WebClient(token=slack_token)

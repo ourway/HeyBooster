@@ -1087,10 +1087,14 @@ def message_actions():
             attachments = message_action['original_message']['attachments']
             if not 'image_url' in attachments[int(attachment_id) - 1]:
                 attachments[int(attachment_id) - 1]['image_url'] = imageurl.format(imageId)
-                attachments[int(attachment_id) - 1]['actions'][1]['text'] = "Close Graph"
+                for index in attachments[int(attachment_id) - 1]['actions']:
+                    if(attachments[int(attachment_id) - 1]['actions'][1]['name']=='showgraph'):
+                        attachments[int(attachment_id) - 1]['actions'][index]['text'] = "Close Graph"
             else:
-                del attachments[int(attachment_id) - 1]['image_url']
-                attachments[int(attachment_id) - 1]['actions'][1]['text'] = "Show Graph"
+                for index in attachments[int(attachment_id) - 1]['actions']:
+                    if(attachments[int(attachment_id) - 1]['actions'][1]['name']=='showgraph'):
+                        del attachments[int(attachment_id) - 1]['image_url']
+                        attachments[int(attachment_id) - 1]['actions'][1]['text'] = "Show Graph"
             
             for att in attachments:
                 for act in att["actions"]:
