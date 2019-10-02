@@ -94,8 +94,16 @@
                     <div class="card-body">
                         <h4 class="card-title" style="margin:auto; width:200px">Connected Data Sources</h4>
                         <br>
-                        <h5>Check out your connected slack channel, heybooster even wrote you.</h5>
 
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class=flashes>
+                                    {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
                         <div class="table-responsive" style="padding-top:20px">
                             <table class="table">
                                 <thead>

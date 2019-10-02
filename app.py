@@ -357,6 +357,7 @@ def datasourcesinfo():
         # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    flash("Check out your connected slack channel, heybooster even wrote you.")
     return render_template('datasourcesinfo.html', nForm=nForm, args=args)
 
 
