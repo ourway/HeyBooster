@@ -92,7 +92,7 @@ def home():
 def change():
     message_action = request.form
     # Open a slack client
-    user = db.find_one('user', {'sl_userid': message_action['user']['id']})
+    user = db.find_one('user', {'sl_userid': message_action['user_id']})
     slack_token = user['sl_accesstoken']
     slack_client = WebClient(token=slack_token)
     # text = message_action['original_message']['text']
