@@ -759,7 +759,19 @@ def message_actions():
                                     {
                                         "label": "Revenue",
                                         "value": "ga:transactionRevenue"
-                                    }
+                                    },
+                                    {
+                                        "label": "Impressions",
+                                        "value": "ga:impressions"
+                                    },
+                                    {
+                                        "label": "Clicks",
+                                        "value": "ga:adClicks"
+                                    },
+                                    {
+                                        "label": "New Users",
+                                        "value": "ga:newUsers"
+                                    },
                                 ]
                             },
                             {

@@ -680,7 +680,10 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:sessions': 'Session',
                   'ga:costPerTransaction': 'Adwords Cost Per Transaction',
                   'ga:adCost': "Adwords Cost",
-                  'ga:transactionRevenue': 'Revenue'}
+                  'ga:transactionRevenue': 'Revenue',
+                  'ga:impressions': 'Impression',
+                  'ga:adClicks': 'Click',
+                  'ga:newUsers': 'New User'}
 
     metrics = []
     metricnames = []
