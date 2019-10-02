@@ -1094,7 +1094,7 @@ def message_actions():
                 for index in range(len(attachments[int(attachment_id) - 1]['actions'])):
                     if(attachments[int(attachment_id) - 1]['actions'][1]['name']=='showgraph'):
                         del attachments[int(attachment_id) - 1]['image_url']
-                        attachments[int(attachment_id) - 1]['actions'][1]['text'] = "Show Graph"
+                        attachments[int(attachment_id) - 1]['actions'][index]['text'] = "Show Graph"
             
             for att in attachments:
                 for act in att["actions"]:
