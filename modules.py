@@ -595,7 +595,7 @@ def costprediction(slack_token, task, dataSource):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
             attachments += [{
-                "text": f"Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {predtext} Monthly Budget: {targettext}",
+                "text": f"Your {str_period} adwords total cost is predicted to be more than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -605,7 +605,7 @@ def costprediction(slack_token, task, dataSource):
             }]
         else:
             attachments += [{
-                "text": f"Your monthly adwords total cost is predicted to be more than monthly budget. Predicted Value: {predtext} Monthly Budget: {targettext}",
+                "text": f"Your {str_period} adwords total cost is predicted to be more than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -617,7 +617,7 @@ def costprediction(slack_token, task, dataSource):
         # Prediction is less than target
         if ((target - prediction < (tol * target))):
             attachments += [{
-                "text": f"Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {predtext} Monthly Budget: {targettext}",
+                "text": f"Your {str_period} adwords total cost is predicted to be less than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -627,7 +627,7 @@ def costprediction(slack_token, task, dataSource):
             }]
         else:
             attachments += [{
-                "text": f"Your monthly adwords total cost is predicted to be less than monthly budget. Predicted Value: {predtext} Monthly Budget: {targettext}",
+                "text": f"Your {str_period} adwords total cost is predicted to be less than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
