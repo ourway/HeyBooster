@@ -336,6 +336,8 @@ def datasourcesinfo():
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
+        flash("Check out your connected slack channel, heybooster even wrote you.")
+
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     else:
@@ -357,7 +359,6 @@ def datasourcesinfo():
         # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    flash("Check out your connected slack channel, heybooster even wrote you.")
     return render_template('datasourcesinfo.html', nForm=nForm, args=args)
 
 
