@@ -693,22 +693,24 @@ def performancegoaltracking(slack_token, task, dataSource):
     metricnames = []
     targets = []
     filters = []
+    periods = []
     tol = 0.05
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
         targets += [float(str(task['target'][i]).replace(',','.'))]
         filters += [task['filterExpression'][i]]
+        periods += [int(task['period'][i])]
 
     email = task['email']
     viewId = task['viewId']
     channel = task['channel']
 
     today = datetime.today()
-    start_date = datetime(today.year, today.month, 1)  # First day of current day
-
-    start_date_1 = dtimetostrf(start_date)  # Convert it to string format
-    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+#    start_date = datetime(today.year, today.month, 1)  # First day of current day
+#
+#    start_date_1 = dtimetostrf(start_date)  # Convert it to string format
+#    end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
 
@@ -716,11 +718,26 @@ def performancegoaltracking(slack_token, task, dataSource):
         metricname = metricnames[i]
         target = targets[i]
         filterExpression = filters[i]
+        period = periods[i]
         if('Adwords' in metricname):
             if filterExpression != '':
                 filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
             else:
                 filterExpression = 'ga:sourceMedium==google / cpc'
+        
+        if (period == 1):
+            start_date_1 = dtimetostrf((today - timedelta(days=1)))
+            end_date_1 = start_date_1
+            str_period = "Yesterday"
+        elif (period == 7):
+            start_date_1 = dtimetostrf((today - timedelta(days=today.weekday())))  # Convert it to string format
+            end_date_1 = dtimetostrf((today - timedelta(days=1)))
+            str_period = "This week"
+        elif (period == 30):
+            start_date = datetime(today.year, today.month, 1)  # First day of current day
+            start_date_1 = dtimetostrf(start_date)  # Convert it to string format
+            end_date_1 = dtimetostrf((today - timedelta(days=1)))
+            str_period = "This month"
         
         results = service.reports().batchGet(
         body={
@@ -748,7 +765,7 @@ def performancegoaltracking(slack_token, task, dataSource):
         plt.savefig(imagefile.format(imageId))
         plt.clf()
         if ( (abs(querytotal - target) / target) <= tol):
-            attachments += [{"text": f"This month, {metricname} is {round(querytotal,2)}, Your Target {metricname}: {target}",
+            attachments += [{"text": f"{str_period}, {metricname} is {round(querytotal,2)}, Your Target {metricname}: {target}",
                              "color": "good",
                              "callback_id": "notification_form",
                              "attachment_type": "default",
@@ -773,7 +790,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                              }]
 
         else:
-            attachments += [{"text": f"This month, {metricname} is {round(querytotal,2)}, Your Target {metricname}: {target}",
+            attachments += [{"text": f"{str_period}, {metricname} is {round(querytotal,2)}, Your Target {metricname}: {target}",
                              "color": "danger",
                              "callback_id": "notification_form",
                              "attachment_type": "default",

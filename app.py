@@ -848,7 +848,27 @@ def message_actions():
                                 "optional": True
                             },
                             {
-                                "label": "Monthly Target",
+                                "label": "Interval Type",
+                                "type": "select",
+                                "name": "period",
+                                "placeholder": "Select a interval type",
+                                "options": [
+                                    {
+                                        "label": "Daily",
+                                        "value": 1
+                                    },
+                                    {
+                                        "label": "Weekly",
+                                        "value": 7
+                                    },
+                                    {
+                                        "label": "Monthly",
+                                        "value": 30
+                                    }
+                                ]
+                            },                                    
+                            {
+                                "label": "Target",
                                 "type": "text",
                                 "name": "target",
                                 "subtype": "number",
@@ -1188,7 +1208,7 @@ def message_actions():
             for module in modules:
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
-        elif ('metric' in submission.keys() and 'target' in submission.keys() and len(submission.keys()) == 5):
+        elif ('metric' in submission.keys() and 'target' in submission.keys()):
             dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                           'channelID': channel})
             datasourceID = dataSource['_id']
@@ -1206,6 +1226,7 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['target'] = [submission['target']]
                 module['filterExpression'] = [filterExpression]
+                module['period'] = [submission['period']]
                 try:
                     performancegoaltracking(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1218,12 +1239,14 @@ def message_actions():
                     {'_id': module_id},
                     {'$set': {
                         "target." + str(metricindex): submission['target'],
-                        "filterExpression." + str(metricindex): filterExpression}}
+                        "filterExpression." + str(metricindex): filterExpression,
+                        "period." + str(metricindex): submission['period']}}
                 )
             else:
                 module['metric'] = [submission['metric']]
                 module['target'] = [submission['target']]
                 module['filterExpression'] = [filterExpression]
+                module['period'] = [submission['period']]
                 try:
                     performancegoaltracking(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1248,11 +1271,12 @@ def message_actions():
                     {'_id': module_id},
                     {'$push': {'metric': submission['metric'],
                                'target': submission['target'],
-                               'filterExpression': filterExpression}}
+                               'filterExpression': filterExpression,
+                               'period': submission['period']}}
                 )
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
-        elif ('budget' in submission.keys() and len(submission.keys()) == 1):
+        elif ('budget' in submission.keys()):
             dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                           'channelID': channel})
             datasourceID = dataSource['_id']
@@ -1263,11 +1287,13 @@ def message_actions():
             target = float(submission['budget'])
             db.find_and_modify(collection='notification', query={'_id': module['_id']},
                                target=target,
+                               period = submission['period'],
                                status='1'
                                )
             module['viewId'] = viewId
             module['channel'] = channel
             module['target'] = target
+            module['period'] = submission['period']
             costprediction(slack_token, module, dataSource)
         elif ('threshold' in submission.keys()):
             dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
@@ -1287,8 +1313,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-                #                module['period'] = [int(submission['period'])]
-                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
+                module['period'] = [submission['period']]
+#                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1308,8 +1334,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-                #                module['period'] = [submission['period']]
-                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
+                module['period'] = [submission['period']]
+#                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1339,7 +1365,7 @@ def message_actions():
                     {'$push': {'metric': submission['metric'],
                                'threshold': submission['threshold'],
                                'filterExpression': filterExpression,
-                               'period': 1}}
+                               'period': int(submission['period'])}}
                 )
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
@@ -1387,6 +1413,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     db.insert('notification', data={
         'type': 'costprediction',
         'email': email,
+        'period': 30,
         'target': 100,
         'scheduleType': 'daily',
         'frequency': 0,
@@ -1398,6 +1425,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     db.insert('notification', data={
         'type': 'performancegoaltracking',
         'email': email,
+        'period': 30,
         'metric': [],
         'target': [],
         'filterExpression': [],
