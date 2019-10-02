@@ -589,7 +589,11 @@ def costprediction(slack_token, task, dataSource):
     predtext = babel.numbers.format_currency(decimal.Decimal(str(prediction)), task['currency'])
     print("Target:", targettext)
     print("Prediction:", predtext)
-
+    
+    actions += [{"name": "showgraph",
+                 "text": "Show Graph",
+                 "type": "button",
+                  "value": f"{imageId}"}]
     if (prediction > target):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
@@ -600,10 +604,7 @@ def costprediction(slack_token, task, dataSource):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
 #                "image_url": imageurl.format(imageId),
-                "actions": actions.append({"name": "showgraph",
-                                             "text": "Show Graph",
-                                             "type": "button",
-                                              "value": f"{imageId}"})
+                "actions": actions
             }]
         else:
             attachments += [{
@@ -613,10 +614,7 @@ def costprediction(slack_token, task, dataSource):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
 #                "image_url": imageurl.format(imageId),
-                "actions": actions.append({"name": "showgraph",
-                                             "text": "Show Graph",
-                                             "type": "button",
-                                              "value": f"{imageId}"})
+                "actions": actions
             }]
     else:
         # Prediction is less than target
@@ -628,10 +626,7 @@ def costprediction(slack_token, task, dataSource):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
 #                "image_url": imageurl.format(imageId),
-                "actions": actions.append({"name": "showgraph",
-                                             "text": "Show Graph",
-                                             "type": "button",
-                                              "value": f"{imageId}"})
+                "actions": actions
             }]
         else:
             attachments += [{
@@ -641,10 +636,7 @@ def costprediction(slack_token, task, dataSource):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
 #                "image_url": imageurl.format(imageId),
-                "actions": actions.append({"name": "showgraph",
-                                             "text": "Show Graph",
-                                             "type": "button",
-                                              "value": f"{imageId}"})
+                "actions": actions
             }]
 
     slack_client = WebClient(token=slack_token)
