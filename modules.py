@@ -562,7 +562,8 @@ def costprediction(slack_token, task, dataSource):
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     'filtersExpression': 'ga:sourceMedium==google / cpc',
-                    'dimensions': [{'name': 'ga:day'}]
+                    'dimensions': [{'name': 'ga:day'}],
+                    'includeEmptyRows': True
                 }]}).execute()
 
 #    subquery1 = float(results['reports'][0]['data']['totals'][0]['values'][0])
