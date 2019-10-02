@@ -1085,7 +1085,7 @@ def message_actions():
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
             attachments = message_action['original_message']['attachments']
-            if not attachments[int(attachment_id) - 1]['image_url']:
+            if not 'image_url' in attachments[int(attachment_id) - 1]:
                 attachments[int(attachment_id) - 1]['image_url'] = imageurl.format(imageId)
                 attachments[int(attachment_id) - 1]['image_url']['actions'][1]['text'] = "Close Graph"
             else:
