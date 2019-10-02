@@ -557,8 +557,9 @@ def costprediction(slack_token, task, dataSource):
             'reportRequests': [
                 {
                     'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
-                                   {'startDate': start_date_2, 'endDate': end_date_2}],
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1},
+#                                   {'startDate': start_date_2, 'endDate': end_date_2}],
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     "dimensionFilterClauses": [
                         {
@@ -567,13 +568,13 @@ def costprediction(slack_token, task, dataSource):
                     'dimensions': [{'name': 'ga:day'}]
                 }]}).execute()
 
-    subquery1 = float(results['reports'][0]['data']['totals'][0]['values'][0])
-    subquery2 = float(results['reports'][0]['data']['totals'][1]['values'][0])
-    prediction = subquery2 * days + subquery1
-    targettext = babel.numbers.format_currency(decimal.Decimal(str(target)), task['currency'])
-    predtext = babel.numbers.format_currency(decimal.Decimal(str(prediction)), task['currency'])
-    print("Target:", targettext)
-    print("Prediction:", predtext)
+#    subquery1 = float(results['reports'][0]['data']['totals'][0]['values'][0])
+#    subquery2 = float(results['reports'][0]['data']['totals'][1]['values'][0])
+#    prediction = subquery2 * days + subquery1
+#    targettext = babel.numbers.format_currency(decimal.Decimal(str(target)), task['currency'])
+#    predtext = babel.numbers.format_currency(decimal.Decimal(str(prediction)), task['currency'])
+#    print("Target:", targettext)
+#    print("Prediction:", predtext)
     yval = [float(row['metrics'][0]['values'][0]) for row in results['reports'][0]['data']['rows']]
     #        xval = list(range(1, today.day)) #It is applied for preventing graph dimension error
     xval = list(range(1, len(yval) + 1))
@@ -583,6 +584,13 @@ def costprediction(slack_token, task, dataSource):
     imageId = uuid.uuid4().hex
     plt.savefig(imagefile.format(imageId))
     plt.clf()
+    subquery1 = float(results['reports'][0]['data']['totals'][0]['values'][0])
+    subquery2 = yval[-1]
+    prediction = subquery2 * days + subquery1
+    targettext = babel.numbers.format_currency(decimal.Decimal(str(target)), task['currency'])
+    predtext = babel.numbers.format_currency(decimal.Decimal(str(prediction)), task['currency'])
+    print("Target:", targettext)
+    print("Prediction:", predtext)
 
     if (prediction > target):
         # Prediction is more than target
