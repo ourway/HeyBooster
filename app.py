@@ -1002,7 +1002,23 @@ def message_actions():
                         "callback_id": "notification_form",
                         "elements": [
                             {
-                                "label": "Monthly Adwords Budget",
+                                "label": "Interval Type",
+                                "type": "select",
+                                "name": "period",
+                                "placeholder": "Select a interval type",
+                                "options": [
+                                    {
+                                        "label": "Weekly",
+                                        "value": 7
+                                    },
+                                    {
+                                        "label": "Monthly",
+                                        "value": 30
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Adwords Budget",
                                 "name": "budget",
                                 "type": "text",
                                 "subtype": "number",
@@ -1046,11 +1062,12 @@ def message_actions():
             metricindex = module['metric'].index(metric)
             db.DATABASE['notification'].update_one({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
                                                                                    "target." + str(metricindex): 1,
-                                                                                   "filterExpression." + str(
-                                                                                       metricindex): 1}})
+                                                                                   "filterExpression." + str(metricindex): 1,
+                                                                                   "period." + str(metricindex): 1}})
             db.DATABASE['notification'].update_one({"_id": module["_id"]}, {"$pull": {"metric": None,
                                                                                   "target": None,
-                                                                                  "filterExpression": None}})
+                                                                                  "filterExpression": None,
+                                                                                  "period": None}})
             slack_client.chat_update(channel=channel,
                                      ts=message_ts,
                                      text="",

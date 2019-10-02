@@ -518,15 +518,7 @@ def costprediction(slack_token, task, dataSource):
     metrics = [
         {'expression': 'ga:adCost'},
     ]
-
-    filters = [
-        {
-            "dimensionName": "ga:sourceMedium",
-            "operator": "EXACT",
-            "expressions": ["google / cpc"]
-        }
-    ]
-
+    
     tol = 0.10
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -534,23 +526,28 @@ def costprediction(slack_token, task, dataSource):
     channel = task['channel']
 
     target = float(str(task['target']).replace(',','.'))
-
+    period = int(task['period'])
     today = datetime.today()
-    start_date = datetime(today.year, today.month, 1)
-    try:
-        end_date = datetime(today.year, today.month + 1, 1)
-    except:
-        end_date = datetime(today.year + 1, 1, 1)
-
-    days = (end_date - today + timedelta(days=1)).days
-
-    start_date_1 = dtimetostrf(start_date)
     
-    yesterday = today - timedelta(days=1)
-    end_date_1 = dtimetostrf(yesterday)
 
-    start_date_2 = dtimetostrf(yesterday)
-    end_date_2 = dtimetostrf(yesterday)
+    if period == 7:
+        start_date_1 = dtimetostrf((today - timedelta(days=today.weekday())))  # Convert it to string format
+        end_date_1 = dtimetostrf((today - timedelta(days=1)))
+        days = 7 - today.weekday()
+        str_period = "weekly"
+    elif period == 30:
+        start_date = datetime(today.year, today.month, 1)
+        try:
+            end_date = datetime(today.year, today.month + 1, 1)
+        except:
+            end_date = datetime(today.year + 1, 1, 1)
+        days = (end_date - today + timedelta(days=1)).days
+        start_date_1 = dtimetostrf(start_date)
+        end_date_1 = dtimetostrf((today - timedelta(days=1)))
+        str_period = "monthly"
+            
+            
+    
 
     results = service.reports().batchGet(
         body={
