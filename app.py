@@ -1225,7 +1225,7 @@ def message_actions():
             for module in modules:
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
-            return make_response("Time of Day: {}:{}".format(selectedhour,selectedminute), 200)
+            return make_response("Time of Day: {}:{}".format(selectedhour,selectedminute))
         elif ('metric' in submission.keys() and 'target' in submission.keys()):
             dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                           'channelID': channel})
