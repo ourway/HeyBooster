@@ -1226,7 +1226,7 @@ def message_actions():
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
             slack_client.chat_postMessage(channel=channel,
-                                                      text=f"Time of Day is set to {selectedhour.zfill(2)}:{selectedminute}  ")
+                                                      text=f"Time of Day is set to {str(selectedhour).zfill(2)}:{selectedminute}  ")
         elif ('metric' in submission.keys() and 'target' in submission.keys()):
             dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                           'channelID': channel})
