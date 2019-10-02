@@ -46,8 +46,8 @@ def performancechangetracking(slack_token, task, dataSource):
     viewId = task['viewId']
     channel = task['channel']
 
-    period = task['period']
-
+#    period = task['period']
+    period = 1
     tol = 0.10
 
     filters = [
@@ -208,7 +208,8 @@ def performancechangealert(slack_token, task, dataSource):
         metricnames += [metricdict[task['metric'][i]]]
         thresholds += [float(str(task['threshold'][i]).replace(',','.'))/100]
         filters += [task['filterExpression'][i]]
-        periods += [int(task['period'][i])]
+#        periods += [int(task['period'][i])]
+        periods += [1]
 
     email = task['email']
     viewId = task['viewId']

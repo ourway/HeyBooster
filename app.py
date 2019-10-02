@@ -1330,7 +1330,7 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-                module['period'] = [submission['period']]
+#                module['period'] = [submission['period']]
 #                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
@@ -1351,7 +1351,7 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-                module['period'] = [submission['period']]
+#                module['period'] = [submission['period']]
 #                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
@@ -1382,7 +1382,7 @@ def message_actions():
                     {'$push': {'metric': submission['metric'],
                                'threshold': submission['threshold'],
                                'filterExpression': filterExpression,
-                               'period': int(submission['period'])}}
+                               'period': 1}}
                 )
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
@@ -1442,7 +1442,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     db.insert('notification', data={
         'type': 'performancegoaltracking',
         'email': email,
-        'period': 30,
+        'period': [],
         'metric': [],
         'target': [],
         'filterExpression': [],
