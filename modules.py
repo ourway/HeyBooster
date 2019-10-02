@@ -561,10 +561,7 @@ def costprediction(slack_token, task, dataSource):
 #                                   {'startDate': start_date_2, 'endDate': end_date_2}],
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    "dimensionFilterClauses": [
-                        {
-                            "filters": filters
-                        }],
+                    'filtersExpression': 'ga:sourceMedium==google / cpc',
                     'dimensions': [{'name': 'ga:day'}]
                 }]}).execute()
 
