@@ -564,7 +564,7 @@ def costprediction(slack_token, task, dataSource):
                         {
                             "filters": filters
                         }],
-                    'dimension': [{'name': 'ga:day'}]
+                    'dimensions': [{'name': 'ga:day'}]
                 }]}).execute()
 
     subquery1 = float(results['reports'][0]['data']['totals'][0]['values'][0])
