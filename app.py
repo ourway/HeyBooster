@@ -18,6 +18,8 @@ import requests
 import time
 from modules import performancegoaltracking, costprediction, performancechangealert
 from bson.objectid import ObjectId
+imageurl = "https://app.heybooster.ai/images/{}.png"
+
 
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
@@ -1078,6 +1080,32 @@ def message_actions():
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
+        elif message_action['actions'][-1]['name']=="showgraph":
+            imageId = message_action['actions'][-1]['value']
+            message_ts = message_action['message_ts']
+            attachment_id = message_action['attachment_id']
+            attachments = message_action['original_message']['attachments']
+            if not attachments[int(attachment_id) - 1]['image_url']:
+                attachments[int(attachment_id) - 1]['image_url'] = imageurl.format(imageId)
+                attachments[int(attachment_id) - 1]['image_url']['actions'][1]['text'] = "Close Graph"
+            else:
+                del attachments[int(attachment_id) - 1]['image_url']
+                attachments[int(attachment_id) - 1]['image_url']['actions'][1]['text'] = "Show Graph"
+            
+            for att in attachments:
+                for act in att["actions"]:
+                    del act["id"]
+                    del act["style"]
+                del att["id"]
+                del att["fallback"]
+                if (not "text" in att.keys()):
+                    att["text"] = ""
+                    
+            slack_client.chat_update(channel=channel,
+                                     ts=message_ts,
+                                     text="",
+                                     attachments=attachments)
+            
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
