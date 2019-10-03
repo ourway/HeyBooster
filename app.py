@@ -18,6 +18,9 @@ import requests
 import time
 from modules import performancegoaltracking, costprediction, performancechangealert
 from bson.objectid import ObjectId
+
+from analyticsAudit import adwordsAccountConnection
+
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
 
@@ -1254,6 +1257,7 @@ def message_actions():
                 module['period'] = [submission['period']]
                 try:
                     performancegoaltracking(slack_token, module, dataSource)
+                    adwordsAccountConnection(slack_token, module, dataSource)
                 except Exception as ex:
                     if "Selected dimensions and metrics cannot be queried together" in str(ex):
                         slack_client.chat_postMessage(channel=channel,
@@ -1320,6 +1324,7 @@ def message_actions():
             module['target'] = target
             module['period'] = submission['period']
             costprediction(slack_token, module, dataSource)
+
         elif ('threshold' in submission.keys()):
             dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                           'channelID': channel})

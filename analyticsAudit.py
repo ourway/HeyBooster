@@ -58,9 +58,6 @@ def adwordsAccountConnection(slack_token, task, dataSource):
                     }]}).execute()
 
     result = int(results['reports'][0]['data']['totals'][0]['values'][0])
-    print('************************')
-    print(result, type(result))
-    print('************************')
 
     if result < tol:
         attachments += [{
