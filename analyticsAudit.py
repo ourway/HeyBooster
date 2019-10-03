@@ -54,10 +54,11 @@ def adwordsAccountConnection(slack_token, task, dataSource):
                         'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                         'metrics': metrics,
                         'filtersExpression': 'ga:sourceMedium=~google / cpc',
-                        'dimensions': [{'name': 'ga:day'}],
                         'includeEmptyRows': True
                     }]}).execute()
 
+    print(results)
+    
     if results < tol:
         attachments += [{
             "text": f"Google Ads Account and Google Analytics don’t link them, to track properly you need to connect your account.",
