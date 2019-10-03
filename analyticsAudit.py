@@ -7,61 +7,112 @@ def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
 
-def adwordsAccountConnection(slack_token, task, dataSource):
-    #    Performance Changes Tracking
-    task['channel'] = dataSource['channelID']
-    task['viewId'] = dataSource['viewID']
-    text = "*Adwords Account Connection*"
+def analyticsAudit(slack_token, dataSource):
+    channel = dataSource['channelID']
+    
+    attachments = []
+    attachments += bounceRateTracking(slack_token, dataSource)
+    attachments += notSetLandingPage(slack_token, dataSource)
+    attachments += adwordsAccountConnection(slack_token, dataSource)
+    
+    if(len(attachments)):
+        slack_client = WebClient(token=slack_token)
+        resp = slack_client.chat_postMessage(channel=channel,
+                                             attachments=attachments)
+        return resp['ts']
+
+
+def bounceRateTracking(slack_token, dataSource):
+#    Performance Changes Tracking
+    text = "*Bounce Rate Tracking*"
     attachments = []
 
-    metrics = [{
-        'expression': 'ga:adClicks'
-    }]
-
-    metricnames = [
-        'Adwords Account Connection'
-    ]
-
-    email = task['email']
-    service = google_analytics.build_reporting_api_v4_woutSession(email)
-    viewId = task['viewId']
-    channel = task['channel']
-
-    #    period = task['period']
-    period = 7
-    tol = 20
-
-    filters = [
-        {
-            "dimensionName": "ga:sourceMedium",
-            "operator": "CONTAINS",
-            "expressions": ["google / cpc"]
-        }
-    ]
-
+    metrics = [{'expression': 'ga:bounceRate'}
+               ]
+    
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+    
     today = datetime.today()
-
-    if period == 7:
-        start_date_1 = dtimetostrf((today - timedelta(days=today.weekday())))  # Convert it to string format
-        end_date_1 = dtimetostrf((today - timedelta(days=1)))
-        days = 7 - today.weekday()
-
-        results = service.reports().batchGet(
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+    
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
             body={
                 'reportRequests': [
                     {
                         'viewId': viewId,
                         'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                         'metrics': metrics,
-                        'filtersExpression': 'ga:sourceMedium=~google / cpc',
+                        'filtersExpression': "ga:bounceRate>65,ga:bounceRate<30",
                         'includeEmptyRows': True
                     }]}).execute()
-
-    result = int(results['reports'][0]['data']['totals'][0]['values'][0])
-
-    if result < tol:
+    
+    bounceRate = float(results['reports'][0]['data']['totals'][0]['values'][0])
+    
+    if bounceRate > 65:
         attachments += [{
-            "text": f"Google Ads Account and Google Analytics don’t link them, to track properly you need to connect your account.",
+            "text": "Bounce rate is more than normal level (avg = %40-%65) , You may need to use adjusted bounce rate to see the real performance of your landing page.",
+            "color": "danger",
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    elif bounceRate < 30:
+        attachments += [{
+            "text": "Bounce rate is less than normal level (avg = %40-%65) , You may need to check your event which affected the healthy measurement of bounce rate.",
+            "color": "danger",
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "Well done, nothing to worry!",
+            "color": "good",
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+def notSetLandingPage(slack_token, dataSource):
+#    Performance Changes Tracking
+    text = "*Not Set Landing Page Tracking*"
+    attachments = []
+
+    metrics = [{'expression': 'ga:pageviews'}
+               ]
+    
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+    
+    today = datetime.today()
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+    
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+            body={
+                'reportRequests': [
+                    {
+                        'viewId': viewId,
+                        'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                        'metrics': metrics,
+                        'filtersExpression': "ga:landingPagePath=@not set",
+                        'includeEmptyRows': True
+                    }]}).execute()
+    
+    
+    
+    pageviews = float(results['reports'][0]['data']['totals'][0]['values'][0])
+    
+    if pageviews > 0:
+        attachments += [{
+            "text": "(not set) landing pages are seen on your landing page report, it is indicated that there is an issue in your page tracking.",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
@@ -69,7 +120,62 @@ def adwordsAccountConnection(slack_token, task, dataSource):
         }]
     else:
         attachments += [{
-            "text": f"Well done, nothing to worry!",
+            "text": "Well done, nothing to worry!",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+    
+    
+def adwordsAccountConnection(slack_token, dataSource):
+    #    Performance Changes Tracking
+    text = "*Adwords Account Connection*"
+    attachments = []
+
+    metrics = [{
+        'expression': 'ga:adClicks'
+    }]
+    
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=1)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+    
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'filtersExpression': 'ga:sourceMedium=@google / cpc',
+                    'includeEmptyRows': True
+                }]}).execute()
+
+    result = int(results['reports'][0]['data']['totals'][0]['values'][0])
+
+    if result < 20:
+        attachments += [{
+            "text": "Google Ads Account and Google Analytics don’t link them, to track properly you need to connect your account.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "Well done, nothing to worry!",
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
@@ -78,9 +184,6 @@ def adwordsAccountConnection(slack_token, task, dataSource):
 
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
-        slack_client = WebClient(token=slack_token)
-        resp = slack_client.chat_postMessage(
-            channel=channel,
-            attachments=attachments)
-
-        return resp['ts']
+        return attachments
+    else:
+        return []
