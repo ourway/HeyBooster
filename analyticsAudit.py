@@ -57,14 +57,9 @@ def adwordsAccountConnection(slack_token, task, dataSource):
                         'includeEmptyRows': True
                     }]}).execute()
 
-    print('-----------------------')
-    print(results)
-    print('-----------------------')
-    print(type(results['reports'][0]['data']['totals'][0]['values'][0]))
-    print('-----------------------')
-    result = results['reports'][0]['data']['totals'][0]['values'][0]
+    result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
-    if int(result) < tol:
+    if result < tol:
         attachments += [{
             "text": f"Google Ads Account and Google Analytics don’t link them, to track properly you need to connect your account.",
             "color": "danger",
