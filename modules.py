@@ -13,6 +13,8 @@ import uuid
 import decimal
 import babel.numbers
 
+import analyticsAudit
+
 
 imagefile = "slackdb/images/{}.png"
 imageurl = "https://app.heybooster.ai/images/{}.png"
@@ -820,6 +822,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                     "attachment_type": "default",
                     "actions": actions}]
 
+    analyticsAudit.adwordsAccountConnection(slack_token, task, dataSource)
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(channel=channel,
                                          attachments=attachments)
