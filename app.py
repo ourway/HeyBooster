@@ -810,7 +810,10 @@ def message_actions():
                                         "label": "Event Label",
                                         "value": "ga:eventLabel",
                                     },
-
+                                    {
+                                        "label": "Channel Grouping",
+                                        "value": "ga:channelGrouping",
+                                    }
                                 ]
                             },
                             {
@@ -943,7 +946,10 @@ def message_actions():
                                         "label": "Event Label",
                                         "value": "ga:eventLabel",
                                     },
-
+                                    {
+                                        "label": "Channel Grouping",
+                                        "value": "ga:channelGrouping",
+                                    }
                                 ]
                             },
                             {
