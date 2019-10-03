@@ -288,7 +288,7 @@ def goalSettingActivity(slack_token, dataSource):
         return []
     
 def selfReferral(slack_token, dataSource):
-    text = "*Adwords Account Connection*"
+    text = "*Self Referral*"
     attachments = []
 
     metrics = [{
@@ -312,7 +312,11 @@ def selfReferral(slack_token, dataSource):
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:hostname'}],
-                    'sort': '-' + metrics[0]['expression']
+                    "orderBys": [
+                                {
+                                  "fieldName": metrics[0]['expression'],
+                                  "sortOrder": "DESCENDING"
+                                }]
                 }]}).execute()
 
     hostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
@@ -371,7 +375,7 @@ def customDimension(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
     
     
-    mservice = google_analytics.build_management_api_v4_woutSession(email)
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
     customDimensions  = mservice.management().customDimensions().list(
                                                   accountId=accountId,
                                                   webPropertyId=propertyId,
@@ -379,7 +383,8 @@ def customDimension(slack_token, dataSource):
     hitsdimensions = []
     for dimension in customDimensions.get('items', []):
         if dimension.get('scope') == 'HIT' and dimension.get('active'):
-            hitsdimensions += dimension.get('id')
+            hitsdimensions += [dimension.get('id')]
+            
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
     
     results = rservice.reports().batchGet(
@@ -394,10 +399,12 @@ def customDimension(slack_token, dataSource):
                     }]}).execute()
     
     hasHit = False
-    for row in results['reports'][0]['data']['rows']:
-        if int(row['metrics'][0]['values'][0]) != 0:
-            hasHit = True
-            break   
+    
+    if 'rows' in results['reports'][0]['data'].keys():
+        for row in results['reports'][0]['data']['rows']:
+            if int(row['metrics'][0]['values'][0]) != 0:
+                hasHit = True
+                break   
 
     if hasHit:
         attachments += [{
