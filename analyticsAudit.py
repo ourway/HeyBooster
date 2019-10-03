@@ -227,14 +227,6 @@ def sessionClickDiscrepancy(slack_token, dataSource):
             "callback_id": "notification_form",
             "attachment_type": "default",
         }]
-    else:
-        attachments += [{
-            "text": "Well done, nothing to worry!",
-            "color": "good",
-            "pretext": text,
-            "callback_id": "notification_form",
-            "attachment_type": "default",
-        }]
 
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
