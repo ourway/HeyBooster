@@ -822,8 +822,6 @@ def performancegoaltracking(slack_token, task, dataSource):
                     "attachment_type": "default",
                     "actions": actions}]
 
-    analyticsAudit.adwordsAccountConnection(slack_token, task, dataSource)
-
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(channel=channel,
                                          attachments=attachments)
@@ -842,6 +840,8 @@ def performancegoaltracking(slack_token, task, dataSource):
 #                                    "value": "change"
 #                                }]
 #                    }])
+    analyticsAudit.adwordsAccountConnection(slack_token, task, dataSource)
+
     return resp['ts']
 
 
