@@ -15,7 +15,7 @@ def analyticsAudit(slack_token, dataSource):
     attachments += notSetLandingPage(slack_token, dataSource)
     attachments += adwordsAccountConnection(slack_token, dataSource)
     attachments += sessionClickDiscrepancy(slack_token, dataSource)
-    
+
     if (len(attachments)):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
@@ -193,9 +193,9 @@ def sessionClickDiscrepancy(slack_token, dataSource):
     attachments = []
 
     metrics = [
-                {'expression': 'ga:sessions'},
-                {'expression': 'ga:sessions'}
-            ]
+        {'expression': 'ga:sessions'},
+        {'expression': 'ga:sessions'}
+    ]
 
     email = dataSource['email']
     viewId = dataSource['viewID']
@@ -223,6 +223,51 @@ def sessionClickDiscrepancy(slack_token, dataSource):
     if adclicks_result > 0 and (adclicks_result > sessions_result * 1.05 or adclicks_result < sessions_result * 1.05):
         attachments += [{
             "text": "There is session click discrepancy, you don’t measure your adwords performans properly.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def goalSettingActivity(slack_token, dataSource):
+    text = "*Goal Setting Activity*"
+    attachments = []
+
+    metrics = [{
+        'expression': 'ga:goalCompletionsAll'
+    }]
+
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=1)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'includeEmptyRows': True
+                }]}).execute()
+
+    result = int(results['reports'][0]['data']['totals'][0]['values'][0])
+
+    if result < 20:
+        attachments += [{
+            "text": "Goals are not set up yet, you should configure your macro and micro goals.",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
