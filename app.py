@@ -19,7 +19,7 @@ import time
 from modules import performancegoaltracking, costprediction, performancechangealert
 from bson.objectid import ObjectId
 
-from analyticsAudit import adwordsAccountConnection
+#from analyticsAudit import adwordsAccountConnection
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
