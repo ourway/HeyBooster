@@ -14,7 +14,8 @@ def analyticsAudit(slack_token, dataSource):
     attachments += bounceRateTracking(slack_token, dataSource)
     attachments += notSetLandingPage(slack_token, dataSource)
     attachments += adwordsAccountConnection(slack_token, dataSource)
-
+    attachments += sessionClickDiscrepancy(slack_token, dataSource)
+    
     if (len(attachments)):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
