@@ -23,6 +23,8 @@ def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
 
+analyticsAudit.adwordsAccountConnection()
+
 def performancechangetracking(slack_token, task, dataSource):
     #    Performance Changes Tracking
     task['channel'] = dataSource['channelID']
@@ -840,7 +842,6 @@ def performancegoaltracking(slack_token, task, dataSource):
 #                                    "value": "change"
 #                                }]
 #                    }])
-    analyticsAudit.adwordsAccountConnection(slack_token, task, dataSource)
 
     return resp['ts']
 
