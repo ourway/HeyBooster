@@ -120,7 +120,7 @@ def notSetLandingPage(slack_token, dataSource):
     else:
         attachments += [{
             "text": "Well done, nothing to worry!",
-            "color": "danger",
+            "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
@@ -191,10 +191,10 @@ def sessionClickDiscrepancy(slack_token, dataSource):
     text = "*Session Click Discrepancy*"
     attachments = []
 
-    metrics = [{
-        'expression': 'ga:sessions',
-        'expression': 'ga:adClicks'
-    }]
+    metrics = [
+                {'expression': 'ga:sessions'},
+                {'expression': 'ga:sessions'}
+            ]
 
     email = dataSource['email']
     viewId = dataSource['viewID']
@@ -217,9 +217,9 @@ def sessionClickDiscrepancy(slack_token, dataSource):
                 }]}).execute()
 
     sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
-    adcliks_result = int(results['reports'][0]['data']['totals'][0]['values'][1])
+    adclicks_result = int(results['reports'][0]['data']['totals'][0]['values'][1])
 
-    if adcliks_result > 0 and adcliks_result > sessions_result * 1.05 or adcliks_result < sessions_result * 1.05:
+    if adclicks_result > 0 and (adclicks_result > sessions_result * 1.05 or adclicks_result < sessions_result * 1.05):
         attachments += [{
             "text": "There is session click discrepancy, you don’t measure your adwords performans properly.",
             "color": "danger",
