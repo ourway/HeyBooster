@@ -13,7 +13,7 @@ import uuid
 import decimal
 import babel.numbers
 
-import analyticsAudit
+from analyticsAudit import adwordsAccountConnection
 
 
 imagefile = "slackdb/images/{}.png"
@@ -643,6 +643,7 @@ def costprediction(slack_token, task, dataSource):
     resp = slack_client.chat_postMessage(
         channel=channel,
         attachments=attachments)
+    adwordsAccountConnection(slack_token, task, dataSource)
     return resp['ts']
 
 

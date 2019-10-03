@@ -1257,7 +1257,6 @@ def message_actions():
                 module['period'] = [submission['period']]
                 try:
                     performancegoaltracking(slack_token, module, dataSource)
-                    adwordsAccountConnection(slack_token, module, dataSource)
                 except Exception as ex:
                     if "Selected dimensions and metrics cannot be queried together" in str(ex):
                         slack_client.chat_postMessage(channel=channel,
