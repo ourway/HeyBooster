@@ -20,7 +20,7 @@ def analyticsAudit(slack_token, dataSource):
     attachments += adwordsAccountConnection(slack_token, dataSource)
     attachments += sessionClickDiscrepancy(slack_token, dataSource)
     attachments += goalSettingActivity(slack_token, dataSource)
-    attachments += selfReferral(slack_token, dataSource)
+#    attachments += selfReferral(slack_token, dataSource)
     attachments += customDimension(slack_token, dataSource)
     
     if (len(attachments)):
