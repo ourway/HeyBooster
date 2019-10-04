@@ -19,7 +19,7 @@ import time
 from modules import performancegoaltracking, costprediction, performancechangealert
 from bson.objectid import ObjectId
 
-#from analyticsAudit import adwordsAccountConnection
+from analyticsAudit import analyticsAudit
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
@@ -1036,6 +1036,10 @@ def message_actions():
                         ]
                     }
                 )
+        elif (message_action['actions'][-1]['value'] == 'analyticsAudit'):
+            if True:
+                analyticsAudit()
+
         elif ('ignoreone' in message_action['actions'][-1]['value']):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
             message_ts = message_action['message_ts']
@@ -1513,12 +1517,18 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
                         "type": "button",
                         "value": "setmybudget"
                     },
-                    #                    {
-                    #                        "name": "setmyalert",
-                    #                        "text": "Set My Alert",
-                    #                        "type": "button",
-                    #                        "value": "setmyalert"
-                    #                    },
+                    {
+                        "name": "setmyalert",
+                        "text": "Set My Alert",
+                        "type": "button",
+                        "value": "setmyalert"
+                    },
+                    {
+                        "name": "analyticsAudit",
+                        "text": "Analytics Audit",
+                        "type": "button",
+                        "value": "analyticsAudit"
+                    },
                 ]
             }]}
     requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
