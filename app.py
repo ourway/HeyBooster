@@ -1475,20 +1475,20 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'lastRunDate': '',
         'datasourceID': dataSourceID
     })
-    #    db.insert('notification', data={
-    #        'type': 'performancechangealert',
-    #        'email': email,
-    #        'metric': [],
-    #        'threshold': [],
-    #        'filterExpression': [],
-    #        'period': [],
-    #        'scheduleType': 'daily',
-    #        'frequency': 0,
-    #        'timeofDay': "%s.00" % (default_time),
-    #        'status': '0',
-    #        'lastRunDate': '',
-    #        'datasourceID': dataSourceID
-    #    })
+    db.insert('notification', data={
+        'type': 'performancechangealert',
+        'email': email,
+        'metric': [],
+        'threshold': [],
+        'filterExpression': [],
+        'period': [],
+        'scheduleType': 'daily',
+        'frequency': 0,
+        'timeofDay': "%s.00" % (default_time),
+        'status': '0',
+        'lastRunDate': '',
+        'datasourceID': dataSourceID
+    })
     # When the slack connection is completed send notification user to set time
     headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
     data = {
