@@ -23,9 +23,11 @@ def analyticsAudit(slack_token, dataSource):
     attachments += notSetLandingPage(slack_token, dataSource)
     attachments += adwordsAccountConnection(slack_token, dataSource)
     attachments += sessionClickDiscrepancy(slack_token, dataSource)
-    attachments += goalSettingActivity(slack_token, dataSource)
     attachments += selfReferral(slack_token, dataSource)
-#    attachments += customDimension(slack_token, dataSource)
+    attachments += paymentReferral(slack_token, dataSource)
+    attachments += goalSettingActivity(slack_token, dataSource)
+    attachments += botSpamExcluding(slack_token, dataSource)
+    attachments += customDimension(slack_token, dataSource)
     attachments += siteSearchTracking(slack_token, dataSource)
 
     if (len(attachments)):
@@ -160,7 +162,7 @@ def adwordsAccountConnection(slack_token, dataSource):
 
     today = datetime.today()
 
-    start_date_1 = dtimetostrf((today - timedelta(days=1)))  # Convert it to string format
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -215,7 +217,7 @@ def sessionClickDiscrepancy(slack_token, dataSource):
 
     today = datetime.today()
 
-    start_date_1 = dtimetostrf((today - timedelta(days=1)))  # Convert it to string format
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -262,7 +264,7 @@ def goalSettingActivity(slack_token, dataSource):
 
     today = datetime.today()
 
-    start_date_1 = dtimetostrf((today - timedelta(days=1)))  # Convert it to string format
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -307,7 +309,7 @@ def selfReferral(slack_token, dataSource):
 
     today = datetime.today()
 
-    start_date_1 = dtimetostrf((today - timedelta(days=1)))  # Convert it to string format
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -362,9 +364,106 @@ def selfReferral(slack_token, dataSource):
     else:
         return []
 
+def paymentReferral(slack_token, dataSource):
+    text = "*Payment Referral*"
+    attachments = []
 
+    metrics = [{'expression': 'ga:newUsers'},
+               {'expression': 'ga:sessions'},
+               {'expression': 'ga:transactionsPerSession'}
+            ]
+
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'filtersExpression': 'ga:medium==referral',
+                    'includeEmptyRows': True
+                }]}).execute()
+    
+    newUsers = int(results['reports'][0]['data']['totals'][0]['values'][0])
+    sessions = int(results['reports'][0]['data']['totals'][0]['values'][1])
+    transactionsPerSession = float(results['reports'][0]['data']['totals'][0]['values'][2])
+
+    if newUsers < sessions*0.001 and transactionsPerSession  > 0.20:
+        attachments += [{
+            "text": "You got traffic from payment referral gateway, it causes to lose the original traffic sources which brings you transaction.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "No worries, you had good job, but don’t forget to track your payment referral if any payment method is added.",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def botSpamExcluding(slack_token, dataSource):
+    text = "*Bot & Spam Excluding*"
+    
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    viewId = dataSource['viewID']
+
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    profile = mservice.management().profiles().get(accountId=accountId,
+                                                          webPropertyId=propertyId,
+                                                          profileId=viewId
+                                                          ).execute()
+    botFilteringEnabled = profile.get('botFilteringEnabled')
+    
+    if botFilteringEnabled:
+        attachments += [{
+            "text": "Well done, you already switch on bot filtering feature of google analytics.",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "You need to switch on bot filtering feature on google analytics to get rid of traffic from bots, spiders and computer programs",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+    
+    
 def customDimension(slack_token, dataSource):
-    #    Performance Changes Tracking
+#    Performance Changes Tracking
     text = "*Custom Dimension*"
     attachments = []
 
@@ -385,31 +484,34 @@ def customDimension(slack_token, dataSource):
         accountId=accountId,
         webPropertyId=propertyId,
     ).execute()
+    
     hitsdimensions = []
     for dimension in customDimensions.get('items', []):
         if dimension.get('scope') == 'HIT' and dimension.get('active'):
             hitsdimensions += [dimension.get('id')]
 
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
+    
+    for i in range(len(hitsdimensions)//9 + 1):
+        results = rservice.reports().batchGet(
+            body={
+                'reportRequests': [
+                    {
+                        'viewId': viewId,
+                        'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                        'metrics': metrics,
+                        'dimensions': [{'name': dimId} for dimId in hitsdimensions[i:i+9]],
+                        'filtersExpression': "ga:hits>0"
+                    }]}).execute()
 
-    results = rservice.reports().batchGet(
-        body={
-            'reportRequests': [
-                {
-                    'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                    'metrics': metrics,
-                    'dimensions': [{'name': dimId} for dimId in hitsdimensions],
-                    'filtersExpression': "ga:hits>0"
-                }]}).execute()
-
-    hasHit = False
-
-    if 'rows' in results['reports'][0]['data'].keys():
-        for row in results['reports'][0]['data']['rows']:
-            if int(row['metrics'][0]['values'][0]) != 0:
-                hasHit = True
-                break
+        hasHit = False
+        if 'rows' in results['reports'][0]['data'].keys():
+            for row in results['reports'][0]['data']['rows']:
+                if int(row['metrics'][0]['values'][0]) != 0:
+                    hasHit = True
+                    break
+        if(hasHit):
+            break
 
     if hasHit:
         attachments += [{
@@ -439,16 +541,15 @@ def siteSearchTracking(slack_token, dataSource):
     text = "*Site Search Tracking*"
     attachments = []
 
-    metrics = [{
-        'expression': 'ga:sessions'
-    }]
+    metrics = [{'expression': 'ga:sessions'}
+            ]
 
     email = dataSource['email']
     viewId = dataSource['viewID']
 
     today = datetime.today()
 
-    start_date_1 = dtimetostrf((today - timedelta(days=1)))  # Convert it to string format
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -459,12 +560,11 @@ def siteSearchTracking(slack_token, dataSource):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'dimensions': [{'name': 'ga:searchKeyword'}],
-                    'includeEmptyRows': True
+                    'dimensions': [{'name': 'ga:searchKeyword'}]
                 }]}).execute()
 
     if 'rows' in results['reports'][0]['data'].keys():
-        result = int(results['reports'][0]['data']['rows']['metrics']['values'])
+        result = results['reports'][0]['data']['rows']['metrics']['values'][0]
     else:
         result = 0
 
