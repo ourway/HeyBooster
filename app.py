@@ -1341,11 +1341,8 @@ def message_actions():
             viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancechangealert'})
-            print('***************Test1*****************')
             module_id = module['_id']
-            print('************************Test2************************')
-            print('****************', module_id, '************************')
-            
+
             if (submission['dimension'] != None and submission['operator'] != None and submission['expression'] != None):
                 filterExpression = submission['dimension'] + submission['operator'] + submission['expression']
             else:
