@@ -23,7 +23,6 @@ from analyticsAudit import analyticsAudit
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
-
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
 
@@ -77,13 +76,13 @@ def home():
                     slack_confirm = True
                 else:
                     slack_confirm = False
-                    
+
                 # Check if user has analytics connection    
                 if session['ga_accesstoken']:
                     analytics_confirm = True
                 else:
                     analytics_confirm = False
-                #Fill the boxes for the value of slack_confirm and analytics_confirm
+                # Fill the boxes for the value of slack_confirm and analytics_confirm
                 return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
         except:
             return redirect('/logout')
@@ -130,8 +129,9 @@ def change():
                 ]
             }
         )
-#    return make_response("Time of Day: ", 200)
+    #    return make_response("Time of Day: ", 200)
     return make_response("", 200)
+
 
 @app.route('/about')
 def about():
@@ -872,7 +872,7 @@ def message_actions():
                                         "value": 30
                                     }
                                 ]
-                            },                                    
+                            },
                             {
                                 "label": "Target",
                                 "type": "text",
@@ -1036,9 +1036,10 @@ def message_actions():
                         ]
                     }
                 )
-        elif (message_action['actions'][-1]['value'] == 'analyticsAudit'):
-            if True:
-                analyticsAudit(slack_token, datasources)
+        elif message_action['actions'][-1]['value'] == 'analyticsAudit':
+            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                          'channelID': channel})
+            analyticsAudit(slack_token, dataSource)
 
         elif ('ignoreone' in message_action['actions'][-1]['value']):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
@@ -1074,13 +1075,15 @@ def message_actions():
             module_id = module['_id']
             metricindex = module['metric'].index(metric)
             db.DATABASE['notification'].update_one({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
-                                                                                   "target." + str(metricindex): 1,
-                                                                                   "filterExpression." + str(metricindex): 1,
-                                                                                   "period." + str(metricindex): 1}})
+                                                                                       "target." + str(metricindex): 1,
+                                                                                       "filterExpression." + str(
+                                                                                           metricindex): 1,
+                                                                                       "period." + str(
+                                                                                           metricindex): 1}})
             db.DATABASE['notification'].update_one({"_id": module["_id"]}, {"$pull": {"metric": None,
-                                                                                  "target": None,
-                                                                                  "filterExpression": None,
-                                                                                  "period": None}})
+                                                                                      "target": None,
+                                                                                      "filterExpression": None,
+                                                                                      "period": None}})
             slack_client.chat_update(channel=channel,
                                      ts=message_ts,
                                      text="",
@@ -1119,18 +1122,21 @@ def message_actions():
             module_id = module['_id']
             metricindex = module['metric'].index(metric)
             db.DATABASE['notification'].update_one({"_id": module["_id"]}, {"$unset": {"metric." + str(metricindex): 1,
-                                                                                   "threshold." + str(metricindex): 1,
-                                                                                   "filterExpression." + str(metricindex): 1,
-                                                                                   "period." + str(metricindex): 1}})
+                                                                                       "threshold." + str(
+                                                                                           metricindex): 1,
+                                                                                       "filterExpression." + str(
+                                                                                           metricindex): 1,
+                                                                                       "period." + str(
+                                                                                           metricindex): 1}})
             db.DATABASE['notification'].update_one({"_id": module["_id"]}, {"$pull": {"metric": None,
-                                                                                  "threshold": None,
-                                                                                  "filterExpression": None,
-                                                                                  "period": None}})
+                                                                                      "threshold": None,
+                                                                                      "filterExpression": None,
+                                                                                      "period": None}})
             slack_client.chat_update(channel=channel,
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
-        elif message_action['actions'][-1]['name']=="showgraph":
+        elif message_action['actions'][-1]['name'] == "showgraph":
             imageId = message_action['actions'][-1]['value']
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
@@ -1138,14 +1144,14 @@ def message_actions():
             if not 'image_url' in attachments[int(attachment_id) - 1]:
                 attachments[int(attachment_id) - 1]['image_url'] = imageurl.format(imageId)
                 for index in range(len(attachments[int(attachment_id) - 1]['actions'])):
-                    if(attachments[int(attachment_id) - 1]['actions'][index]['name']=='showgraph'):
+                    if (attachments[int(attachment_id) - 1]['actions'][index]['name'] == 'showgraph'):
                         attachments[int(attachment_id) - 1]['actions'][index]['text'] = "Close Graph"
             else:
                 for index in range(len(attachments[int(attachment_id) - 1]['actions'])):
-                    if(attachments[int(attachment_id) - 1]['actions'][index]['name']=='showgraph'):
+                    if (attachments[int(attachment_id) - 1]['actions'][index]['name'] == 'showgraph'):
                         del attachments[int(attachment_id) - 1]['image_url']
                         attachments[int(attachment_id) - 1]['actions'][index]['text'] = "Show Graph"
-            
+
             for att in attachments:
                 for act in att["actions"]:
                     del act["id"]
@@ -1154,12 +1160,12 @@ def message_actions():
                 del att["fallback"]
                 if (not "text" in att.keys()):
                     att["text"] = ""
-                    
+
             slack_client.chat_update(channel=channel,
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
-            
+
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
@@ -1239,7 +1245,7 @@ def message_actions():
                 db.find_and_modify("notification", query={'_id': module['_id']},
                                    timeofDay="%s.%s" % (writtenhour, selectedminute))
             slack_client.chat_postMessage(channel=channel,
-                                                      text=f"Time of Day is set to {str(selectedhour).zfill(2)}:{selectedminute}  ")
+                                          text=f"Time of Day is set to {str(selectedhour).zfill(2)}:{selectedminute}  ")
         elif ('metric' in submission.keys() and 'target' in submission.keys()):
             dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
                                                           'channelID': channel})
@@ -1287,18 +1293,18 @@ def message_actions():
                                                       text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
-#                db.DATABASE['notification'].update(
-#                    {'_id': module_id},
-#                    {'$push': {'metric': submission['metric']}}
-#                )
-#                db.DATABASE['notification'].update(
-#                    {'_id': module_id},
-#                    {'$push': {'target': submission['target']}}
-#                )
-#                db.DATABASE['notification'].update(
-#                    {'_id': module_id},
-#                    {'$push': {'filterExpression': filterExpression}}
-#                )
+                #                db.DATABASE['notification'].update(
+                #                    {'_id': module_id},
+                #                    {'$push': {'metric': submission['metric']}}
+                #                )
+                #                db.DATABASE['notification'].update(
+                #                    {'_id': module_id},
+                #                    {'$push': {'target': submission['target']}}
+                #                )
+                #                db.DATABASE['notification'].update(
+                #                    {'_id': module_id},
+                #                    {'$push': {'filterExpression': filterExpression}}
+                #                )
                 db.DATABASE['notification'].update_one(
                     {'_id': module_id},
                     {'$push': {'metric': submission['metric'],
@@ -1319,7 +1325,7 @@ def message_actions():
             target = float(submission['budget'])
             db.find_and_modify(collection='notification', query={'_id': module['_id']},
                                target=target,
-                               period = submission['period'],
+                               period=submission['period'],
                                status='1'
                                )
             module['viewId'] = viewId
@@ -1346,8 +1352,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-#                module['period'] = [submission['period']]
-#                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
+                #                module['period'] = [submission['period']]
+                #                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1367,8 +1373,8 @@ def message_actions():
                 module['metric'] = [submission['metric']]
                 module['threshold'] = [submission['threshold']]
                 module['filterExpression'] = [filterExpression]
-#                module['period'] = [submission['period']]
-#                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
+                #                module['period'] = [submission['period']]
+                #                module['period'] = [1]  ## FOR TESTING, PERIOD NOT ADDED YET
                 try:
                     performancechangealert(slack_token, module, dataSource)
                 except Exception as ex:
@@ -1377,22 +1383,22 @@ def message_actions():
                                                       text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
-#                db.DATABASE['notification'].update(
-#                    {'_id': module_id},
-#                    {'$push': {'metric': submission['metric']}}
-#                )
-#                db.DATABASE['notification'].update(
-#                    {'_id': module_id},
-#                    {'$push': {'threshold': submission['threshold']}}
-#                )
-#                db.DATABASE['notification'].update(
-#                    {'_id': module_id},
-#                    {'$push': {'filterExpression': filterExpression}}
-#                )
-#                db.DATABASE['notification'].update(
-#                    {'_id': module_id},
-#                    {'$push': {'period': 1}}
-#                )
+                #                db.DATABASE['notification'].update(
+                #                    {'_id': module_id},
+                #                    {'$push': {'metric': submission['metric']}}
+                #                )
+                #                db.DATABASE['notification'].update(
+                #                    {'_id': module_id},
+                #                    {'$push': {'threshold': submission['threshold']}}
+                #                )
+                #                db.DATABASE['notification'].update(
+                #                    {'_id': module_id},
+                #                    {'$push': {'filterExpression': filterExpression}}
+                #                )
+                #                db.DATABASE['notification'].update(
+                #                    {'_id': module_id},
+                #                    {'$push': {'period': 1}}
+                #                )
                 db.DATABASE['notification'].update_one(
                     {'_id': module_id},
                     {'$push': {'metric': submission['metric'],
