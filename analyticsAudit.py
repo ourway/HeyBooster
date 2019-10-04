@@ -97,8 +97,9 @@ def notSetLandingPage(slack_token, dataSource):
     text = "*Not Set Landing Page Tracking*"
     attachments = []
 
-    metrics = [{'expression': 'ga:pageviews'}
-               ]
+    metrics = [{
+        'expression': 'ga:sessions'
+    }]
 
     email = dataSource['email']
     viewId = dataSource['viewID']
@@ -420,6 +421,63 @@ def customDimension(slack_token, dataSource):
     else:
         attachments += [{
             "text": "Custom dimensions are not set yet, you are missing the chance to use google analytics advance version effectively.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def siteSearchTracking(slack_token, dataSource):
+    text = "*Site Search Tracking*"
+    attachments = []
+
+    metrics = [{
+        'expression': 'ga:sessions'
+    }]
+
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=1)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': [{'name': 'ga:searchKeyword'}],
+                    'includeEmptyRows': True
+                }]}).execute()
+
+    if 'rows' in results['reports'][0]['data'].keys():
+        result = int(results['reports'][0]['data']['rows']['metrics']['values'])
+    else:
+        result = 0
+
+    if result > 0:
+        attachments += [{
+            "text": "Nothing to worry! You had a great job.",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "Do you wonder what user searching on your website? You can track site search data via google analytics.",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
