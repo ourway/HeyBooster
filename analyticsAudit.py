@@ -8,6 +8,9 @@ from slack import WebClient
 # - attachments are running in a row. This can be done using multithreading 
 #   and then sorting can be applied
 
+###ERROR##
+# - customDimension filter ga:hint>0
+
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
@@ -22,7 +25,7 @@ def analyticsAudit(slack_token, dataSource):
     attachments += sessionClickDiscrepancy(slack_token, dataSource)
     attachments += goalSettingActivity(slack_token, dataSource)
     attachments += selfReferral(slack_token, dataSource)
-    attachments += customDimension(slack_token, dataSource)
+#    attachments += customDimension(slack_token, dataSource)
 
     if (len(attachments)):
         slack_client = WebClient(token=slack_token)
