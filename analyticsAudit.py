@@ -324,15 +324,15 @@ def selfReferral(slack_token, dataSource):
     if 'rows' in results['reports'][0]['data'].keys():
         hostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
 
-    results = service.reports().batchGet(
-        body={
-            'reportRequests': [
-                {
-                    'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                    'metrics': metrics,
-                    'filtersExpression': f'ga:source=={hostname};ga:medium==referral'
-                }]}).execute()
+        results = service.reports().batchGet(
+            body={
+                'reportRequests': [
+                    {
+                        'viewId': viewId,
+                        'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                        'metrics': metrics,
+                        'filtersExpression': f'ga:source=={hostname};ga:medium==referral'
+                    }]}).execute()
 
     if 'rows' in results['reports'][0]['data'].keys():
         attachments += [{
