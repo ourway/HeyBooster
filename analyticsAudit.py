@@ -2,6 +2,7 @@ import google_analytics
 from datetime import datetime, timedelta
 from slack import WebClient
 
+
 ###TIME ISSUES##
 # - reporting and management service is created within each function.
 # - attachments are running in a row. This can be done using multithreading 
@@ -20,9 +21,9 @@ def analyticsAudit(slack_token, dataSource):
     attachments += adwordsAccountConnection(slack_token, dataSource)
     attachments += sessionClickDiscrepancy(slack_token, dataSource)
     attachments += goalSettingActivity(slack_token, dataSource)
-#    attachments += selfReferral(slack_token, dataSource)
+    attachments += selfReferral(slack_token, dataSource)
     attachments += customDimension(slack_token, dataSource)
-    
+
     if (len(attachments)):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
@@ -89,7 +90,7 @@ def bounceRateTracking(slack_token, dataSource):
 
 
 def notSetLandingPage(slack_token, dataSource):
-#    Performance Changes Tracking
+    #    Performance Changes Tracking
     text = "*Not Set Landing Page Tracking*"
     attachments = []
 
@@ -286,7 +287,8 @@ def goalSettingActivity(slack_token, dataSource):
         return attachments
     else:
         return []
-    
+
+
 def selfReferral(slack_token, dataSource):
     text = "*Self Referral*"
     attachments = []
@@ -313,14 +315,15 @@ def selfReferral(slack_token, dataSource):
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:hostname'}],
                     "orderBys": [
-                                {
-                                  "fieldName": metrics[0]['expression'],
-                                  "sortOrder": "DESCENDING"
-                                }]
+                        {
+                            "fieldName": metrics[0]['expression'],
+                            "sortOrder": "DESCENDING"
+                        }]
                 }]}).execute()
 
-    hostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
-    
+    if 'rows' in results['reports'][0]['data'].keys():
+        hostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
+
     results = service.reports().batchGet(
         body={
             'reportRequests': [
@@ -330,8 +333,6 @@ def selfReferral(slack_token, dataSource):
                     'metrics': metrics,
                     'filtersExpression': f'ga:source=={hostname};ga:medium==referral'
                 }]}).execute()
-    
-    
 
     if 'rows' in results['reports'][0]['data'].keys():
         attachments += [{
@@ -356,6 +357,7 @@ def selfReferral(slack_token, dataSource):
     else:
         return []
 
+
 def customDimension(slack_token, dataSource):
     #    Performance Changes Tracking
     text = "*Custom Dimension*"
@@ -368,43 +370,41 @@ def customDimension(slack_token, dataSource):
     accountId = dataSource['accountID']
     propertyId = dataSource['propertyID']
     viewId = dataSource['viewID']
-    
-    
+
     today = datetime.today()
     start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
-    
-    
+
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    customDimensions  = mservice.management().customDimensions().list(
-                                                  accountId=accountId,
-                                                  webPropertyId=propertyId,
-                                              ).execute()
+    customDimensions = mservice.management().customDimensions().list(
+        accountId=accountId,
+        webPropertyId=propertyId,
+    ).execute()
     hitsdimensions = []
     for dimension in customDimensions.get('items', []):
         if dimension.get('scope') == 'HIT' and dimension.get('active'):
             hitsdimensions += [dimension.get('id')]
-            
+
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-    
+
     results = rservice.reports().batchGet(
-            body={
-                'reportRequests': [
-                    {
-                        'viewId': viewId,
-                        'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                        'metrics': metrics,
-                        'dimensions': [{'name': dimId} for dimId in hitsdimensions],
-                        'filtersExpression': "ga:hits>0"
-                    }]}).execute()
-    
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': [{'name': dimId} for dimId in hitsdimensions],
+                    'filtersExpression': "ga:hits>0"
+                }]}).execute()
+
     hasHit = False
-    
+
     if 'rows' in results['reports'][0]['data'].keys():
         for row in results['reports'][0]['data']['rows']:
             if int(row['metrics'][0]['values'][0]) != 0:
                 hasHit = True
-                break   
+                break
 
     if hasHit:
         attachments += [{
