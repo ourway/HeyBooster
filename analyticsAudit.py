@@ -26,6 +26,7 @@ def analyticsAudit(slack_token, dataSource):
     attachments += goalSettingActivity(slack_token, dataSource)
     attachments += selfReferral(slack_token, dataSource)
 #    attachments += customDimension(slack_token, dataSource)
+    attachments += siteSearchTracking(slack_token, dataSource)
 
     if (len(attachments)):
         slack_client = WebClient(token=slack_token)
