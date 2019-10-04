@@ -1038,7 +1038,7 @@ def message_actions():
                 )
         elif (message_action['actions'][-1]['value'] == 'analyticsAudit'):
             if True:
-                analyticsAudit()
+                analyticsAudit(slack_token, datasources)
 
         elif ('ignoreone' in message_action['actions'][-1]['value']):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
