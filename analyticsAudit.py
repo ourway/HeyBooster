@@ -29,8 +29,9 @@ def analyticsAudit(slack_token, dataSource):
     attachments += botSpamExcluding(slack_token, dataSource)
     attachments += customDimension(slack_token, dataSource)
     attachments += siteSearchTracking(slack_token, dataSource)
+    attachments += gdprCompliant(slack_token, dataSource)
 
-    if (len(attachments)):
+    if len(attachments):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
                                              attachments=attachments)
@@ -364,6 +365,7 @@ def selfReferral(slack_token, dataSource):
     else:
         return []
 
+
 def paymentReferral(slack_token, dataSource):
     text = "*Payment Referral*"
     attachments = []
@@ -371,7 +373,7 @@ def paymentReferral(slack_token, dataSource):
     metrics = [{'expression': 'ga:newUsers'},
                {'expression': 'ga:sessions'},
                {'expression': 'ga:transactionsPerSession'}
-            ]
+               ]
 
     email = dataSource['email']
     viewId = dataSource['viewID']
@@ -392,12 +394,12 @@ def paymentReferral(slack_token, dataSource):
                     'filtersExpression': 'ga:medium==referral',
                     'includeEmptyRows': True
                 }]}).execute()
-    
+
     newUsers = int(results['reports'][0]['data']['totals'][0]['values'][0])
     sessions = int(results['reports'][0]['data']['totals'][0]['values'][1])
     transactionsPerSession = float(results['reports'][0]['data']['totals'][0]['values'][2])
 
-    if newUsers < sessions*0.001 and transactionsPerSession  > 0.20:
+    if newUsers < sessions * 0.001 and transactionsPerSession > 0.20:
         attachments += [{
             "text": "You got traffic from payment referral gateway, it causes to lose the original traffic sources which brings you transaction.",
             "color": "danger",
@@ -423,7 +425,7 @@ def paymentReferral(slack_token, dataSource):
 
 def botSpamExcluding(slack_token, dataSource):
     text = "*Bot & Spam Excluding*"
-    
+
     attachments = []
 
     email = dataSource['email']
@@ -433,11 +435,11 @@ def botSpamExcluding(slack_token, dataSource):
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
     profile = mservice.management().profiles().get(accountId=accountId,
-                                                          webPropertyId=propertyId,
-                                                          profileId=viewId
-                                                          ).execute()
+                                                   webPropertyId=propertyId,
+                                                   profileId=viewId
+                                                   ).execute()
     botFilteringEnabled = profile.get('botFilteringEnabled')
-    
+
     if botFilteringEnabled:
         attachments += [{
             "text": "Well done, you already switch on bot filtering feature of google analytics.",
@@ -460,10 +462,10 @@ def botSpamExcluding(slack_token, dataSource):
         return attachments
     else:
         return []
-    
-    
+
+
 def customDimension(slack_token, dataSource):
-#    Performance Changes Tracking
+    #    Performance Changes Tracking
     text = "*Custom Dimension*"
     attachments = []
 
@@ -484,15 +486,15 @@ def customDimension(slack_token, dataSource):
         accountId=accountId,
         webPropertyId=propertyId,
     ).execute()
-    
+
     hitsdimensions = []
     for dimension in customDimensions.get('items', []):
         if dimension.get('scope') == 'HIT' and dimension.get('active'):
             hitsdimensions += [dimension.get('id')]
 
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-    
-    for i in range(len(hitsdimensions)//9 + 1):
+
+    for i in range(len(hitsdimensions) // 9 + 1):
         results = rservice.reports().batchGet(
             body={
                 'reportRequests': [
@@ -500,7 +502,7 @@ def customDimension(slack_token, dataSource):
                         'viewId': viewId,
                         'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                         'metrics': metrics,
-                        'dimensions': [{'name': dimId} for dimId in hitsdimensions[i:i+9]],
+                        'dimensions': [{'name': dimId} for dimId in hitsdimensions[i:i + 9]],
                         'filtersExpression': "ga:hits>0"
                     }]}).execute()
 
@@ -510,7 +512,7 @@ def customDimension(slack_token, dataSource):
                 if int(row['metrics'][0]['values'][0]) != 0:
                     hasHit = True
                     break
-        if(hasHit):
+        if (hasHit):
             break
 
     if hasHit:
@@ -542,7 +544,7 @@ def siteSearchTracking(slack_token, dataSource):
     attachments = []
 
     metrics = [{'expression': 'ga:sessions'}
-            ]
+               ]
 
     email = dataSource['email']
     viewId = dataSource['viewID']
@@ -580,6 +582,58 @@ def siteSearchTracking(slack_token, dataSource):
         attachments += [{
             "text": "Do you wonder what user searching on your website? You can track site search data via google analytics.",
             "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def gdprCompliant(slack_token, dataSource):
+    text = "*GDPR Compliant*"
+    attachments = []
+
+    metrics = [{
+        'expression': 'ga:sessions'
+    }]
+
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': [{'name': 'ga:pagePath'}],
+                    'filtersExpression': "ga:pagePath=@'=email',ga:pagePath=@'@'"
+                }]}).execute()
+
+    if 'rows' in results['reports'][0]['data'].keys():
+        attachments += [{
+            "text": "Check your page paths, there is information which is not compatible with GDPR.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "Nothing to worry, there is no risky page path in terms of GDPR.",
+            "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
