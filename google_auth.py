@@ -173,24 +173,25 @@ def google_connectauth_redirect():
     
     # Obtain current analytics account email
     user = db.find_one('user', {'email': flask.session['email']})
-    resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-    if ('error' in resp.keys()):
-        data = [('client_id', CLIENT_ID.strip()),
-                ('client_secret', CLIENT_SECRET.strip()),
-                ('refresh_token', user['ga_refreshtoken']),
-                ('grant_type', 'refresh_token')]
-        resp = requests.post(ACCESS_TOKEN_URI, data).json()
-    current_analyticsemail = resp['email']
-    
-    # Obtain new analytics account email and 
-    user_info = get_user_info()
-    new_analyticsemail = user_info['email']
-    
-    #Compare them
-    if(current_analyticsemail != new_analyticsemail):
-        #If emails are not same, remove old datasources
-        db.DATABASE['datasource'].remove({'email': user['email']})
-        db.DATABASE['notification'].remove({'email': user['email']})
+    if(user['ga_accesstoken']):
+        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+        if ('error' in resp.keys()):
+            data = [('client_id', CLIENT_ID.strip()),
+                    ('client_secret', CLIENT_SECRET.strip()),
+                    ('refresh_token', user['ga_refreshtoken']),
+                    ('grant_type', 'refresh_token')]
+            resp = requests.post(ACCESS_TOKEN_URI, data).json()
+        current_analyticsemail = resp['email']
+        
+        # Obtain new analytics account email and 
+        user_info = get_user_info()
+        new_analyticsemail = user_info['email']
+        
+        #Compare them
+        if(current_analyticsemail != new_analyticsemail):
+            #If emails are not same, remove old datasources
+            db.DATABASE['datasource'].remove({'email': user['email']})
+            db.DATABASE['notification'].remove({'email': user['email']})
         
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     db.find_and_modify(collection='user', query={'_id': user['_id']},
