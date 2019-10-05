@@ -30,7 +30,8 @@ def analyticsAudit(slack_token, dataSource):
     attachments += customDimension(slack_token, dataSource)
     attachments += siteSearchTracking(slack_token, dataSource)
     attachments += gdprCompliant(slack_token, dataSource)
-
+    attachments += remarketingLists(slack_token, dataSource)
+    attachments += enhancedECommerceActivity(slack_token, dataSource)
     if len(attachments):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
@@ -634,6 +635,89 @@ def gdprCompliant(slack_token, dataSource):
         attachments += [{
             "text": "Nothing to worry, there is no risky page path in terms of GDPR.",
             "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def remarketingLists(slack_token, dataSource):
+    text = "*Remarketing Lists*"
+
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    remarketingAudiences = mservice.management().remarketingAudience().list(
+        accountId=accountId,
+        webPropertyId=propertyId,
+    ).execute()
+    
+    remarketingAudiences = remarketingAudiences.get('items', [])
+    
+    if remarketingAudiences:
+        attachments += [{
+            "text": "You have at least one remarketing list, do you know how you can use them to boost your performance?",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "Sorry, there is no remarketing list, check out remarketing lists which double up revenue you get",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def enhancedECommerceActivity(slack_token, dataSource):
+    text = "*Enhanced Ecommerce Activity*"
+
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    viewId = dataSource['viewID']
+
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    profile = mservice.management().profiles().get(accountId=accountId,
+                                                   webPropertyId=propertyId,
+                                                   profileId=viewId
+                                                   ).execute()
+    
+    enhancedECommerceTracking  = profile.get('enhancedECommerceTracking')
+
+    if enhancedECommerceTracking:
+        attachments += [{
+            "text": "Your enhanced ecommerce setting is active but how you can sure that it is implemented correctly. heybooster will be sure for you soon",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "Enhanced ecommerce is not active for related view, to track your all ecommerce switch it on.",
+            "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
