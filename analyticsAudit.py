@@ -620,7 +620,7 @@ def gdprCompliant(slack_token, dataSource):
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:pagePath'}],
-                    'filtersExpression': "ga:pagePath=@'=email',ga:pagePath=@'@'"
+                    'filtersExpression': "ga:pagePath=@=email,ga:pagePath=@@"
                 }]}).execute()
 
     if 'rows' in results['reports'][0]['data'].keys():
