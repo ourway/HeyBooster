@@ -490,29 +490,30 @@ def customDimension(slack_token, dataSource):
     for dimension in customDimensions.get('items', []):
         if dimension.get('scope') == 'HIT' and dimension.get('active'):
             hitsdimensions += [dimension.get('id')]
-
-    rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-
-    for i in range(len(hitsdimensions) // 9 + 1): #Reporting API allows us to set maximum 9 metrics 
-        results = rservice.reports().batchGet(
-            body={
-                'reportRequests': [
-                    {
-                        'viewId': viewId,
-                        'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                        'metrics': metrics,
-                        'dimensions': [{'name': dimId} for dimId in hitsdimensions[i:i + 9]],
-                        'filtersExpression': "ga:hits>0"
-                    }]}).execute()
-
-        hasHit = False
-        if 'rows' in results['reports'][0]['data'].keys():
-            for row in results['reports'][0]['data']['rows']:
-                if int(row['metrics'][0]['values'][0]) != 0:
-                    hasHit = True
-                    break
-        if (hasHit):
-            break
+    
+    hasHit = False
+    if(hitsdimensions):
+        rservice = google_analytics.build_reporting_api_v4_woutSession(email)
+        for i in range(len(hitsdimensions) // 9 + 1): #Reporting API allows us to set maximum 9 metrics 
+            results = rservice.reports().batchGet(
+                body={
+                    'reportRequests': [
+                        {
+                            'viewId': viewId,
+                            'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                            'metrics': metrics,
+                            'dimensions': [{'name': dimId} for dimId in hitsdimensions[i:i + 9]],
+                            'filtersExpression': "ga:hits>0"
+                        }]}).execute()
+    
+            hasHit = False
+            if 'rows' in results['reports'][0]['data'].keys():
+                for row in results['reports'][0]['data']['rows']:
+                    if int(row['metrics'][0]['values'][0]) != 0:
+                        hasHit = True
+                        break
+            if (hasHit):
+                break
 
     if hasHit:
         attachments += [{
@@ -751,28 +752,29 @@ def customMetric(slack_token, dataSource):
     for metric in customMetrics.get('items', []):
         if metric.get('active'):
             metrics += [{'expression': metric.get('id')}]
-
-    rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-
-    for i in range(len(metrics) // 10 + 1): ## Reporting API allows us to set maximum 10 metrics 
-        results = rservice.reports().batchGet(
-            body={
-                'reportRequests': [
-                    {
-                        'viewId': viewId,
-                        'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                        'metrics': metrics[i:i+10],
-                        'includeEmptyRows': False
-                    }]}).execute()
-
-        hasRow = False
-        if 'rows' in results['reports'][0]['data'].keys():
-            for row in results['reports'][0]['data']['rows']:
-                if int(row['metrics'][0]['values'][0]) != 0:
-                    hasRow = True
-                    break
-        if (hasRow):
-            break
+            
+    hasRow = False
+    if(metrics):
+        rservice = google_analytics.build_reporting_api_v4_woutSession(email)
+        for i in range(len(metrics) // 10 + 1): ## Reporting API allows us to set maximum 10 metrics 
+            results = rservice.reports().batchGet(
+                body={
+                    'reportRequests': [
+                        {
+                            'viewId': viewId,
+                            'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                            'metrics': metrics[i:i+10],
+                            'includeEmptyRows': False
+                        }]}).execute()
+    
+            hasRow = False
+            if 'rows' in results['reports'][0]['data'].keys():
+                for row in results['reports'][0]['data']['rows']:
+                    if int(row['metrics'][0]['values'][0]) != 0:
+                        hasRow = True
+                        break
+            if (hasRow):
+                break
 
     if hasRow:
         attachments += [{
