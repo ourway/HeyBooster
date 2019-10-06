@@ -32,6 +32,7 @@ def analyticsAudit(slack_token, dataSource):
     attachments += gdprCompliant(slack_token, dataSource)
     attachments += remarketingLists(slack_token, dataSource)
     attachments += enhancedECommerceActivity(slack_token, dataSource)
+    attachments += customMetric(slack_token, dataSource)
     if len(attachments):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
@@ -40,7 +41,6 @@ def analyticsAudit(slack_token, dataSource):
 
 
 def bounceRateTracking(slack_token, dataSource):
-    #    Performance Changes Tracking
     text = "*Bounce Rate Tracking*"
     attachments = []
 
@@ -98,7 +98,6 @@ def bounceRateTracking(slack_token, dataSource):
 
 
 def notSetLandingPage(slack_token, dataSource):
-    #    Performance Changes Tracking
     text = "*Not Set Landing Page Tracking*"
     attachments = []
 
@@ -466,7 +465,6 @@ def botSpamExcluding(slack_token, dataSource):
 
 
 def customDimension(slack_token, dataSource):
-    #    Performance Changes Tracking
     text = "*Custom Dimension*"
     attachments = []
 
@@ -495,7 +493,7 @@ def customDimension(slack_token, dataSource):
 
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
 
-    for i in range(len(hitsdimensions) // 9 + 1):
+    for i in range(len(hitsdimensions) // 9 + 1): #Reporting API allows us to set maximum 9 metrics 
         results = rservice.reports().batchGet(
             body={
                 'reportRequests': [
@@ -717,6 +715,76 @@ def enhancedECommerceActivity(slack_token, dataSource):
     else:
         attachments += [{
             "text": "Enhanced ecommerce is not active for related view, to track your all ecommerce switch it on.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+    
+
+def customMetric(slack_token, dataSource):
+    text = "*Custom Metric*"
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    customMetrics = mservice.management().customMetrics().list(
+        accountId=accountId,
+        webPropertyId=propertyId,
+    ).execute()
+
+    metrics = []
+    for metric in customMetrics.get('items', []):
+        if metric.get('active'):
+            metrics += [{'expression': metric.get('id')}]
+
+    rservice = google_analytics.build_reporting_api_v4_woutSession(email)
+
+    for i in range(len(metrics) // 10 + 1): ## Reporting API allows us to set maximum 10 metrics 
+        results = rservice.reports().batchGet(
+            body={
+                'reportRequests': [
+                    {
+                        'viewId': viewId,
+                        'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                        'metrics': metrics[i:i+10],
+                        'includeEmptyRows': False
+                    }]}).execute()
+
+        hasRow = False
+        if 'rows' in results['reports'][0]['data'].keys():
+            for row in results['reports'][0]['data']['rows']:
+                if int(row['metrics'][0]['values'][0]) != 0:
+                    hasRow = True
+                    break
+        if (hasRow):
+            break
+
+    if hasRow:
+        attachments += [{
+            "text": "Great! You are using custom metrics",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "There is no custom metric set up on your google analytics account",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
