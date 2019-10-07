@@ -576,11 +576,7 @@ def siteSearchTracking(slack_token, dataSource):
                 }]}).execute()
 
     if 'rows' in results['reports'][0]['data'].keys():
-        print('**************************')
-        print(type(results['reports'][0]['data']['rows']['metrics']['values'][0]))
-        print(results['reports'][0]['data']['rows']['metrics']['values'])
-        print(results['reports'][0]['data']['rows']['metrics']['values'][0])
-        result = int(results['reports'][0]['data']['rows']['metrics']['values'][0])
+        result = int(results['reports'][0]['data']['rows']['metrics'][0]['values'][0])
 
     else:
         result = 0
