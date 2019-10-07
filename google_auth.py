@@ -126,12 +126,9 @@ def google_loginauth_redirect():
                             state=flask.session[AUTH_STATE_KEY],
                             redirect_uri=LOGINAUTH_REDIRECT_URI)
 
-    try:
-        oauth2_tokens = session.fetch_access_token(
-            ACCESS_TOKEN_URI,
-            authorization_response=flask.request.url)
-    except:
-        return flask.redirect(BASE_URI, code=302)
+    oauth2_tokens = session.fetch_access_token(
+        ACCESS_TOKEN_URI,
+        authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     user_info = get_user_info()
@@ -177,35 +174,41 @@ def google_connectauth_redirect():
 
     # Obtain current analytics account email
     user = db.find_one('user', {'email': flask.session['email']})
-    if (user['ga_accesstoken']):
-        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-        if ('error' in resp.keys()):
-            data = [('client_id', CLIENT_ID.strip()),
-                    ('client_secret', CLIENT_SECRET.strip()),
-                    ('refresh_token', user['ga_refreshtoken']),
-                    ('grant_type', 'refresh_token')]
-            resp = requests.post(ACCESS_TOKEN_URI, data).json()
-        current_analyticsemail = resp['email']
+    try:
+        if (user['ga_accesstoken']):
+            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+            if ('error' in resp.keys()):
+                data = [('client_id', CLIENT_ID.strip()),
+                        ('client_secret', CLIENT_SECRET.strip()),
+                        ('refresh_token', user['ga_refreshtoken']),
+                        ('grant_type', 'refresh_token')]
+                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+            current_analyticsemail = resp['email']
 
-        # Obtain new analytics account email and 
-        user_info = get_user_info()
-        new_analyticsemail = user_info['email']
+            # Obtain new analytics account email and
+            user_info = get_user_info()
+            new_analyticsemail = user_info['email']
 
-        # Compare them
-        if (current_analyticsemail != new_analyticsemail):
-            # If emails are not same, remove old datasources
-            db.DATABASE['datasource'].remove({'email': user['email']})
-            db.DATABASE['notification'].remove({'email': user['email']})
+            # Compare them
+            if (current_analyticsemail != new_analyticsemail):
+                # If emails are not same, remove old datasources
+                db.DATABASE['datasource'].remove({'email': user['email']})
+                db.DATABASE['notification'].remove({'email': user['email']})
+    except:
+        return flask.redirect(BASE_URI, code=302)
 
-    flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
-    db.find_and_modify(collection='user', query={'_id': user['_id']},
-                       ga_accesstoken=oauth2_tokens['access_token'],
-                       ga_refreshtoken=oauth2_tokens['refresh_token'])
-    flask.session['ga_accesstoken'] = oauth2_tokens['access_token']
-    #    viewId = google_analytics.get_first_profile_id()
-    #    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
+    try:
+        flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
+        db.find_and_modify(collection='user', query={'_id': user['_id']},
+                           ga_accesstoken=oauth2_tokens['access_token'],
+                           ga_refreshtoken=oauth2_tokens['refresh_token'])
+        flask.session['ga_accesstoken'] = oauth2_tokens['access_token']
+        #    viewId = google_analytics.get_first_profile_id()
+        #    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
 
-    return flask.redirect(BASE_URI, code=302)
+        return flask.redirect(BASE_URI, code=302)
+    except:
+        return flask.redirect(BASE_URI, code=302)
 
 
 @app.route('/google/logout')
