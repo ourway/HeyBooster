@@ -48,14 +48,15 @@ app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
+"""
 if session['sl_accesstoken']:
     slack_redirect_url = '/datasources'
 else:
     slack_redirect_url = '/'
-
+"""
 slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"],
-    redirect_url=slack_redirect_url)
+    redirect_url='/datasources')
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
