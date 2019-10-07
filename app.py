@@ -73,6 +73,7 @@ def home():
                 # Check if user has slack connection
                 if session['sl_accesstoken']:
                     slack_confirm = True
+                    print(session['sl_accesstoken'])
                 else:
                     slack_confirm = False
 
@@ -231,6 +232,9 @@ def get_channels():
 @app.route("/datasources", methods=['GET', 'POST'])
 @login_required
 def datasources():
+    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+        return redirect('/')
+
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
@@ -302,6 +306,9 @@ def removedatasources(datasourceID):
 @app.route("/datasourcesinfo", methods=['GET', 'POST'])
 @login_required
 def datasourcesinfo():
+    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+        return redirect('/')
+
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
