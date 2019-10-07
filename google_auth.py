@@ -167,10 +167,12 @@ def google_connectauth_redirect():
                             scope=LOGIN_AUTHORIZATION_SCOPE,
                             state=flask.session[AUTH_STATE_KEY],
                             redirect_uri=CONNECTAUTH_REDIRECT_URI)
-
-    oauth2_tokens = session.fetch_access_token(
-        ACCESS_TOKEN_URI,
-        authorization_response=flask.request.url)
+    try:
+        oauth2_tokens = session.fetch_access_token(
+            ACCESS_TOKEN_URI,
+            authorization_response=flask.request.url)
+    except:
+        return flask.redirect(BASE_URI, code=302)
 
     # Obtain current analytics account email
     user = db.find_one('user', {'email': flask.session['email']})
