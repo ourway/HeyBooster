@@ -232,7 +232,7 @@ def get_channels():
 @app.route("/datasources", methods=['GET', 'POST'])
 @login_required
 def datasources():
-    if not (session['sl_accestoken'] and session['ga_accesstoken']):
+    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
 
     nForm = DataSourceForm(request.form)
@@ -306,9 +306,9 @@ def removedatasources(datasourceID):
 @app.route("/datasourcesinfo", methods=['GET', 'POST'])
 @login_required
 def datasourcesinfo():
-    if not (session['sl_accestoken'] and session['ga_accesstoken']):
+    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
-    
+
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
