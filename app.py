@@ -73,6 +73,7 @@ def home():
                 # Check if user has slack connection
                 if session['sl_accesstoken']:
                     slack_confirm = True
+                    print(session['sl_accesstoken'])
                 else:
                     slack_confirm = False
 
