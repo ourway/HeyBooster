@@ -18,7 +18,7 @@ import requests
 import time
 from modules import performancegoaltracking, costprediction, performancechangealert
 from bson.objectid import ObjectId
-
+import babel.numbers
 from analyticsAudit import analyticsAudit
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
@@ -384,6 +384,9 @@ def message_actions():
     slack_token = user['sl_accesstoken']
     email = user['email']
     slack_client = WebClient(token=slack_token)
+    dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
+                                                        'channelID': channel})
+    datasourceID = dataSource['_id']
     if message_action["type"] == "interactive_message":
         if (message_action['actions'][-1]['value'] == 'track'):
             houroptions = []
@@ -997,6 +1000,7 @@ def message_actions():
 
         elif (message_action['actions'][-1]['value'] == 'setmybudget'):
             text = message_action['original_message']['text']
+            currency = babel.numbers.format_currency(0, dataSource['currency']).replace('0.00','')
             if (True):
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
@@ -1022,7 +1026,7 @@ def message_actions():
                                 ]
                             },
                             {
-                                "label": "Adwords Budget",
+                                "label": f"Adwords Budget ({currency})",
                                 "name": "budget",
                                 "type": "text",
                                 "subtype": "number",
@@ -1163,8 +1167,6 @@ def message_actions():
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
-        datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                        'channelID': channel})['_id']
         if ('module_types' in submission.keys()):
             lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
             #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
