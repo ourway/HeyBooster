@@ -9,7 +9,17 @@ from slack import WebClient
 #   and then sorting can be applied
 
 ###ERROR##
-# - customDimension filter ga:hint>0
+# File "/home/app/HeyBooster/app.py", line 1042, in message_actions
+# Oct 07 08:19:41 heybooster gunicorn[1953]:     analyticsAudit(slack_token, dataSource)
+# Oct 07 08:19:41 heybooster gunicorn[1953]:   File "/home/app/HeyBooster/analyticsAudit.py", line 22, in analyticsAudit
+# Oct 07 08:19:41 heybooster gunicorn[1953]:     attachments += bounceRateTracking(slack_token, dataSource)
+# Oct 07 08:19:41 heybooster gunicorn[1953]:   File "/home/app/HeyBooster/analyticsAudit.py", line 66, in bounceRateTracking
+# Oct 07 08:19:41 heybooster gunicorn[1953]:     'includeEmptyRows': True
+# Oct 07 08:19:41 heybooster gunicorn[1953]:   File "/home/app/HeyBooster/env/lib/python3.6/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
+# Oct 07 08:19:41 heybooster gunicorn[1953]:     return wrapped(*args, **kwargs)
+# Oct 07 08:19:41 heybooster gunicorn[1953]:   File "/home/app/HeyBooster/env/lib/python3.6/site-packages/googleapiclient/http.py", line 855, in execute
+# Oct 07 08:19:41 heybooster gunicorn[1953]:     raise HttpError(resp, content, uri=self.uri)
+# Oct 07 08:19:41 heybooster gunicorn[1953]: googleapiclient.errors.HttpError: <HttpError 403 when requesting https://analyticsreporting.googleapis.com/v4/reports:batchGet?alt=json returned
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
@@ -566,7 +576,12 @@ def siteSearchTracking(slack_token, dataSource):
                 }]}).execute()
 
     if 'rows' in results['reports'][0]['data'].keys():
-        result = results['reports'][0]['data']['rows']['metrics']['values'][0]
+        print('**************************')
+        print(type(results['reports'][0]['data']['rows']['metrics']['values'][0]))
+        print(results['reports'][0]['data']['rows']['metrics']['values'])
+        print(results['reports'][0]['data']['rows']['metrics']['values'][0])
+        result = int(results['reports'][0]['data']['rows']['metrics']['values'][0])
+
     else:
         result = 0
 
