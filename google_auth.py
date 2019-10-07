@@ -100,7 +100,7 @@ def no_cache(view):
 
 
 @app.route('/google/login')
-@no_cache
+#@no_cache
 def login():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=LOGIN_AUTHORIZATION_SCOPE,
@@ -114,7 +114,7 @@ def login():
 
 
 @app.route('/google/loginauth')
-@no_cache
+#@no_cache
 def google_loginauth_redirect():
     req_state = flask.request.args.get('state', default=None, type=None)
     if req_state != flask.session[AUTH_STATE_KEY]:
@@ -142,7 +142,7 @@ def google_loginauth_redirect():
 
 
 @app.route('/google/connect')
-@no_cache
+#@no_cache
 def connect():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=CONNECT_AUTHORIZATION_SCOPE,
@@ -156,7 +156,7 @@ def connect():
 
 
 @app.route('/google/connectauth')
-@no_cache
+#@no_cache
 def google_connectauth_redirect():
     req_state = flask.request.args.get('state', default=None, type=None)
     if req_state != flask.session[AUTH_STATE_KEY]:
@@ -206,7 +206,7 @@ def google_connectauth_redirect():
 
 
 @app.route('/google/logout')
-@no_cache
+#@no_cache
 def logout():
     flask.session.pop(AUTH_TOKEN_KEY, None)
     flask.session.pop(AUTH_STATE_KEY, None)
