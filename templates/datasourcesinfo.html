@@ -98,18 +98,21 @@
                         {% with messages = get_flashed_messages() %}
                             {% if messages %}
                                 <ul class=flashes>
-                                    <li class="completed">
-                                        <div class="form-check form-check-flat">
-                                            <label class="form-check-label">
-                                                <input class="checkbox" type="checkbox" checked="checked"
-                                                       onclick="return false;"/>
-                                                {{ message }}
-                                                <i class="input-helper"></i></label>
-                                        </div>
-                                    </li>
+                                    {% for message in messages %}
+                                        <li class="completed">
+                                            <div class="form-check form-check-flat">
+                                                <label class="form-check-label">
+                                                    <input class="checkbox" type="checkbox" checked="checked"
+                                                           onclick="return false;"/>
+                                                    {{ message }}
+                                                    <i class="input-helper"></i></label>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             {% endif %}
                         {% endwith %}
+
                         <div class="table-responsive" style="padding-top:20px">
                             <table class="table">
                                 <thead>
