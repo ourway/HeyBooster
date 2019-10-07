@@ -131,9 +131,7 @@ def google_loginauth_redirect():
             ACCESS_TOKEN_URI,
             authorization_response=flask.request.url)
     except:
-        oauth2_tokens = session.fetch_access_token(
-            ACCESS_TOKEN_URI,
-            authorization_response='https://app.heybooster.ai/')
+        return flask.redirect(BASE_URI, code=302)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     user_info = get_user_info()
