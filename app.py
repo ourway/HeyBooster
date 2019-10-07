@@ -165,8 +165,6 @@ def register():
     if request.method == 'POST' and form.validate():
         user = db.find_one('user', {'email': form.email.data})
         if (user):
-            flash('Bu kullanıcı zaten Google hesabı ile kayıtlı! Lütfen "Sign in with Google" butonuna basınız',
-                  category="danger")
             return redirect(url_for('login'))
         else:
             hashed_password = generate_password_hash(form.password.data, method='sha256')
