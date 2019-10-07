@@ -272,24 +272,24 @@ def datasources():
                                    channelID=nForm.channel.data.split('\u0007')[0])
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
-    else:
+#    else:
         #        user_info = google_auth.get_user_info()
-        useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-        if (useraccounts):
-            nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                      useraccounts]
-        else:
-            nForm.account.choices = [('', 'User does not have Google Analytics Account')]
-            nForm.property.choices = [('', 'User does not have Google Analytics Account')]
-            nForm.view.choices = [('', 'User does not have Google Analytics Account')]
-        try:
-            channels = get_channels()
-            nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
-                                      in channels]
-        except:
-            nForm.channel.choices = [('', 'User does not have Slack Connection')]
-        # incoming_webhook = slack.token['incoming_webhook']
-    #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
+    useraccounts = google_analytics.get_accounts(session['email'])['accounts']
+    if (useraccounts):
+        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
+                                  useraccounts]
+    else:
+        nForm.account.choices = [('', 'User does not have Google Analytics Account')]
+        nForm.property.choices = [('', 'User does not have Google Analytics Account')]
+        nForm.view.choices = [('', 'User does not have Google Analytics Account')]
+    try:
+        channels = get_channels()
+        nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
+                                  in channels]
+    except:
+        nForm.channel.choices = [('', 'User does not have Slack Connection')]
+    # incoming_webhook = slack.token['incoming_webhook']
+#        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('datasources.html', nForm=nForm, args=args)
 
@@ -347,24 +347,24 @@ def datasourcesinfo():
 
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
+#    else:
+    #        user_info = google_auth.get_user_info()
+    useraccounts = google_analytics.get_accounts(session['email'])['accounts']
+    if (useraccounts):
+        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
+                                  useraccounts]
     else:
-        #        user_info = google_auth.get_user_info()
-        useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-        if (useraccounts):
-            nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                      useraccounts]
-        else:
-            nForm.account.choices = [('', 'User does not have Google Analytics Account')]
-            nForm.property.choices = [('', 'User does not have Google Analytics Account')]
-            nForm.view.choices = [('', 'User does not have Google Analytics Account')]
-        try:
-            channels = get_channels()
-            nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
-                                      in channels]
-        except:
-            nForm.channel.choices = [('', 'User does not have Slack Connection')]
-        # incoming_webhook = slack.token['incoming_webhook']
-    #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
+        nForm.account.choices = [('', 'User does not have Google Analytics Account')]
+        nForm.property.choices = [('', 'User does not have Google Analytics Account')]
+        nForm.view.choices = [('', 'User does not have Google Analytics Account')]
+    try:
+        channels = get_channels()
+        nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
+                                  in channels]
+    except:
+        nForm.channel.choices = [('', 'User does not have Slack Connection')]
+    # incoming_webhook = slack.token['incoming_webhook']
+#        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('datasourcesinfo.html', nForm=nForm, args=args)
 
