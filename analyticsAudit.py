@@ -29,7 +29,7 @@ def analyticsAudit(slack_token, dataSource):
     channel = dataSource['channelID']
 
     attachments = []
-#    attachments += bounceRateTracking(slack_token, dataSource)
+    #    attachments += bounceRateTracking(slack_token, dataSource)
     attachments += notSetLandingPage(slack_token, dataSource)
     attachments += adwordsAccountConnection(slack_token, dataSource)
     attachments += sessionClickDiscrepancy(slack_token, dataSource)
@@ -38,8 +38,9 @@ def analyticsAudit(slack_token, dataSource):
     attachments += goalSettingActivity(slack_token, dataSource)
     attachments += botSpamExcluding(slack_token, dataSource)
     attachments += customDimension(slack_token, dataSource)
-#    attachments += siteSearchTracking(slack_token, dataSource)
+    #    attachments += siteSearchTracking(slack_token, dataSource)
     attachments += gdprCompliant(slack_token, dataSource)
+    attachments += dataRetentionPeriod(slack_token, dataSource)
     attachments += remarketingLists(slack_token, dataSource)
     attachments += enhancedECommerceActivity(slack_token, dataSource)
     attachments += customMetric(slack_token, dataSource)
@@ -500,11 +501,11 @@ def customDimension(slack_token, dataSource):
     for dimension in customDimensions.get('items', []):
         if dimension.get('scope') == 'HIT' and dimension.get('active'):
             hitsdimensions += [dimension.get('id')]
-    
+
     hasHit = False
-    if(hitsdimensions):
+    if (hitsdimensions):
         rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-        for i in range(len(hitsdimensions) // 9 + 1): #Reporting API allows us to set maximum 9 metrics 
+        for i in range(len(hitsdimensions) // 9 + 1):  # Reporting API allows us to set maximum 9 metrics
             results = rservice.reports().batchGet(
                 body={
                     'reportRequests': [
@@ -515,7 +516,7 @@ def customDimension(slack_token, dataSource):
                             'dimensions': [{'name': dimId} for dimId in hitsdimensions[i:i + 9]],
                             'filtersExpression': "ga:hits>0"
                         }]}).execute()
-    
+
             hasHit = False
             if 'rows' in results['reports'][0]['data'].keys():
                 for row in results['reports'][0]['data']['rows']:
@@ -658,6 +659,49 @@ def gdprCompliant(slack_token, dataSource):
         return []
 
 
+def dataRetentionPeriod(slack_token, dataSource):
+    text = "*Data Retention Period *"
+
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    viewId = dataSource['viewID']
+
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    profile = mservice.management().profiles().get(accountId=accountId,
+                                                   webPropertyId=propertyId,
+                                                   profileId=viewId
+                                                   ).execute()
+
+    dataRetentionTtl = profile.get('dataRetentionTtl')
+
+
+    if dataRetentionTtl != 'INDEFINITE':
+        attachments += [{
+            "text": "",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
 def remarketingLists(slack_token, dataSource):
     text = "*Remarketing Lists*"
 
@@ -672,9 +716,9 @@ def remarketingLists(slack_token, dataSource):
         accountId=accountId,
         webPropertyId=propertyId,
     ).execute()
-    
+
     remarketingAudiences = remarketingAudiences.get('items', [])
-    
+
     if remarketingAudiences:
         attachments += [{
             "text": "You have at least one remarketing list, do you know how you can use them to boost your performance?",
@@ -714,8 +758,8 @@ def enhancedECommerceActivity(slack_token, dataSource):
                                                    webPropertyId=propertyId,
                                                    profileId=viewId
                                                    ).execute()
-    
-    enhancedECommerceTracking  = profile.get('enhancedECommerceTracking')
+
+    enhancedECommerceTracking = profile.get('enhancedECommerceTracking')
 
     if enhancedECommerceTracking:
         attachments += [{
@@ -739,7 +783,7 @@ def enhancedECommerceActivity(slack_token, dataSource):
         return attachments
     else:
         return []
-    
+
 
 def customMetric(slack_token, dataSource):
     text = "*Custom Metric*"
@@ -764,21 +808,21 @@ def customMetric(slack_token, dataSource):
     for metric in customMetrics.get('items', []):
         if metric.get('active'):
             metrics += [{'expression': metric.get('id')}]
-            
+
     hasRow = False
-    if(metrics):
+    if (metrics):
         rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-        for i in range(len(metrics) // 10 + 1): ## Reporting API allows us to set maximum 10 metrics 
+        for i in range(len(metrics) // 10 + 1):  ## Reporting API allows us to set maximum 10 metrics
             results = rservice.reports().batchGet(
                 body={
                     'reportRequests': [
                         {
                             'viewId': viewId,
                             'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                            'metrics': metrics[i:i+10],
+                            'metrics': metrics[i:i + 10],
                             'includeEmptyRows': False
                         }]}).execute()
-    
+
             hasRow = False
             if 'rows' in results['reports'][0]['data'].keys():
                 for row in results['reports'][0]['data']['rows']:
