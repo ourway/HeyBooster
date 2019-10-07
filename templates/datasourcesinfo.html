@@ -314,6 +314,12 @@
         crossorigin="anonymous"></script>
 
 <script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+
+<script>
 
     let account_select = document.getElementById("account");
     let property_select = document.getElementById("property");
