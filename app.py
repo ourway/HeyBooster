@@ -35,7 +35,6 @@ def login_required(f):
         if 'logged_in' in session or 'auth_token' in session:
             return f(*args, **kwargs)
         else:
-            flash('Bu sayfayı görüntülemek için lütfen giriş yapın.', category='danger')
             return redirect(url_for('login'))
 
     return decorated_function
@@ -149,14 +148,12 @@ def login():
         if user:
             if user['password'] != "":
                 if check_password_hash(user['password'], form.password.data):
-                    flash("Başarıyla Giriş Yaptınız", category="success")
 
                     session['logged_in'] = True
                     session['email'] = user['email']
 
                     return redirect(url_for('home'))
                 else:
-                    flash("Kullanıcı Adı veya Parola Yanlış", category="danger")
                     return redirect(url_for('login'))
 
     return render_template('auths/login.html', form=form)
