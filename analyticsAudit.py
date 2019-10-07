@@ -38,7 +38,7 @@ def analyticsAudit(slack_token, dataSource):
     attachments += goalSettingActivity(slack_token, dataSource)
     attachments += botSpamExcluding(slack_token, dataSource)
     attachments += customDimension(slack_token, dataSource)
-    attachments += siteSearchTracking(slack_token, dataSource)
+#    attachments += siteSearchTracking(slack_token, dataSource)
     attachments += gdprCompliant(slack_token, dataSource)
     attachments += remarketingLists(slack_token, dataSource)
     attachments += enhancedECommerceActivity(slack_token, dataSource)
