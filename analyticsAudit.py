@@ -44,6 +44,7 @@ def analyticsAudit(slack_token, dataSource):
     attachments += remarketingLists(slack_token, dataSource)
     attachments += enhancedECommerceActivity(slack_token, dataSource)
     attachments += customMetric(slack_token, dataSource)
+    attachments += samplingCheck(slack_token, dataSource)
     if len(attachments):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
@@ -843,6 +844,61 @@ def customMetric(slack_token, dataSource):
         attachments += [{
             "text": "There is no custom metric set up on your google analytics account",
             "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def samplingCheck(slack_token, dataSource):
+    text = "*Sampling Check*"
+    attachments = []
+
+    metrics = [
+        {'expression': 'ga:sessions'}
+    ]
+
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+
+    start_date = datetime(today.year, today.month, 1)
+
+    start_date_1 = dtimetostrf(start_date)
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'includeEmptyRows': True
+                }]}).execute()
+
+    sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
+
+    if sessions_result > 500000:
+        attachments += [{
+            "text": "Your analytics reports are sampling when you try to create monthly report because there is more than 500000 session without any filter.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "No worries for now however sampling occurs at 500000 session for the date range you are using",
+            "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
