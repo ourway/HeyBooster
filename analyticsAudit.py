@@ -677,10 +677,9 @@ def dataRetentionPeriod(slack_token, dataSource):
 
     dataRetentionTtl = profile.get('dataRetentionTtl')
 
-
     if dataRetentionTtl != 'INDEFINITE':
         attachments += [{
-            "text": "",
+            "text": "If you wanna play safe, it is okay your user and event data will be deleted at the end of data retention period, otherwise change it to indefinite one.",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
@@ -688,7 +687,7 @@ def dataRetentionPeriod(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "",
+            "text": "Data retention period is already set as indefinite, you will never lose your user and event data but be sure about GDPR Compliancy.",
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
