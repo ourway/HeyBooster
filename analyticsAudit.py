@@ -668,15 +668,13 @@ def dataRetentionPeriod(slack_token, dataSource):
     email = dataSource['email']
     accountId = dataSource['accountID']
     propertyId = dataSource['propertyID']
-    viewId = dataSource['viewID']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    profile = mservice.management().profiles().get(accountId=accountId,
-                                                   webPropertyId=propertyId,
-                                                   profileId=viewId
+    webproperty = mservice.management().webproperties().get(accountId=accountId,
+                                                   webPropertyId=propertyId
                                                    ).execute()
 
-    dataRetentionTtl = profile.get('dataRetentionTtl')
+    dataRetentionTtl = webproperty.get('dataRetentionTtl')
 
     if dataRetentionTtl != 'INDEFINITE':
         attachments += [{
