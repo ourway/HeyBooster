@@ -506,18 +506,18 @@ def customDimension(slack_token, dataSource):
     hasHit = False
     if (hitsdimensions):
         rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-        for i in range(len(hitsdimensions) // 9 + 1):  # Reporting API allows us to set maximum 9 metrics
+        reportRequests =  []
+        for i in range(len(hitsdimensions) // 5 + 1):  # Reporting API allows us to set maximum 5 reports
+            reportRequests  = []
+            reportRequests += [{
+                                    'viewId': viewId,
+                                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                                    'metrics': metrics,
+                                    'dimensions': [{'name': dimId}],
+                                    'filtersExpression': "ga:hits>0"
+                                } for dimId in hitsdimensions[i:i + 5]]
             results = rservice.reports().batchGet(
-                body={
-                    'reportRequests': [
-                        {
-                            'viewId': viewId,
-                            'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                            'metrics': metrics,
-                            'dimensions': [{'name': dimId} for dimId in hitsdimensions[i:i + 9]],
-                            'filtersExpression': "ga:hits>0"
-                        }]}).execute()
-
+                body={'reportRequests': reportRequests}).execute()
             hasHit = False
             if 'rows' in results['reports'][0]['data'].keys():
                 for row in results['reports'][0]['data']['rows']:
