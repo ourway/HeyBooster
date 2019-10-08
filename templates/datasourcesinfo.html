@@ -94,7 +94,6 @@
                     <div class="card-body">
                         <h4 class="card-title" style="margin:auto; width:200px">Connected Data Sources</h4>
                         <br>
-
                         {% with messages = get_flashed_messages() %}
                             {% if messages %}
                                 <ul class=flashes>
@@ -112,6 +111,20 @@
                                 </ul>
                             {% endif %}
                         {% endwith %}
+                        <br>
+                        <button onclick="myFunction()">Wrong Account?</button>
+
+                        <script>
+                            function myFunction() {
+                                var r = confirm("Press a button!");
+                                if (r == true) {
+                                    window.location.href = 'https://app.heybooster.ai/google/connect';
+                                } else {
+                                    window.location.href = 'https://app.heybooster.ai/datasources/'
+                                }
+                            }
+                        </script>
+                        <br>
 
                         <div class="table-responsive" style="padding-top:20px">
                             <table class="table">
