@@ -1,7 +1,7 @@
 import google_analytics
 from datetime import datetime, timedelta
 from slack import WebClient
-
+import time
 
 ###TIME ISSUES##
 # - reporting and management service is created within each function.
@@ -27,24 +27,46 @@ def dtimetostrf(x):
 
 def analyticsAudit(slack_token, dataSource):
     channel = dataSource['channelID']
-
+    subfunctions = [bounceRateTracking,
+                   notSetLandingPage,
+                   adwordsAccountConnection,
+                   sessionClickDiscrepancy,
+                   selfReferral,
+                   paymentReferral,
+                   goalSettingActivity,
+                   botSpamExcluding,
+                   customDimension,
+                   siteSearchTracking,
+                   gdprCompliant,
+                   dataRetentionPeriod,
+                   remarketingLists,
+                   enhancedECommerceActivity,
+                   customMetric,
+                   samplingCheck]
     attachments = []
-    #    attachments += bounceRateTracking(slack_token, dataSource)
-    attachments += notSetLandingPage(slack_token, dataSource)
-    attachments += adwordsAccountConnection(slack_token, dataSource)
-    attachments += sessionClickDiscrepancy(slack_token, dataSource)
-    attachments += selfReferral(slack_token, dataSource)
-    attachments += paymentReferral(slack_token, dataSource)
-    attachments += goalSettingActivity(slack_token, dataSource)
-    attachments += botSpamExcluding(slack_token, dataSource)
-    attachments += customDimension(slack_token, dataSource)
-    #    attachments += siteSearchTracking(slack_token, dataSource)
-    attachments += gdprCompliant(slack_token, dataSource)
-    attachments += dataRetentionPeriod(slack_token, dataSource)
-    attachments += remarketingLists(slack_token, dataSource)
-    attachments += enhancedECommerceActivity(slack_token, dataSource)
-    attachments += customMetric(slack_token, dataSource)
-    attachments += samplingCheck(slack_token, dataSource)
+    for function in subfunctions:
+        trycount = 0
+        while trycount < 3:
+            try:
+                attachments += function(slack_token, dataSource)
+            except:
+                time.sleep(0.5)
+#    attachments += bounceRateTracking(slack_token, dataSource)
+#    attachments += notSetLandingPage(slack_token, dataSource)
+#    attachments += adwordsAccountConnection(slack_token, dataSource)
+#    attachments += sessionClickDiscrepancy(slack_token, dataSource)
+#    attachments += selfReferral(slack_token, dataSource)
+#    attachments += paymentReferral(slack_token, dataSource)
+#    attachments += goalSettingActivity(slack_token, dataSource)
+#    attachments += botSpamExcluding(slack_token, dataSource)
+#    attachments += customDimension(slack_token, dataSource)
+#    attachments += siteSearchTracking(slack_token, dataSource)
+#    attachments += gdprCompliant(slack_token, dataSource)
+#    attachments += dataRetentionPeriod(slack_token, dataSource)
+#    attachments += remarketingLists(slack_token, dataSource)
+#    attachments += enhancedECommerceActivity(slack_token, dataSource)
+#    attachments += customMetric(slack_token, dataSource)
+#    attachments += samplingCheck(slack_token, dataSource)
     if len(attachments):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
