@@ -888,7 +888,6 @@ def samplingCheck(slack_token, dataSource):
     if sessions_result > 500000:
         attachments += [{
             "text": "Your analytics reports are sampling when you try to create monthly report because there is more than 500000 session without any filter.",
-            "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
@@ -896,7 +895,6 @@ def samplingCheck(slack_token, dataSource):
     else:
         attachments += [{
             "text": "No worries for now however sampling occurs at 500000 session for the date range you are using",
-            "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
