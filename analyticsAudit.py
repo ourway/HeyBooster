@@ -98,7 +98,7 @@ def bounceRateTracking(slack_token, dataSource):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'filtersExpression': "ga:bounceRate>65,ga:bounceRate<30",
+#                    'filtersExpression': "ga:bounceRate>65,ga:bounceRate<30",
                     'includeEmptyRows': True
                 }]}).execute()
 
