@@ -51,6 +51,7 @@ def analyticsAudit(slack_token, dataSource):
                 attachments += function(slack_token, dataSource)
                 break
             except:
+                trycount += 1
                 time.sleep(0.5)
 #    attachments += bounceRateTracking(slack_token, dataSource)
 #    attachments += notSetLandingPage(slack_token, dataSource)
