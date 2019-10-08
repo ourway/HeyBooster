@@ -518,12 +518,14 @@ def customDimension(slack_token, dataSource):
                                 } for dimId in hitsdimensions[i:i + 5]]
             results = rservice.reports().batchGet(
                 body={'reportRequests': reportRequests}).execute()
-            hasHit = False
-            if 'rows' in results['reports'][0]['data'].keys():
-                for row in results['reports'][0]['data']['rows']:
-                    if int(row['metrics'][0]['values'][0]) != 0:
-                        hasHit = True
-                        break
+            for report in results['reports']:
+                if 'rows' in results['reports'][0]['data'].keys():
+                    for row in results['reports'][0]['data']['rows']:
+                        if int(row['metrics'][0]['values'][0]) != 0:
+                            hasHit = True
+                            break
+                if (hasHit):
+                    break
             if (hasHit):
                 break
 
