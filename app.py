@@ -240,6 +240,21 @@ def datasources():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
 
+    user = db.find_one('user', {'email': session['email']})
+
+    try:
+        if user['ga_accesstoken']:
+            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+            if 'error' in resp.keys():
+                data = [('client_id', CLIENT_ID.strip()),
+                        ('client_secret', CLIENT_SECRET.strip()),
+                        ('refresh_token', user['ga_refreshtoken']),
+                        ('grant_type', 'refresh_token')]
+                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+            current_analyticsemail = resp['email']
+    except:
+        current_analyticsemail = ""
+
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
@@ -296,7 +311,7 @@ def datasources():
     # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources.html', nForm=nForm, args=args)
+    return render_template('datasources.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
 
 
 @app.route("/removedatasources/<datasourceID>", methods=['GET', 'POST'])
@@ -316,15 +331,18 @@ def datasourcesinfo():
 
     user = db.find_one('user', {'email': session['email']})
 
-    if user['ga_accesstoken']:
-        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-        if 'error' in resp.keys():
-            data = [('client_id', CLIENT_ID.strip()),
-                    ('client_secret', CLIENT_SECRET.strip()),
-                    ('refresh_token', user['ga_refreshtoken']),
-                    ('grant_type', 'refresh_token')]
-            resp = requests.post(ACCESS_TOKEN_URI, data).json()
-        current_analyticsemail = resp['email']
+    try:
+        if user['ga_accesstoken']:
+            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+            if 'error' in resp.keys():
+                data = [('client_id', CLIENT_ID.strip()),
+                        ('client_secret', CLIENT_SECRET.strip()),
+                        ('refresh_token', user['ga_refreshtoken']),
+                        ('grant_type', 'refresh_token')]
+                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+            current_analyticsemail = resp['email']
+    except:
+        current_analyticsemail = ""
 
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
