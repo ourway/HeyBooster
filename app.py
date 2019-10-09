@@ -26,6 +26,11 @@ imageurl = "https://app.heybooster.ai/images/{}.png"
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
 
+TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'
+ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
+CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
+CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
+
 
 # Kullanıcı Giriş Decorator'ı
 
@@ -272,8 +277,8 @@ def datasources():
                                    channelID=nForm.channel.data.split('\u0007')[0])
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
-#    else:
-        #        user_info = google_auth.get_user_info()
+    #    else:
+    #        user_info = google_auth.get_user_info()
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
     if (useraccounts):
         nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
@@ -289,7 +294,7 @@ def datasources():
     except:
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
     # incoming_webhook = slack.token['incoming_webhook']
-#        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
+    #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('datasources.html', nForm=nForm, args=args)
 
@@ -308,6 +313,18 @@ def removedatasources(datasourceID):
 def datasourcesinfo():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
+
+    user = db.find_one('user', {'email': session['email']})
+
+    if user['ga_accesstoken']:
+        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+        if 'error' in resp.keys():
+            data = [('client_id', CLIENT_ID.strip()),
+                    ('client_secret', CLIENT_SECRET.strip()),
+                    ('refresh_token', user['ga_refreshtoken']),
+                    ('grant_type', 'refresh_token')]
+            resp = requests.post(ACCESS_TOKEN_URI, data).json()
+        current_analyticsemail = resp['email']
 
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
@@ -344,12 +361,10 @@ def datasourcesinfo():
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
         flash("Check out your connected slack channel, heybooster even wrote you.")
-        useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-        print(useraccounts)
 
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
-#    else:
+    #    else:
     #        user_info = google_auth.get_user_info()
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
     if (useraccounts):
@@ -366,9 +381,9 @@ def datasourcesinfo():
     except:
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
     # incoming_webhook = slack.token['incoming_webhook']
-#        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
+    #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasourcesinfo.html', nForm=nForm, args=args)
+    return render_template('datasourcesinfo.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
 
 
 @app.route("/gatest/<email>")
@@ -394,7 +409,7 @@ def message_actions():
     email = user['email']
     slack_client = WebClient(token=slack_token)
     dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                        'channelID': channel})
+                                                  'channelID': channel})
     datasourceID = dataSource['_id']
     if message_action["type"] == "interactive_message":
         if (message_action['actions'][-1]['value'] == 'track'):
@@ -1009,7 +1024,7 @@ def message_actions():
 
         elif (message_action['actions'][-1]['value'] == 'setmybudget'):
             text = message_action['original_message']['text']
-            currency = babel.numbers.format_currency(0, dataSource['currency']).replace('0.00','')
+            currency = babel.numbers.format_currency(0, dataSource['currency']).replace('0.00', '')
             if (True):
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
