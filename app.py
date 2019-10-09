@@ -65,6 +65,8 @@ def get_image(pid):
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
+    useraccounts = google_analytics.get_accounts(session['email'])['accounts']
+    print(useraccounts)
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
