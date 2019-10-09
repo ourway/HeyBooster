@@ -187,10 +187,11 @@ def google_connectauth_redirect():
             resp = requests.post(ACCESS_TOKEN_URI, data).json()
         current_analyticsemail = resp['email']
 
-        # Obtain new analytics account email and
-        user_info = get_user_info()
-        new_analyticsemail = user_info['email']
-
+#        # Obtain new analytics account email and
+#        user_info = get_user_info()
+#        new_analyticsemail = user_info['email']
+        resp = requests.get(TOKEN_INFO_URI.format(oauth2_tokens['access_token'])).json()
+        new_analyticsemail = resp['email']
         # Compare them
         if (current_analyticsemail != new_analyticsemail):
             # If emails are not same, remove old datasources
