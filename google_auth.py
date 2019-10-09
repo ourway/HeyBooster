@@ -49,12 +49,13 @@ def build_credentials():
         token_uri=ACCESS_TOKEN_URI)
 
 
+
 def build_credentials_woutSession(email):
     oauth2_tokens = {}
     user = db.find_one('user', {'email': email})
-
+    
+    
     resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken']))
-
     if ('error' in resp.json().keys()):
         data = [('client_id', CLIENT_ID.strip()),
                 ('client_secret', CLIENT_SECRET.strip()),
