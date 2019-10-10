@@ -401,7 +401,8 @@ def datasourcesinfo():
     # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasourcesinfo.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
+    return render_template('datasourcesinfo.html', nForm=nForm, args=args,
+                           current_analyticsemail=current_analyticsemail)
 
 
 @app.route("/gatest/<email>")
