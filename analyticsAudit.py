@@ -42,7 +42,8 @@ def analyticsAudit(slack_token, dataSource):
                    remarketingLists,
                    enhancedECommerceActivity,
                    customMetric,
-                   samplingCheck]
+                   samplingCheck,
+                   internalSearchTermConsistency]
     attachments = []
     for function in subfunctions:
         trycount = 0
@@ -921,6 +922,55 @@ def samplingCheck(slack_token, dataSource):
     else:
         attachments += [{
             "text": "No worries for now however sampling occurs at 500000 session for the date range you are using",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def internalSearchTermConsistency(slack_token, dataSource):
+    text = "*Internal Search Term Consistency*"
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    filters = mservice.management().filters().list(accountId=accountId).execute()
+    
+    hasISTC = False
+    for filter in filters.get('items', []):
+        print(filter)
+        filterType = filter.get('type')
+        if filterType == 'LOWERCASE':
+            details = filter.get('lowercaseDetails', {})
+        elif filterType == 'UPPERCASE':
+            details = filter.get('uppercaseDetails', {})
+        else:
+            continue
+        field = details.get('field')
+        if field == "INTERNAL_SEARCH_TERM":
+            hasISTC = True
+            break
+        
+    if hasISTC:
+        attachments += [{
+            "text": "No worries! There is no duplicated internal search term because of case sensitivity",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "Internal search term performans may not be measure properly because of case sensitivity of terms, use lowercase filter to get rid of duplicated terms",
+            "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
