@@ -856,16 +856,10 @@ def performancegoaltracking(slack_token, task, dataSource):
                       "type": "button",
                       "value": f"{imageId}"}]
                  }]
-            attachments += [
-                {"text": f"{info['viewName']}",
-                 "color": "",
-                 "callback_id": "notification_form",
-                 "attachment_type": "default",
-                 }]
 
     attachments[0]['pretext'] = text
     #    attachments[-1]['actions'] = actions
-    attachments += [{"text": "",
+    attachments += [{"text": f"Source: {info['viewName']}",
                      "color": "FFFFFF",
                      "callback_id": "notification_form",
                      "attachment_type": "default",
