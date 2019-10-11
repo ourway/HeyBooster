@@ -772,11 +772,10 @@ def performancegoaltracking(slack_token, task, dataSource):
 
         if ((abs(querytotal - target) / target) <= tol):
             attachments += [
-                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
+                {"text": f"{dataSource['accountName']} & {dataSource['viewName']}\n{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
                  "color": "good",
                  "callback_id": "notification_form",
                  "attachment_type": "default",
-                 "author_name": f"{dataSource['accountName']} & {dataSource['viewName']}",
                  #                             "image_url": imageurl.format(imageId),
                  "actions": [{
                      "name": "ignore",
@@ -799,11 +798,10 @@ def performancegoaltracking(slack_token, task, dataSource):
 
         else:
             attachments += [
-                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
+                {"text": f"{dataSource['accountName']} & {dataSource['viewName']}\n{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
                  "color": "danger",
                  "callback_id": "notification_form",
                  "attachment_type": "default",
-                 "author_name": f"{dataSource['accountName']} & {dataSource['viewName']}",
                  #                             "image_url": imageurl.format(imageId),
                  "actions": [{
                      "name": "ignore",
