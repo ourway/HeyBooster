@@ -823,11 +823,12 @@ def performancegoaltracking(slack_token, task, dataSource):
 
     attachments[0]['pretext'] = text
     #    attachments[-1]['actions'] = actions
-    attachments += [{"text": "Deneme",
+    attachments += [{
                      "color": "FFFFFF",
                      "callback_id": "notification_form",
                      "attachment_type": "default",
-                     "actions": actions}]
+                     "actions": actions,
+                     "text": f"{dataSource['accountName']} & {dataSource['viewName']}"}]
 
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(channel=channel,
