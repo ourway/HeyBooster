@@ -27,40 +27,6 @@ def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
 
-def sourceInfo():
-    datasources = db.find('datasource', query={'email': session['email']})
-    unsortedargs = []
-    for datasource in datasources:
-        unsortedargs.append(datasource)
-
-    nForm = DataSourceForm(request.form)
-
-    uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
-    ts = time.time()
-    data = {
-        'email': session['email'],
-        'sl_userid': uID,
-        'sourceType': "Google Analytics",
-        'accountID': nForm.account.data.split('\u0007')[0],
-        'accountName': nForm.account.data.split('\u0007')[1],
-        'propertyID': nForm.property.data.split('\u0007')[0],
-        'propertyName': nForm.property.data.split('\u0007')[1],
-        'viewID': nForm.view.data.split('\u0007')[0],
-        'currency': nForm.view.data.split('\u0007')[1],
-        'viewName': nForm.view.data.split('\u0007')[2],
-        'channelType': "Slack",
-        'channelID': nForm.channel.data.split('\u0007')[0],
-        'channelName': nForm.channel.data.split('\u0007')[1],
-        'createdTS': ts
-    }
-    _id = db.insert_one("datasource", data=data).inserted_id
-    data['_id'] = _id
-    unsortedargs.append(data)
-    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-
-    return args
-
-
 def performancechangetracking(slack_token, task, dataSource):
     #    Performance Changes Tracking
     task['channel'] = dataSource['channelID']
@@ -804,8 +770,6 @@ def performancegoaltracking(slack_token, task, dataSource):
         plt.savefig(imagefile.format(imageId))
         plt.clf()
 
-        info = sourceInfo()
-
         if ((abs(querytotal - target) / target) <= tol):
             attachments += [
                 {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
@@ -859,7 +823,7 @@ def performancegoaltracking(slack_token, task, dataSource):
 
     attachments[0]['pretext'] = text
     #    attachments[-1]['actions'] = actions
-    attachments += [{"text": f"Source: {info['viewName']}",
+    attachments += [{"text": "",
                      "color": "FFFFFF",
                      "callback_id": "notification_form",
                      "attachment_type": "default",
