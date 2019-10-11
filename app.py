@@ -342,7 +342,7 @@ def datasourcesinfo():
                 resp = requests.post(ACCESS_TOKEN_URI, data).json()
             current_analyticsemail = resp['email']
     except:
-        current_analyticsemail = "Refresh Page"
+        current_analyticsemail = False
 
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})

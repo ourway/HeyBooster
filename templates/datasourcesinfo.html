@@ -113,7 +113,13 @@
                         {% endwith %}
                         <br>
                         <h5>Your Analytics Account:</h5>
-                        {{ current_analyticsemail }} <span style="color: blue; cursor: pointer" onclick="myFunction()">(Wrong Account?)</span>
+                        {% if current_analyticsemail %}
+                            {{ current_analyticsemail }} <span style="color: blue; cursor: pointer" onclick="myFunction()">(Wrong Account?)</span>
+                        {% else %}
+                            <script>
+                                location.reload();
+                            </script>
+                        {% endif %}
 
 {#                        <button class="btn btn-primary mb-2" onclick="myFunction()">Wrong Account?</button>#}
 
