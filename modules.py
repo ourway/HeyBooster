@@ -133,7 +133,7 @@ def performancechangetracking(slack_token, task, dataSource):
             #                }]
             else:
                 attachments += [{
-                    "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {round(data_new, 2)}\n",
+                    "text": f"{dataSource['accountName']} & {dataSource['viewName']}\n{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {round(data_new, 2)}\n",
                     "callback_id": "notification_form",
                     'color': "danger",
                     "attachment_type": "default",
@@ -147,7 +147,7 @@ def performancechangetracking(slack_token, task, dataSource):
             #                }]
             else:
                 attachments += [{
-                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {round(data_new, 2)}\n",
+                    "text": f"{dataSource['accountName']} & {dataSource['viewName']}\n{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {round(data_new, 2)}\n",
                     "callback_id": "notification_form",
                     'color': "good",
                     "attachment_type": "default",
@@ -457,7 +457,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                     else:
 
                         attachments[seg] += [{
-                            "text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
+                            "text": f"{dataSource['accountName']} & {dataSource['viewName']}\nYesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
                             "callback_id": "notification_form",
                             'color': "danger",
                             "attachment_type": "default",
@@ -471,7 +471,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                     #                    }]
                     else:
                         attachments[seg] += [{
-                            "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
+                            "text": f"{dataSource['accountName']} & {dataSource['viewName']}\nYesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
                             "callback_id": "notification_form",
                             'color': "good",
                             "attachment_type": "default",
@@ -602,7 +602,7 @@ def costprediction(slack_token, task, dataSource):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
             attachments += [{
-                "text": f"Your {str_period} adwords total cost is predicted to be more than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
+                "text": f"{dataSource['accountName']} & {dataSource['viewName']}\nYour {str_period} adwords total cost is predicted to be more than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -612,7 +612,7 @@ def costprediction(slack_token, task, dataSource):
             }]
         else:
             attachments += [{
-                "text": f"Your {str_period} adwords total cost is predicted to be more than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
+                "text": f"{dataSource['accountName']} & {dataSource['viewName']}\nYour {str_period} adwords total cost is predicted to be more than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -624,7 +624,7 @@ def costprediction(slack_token, task, dataSource):
         # Prediction is less than target
         if ((target - prediction < (tol * target))):
             attachments += [{
-                "text": f"Your {str_period} adwords total cost is predicted to be less than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
+                "text": f"{dataSource['accountName']} & {dataSource['viewName']}\nYour {str_period} adwords total cost is predicted to be less than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -634,7 +634,7 @@ def costprediction(slack_token, task, dataSource):
             }]
         else:
             attachments += [{
-                "text": f"Your {str_period} adwords total cost is predicted to be less than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
+                "text": f"{dataSource['accountName']} & {dataSource['viewName']}\nYour {str_period} adwords total cost is predicted to be less than monthly budget. Predicted Value: {predtext} {str_period[0].upper() + str_period[1:]} Budget: {targettext}",
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
