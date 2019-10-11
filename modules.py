@@ -828,7 +828,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                      "callback_id": "notification_form",
                      "attachment_type": "default",
                      "actions": actions,
-                     "footer": f"{dataSource['accountName']} & {dataSource['viewName']}"}]
+                     "author_name": f"{dataSource['accountName']} & {dataSource['viewName']}"}]
 
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(channel=channel,
