@@ -823,7 +823,7 @@ def performancegoaltracking(slack_token, task, dataSource):
 
     attachments[0]['pretext'] = text
     #    attachments[-1]['actions'] = actions
-    attachments += [{"text": "",
+    attachments += [{"text": "Deneme",
                      "color": "FFFFFF",
                      "callback_id": "notification_form",
                      "attachment_type": "default",
