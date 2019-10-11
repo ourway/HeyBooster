@@ -776,6 +776,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                  "color": "good",
                  "callback_id": "notification_form",
                  "attachment_type": "default",
+                 "author_name": f"{dataSource['accountName']} & {dataSource['viewName']}",
                  #                             "image_url": imageurl.format(imageId),
                  "actions": [{
                      "name": "ignore",
@@ -802,6 +803,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                  "color": "danger",
                  "callback_id": "notification_form",
                  "attachment_type": "default",
+                 "author_name": f"{dataSource['accountName']} & {dataSource['viewName']}",
                  #                             "image_url": imageurl.format(imageId),
                  "actions": [{
                      "name": "ignore",
@@ -827,8 +829,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                      "color": "FFFFFF",
                      "callback_id": "notification_form",
                      "attachment_type": "default",
-                     "actions": actions,
-                     "author_name": f"{dataSource['accountName']} & {dataSource['viewName']}"}]
+                     "actions": actions}]
 
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(channel=channel,
