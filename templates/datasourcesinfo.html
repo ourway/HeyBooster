@@ -113,13 +113,13 @@
                         {% endwith %}
                         <br>
                         <h5>Your Analytics Account:</h5>
-                        {{ current_analyticsemail }} <span style="color: blue" onclick="myFunction()">(Wrong Account?)</span>
+                        {{ current_analyticsemail }} <span style="color: blue; cursor: pointer" onclick="myFunction()">(Wrong Account?)</span>
 
 {#                        <button class="btn btn-primary mb-2" onclick="myFunction()">Wrong Account?</button>#}
 
                         <script>
                             function myFunction() {
-                                var r = confirm("Confirm");
+                                var r = confirm("If you change the analytics account, your recent data sources will be deleted. Are you sure to continue?");
                                 if (r == true) {
                                     window.location.href = 'https://app.heybooster.ai/google/connect';
                                 } else {
