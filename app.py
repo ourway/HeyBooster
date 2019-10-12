@@ -67,9 +67,10 @@ def get_image(pid):
     return send_file('slackdb/images/%s.png' % pid, mimetype='image/gif')
 
 
-@app.route('/send_message', methods=['GET', 'POST'])
+@app.route('/slack/send_message', methods=['GET', 'POST'])
 def send_message():
-    return make_response('', 200)
+    event  = request.form
+    return make_response(event['challenge'], 200)
 
 @app.route('/', methods=['GET', 'POST'])
 @login_required
