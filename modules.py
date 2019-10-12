@@ -137,7 +137,7 @@ def performancechangetracking(slack_token, task, dataSource):
                     "callback_id": "notification_form",
                     'color': "danger",
                     "attachment_type": "default",
-                    "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 }]
         else:
             if ((data_new - data_old) <= (tol * data_old)):
@@ -152,7 +152,7 @@ def performancechangetracking(slack_token, task, dataSource):
                     "callback_id": "notification_form",
                     'color': "good",
                     "attachment_type": "default",
-                    "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 }]
 
     if (len(attachments) != 0):
@@ -470,7 +470,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                             "callback_id": "notification_form",
                             'color': "danger",
                             "attachment_type": "default",
-                            "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                         }]
                 else:
                     if ((data_new - data_old) <= (tol * data_old)):
@@ -485,7 +485,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                             "callback_id": "notification_form",
                             'color': "good",
                             "attachment_type": "default",
-                            "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                         }]
         if (len(attachments[seg]) > 0):
             attachments[seg][0]['pretext'] = text[seg]
@@ -618,7 +618,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 #                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
@@ -629,7 +629,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 #                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
@@ -642,7 +642,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 #                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
@@ -653,7 +653,7 @@ def costprediction(slack_token, task, dataSource):
                 "pretext": text,
                 "callback_id": "notification_form",
                 "attachment_type": "default",
-                "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 #                "image_url": imageurl.format(imageId),
                 "actions": actions
             }]
@@ -791,7 +791,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                  "color": "good",
                  "callback_id": "notification_form",
                  "attachment_type": "default",
-                 "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                  #                             "image_url": imageurl.format(imageId),
                  "actions": [{
                      "name": "ignore",
@@ -818,7 +818,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                  "color": "danger",
                  "callback_id": "notification_form",
                  "attachment_type": "default",
-                 "footer": f"{dataSource['accountName']} & {dataSource['viewName']}\n",
+                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                  #                             "image_url": imageurl.format(imageId),
                  "actions": [{
                      "name": "ignore",
