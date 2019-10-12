@@ -71,8 +71,8 @@ def get_image(pid):
 def send_message():
 #    event  = request.form
 #    return make_response(event['challenge'], 200)
-    print(str(request.json))
-    return make_response('', 200)
+    event =  str(request.json)
+    return make_response(event['challenge'], 200)
 
 @app.route('/', methods=['GET', 'POST'])
 @login_required
