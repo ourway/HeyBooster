@@ -72,6 +72,7 @@ def send_message():
 #    event  = request.form
 #    return make_response(event['challenge'], 200)
     event =  request.json
+    print(str(event))
     return make_response(event['challenge'], 200)
 
 @app.route('/', methods=['GET', 'POST'])
