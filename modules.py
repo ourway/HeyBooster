@@ -355,11 +355,18 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
         {'expression': 'ga:sessions'}
     ]
 
-    dimensions = {'ALL_VISITS': 'Number of session',
-                  'PRODUCT_VIEW': 'Number of session with product view',
-                  'ADD_TO_CART': 'Number of session with add to cart',
-                  'CHECKOUT': 'Number of session with checkout',
-                  'TRANSACTION': 'Number of session with transaction'
+    dimensions = {}
+    dimensions['desktop'] = {'ALL_VISITS': 'Number of desktop session',
+                  'PRODUCT_VIEW': 'Number of desktop session with product view',
+                  'ADD_TO_CART': 'Number of desktop session with add to cart',
+                  'CHECKOUT': 'Number of desktop session with checkout',
+                  'TRANSACTION': 'Number of desktop session with transaction'
+                  }
+    dimensions['mobile'] = {'ALL_VISITS': 'Number of mobile session',
+                  'PRODUCT_VIEW': 'Number of mobile session with product view',
+                  'ADD_TO_CART': 'Number of mobile session with add to cart',
+                  'CHECKOUT': 'Number of mobile session with checkout',
+                  'TRANSACTION': 'Number of mobile session with transaction'
                   }
     actions = [
         #            {
@@ -428,7 +435,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
             datas_old = []
 
         for i in range(len(metrics)):
-            for dim in dimensions.keys():
+            for dim in dimensions[seg].keys():
                 try:
                     j1 = dims_new.index(dim)
                     data_new = datas_new[j1]
@@ -441,7 +448,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                 except:
                     data_old = 0
 
-                dimname = dimensions[dim]
+                dimname = dimensions[seg][dim]
 
                 #            sessions_new = float(results['reports'][0]['data']['rows'][j]['metrics'][0]['values'][0])
                 #            sessions_old = float(['reports'][0]['data']['rows'][j]['metrics'][1]['values'][0])
