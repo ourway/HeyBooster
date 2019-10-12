@@ -69,8 +69,10 @@ def get_image(pid):
 
 @app.route('/slack/send_message', methods=['GET', 'POST'])
 def send_message():
-    event  = request.form
-    return make_response(event['challenge'], 200)
+#    event  = request.form
+#    return make_response(event['challenge'], 200)
+    print(str(request))
+    return make_response('', 200)
 
 @app.route('/', methods=['GET', 'POST'])
 @login_required
