@@ -28,7 +28,7 @@ def dtimetostrf(x):
 
 
 def performancechangetracking(slack_token, task, dataSource):
-    #    Performance Changes Tracking
+#    Performance Changes Tracking
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
@@ -46,13 +46,18 @@ def performancechangetracking(slack_token, task, dataSource):
                    'Adwords Cost Per Transaction',
                    'Adwords Cost'
                    ]
+    
+    currencies = [False,
+                  False,
+                  True,
+                  True]
 
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
     channel = task['channel']
 
-    #    period = task['period']
+#    period = task['period']
     period = 1
     tol = 0.30
 
@@ -111,7 +116,7 @@ def performancechangetracking(slack_token, task, dataSource):
 
     for i in range(len(metrics)):
         metricname = metricnames[i]
-
+        currency = currencies[i]
         # WARNING: When the number of metrics is increased, 
         # WARNING: obtain data for other metrics
         data_new = float(results['reports'][0]['data']['totals'][0]['values'][i])
@@ -124,7 +129,12 @@ def performancechangetracking(slack_token, task, dataSource):
             changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
         except:
             changerate = abs(data_old - data_new)
+        if(currency):
+            datanewtext = babel.numbers.format_currency(decimal.Decimal(str(data_new)), task['currency'])
+        else:
+            datanewtext = round(data_new,2)
         if (data_new < data_old):
+            
             if ((data_old - data_new) <= (tol * data_old)):
                 pass
             #                attachments += [{"text": f"Yesterday you got {changerate} less {metricname} than previous day. {metricname} : {round(data_new,2)}\n",
@@ -133,7 +143,7 @@ def performancechangetracking(slack_token, task, dataSource):
             #                }]
             else:
                 attachments += [{
-                    "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {round(data_new, 2)}\n",
+                    "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                     "callback_id": "notification_form",
                     'color': "danger",
                     "attachment_type": "default",
@@ -148,7 +158,7 @@ def performancechangetracking(slack_token, task, dataSource):
             #                }]
             else:
                 attachments += [{
-                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {round(data_new, 2)}\n",
+                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                     "callback_id": "notification_form",
                     'color': "good",
                     "attachment_type": "default",
@@ -204,16 +214,22 @@ def performancechangealert(slack_token, task, dataSource):
                   'ga:CPC': 'Adwords CPC',
                   'ga:costPerTransaction': 'Adwords Cost Per Transaction',
                   'ga:adCost': 'Adwords Cost'}
-
+    
+    currencydict = {'ga:ROAS': False,
+                  'ga:CPC': False,
+                  'ga:costPerTransaction': True,
+                  'ga:adCost': True}
+    
     metrics = []
     metricnames = []
     thresholds = []
     filters = []
     periods = []
-
+    currencies = []
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
+        currencies += [currencydict[task['metric'][i]]]
         thresholds += [float(str(task['threshold'][i]).replace(',', '.')) / 100]
         filters += [task['filterExpression'][i]]
         #        periods += [int(task['period'][i])]
@@ -232,6 +248,7 @@ def performancechangealert(slack_token, task, dataSource):
         threshold = thresholds[i]
         filterExpression = filters[i]
         period = periods[i]
+        currency = currencies[i]
         if ('Adwords' in metricname):
             if filterExpression != '':
                 filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
@@ -267,10 +284,15 @@ def performancechangealert(slack_token, task, dataSource):
         # WARNING: obtain data for other metrics
         data_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
         print(str(data_old))
+        
         try:
             changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
         except:
             changerate = abs(data_old - data_new)
+        if(currency):
+            datanewtext = babel.numbers.format_currency(decimal.Decimal(str(data_new)), task['currency'])
+        else:
+            datanewtext = round(data_new,2)
         if (data_new < data_old):
             if ((data_old - data_new) <= (threshold * data_old)):
                 pass
@@ -280,7 +302,7 @@ def performancechangealert(slack_token, task, dataSource):
             #                }]
             else:
                 attachments += [{
-                    "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {round(data_new, 2)}\n",
+                    "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                     "callback_id": "notification_form",
                     'color': "danger",
                     "attachment_type": "default",
@@ -306,7 +328,7 @@ def performancechangealert(slack_token, task, dataSource):
             #                }]
             else:
                 attachments += [{
-                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {round(data_new, 2)}\n",
+                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                     "callback_id": "notification_form",
                     'color': "good",
                     "attachment_type": "default",
