@@ -830,6 +830,9 @@ def performancegoaltracking(slack_token, task, dataSource):
         if(currency):
             querytotaltext = babel.numbers.format_currency(decimal.Decimal(str(querytotal)), task['currency'])
             targettext = babel.numbers.format_currency(decimal.Decimal(str(target)), task['currency'])
+        else:
+            querytotaltext =  round(querytotal,2)
+            targettext = round(target,2)
         attachments += [
                 {"text": f"{str_period}, {metricname} is {querytotaltext}, Your Target {metricname}: {targettext}",
                  "color": color,
