@@ -5,23 +5,18 @@ from wtforms.fields.html5 import DateField
 # Notification Formu
 
 class DataSourceForm(Form):
-    account = SelectField("account", choices=[('', '-- Select an Option --')], validators=[validators.DataRequired(message="This field is required.")])
-    property = SelectField("property", choices=[('', '-- Select an Option --')], validators=[validators.DataRequired(message="This field is required.")])
-    view = SelectField("view", choices=[('', '-- Select an Option --')], validators=[validators.DataRequired(message="This field is required.")])
-#    metric = SelectField('metric', choices=[('ga:users', 'users')])
-#    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
-#    start_date = DateField('start_date', format="%Y-%m-%d")
-#    end_date = DateField('end_date', format="%Y-%m-%d")
-    channel = SelectField('channel', choices=[('', '-- Select a Channel --')], validators=[validators.DataRequired(message="This field is required.")])
-
-
-# Time Formu
-
-#class TimeForm(Form):
-#    frequency = SelectField('frequency', choices=[('0', '0'), ('1', '1')])
-#    scheduleType = SelectField('scheduletype', choices=[('daily', 'Daily'), ('weekly', 'weekly')])
-#    timeofDay = SelectField('timeofDay', choices=[('07.00', '07.00'), ('09.00', '09.00')])
-#    channel = SelectField('channel', choices=[('', '-- Select an Channel --')])
+    account = SelectField("account", choices=[('', '-- Select an Option --')],
+                          validators=[validators.DataRequired(message="This field is required.")])
+    property = SelectField("property", choices=[('', '-- Select an Option --')],
+                           validators=[validators.DataRequired(message="This field is required.")])
+    view = SelectField("view", choices=[('', '-- Select an Option --')],
+                       validators=[validators.DataRequired(message="This field is required.")])
+    #    metric = SelectField('metric', choices=[('ga:users', 'users')])
+    #    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
+    #    start_date = DateField('start_date', format="%Y-%m-%d")
+    #    end_date = DateField('end_date', format="%Y-%m-%d")
+    channel = SelectField('channel', choices=[('', '-- Select a Channel --')],
+                          validators=[validators.DataRequired(message="This field is required.")])
 
 
 # Kullanıcı giriş formu
