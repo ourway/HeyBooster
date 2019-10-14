@@ -71,9 +71,14 @@ def get_image(pid):
 def send_message():
 #    event  = request.form
 #    return make_response(event['challenge'], 200)
-    event =  request.json
-    print(str(event))
-    return make_response(event['challenge'], 200)
+    response = request.json
+    channel = response['event']['channel']
+    user = db.find_one('user', {'sl_userid': response['event']['user']})
+    slack_token = user['sl_accesstoken']
+    slack_client = WebClient(token=slack_token)
+    slack_client.chat_postMessage(channel=channel,
+                                  text="https://drift.me/heybooster")
+    return make_response('', 200)
 
 @app.route('/', methods=['GET', 'POST'])
 @login_required
