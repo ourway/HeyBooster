@@ -47,6 +47,10 @@ def performancechangetracking(slack_token, task, dataSource):
                    'Adwords Cost'
                    ]
     
+    conditions = ['More',
+                     'Less',
+                     'Less',
+                     "Equal"]
     currencies = [False,
                   False,
                   True,
@@ -117,6 +121,7 @@ def performancechangetracking(slack_token, task, dataSource):
     for i in range(len(metrics)):
         metricname = metricnames[i]
         currency = currencies[i]
+        condition = conditions[i]
         # WARNING: When the number of metrics is increased, 
         # WARNING: obtain data for other metrics
         data_new = float(results['reports'][0]['data']['totals'][0]['values'][i])
@@ -134,33 +139,45 @@ def performancechangetracking(slack_token, task, dataSource):
         else:
             datanewtext = round(data_new,2)
         if (data_new < data_old):
-            
             if ((data_old - data_new) <= (tol * data_old)):
-                pass
+                color = "good"
             #                attachments += [{"text": f"Yesterday you got {changerate} less {metricname} than previous day. {metricname} : {round(data_new,2)}\n",
             #                    "callback_id": "notification_form",
             #                    "attachment_type": "default",
             #                }]
             else:
+                if(condition == "Equal"):
+                    color = None
+                elif(condition == "More"):
+                    color = "danger"
+                elif(condition == "Less"):
+                    color = "good"
                 attachments += [{
                     "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                     "callback_id": "notification_form",
-                    'color': "danger",
+                    'color': color,
                     "attachment_type": "default",
                     "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 }]
         else:
             if ((data_new - data_old) <= (tol * data_old)):
-                pass
+                color = "good"
+#                pass
             #                attachments += [{"text": f"Yesterday you got {changerate} more {metricname} than previous day. {metricname} : {round(data_new,2)}\n",
             #                    "callback_id": "notification_form",
             #                    "attachment_type": "default",
             #                }]
             else:
+                if(condition == "Equal"):
+                    color = None
+                elif(condition == "More"):
+                    color = "good"
+                elif(condition == "Less"):
+                    color = "danger"
                 attachments += [{
                     "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                     "callback_id": "notification_form",
-                    'color': "good",
+                    'color': color,
                     "attachment_type": "default",
                     "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 }]
@@ -839,12 +856,18 @@ def performancegoaltracking(slack_token, task, dataSource):
                 color = "danger"
             elif(condition == "More"):
                 if(querytotal > target):
-                    color = "good"
+                    if(querytotal < target*(1+0.81)):
+                        color = "good"
+                    else:
+                        color = None
                 else:
                     color = "danger"
             elif(condition == "Less"):
                 if(querytotal < target):
-                    color = "good"
+                    if(querytotal > target*(1-0.81)):
+                        color = "good"
+                    else:
+                        color = None
                 else:
                     color = "danger"
             else:
