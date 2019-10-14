@@ -719,17 +719,29 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:adClicks': 'More',
                   'ga:newUsers': 'More'}
     
+    currencydict = {'ga:ROAS': False,
+                  'ga:CPC': False,
+                  'ga:sessions': False,
+                  'ga:costPerTransaction': True,
+                  'ga:adCost': True,
+                  'ga:transactionRevenue': True,
+                  'ga:impressions': False,
+                  'ga:adClicks': False,
+                  'ga:newUsers': False}
+    
     metrics = []
     metricnames = []
     targets = []
     filters = []
     periods = []
     conditions = []
+    currencies  = []
     tol = 0.05
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
         conditions += [conditiondict[task['metric'][i]]]
+        currencies += [currencydict[task['metric'][i]]]
         targets += [float(str(task['target'][i]).replace(',', '.'))]
         filters += [task['filterExpression'][i]]
         periods += [int(task['period'][i])]
@@ -752,6 +764,7 @@ def performancegoaltracking(slack_token, task, dataSource):
         filterExpression = filters[i]
         period = periods[i]
         condition = conditions[i]
+        currency = currencies[i]
         if ('Adwords' in metricname):
             if filterExpression != '':
                 filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
@@ -814,8 +827,11 @@ def performancegoaltracking(slack_token, task, dataSource):
                     color = "danger"
             else:
                 color = None
+        if(currency):
+            querytotaltext = babel.numbers.format_currency(decimal.Decimal(str(querytotal)), task['currency'])
+            targettext = babel.numbers.format_currency(decimal.Decimal(str(target)), task['currency'])
         attachments += [
-                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
+                {"text": f"{str_period}, {metricname} is {querytotaltext}, Your Target {metricname}: {targettext}",
                  "color": color,
                  "callback_id": "notification_form",
                  "attachment_type": "default",
