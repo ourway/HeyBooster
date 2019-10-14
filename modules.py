@@ -48,9 +48,10 @@ def performancechangetracking(slack_token, task, dataSource):
                    ]
     
     conditions = ['More',
-                     'Less',
-                     'Less',
-                     "Equal"]
+                  'Less',
+                  'Less',
+                  "Equal"]
+    
     currencies = [False,
                   False,
                   True,
