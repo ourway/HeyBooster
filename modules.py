@@ -708,16 +708,28 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:impressions': 'Impression',
                   'ga:adClicks': 'Click',
                   'ga:newUsers': 'New User'}
-
+    
+    conditiondict = {'ga:ROAS': 'More',
+                  'ga:CPC': 'Less',
+                  'ga:sessions': 'More',
+                  'ga:costPerTransaction': 'Less',
+                  'ga:adCost': "Equal",
+                  'ga:transactionRevenue': 'More',
+                  'ga:impressions': 'More',
+                  'ga:adClicks': 'More',
+                  'ga:newUsers': 'More'}
+    
     metrics = []
     metricnames = []
     targets = []
     filters = []
     periods = []
+    conditions = []
     tol = 0.05
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
         metricnames += [metricdict[task['metric'][i]]]
+        conditions += [conditiondict[task['metric'][i]]]
         targets += [float(str(task['target'][i]).replace(',', '.'))]
         filters += [task['filterExpression'][i]]
         periods += [int(task['period'][i])]
@@ -739,6 +751,7 @@ def performancegoaltracking(slack_token, task, dataSource):
         target = targets[i]
         filterExpression = filters[i]
         period = periods[i]
+        condition = conditions[i]
         if ('Adwords' in metricname):
             if filterExpression != '':
                 filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
@@ -784,11 +797,26 @@ def performancegoaltracking(slack_token, task, dataSource):
         imageId = uuid.uuid4().hex
         plt.savefig(imagefile.format(imageId))
         plt.clf()
-
         if ((abs(querytotal - target) / target) <= tol):
-            attachments += [
+            color = "good"
+        else:
+            if(condition == "Equal"):
+                color = "danger"
+            elif(condition == "More"):
+                if(querytotal > target):
+                    color = "good"
+                else:
+                    color = "danger"
+            elif(condition == "Less"):
+                if(querytotal < target):
+                    color = "good"
+                else:
+                    color = "danger"
+            else:
+                color = None
+        attachments += [
                 {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
-                 "color": "good",
+                 "color": color,
                  "callback_id": "notification_form",
                  "attachment_type": "default",
                  "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
@@ -811,32 +839,58 @@ def performancegoaltracking(slack_token, task, dataSource):
                       "value": f"{imageId}"}],
 
                  }]
-
-        else:
-            attachments += [
-                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
-                 "color": "danger",
-                 "callback_id": "notification_form",
-                 "attachment_type": "default",
-                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                 #                             "image_url": imageurl.format(imageId),
-                 "actions": [{
-                     "name": "ignore",
-                     "text": "Remove",
-                     "type": "button",
-                     "value": "ignoreone " + metrics[i]['expression'],
-                     "confirm": {
-                         "title": "Warning",
-                         "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
-                         "ok_text": "Yes",
-                         "dismiss_text": "No"
-                     }
-                 },
-                     {"name": "showgraph",
-                      "text": "Show Graph",
-                      "type": "button",
-                      "value": f"{imageId}"}]
-                 }]
+#        if ((abs(querytotal - target) / target) <= tol):
+#            attachments += [
+#                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
+#                 "color": "good",
+#                 "callback_id": "notification_form",
+#                 "attachment_type": "default",
+#                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                 #                             "image_url": imageurl.format(imageId),
+#                 "actions": [{
+#                     "name": "ignore",
+#                     "text": "Remove",
+#                     "type": "button",
+#                     "value": "ignoreone " + metrics[i]['expression'],
+#                     "confirm": {
+#                         "title": "Warning",
+#                         "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
+#                         "ok_text": "Yes",
+#                         "dismiss_text": "No"
+#                     }
+#                 },
+#                     {"name": "showgraph",
+#                      "text": "Show Graph",
+#                      "type": "button",
+#                      "value": f"{imageId}"}],
+#
+#                 }]
+#
+#        else:
+#            attachments += [
+#                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
+#                 "color": "danger",
+#                 "callback_id": "notification_form",
+#                 "attachment_type": "default",
+#                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                 #                             "image_url": imageurl.format(imageId),
+#                 "actions": [{
+#                     "name": "ignore",
+#                     "text": "Remove",
+#                     "type": "button",
+#                     "value": "ignoreone " + metrics[i]['expression'],
+#                     "confirm": {
+#                         "title": "Warning",
+#                         "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
+#                         "ok_text": "Yes",
+#                         "dismiss_text": "No"
+#                     }
+#                 },
+#                     {"name": "showgraph",
+#                      "text": "Show Graph",
+#                      "type": "button",
+#                      "value": f"{imageId}"}]
+#                 }]
 
     attachments[0]['pretext'] = text
     #    attachments[-1]['actions'] = actions

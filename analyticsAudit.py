@@ -53,7 +53,7 @@ def analyticsAudit(slack_token, dataSource):
                 break
             except:
                 trycount += 1
-                time.sleep(0.5)
+                time.sleep(0.2)
 #    attachments += bounceRateTracking(slack_token, dataSource)
 #    attachments += notSetLandingPage(slack_token, dataSource)
 #    attachments += adwordsAccountConnection(slack_token, dataSource)
