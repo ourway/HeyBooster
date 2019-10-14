@@ -67,6 +67,14 @@ def get_image(pid):
     return send_file('slackdb/images/%s.png' % pid, mimetype='image/gif')
 
 
+@app.route('/slack/send_message', methods=['GET', 'POST'])
+def send_message():
+#    event  = request.form
+#    return make_response(event['challenge'], 200)
+    event =  request.json
+    print(str(event))
+    return make_response(event['challenge'], 200)
+
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
@@ -222,11 +230,12 @@ def get_channels():
         imlist = requests.post(URL.format('im.list'), data).json()['ims']
 
         for user in userslist:
-            if (not user['is_bot']):
+            if (not user['is_bot'] or user['name'] == 'heybooster'):
                 for im in imlist:
                     if (user['id'] == im['user']):
                         #                    print("User ID:", user['id'], '\n', "User Name:", user['name'], '\n', "IM ID:", im['id'])
                         user['id'] = im['id']
+                        user['name'] = '@' + user['name']
                         channels += [user]
                         break
     except:
