@@ -587,7 +587,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                  "type": "button",
                  "value": f"{UUID}"}] + actions
         attachments = [{"text": viewmoretext,
-                        "pretext": "Shopping Funnel Changes Tracking",
+                        "pretext": "*Shopping Funnel Changes Tracking*",
                         "color": "danger" if viewmoretext == text_r else "good",
                         "callback_id": "notification_form",
                         "attachment_type": "default",
