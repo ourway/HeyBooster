@@ -198,7 +198,7 @@ def performancechangetracking(slack_token, task, dataSource):
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
-                 "value": f"{UUID}"}] + actions
+                 "value": f"{UUID}"}] # + actions
         attachments = [{"text": viewmoretext,
                         "pretext": text,
                         "color": "danger" if viewmoretext == text_r else "good",
@@ -401,7 +401,7 @@ def performancechangealert(slack_token, task, dataSource):
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
-                 "value": f"{UUID}"}] + actions
+                 "value": f"{UUID}"}] # + actions
         attachments = [{"text": viewmoretext,
                         "pretext": text,
                         "color": "danger" if viewmoretext == text_r else "good",
@@ -585,7 +585,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
-                 "value": f"{UUID}"}] + actions
+                 "value": f"{UUID}"}] # + actions
         attachments = [{"text": viewmoretext,
                         "pretext": "*Shopping Funnel Changes Tracking*",
                         "color": "danger" if viewmoretext == text_r else "good",
@@ -1025,12 +1025,12 @@ def performancegoaltracking(slack_token, task, dataSource):
                      "callback_id": "notification_form",
                      "attachment_type": "default",
                      "actions": actions}]
-    if(len(attachments) > 1):
+    if(len(attachments) > 2):
         UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
-                 "value": f"{UUID}"}] + actions
+                 "value": f"{UUID}"}] # + actions
         attachments = [{"text": viewmoretext,
                         "pretext": text,
                         "color": "danger" if viewmoretext == text_r else "good",
