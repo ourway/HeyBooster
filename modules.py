@@ -191,7 +191,10 @@ def performancechangetracking(slack_token, task, dataSource):
     if (len(attachments) != 0):
         attachments[0]['pretext'] = text
         attachments[-1]['actions'] = actions
-        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
+        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments,
+                                                        'datasourceID': dataSource['_id'],
+                                                        'ts': time.time()
+                                                        }).inserted_id)
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
@@ -391,7 +394,10 @@ def performancechangealert(slack_token, task, dataSource):
                          "callback_id": "notification_form",
                          "attachment_type": "default",
                          "actions": actions}]
-        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
+        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments,
+                                                        'datasourceID': dataSource['_id'],
+                                                        'ts': time.time()
+                                                        }).inserted_id)
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
@@ -538,7 +544,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                     #                        "attachment_type": "default",
                     #                    }]
                     else:
-                        viewmoretext = text_g
+                        viewmoretext = text_r
                         attachments[seg] += [{
                             "text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
                             "callback_id": "notification_form",
@@ -572,7 +578,10 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                               "callback_id": "notification_form",
                               "attachment_type": "default",
                               "actions": actions}]
-        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
+        UUID = str(db2.insert_one("attachment", data = {'attachments': totalattachments,
+                                                        'datasourceID': dataSource['_id'],
+                                                        'ts': time.time()
+                                                        }).inserted_id)
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
