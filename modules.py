@@ -189,8 +189,8 @@ def performancechangetracking(slack_token, task, dataSource):
                 }]
     
     if (len(attachments) != 0):
-#        attachments[0]['pretext'] = text
-#        attachments[-1]['actions'] = actions
+        attachments[0]['pretext'] = text
+        attachments[-1]['actions'] = actions
         UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
         actions = [{"name": "viewmore",
                  "text": "View More",
@@ -198,6 +198,7 @@ def performancechangetracking(slack_token, task, dataSource):
                  "value": f"{UUID}"}] + actions
         attachments = [{"text": viewmoretext,
                         "pretext": text,
+                        "color": "danger" if viewmoretext == text_r else "good",
                         "callback_id": "notification_form",
                         "attachment_type": "default",
                         "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
@@ -206,12 +207,14 @@ def performancechangetracking(slack_token, task, dataSource):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
                                             attachments=attachments)
-
         return resp['ts']
 
 
 def performancechangealert(slack_token, task, dataSource):
     # Custom Performance Change Tracking
+    text_r = "You need to check the status, something unexpected happened."
+    text_g = "You are on the right track, everything is superamazing!"
+    viewmoretext = text_g
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
@@ -335,6 +338,7 @@ def performancechangealert(slack_token, task, dataSource):
             #                    "attachment_type": "default",
             #                }]
             else:
+                viewmoretext = text_r
                 attachments += [{
                     "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                     "callback_id": "notification_form",
@@ -387,16 +391,30 @@ def performancechangealert(slack_token, task, dataSource):
                          "callback_id": "notification_form",
                          "attachment_type": "default",
                          "actions": actions}]
+        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
+        actions = [{"name": "viewmore",
+                 "text": "View More",
+                 "type": "button",
+                 "value": f"{UUID}"}] + actions
+        attachments = [{"text": viewmoretext,
+                        "pretext": text,
+                        "color": "danger" if viewmoretext == text_r else "good",
+                        "callback_id": "notification_form",
+                        "attachment_type": "default",
+                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                        "actions": actions
+                        }]
         slack_client = WebClient(token=slack_token)
-        resp = slack_client.chat_postMessage(
-            channel=channel,
-            attachments=attachments)
-
+        resp = slack_client.chat_postMessage(channel=channel,
+                                            attachments=attachments)
         return resp['ts']
 
 
 def shoppingfunnelchangetracking(slack_token, task, dataSource):
     # Funnel Changes Tracking
+    text_r = "You need to check the status, something unexpected happened."
+    text_g = "You are on the right track, everything is superamazing!"
+    viewmoretext = text_g
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
@@ -520,7 +538,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                     #                        "attachment_type": "default",
                     #                    }]
                     else:
-
+                        viewmoretext = text_g
                         attachments[seg] += [{
                             "text": f"Yesterday {dimname} is {changerate} less than previous day. {dimname} : {int(data_new)}\n",
                             "callback_id": "notification_form",
@@ -554,6 +572,19 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                               "callback_id": "notification_form",
                               "attachment_type": "default",
                               "actions": actions}]
+        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
+        actions = [{"name": "viewmore",
+                 "text": "View More",
+                 "type": "button",
+                 "value": f"{UUID}"}] + actions
+        attachments = [{"text": viewmoretext,
+                        "pretext": text,
+                        "color": "danger" if viewmoretext == text_r else "good",
+                        "callback_id": "notification_form",
+                        "attachment_type": "default",
+                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                        "actions": actions
+                        }]
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(
             channel=channel,
@@ -724,6 +755,9 @@ def costprediction(slack_token, task, dataSource):
 
 def performancegoaltracking(slack_token, task, dataSource):
     # Performance Goal Tracking
+    text_r = "You need to check the status, something unexpected happened."
+    text_g = "You are on the right track, everything is superamazing!"
+    viewmoretext = text_g
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
@@ -871,6 +905,7 @@ def performancegoaltracking(slack_token, task, dataSource):
         else:
             if(condition == "Equal"):
                 color = "danger"
+                viewmoretext = text_r
             elif(condition == "More"):
                 if(querytotal > target):
                     if(querytotal < target*(1+0.81)):
@@ -879,6 +914,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                         color = None
                 else:
                     color = "danger"
+                    viewmoretext = text_r
             elif(condition == "Less"):
                 if(querytotal < target):
                     if(querytotal > target*(1-0.81)):
@@ -887,6 +923,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                         color = None
                 else:
                     color = "danger"
+                    viewmoretext = text_r
             else:
                 color = None
         if(currency):
@@ -974,30 +1011,25 @@ def performancegoaltracking(slack_token, task, dataSource):
 #                 }]
 
     attachments[0]['pretext'] = text
-    #    attachments[-1]['actions'] = actions
     attachments += [{"text": "",
                      "color": "FFFFFF",
                      "callback_id": "notification_form",
                      "attachment_type": "default",
                      "actions": actions}]
-
+    UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
+    actions = [{"name": "viewmore",
+             "text": "View More",
+             "type": "button",
+             "value": f"{UUID}"}] + actions
+    attachments = [{"text": viewmoretext,
+                    "pretext": text,
+                    "color": "danger" if viewmoretext == text_r else "good",
+                    "callback_id": "notification_form",
+                    "attachment_type": "default",
+                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    "actions": actions
+                    }]
     slack_client = WebClient(token=slack_token)
     resp = slack_client.chat_postMessage(channel=channel,
                                          attachments=attachments)
-
-    #    time.sleep(0.5)
-    #    slack_client.chat_postMessage(
-    #        channel=channel,
-    #        attachments=[{"text": "",
-    #                     "color": "FFFFFF",
-    #                     "callback_id": "notification_form",
-    #                     "attachment_type": "default",
-    #                     "actions": [{
-    #                                    "name": "change",
-    #                                    "text": "Reschedule",
-    #                                    "type": "button",
-    #                                    "value": "change"
-    #                                }]
-    #                    }])
-
     return resp['ts']
