@@ -588,7 +588,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(
             channel=channel,
-            attachments=totalattachments)
+            attachments=attachments)
         return resp['ts']
 
 
