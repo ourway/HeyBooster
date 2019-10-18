@@ -6,7 +6,7 @@ from forms import LoginForm, RegisterForm, DataSourceForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 import google_auth
 import google_analytics
-from database import db
+from database import db, db2
 from models.user import User
 from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
@@ -47,6 +47,7 @@ def login_required(f):
 
 app = Flask(__name__)
 db.init()
+db2.init()
 
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
@@ -1224,6 +1225,15 @@ def message_actions():
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
+        elif message_action['actions'][-1]['name'] == "viewmore":
+            UUID = ObjectId(message_action['actions'][-1]['value'])
+            message_ts = message_action['message_ts']
+            attachments = db2.find_one('attachment', query = {'_id': UUID})
+            del attachments['_id']
+            slack_client.chat_update(channel=channel,
+                                     ts=message_ts,
+                                     text="",
+                                     attachments=attachments['attachments'])
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']

@@ -13,7 +13,7 @@ import uuid
 import decimal
 import babel.numbers
 from flask import session, request
-from database import db
+from database import db, db2
 from forms import DataSourceForm
 
 # from analyticsAudit import adwordsAccountConnection
@@ -29,12 +29,15 @@ def dtimetostrf(x):
 
 def performancechangetracking(slack_token, task, dataSource):
 #    Performance Changes Tracking
+    text_r = "You need to check the status, something unexpected happened."
+    text_g = "You are on the right track, everything is superamazing!"
+    viewmoretext = text_g
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
     text = "*Performance Changes Tracking*"
     attachments = []
-
+    actions = []
     metrics = [{'expression': 'ga:ROAS'},
                {'expression': 'ga:CPC'},
                {'expression': 'ga:costPerTransaction'},
@@ -151,6 +154,7 @@ def performancechangetracking(slack_token, task, dataSource):
                     color = None
                 elif(condition == "More"):
                     color = "danger"
+                    viewmoretext = text_r
                 elif(condition == "Less"):
                     color = "good"
                 attachments += [{
@@ -175,6 +179,7 @@ def performancechangetracking(slack_token, task, dataSource):
                     color = "good"
                 elif(condition == "Less"):
                     color = "danger"
+                    viewmoretext = text_r
                 attachments += [{
                     "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                     "callback_id": "notification_form",
@@ -182,14 +187,25 @@ def performancechangetracking(slack_token, task, dataSource):
                     "attachment_type": "default",
                     "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 }]
-
+    
     if (len(attachments) != 0):
-        attachments[0]['pretext'] = text
-        attachments[-1]['actions'] = actions
+#        attachments[0]['pretext'] = text
+#        attachments[-1]['actions'] = actions
+        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments}).inserted_id)
+        actions = [{"name": "viewmore",
+                 "text": "View More",
+                 "type": "button",
+                 "value": f"{UUID}"}] + actions
+        attachments = [{"text": viewmoretext,
+                        "pretext": text,
+                        "callback_id": "notification_form",
+                        "attachment_type": "default",
+                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                        "actions": actions
+                        }]
         slack_client = WebClient(token=slack_token)
-        resp = slack_client.chat_postMessage(
-            channel=channel,
-            attachments=attachments)
+        resp = slack_client.chat_postMessage(channel=channel,
+                                            attachments=attachments)
 
         return resp['ts']
 

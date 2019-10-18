@@ -2,7 +2,7 @@ from multiprocessing import Lock, Process, Queue, current_process
 import time
 from datetime import datetime
 import queue  # imported for using queue.Empty exception
-from database import db
+from database import db, db2
 from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction, performancegoaltracking, performancechangealert
 
 
@@ -20,6 +20,7 @@ def do_job(tasks_to_accomplish):
             '''
             task = tasks_to_accomplish.get_nowait()
             db.init()
+            db2.init()
             user = db.find_one('user', {'email': task['email']})
             slack_token = user['sl_accesstoken']
             dataSource = db.find_one('datasource', query={'_id': task['datasourceID']})
@@ -76,6 +77,7 @@ def main():
 
 if __name__ == '__main__':
     db.init()
+    db2.init()
     while (True):
         try:
             time.sleep(59.5 - datetime.now().second)
