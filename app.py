@@ -1340,7 +1340,7 @@ def message_actions():
                                                       text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
                     raise ex
-
+                
                 db.DATABASE['notification'].update_one(
                     {'_id': module_id},
                     {'$set': {
