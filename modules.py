@@ -878,6 +878,9 @@ def performancegoaltracking(slack_token, task, dataSource):
             start_date_1 = dtimetostrf((today - timedelta(days=today.weekday())))  # Convert it to string format
             end_date_1 = dtimetostrf((today - timedelta(days=1)))
             str_period = "This week"
+            if(start_date_1 > end_date_1):
+                start_date_1 = dtimetostrf(today)  # Convert it to string format
+                end_date_1 = start_date_1
         elif (period == 30):
             start_date = datetime(today.year, today.month, 1)  # First day of current day
             start_date_1 = dtimetostrf(start_date)  # Convert it to string format

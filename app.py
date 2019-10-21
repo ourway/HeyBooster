@@ -1335,14 +1335,11 @@ def message_actions():
                 try:
                     performancegoaltracking(slack_token, module, dataSource)
                 except Exception as ex:
-                    try:
-                        if "Selected dimensions and metrics cannot be queried together" in str(ex):
-                            slack_client.chat_postMessage(channel=channel,
-                                                          text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
-                            return make_response("", 200)
-                        raise ex
-                    except:
+                    if "Selected dimensions and metrics cannot be queried together" in str(ex):
+                        slack_client.chat_postMessage(channel=channel,
+                                                      text=":exclamation:ERROR - Selected dimensions and metrics cannot be queried together")
                         return make_response("", 200)
+                    raise ex
                 db.DATABASE['notification'].update_one(
                     {'_id': module_id},
                     {'$set': {
