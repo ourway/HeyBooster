@@ -893,7 +893,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                         'metrics': metrics[i],
                         'filtersExpression': filterExpression,
                         'dimensions': [{'name': 'ga:day'}],
-                        'includeEmptyRows': False
+                        'includeEmptyRows': True
                     }]}).execute()
         querytotal = float(results['reports'][0]['data']['totals'][0]['values'][0])
         if (str("%.2f" % (round(querytotal, 2))).split('.')[1] == '00'):
