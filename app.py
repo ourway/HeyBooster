@@ -788,6 +788,16 @@ def message_actions():
 
         elif (message_action['actions'][-1]['value'] == 'setmygoal'):
             text = message_action['original_message']['text']
+            mservice = google_analytics.build_management_api_v3_woutSession(email)
+            goals = mservice.management().goals().list(accountId=dataSource['accountID'],
+                                                      webPropertyId=dataSource['propertyID'],
+                                                      profileId=dataSource['viewID']).execute()
+            goaloptions = []
+            for goal in goals.get('items', []):
+                goalnumber = goal.get('id')
+                goalname = goal.get('name')
+                goaloptions += [{'label': f'{goalname} (Goal {goalnumber} Completions)',
+                                 'value': f'ga:goal{goalnumber}Completions'}]
             if (True):
                 slack_client.dialog_open(
                     trigger_id=message_action["trigger_id"],
@@ -838,7 +848,7 @@ def message_actions():
                                         "label": "New Users",
                                         "value": "ga:newUsers"
                                     },
-                                ]
+                                ] + goaloptions
                             },
                             {
                                 "label": "Filter : Dimension",

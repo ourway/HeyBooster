@@ -798,6 +798,26 @@ def performancegoaltracking(slack_token, task, dataSource):
         #                    }
         #        }
     ]
+##FASTER BUT STATIC SOLUTION
+#    goalCompletions = []
+#    for i in range(1,21):
+#        goalCompletions += [{f'ga:goal{i}Completion': 'Goal {} Completions'}]
+
+##SLOW BUT DYNAMIC SOLUTION
+    mservice = google_analytics.build_management_api_v3_woutSession(dataSource['email'])
+    goals = mservice.management().goals().list(accountId=dataSource['accountID'],
+                                              webPropertyId=dataSource['propertyID'],
+                                              profileId=dataSource['viewID']).execute()
+    goalmetricdict = []
+    goalconditiondict = []
+    goalcurrencydict = []
+    for goal in goals.get('items', []):
+        goalnumber = goal.get('id')
+        goalname = goal.get('name')
+        goalmetricdict += [{f'ga:goal{goalnumber}Completions': f'{goalname} (Goal {goalnumber} Completions)',
+                        }]
+        goalconditiondict += [{f'ga:goal{goalnumber}Completions': "More"}]
+        goalcurrencydict += [{f'ga:goal{goalnumber}Completions': "False"}]
     metricdict = {'ga:ROAS': 'Adwords ROAS',
                   'ga:CPC': 'Adwords CPC',
                   'ga:sessions': 'Session',
@@ -806,7 +826,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:transactionRevenue': 'Revenue',
                   'ga:impressions': 'Impression',
                   'ga:adClicks': 'Click',
-                  'ga:newUsers': 'New User'}
+                  'ga:newUsers': 'New User'} + goalmetricdict
 
     conditiondict = {'ga:ROAS': 'More',
                   'ga:CPC': 'Less',
@@ -816,7 +836,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:transactionRevenue': 'More',
                   'ga:impressions': 'More',
                   'ga:adClicks': 'More',
-                  'ga:newUsers': 'More'}
+                  'ga:newUsers': 'More'} + goalconditiondict
 
     currencydict = {'ga:ROAS': False,
                   'ga:CPC': False,
@@ -826,7 +846,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:transactionRevenue': True,
                   'ga:impressions': False,
                   'ga:adClicks': False,
-                  'ga:newUsers': False}
+                  'ga:newUsers': False} + goalcurrencydict
 
     metrics = []
     metricnames = []
