@@ -1043,4 +1043,4 @@ def performancegoaltracking(slack_token, task, dataSource):
         resp = slack_client.chat_postMessage(channel=channel,
                                              attachments=attachments)
 
-    return resp['ts']
+        return resp['ts']
