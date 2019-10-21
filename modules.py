@@ -49,12 +49,12 @@ def performancechangetracking(slack_token, task, dataSource):
                    'Adwords Cost Per Transaction',
                    'Adwords Cost'
                    ]
-    
+
     conditions = ['More',
                   'Less',
                   'Less',
                   "Equal"]
-    
+
     currencies = [False,
                   False,
                   True,
@@ -187,7 +187,7 @@ def performancechangetracking(slack_token, task, dataSource):
                     "attachment_type": "default",
                     "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 }]
-    
+
     if (len(attachments) != 0):
         attachments[0]['pretext'] = text
         attachments[-1]['actions'] = actions
@@ -254,12 +254,12 @@ def performancechangealert(slack_token, task, dataSource):
                   'ga:CPC': 'Adwords CPC',
                   'ga:costPerTransaction': 'Adwords Cost Per Transaction',
                   'ga:adCost': 'Adwords Cost'}
-    
+
     currencydict = {'ga:ROAS': False,
                   'ga:CPC': False,
                   'ga:costPerTransaction': True,
                   'ga:adCost': True}
-    
+
     metrics = []
     metricnames = []
     thresholds = []
@@ -324,7 +324,7 @@ def performancechangealert(slack_token, task, dataSource):
         # WARNING: obtain data for other metrics
         data_old = float(results['reports'][0]['data']['totals'][1]['values'][0])
         print(str(data_old))
-        
+
         try:
             changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
         except:
@@ -807,7 +807,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:impressions': 'Impression',
                   'ga:adClicks': 'Click',
                   'ga:newUsers': 'New User'}
-    
+
     conditiondict = {'ga:ROAS': 'More',
                   'ga:CPC': 'Less',
                   'ga:sessions': 'More',
@@ -817,7 +817,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:impressions': 'More',
                   'ga:adClicks': 'More',
                   'ga:newUsers': 'More'}
-    
+
     currencydict = {'ga:ROAS': False,
                   'ga:CPC': False,
                   'ga:sessions': False,
@@ -827,7 +827,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:impressions': False,
                   'ga:adClicks': False,
                   'ga:newUsers': False}
-    
+
     metrics = []
     metricnames = []
     targets = []
@@ -893,7 +893,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                         'metrics': metrics[i],
                         'filtersExpression': filterExpression,
                         'dimensions': [{'name': 'ga:day'}],
-                        'includeEmptyRows': True
+                        'includeEmptyRows': False
                     }]}).execute()
         querytotal = float(results['reports'][0]['data']['totals'][0]['values'][0])
         if (str("%.2f" % (round(querytotal, 2))).split('.')[1] == '00'):
@@ -1039,11 +1039,8 @@ def performancegoaltracking(slack_token, task, dataSource):
                         "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                         "actions": actions
                         }]
-    slack_client = WebClient(token=slack_token)
-    try:
+        slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
                                              attachments=attachments)
-    except:
-        return make_response('', 200)
 
     return resp['ts']
