@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 import uuid
 import decimal
 import babel.numbers
-from flask import session, request, make_response
+from flask import session, request
 from database import db, db2
 from forms import DataSourceForm
 
@@ -1039,8 +1039,8 @@ def performancegoaltracking(slack_token, task, dataSource):
                         "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                         "actions": actions
                         }]
-        slack_client = WebClient(token=slack_token)
-        resp = slack_client.chat_postMessage(channel=channel,
-                                             attachments=attachments)
+    slack_client = WebClient(token=slack_token)
+    resp = slack_client.chat_postMessage(channel=channel,
+                                         attachments=attachments)
 
-        return resp['ts']
+    return resp['ts']
