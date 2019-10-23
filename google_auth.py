@@ -258,8 +258,8 @@ def google_gscconnectauth_redirect():
 #@no_cache
 def adwconnect():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
-                            scope=GSC_CONNECT_AUTHORIZATION_SCOPE,
-                            redirect_uri=GSC_CONNECTAUTH_REDIRECT_URI)
+                            scope=ADW_CONNECT_AUTHORIZATION_SCOPE,
+                            redirect_uri=ADW_CONNECTAUTH_REDIRECT_URI)
 
     uri, state = session.authorization_url(AUTHORIZATION_URL)
     flask.session[AUTH_STATE_KEY] = state
