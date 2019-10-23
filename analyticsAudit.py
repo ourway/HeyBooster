@@ -1012,7 +1012,7 @@ def domainControl(slack_token, dataSource):
                     'dimensions': [{'name': 'ga:hostname'}]
                 }]}).execute()
 
-    hotname = results['reports'][0]['data']['totals'][0]['values'][0]
+    hostname = results['reports'][0]['data']['totals'][0]['values'][0]
 
     try:
         mservice = google_analytics.build_management_api_v3_woutSession(email)
@@ -1030,7 +1030,7 @@ def domainControl(slack_token, dataSource):
 
     if totalResult == 1:
         attachments += [{
-            "text": "Most of the visits (97.17%) in the view are happening on the domain, specified in the view settings {websiteUrl}.".format(websiteUrl),
+            "text": "Most of the visits (97.17%) in the view are happening on the domain, specified in the view settings {}.".format(websiteUrl),
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
@@ -1038,7 +1038,7 @@ def domainControl(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Check out the website url specified in view setting because only 80% of session is happening on that domain {websiteUrl}.".format(websiteUrl),
+            "text": "Check out the website url specified in view setting because only 80% of session is happening on that domain {}.".format(websiteUrl),
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
