@@ -14,12 +14,17 @@ TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
 
-CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/analytics.readonly']
+GA_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/analytics.readonly']
+GSC_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/adwords']
+ADW_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/webmasters.readonly']
 LOGIN_AUTHORIZATION_SCOPE = ['profile', 'email']
 
 LOGINAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/loginauth"
-CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/connectauth"
+GA_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/connectauth"
+GSC_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/gscconnectauth"
+ADW_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/adwconnectauth"
 BASE_URI = "https://app.heybooster.ai"
+
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
 
@@ -144,10 +149,10 @@ def google_loginauth_redirect():
 
 @app.route('/google/connect')
 #@no_cache
-def connect():
+def gaconnect():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
-                            scope=CONNECT_AUTHORIZATION_SCOPE,
-                            redirect_uri=CONNECTAUTH_REDIRECT_URI)
+                            scope=GA_CONNECT_AUTHORIZATION_SCOPE,
+                            redirect_uri=GA_CONNECTAUTH_REDIRECT_URI)
 
     uri, state = session.authorization_url(AUTHORIZATION_URL)
     flask.session[AUTH_STATE_KEY] = state
@@ -158,16 +163,16 @@ def connect():
 
 @app.route('/google/connectauth')
 #@no_cache
-def google_connectauth_redirect():
+def google_gaconnectauth_redirect():
     req_state = flask.request.args.get('state', default=None, type=None)
     if req_state != flask.session[AUTH_STATE_KEY]:
         response = flask.make_response('Invalid state parameter', 401)
         return response
 
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
-                            scope=LOGIN_AUTHORIZATION_SCOPE,
+                            scope=GA_CONNECT_AUTHORIZATION_SCOPE,
                             state=flask.session[AUTH_STATE_KEY],
-                            redirect_uri=CONNECTAUTH_REDIRECT_URI)
+                            redirect_uri=GA_CONNECTAUTH_REDIRECT_URI)
     try:
         oauth2_tokens = session.fetch_access_token(
             ACCESS_TOKEN_URI,
@@ -206,6 +211,86 @@ def google_connectauth_redirect():
     #    viewId = google_analytics.get_first_profile_id()
     #    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
 
+    return flask.redirect(BASE_URI, code=302)
+
+
+@app.route('/google/gscconnect')
+#@no_cache
+def gscconnect():
+    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
+                            scope=GSC_CONNECT_AUTHORIZATION_SCOPE,
+                            redirect_uri=GSC_CONNECTAUTH_REDIRECT_URI)
+
+    uri, state = session.authorization_url(AUTHORIZATION_URL)
+    flask.session[AUTH_STATE_KEY] = state
+    flask.session.permanent = True
+
+    return flask.redirect(uri, code=302)
+
+
+@app.route('/google/gscconnectauth')
+#@no_cache
+def google_gscconnectauth_redirect():
+    req_state = flask.request.args.get('state', default=None, type=None)
+    if req_state != flask.session[AUTH_STATE_KEY]:
+        response = flask.make_response('Invalid state parameter', 401)
+        return response
+
+    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
+                            scope=GSC_CONNECT_AUTHORIZATION_SCOPE,
+                            state=flask.session[AUTH_STATE_KEY],
+                            redirect_uri=GSC_CONNECTAUTH_REDIRECT_URI)
+    try:
+        oauth2_tokens = session.fetch_access_token(
+            ACCESS_TOKEN_URI,
+            authorization_response=flask.request.url)
+    except:
+        return flask.redirect(BASE_URI, code=302)
+
+    flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
+    db.find_and_modify(collection='user', query={'email': flask.session['email']},
+                       gsc_accesstoken=oauth2_tokens['access_token'],
+                       gsc_refreshtoken=oauth2_tokens['refresh_token'])
+    return flask.redirect(BASE_URI, code=302)
+
+
+@app.route('/google/adwconnect')
+#@no_cache
+def adwconnect():
+    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
+                            scope=GSC_CONNECT_AUTHORIZATION_SCOPE,
+                            redirect_uri=GSC_CONNECTAUTH_REDIRECT_URI)
+
+    uri, state = session.authorization_url(AUTHORIZATION_URL)
+    flask.session[AUTH_STATE_KEY] = state
+    flask.session.permanent = True
+
+    return flask.redirect(uri, code=302)
+
+
+@app.route('/google/adwconnectauth')
+#@no_cache
+def google_adwconnectauth_redirect():
+    req_state = flask.request.args.get('state', default=None, type=None)
+    if req_state != flask.session[AUTH_STATE_KEY]:
+        response = flask.make_response('Invalid state parameter', 401)
+        return response
+
+    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
+                            scope=ADW_CONNECT_AUTHORIZATION_SCOPE,
+                            state=flask.session[AUTH_STATE_KEY],
+                            redirect_uri=ADW_CONNECTAUTH_REDIRECT_URI)
+    try:
+        oauth2_tokens = session.fetch_access_token(
+            ACCESS_TOKEN_URI,
+            authorization_response=flask.request.url)
+    except:
+        return flask.redirect(BASE_URI, code=302)
+
+    flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
+    db.find_and_modify(collection='user', query={'email': flask.session['email']},
+                       adw_accesstoken=oauth2_tokens['access_token'],
+                       adw_refreshtoken=oauth2_tokens['refresh_token'])
     return flask.redirect(BASE_URI, code=302)
 
 
