@@ -261,7 +261,7 @@ def adwconnect():
                             scope=GSC_CONNECT_AUTHORIZATION_SCOPE,
                             redirect_uri=GSC_CONNECTAUTH_REDIRECT_URI)
 
-    uri, state = session.authorization_url(AUTHORIZATION_URL, access_type='offline')
+    uri, state = session.authorization_url(AUTHORIZATION_URL)
     flask.session[AUTH_STATE_KEY] = state
     flask.session.permanent = True
 
