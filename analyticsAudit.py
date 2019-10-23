@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from slack import WebClient
 import time
 
+
 ###TIME ISSUES##
 # - reporting and management service is created within each function.
 # - attachments are running in a row. This can be done using multithreading 
@@ -28,22 +29,22 @@ def dtimetostrf(x):
 def analyticsAudit(slack_token, dataSource):
     channel = dataSource['channelID']
     subfunctions = [bounceRateTracking,
-                   notSetLandingPage,
-                   adwordsAccountConnection,
-                   sessionClickDiscrepancy,
-                   selfReferral,
-                   paymentReferral,
-                   goalSettingActivity,
-                   botSpamExcluding,
-                   customDimension,
-                   siteSearchTracking,
-                   gdprCompliant,
-                   dataRetentionPeriod,
-                   remarketingLists,
-                   enhancedECommerceActivity,
-                   customMetric,
-                   samplingCheck,
-                   internalSearchTermConsistency]
+                    notSetLandingPage,
+                    adwordsAccountConnection,
+                    sessionClickDiscrepancy,
+                    selfReferral,
+                    paymentReferral,
+                    goalSettingActivity,
+                    botSpamExcluding,
+                    customDimension,
+                    siteSearchTracking,
+                    gdprCompliant,
+                    dataRetentionPeriod,
+                    remarketingLists,
+                    enhancedECommerceActivity,
+                    customMetric,
+                    samplingCheck,
+                    internalSearchTermConsistency]
     attachments = []
     for function in subfunctions:
         trycount = 0
@@ -54,22 +55,22 @@ def analyticsAudit(slack_token, dataSource):
             except:
                 trycount += 1
                 time.sleep(0.2)
-#    attachments += bounceRateTracking(slack_token, dataSource)
-#    attachments += notSetLandingPage(slack_token, dataSource)
-#    attachments += adwordsAccountConnection(slack_token, dataSource)
-#    attachments += sessionClickDiscrepancy(slack_token, dataSource)
-#    attachments += selfReferral(slack_token, dataSource)
-#    attachments += paymentReferral(slack_token, dataSource)
-#    attachments += goalSettingActivity(slack_token, dataSource)
-#    attachments += botSpamExcluding(slack_token, dataSource)
-#    attachments += customDimension(slack_token, dataSource)
-#    attachments += siteSearchTracking(slack_token, dataSource)
-#    attachments += gdprCompliant(slack_token, dataSource)
-#    attachments += dataRetentionPeriod(slack_token, dataSource)
-#    attachments += remarketingLists(slack_token, dataSource)
-#    attachments += enhancedECommerceActivity(slack_token, dataSource)
-#    attachments += customMetric(slack_token, dataSource)
-#    attachments += samplingCheck(slack_token, dataSource)
+    #    attachments += bounceRateTracking(slack_token, dataSource)
+    #    attachments += notSetLandingPage(slack_token, dataSource)
+    #    attachments += adwordsAccountConnection(slack_token, dataSource)
+    #    attachments += sessionClickDiscrepancy(slack_token, dataSource)
+    #    attachments += selfReferral(slack_token, dataSource)
+    #    attachments += paymentReferral(slack_token, dataSource)
+    #    attachments += goalSettingActivity(slack_token, dataSource)
+    #    attachments += botSpamExcluding(slack_token, dataSource)
+    #    attachments += customDimension(slack_token, dataSource)
+    #    attachments += siteSearchTracking(slack_token, dataSource)
+    #    attachments += gdprCompliant(slack_token, dataSource)
+    #    attachments += dataRetentionPeriod(slack_token, dataSource)
+    #    attachments += remarketingLists(slack_token, dataSource)
+    #    attachments += enhancedECommerceActivity(slack_token, dataSource)
+    #    attachments += customMetric(slack_token, dataSource)
+    #    attachments += samplingCheck(slack_token, dataSource)
 
     if len(attachments):
         slack_client = WebClient(token=slack_token)
@@ -100,7 +101,7 @@ def bounceRateTracking(slack_token, dataSource):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-#                    'filtersExpression': "ga:bounceRate>65,ga:bounceRate<30",
+                    #                    'filtersExpression': "ga:bounceRate>65,ga:bounceRate<30",
                     'includeEmptyRows': True
                 }]}).execute()
 
@@ -532,16 +533,16 @@ def customDimension(slack_token, dataSource):
     hasHit = False
     if (hitsdimensions):
         rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-        reportRequests =  []
+        reportRequests = []
         for i in range(len(hitsdimensions) // 5 + 1):  # Reporting API allows us to set maximum 5 reports
-            reportRequests  = []
+            reportRequests = []
             reportRequests += [{
-                                    'viewId': viewId,
-                                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                                    'metrics': metrics,
-                                    'dimensions': [{'name': dimId}],
-                                    'filtersExpression': "ga:hits>0"
-                                } for dimId in hitsdimensions[i:i + 5]]
+                'viewId': viewId,
+                'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                'metrics': metrics,
+                'dimensions': [{'name': dimId}],
+                'filtersExpression': "ga:hits>0"
+            } for dimId in hitsdimensions[i:i + 5]]
             results = rservice.reports().batchGet(
                 body={'reportRequests': reportRequests}).execute()
             for report in results['reports']:
@@ -699,8 +700,8 @@ def dataRetentionPeriod(slack_token, dataSource):
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
     webproperty = mservice.management().webproperties().get(accountId=accountId,
-                                                   webPropertyId=propertyId
-                                                   ).execute()
+                                                            webPropertyId=propertyId
+                                                            ).execute()
 
     dataRetentionTtl = webproperty.get('dataRetentionTtl')
 
@@ -944,7 +945,7 @@ def internalSearchTermConsistency(slack_token, dataSource):
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
     filters = mservice.management().filters().list(accountId=accountId).execute()
-    
+
     hasISTC = False
     for filter in filters.get('items', []):
         print(filter)
@@ -959,7 +960,7 @@ def internalSearchTermConsistency(slack_token, dataSource):
         if field == "INTERNAL_SEARCH_TERM":
             hasISTC = True
             break
-        
+
     if hasISTC:
         attachments += [{
             "text": "No worries! There is no duplicated internal search term because of case sensitivity",
@@ -971,6 +972,72 @@ def internalSearchTermConsistency(slack_token, dataSource):
     else:
         attachments += [{
             "text": "Internal search term performans may not be measure properly because of case sensitivity of terms, use lowercase filter to get rid of duplicated terms",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def domainControl(slack_token, dataSource):
+    text = "*Domain Control*"
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    viewId = dataSource['viewID']
+
+    metrics = [{'expression': 'ga:sessions'}]
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': [{'name': 'ga:hostname'}]
+                }]}).execute()
+
+    hotname = results['reports'][0]['data']['totals'][0]['values'][0]
+
+    try:
+        mservice = google_analytics.build_management_api_v3_woutSession(email)
+        domainControls = mservice.management().remarketingAudience().list(
+            accountId=accountId,
+            webPropertyId=propertyId,
+        ).execute()
+
+    except TypeError:
+        print('There was an error in constructing your query : %s' % TypeError)
+
+    for item in domainControls.get('items', []):
+        totalResult = item('totalResults')
+
+    if totalResult == 1:
+        attachments += [{
+            "text": "",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
