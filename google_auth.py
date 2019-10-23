@@ -15,8 +15,8 @@ ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
 
 GA_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/analytics.readonly']
-GSC_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/adwords']
-ADW_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/webmasters.readonly']
+GSC_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/webmasters.readonly']
+ADW_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/adwords']
 LOGIN_AUTHORIZATION_SCOPE = ['profile', 'email']
 
 LOGINAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/loginauth"
