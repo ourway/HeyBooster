@@ -157,13 +157,15 @@ def performancechangetracking(slack_token, task, dataSource):
                     viewmoretext = text_r
                 elif(condition == "Less"):
                     color = "good"
-                attachments += [{
-                    "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
-                    "callback_id": "notification_form",
-                    'color': color,
-                    "attachment_type": "default",
-                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                }]
+
+                if(color != "good"):
+                    attachments += [{
+                        "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
+                        "callback_id": "notification_form",
+                        'color': color,
+                        "attachment_type": "default",
+                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    }]
         else:
             if ((data_new - data_old) <= (tol * data_old)):
                 color = "good"
@@ -180,13 +182,14 @@ def performancechangetracking(slack_token, task, dataSource):
                 elif(condition == "Less"):
                     color = "danger"
                     viewmoretext = text_r
-                attachments += [{
-                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
-                    "callback_id": "notification_form",
-                    'color': color,
-                    "attachment_type": "default",
-                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                }]
+                if(color != "good"):
+                    attachments += [{
+                        "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
+                        "callback_id": "notification_form",
+                        'color': color,
+                        "attachment_type": "default",
+                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    }]
 
     if (len(attachments) != 0):
         attachments[0]['pretext'] = text
@@ -368,24 +371,25 @@ def performancechangealert(slack_token, task, dataSource):
             #                    "attachment_type": "default",
             #                }]
             else:
-                attachments += [{
-                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
-                    "callback_id": "notification_form",
-                    'color': "good",
-                    "attachment_type": "default",
-                    "actions": [{
-                        "name": "ignore",
-                        "text": "Remove",
-                        "type": "button",
-                        "value": "ignoreanalert " + metrics[i]['expression'],
-                        "confirm": {
-                            "title": "Warning",
-                            "text": f"If you remove {metricname} performance change alert, you will not track your {metricname} performance change alert anymore. Are you still sure you want to remove it?",
-                            "ok_text": "Yes",
-                            "dismiss_text": "No"
-                        }
-                    }]
-                }]
+                pass
+#                attachments += [{
+#                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
+#                    "callback_id": "notification_form",
+#                    'color': "good",
+#                    "attachment_type": "default",
+#                    "actions": [{
+#                        "name": "ignore",
+#                        "text": "Remove",
+#                        "type": "button",
+#                        "value": "ignoreanalert " + metrics[i]['expression'],
+#                        "confirm": {
+#                            "title": "Warning",
+#                            "text": f"If you remove {metricname} performance change alert, you will not track your {metricname} performance change alert anymore. Are you still sure you want to remove it?",
+#                            "ok_text": "Yes",
+#                            "dismiss_text": "No"
+#                        }
+#                    }]
+#                }]
 
     if (len(attachments) != 0):
         attachments[0]['pretext'] = text
@@ -560,13 +564,14 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                     #                        "attachment_type": "default",
                     #                    }]
                     else:
-                        attachments[seg] += [{
-                            "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
-                            "callback_id": "notification_form",
-                            'color': "good",
-                            "attachment_type": "default",
-                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                        }]
+                        pass
+#                        attachments[seg] += [{
+#                            "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
+#                            "callback_id": "notification_form",
+#                            'color': "good",
+#                            "attachment_type": "default",
+#                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                        }]
         if (len(attachments[seg]) > 0):
             attachments[seg][0]['pretext'] = text[seg]
 
