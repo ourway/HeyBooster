@@ -1024,12 +1024,13 @@ def domainControl(slack_token, dataSource):
     except TypeError:
         print('There was an error in constructing your query : %s' % TypeError)
 
+    totalResult = domainControls.get('totalResults')
     for item in domainControls.get('items', []):
-        totalResult = item('totalResults')
+        websiteUrl = item('websiteUrl')
 
     if totalResult == 1:
         attachments += [{
-            "text": "",
+            "text": "Most of the visits (97.17%) in the view are happening on the domain, specified in the view settings {websiteUrl}.".format(websiteUrl),
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
@@ -1037,7 +1038,7 @@ def domainControl(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "",
+            "text": "Check out the website url specified in view setting because only 80% of session is happening on that domain {websiteUrl}.".format(websiteUrl),
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
