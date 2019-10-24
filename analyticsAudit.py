@@ -1003,21 +1003,14 @@ def domainControl(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
     
     #Obtain websiteURL
-    try:
-        mservice = google_analytics.build_management_api_v3_woutSession(email)
-        domainControls = mservice.management().remarketingAudience().list(
-            accountId=accountId,
-            webPropertyId=propertyId,
-        ).execute()
-    except TypeError:
-        print('There was an error in constructing your query : %s' % TypeError)
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    webProperty = mservice.management().webproperties().get(
+                                                accountId=accountId,
+                                                webPropertyId=propertyId,
+                                            ).execute()
+    websiteUrl = webProperty['websiteUrl'].replace('https://','')
 
-    #domainControlsResult = domainControls.get('totalResults')
-    for item in domainControls.get('items', []):
-        websiteUrl = item('websiteUrl')
 
-    
-        
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     results = service.reports().batchGet(
         body={
