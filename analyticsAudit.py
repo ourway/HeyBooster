@@ -44,7 +44,8 @@ def analyticsAudit(slack_token, dataSource):
                     enhancedECommerceActivity,
                     customMetric,
                     samplingCheck,
-                    internalSearchTermConsistency]
+                    internalSearchTermConsistency,
+                    domainControl]
     attachments = []
     for function in subfunctions:
         trycount = 0
@@ -1000,55 +1001,64 @@ def domainControl(slack_token, dataSource):
 
     start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
-
-    service = google_analytics.build_reporting_api_v4_woutSession(email)
-    hostnameResults = service.reports().batchGet(
-        body={
-            'reportRequests': [
-                {
-                    'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                    'metrics': metrics,
-                    'dimensions': [{'name': 'ga:hostname'}]
-                }]}).execute()
-
-    totalResults = service.reports().batchGet(
-        body={
-            'reportRequests': [
-                {
-                    'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                    'metrics': metrics
-                }]}).execute()
-
-    hostname = hostnameResults['reports'][0]['data']['totals'][0]['values'][0]
-    totalSession = totalResults['reports'][0]['data']['totals'][0]['values'][0]
-
+    
+    #Obtain websiteURL
     try:
         mservice = google_analytics.build_management_api_v3_woutSession(email)
         domainControls = mservice.management().remarketingAudience().list(
             accountId=accountId,
             webPropertyId=propertyId,
         ).execute()
-
     except TypeError:
         print('There was an error in constructing your query : %s' % TypeError)
 
-    # domainControlsResult = domainControls.get('totalResults')
+    #domainControlsResult = domainControls.get('totalResults')
     for item in domainControls.get('items', []):
         websiteUrl = item('websiteUrl')
 
-    if hostname / totalSession:
-        attachments += [{
-            "text": "Most of the visits (97.17%) in the view are happening on the domain, specified in the view settings {}.".format(websiteUrl),
-            "color": "good",
-            "pretext": text,
-            "callback_id": "notification_form",
-            "attachment_type": "default",
-        }]
+    
+        
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': [{'name': 'ga:hostname'}],
+                    "orderBys": [
+                        {
+                            "fieldName": metrics[0]['expression'],
+                            "sortOrder": "DESCENDING"
+                        }]
+                }]}).execute()
+    
+    maxHostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
+    maxSession = int(results['reports'][0]['data']['rows'][0]['metrics'][0]['values'][0])
+    totalSession = int(results['reports'][0]['data']['totals'][0]['values'][0])
+    percentage = maxSession / totalSession
+    
+    if(websiteUrl in  maxHostname or maxHostname in websiteUrl):
+        if percentage > 95:
+            attachments += [{
+                "text": "Most of the visits {round(percentage,2)}% in the view are happening on the domain, specified in the view settings {websiteUrl}.".format(websiteUrl),
+                "color": "good",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
+        else:
+            attachments += [{
+                "text": "Check out the website url specified in view setting because only {round(percentage,2)}% of session is happening on that domain {websiteUrl}.".format(websiteUrl),
+                "color": "danger",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
     else:
         attachments += [{
-            "text": "Check out the website url specified in view setting because only 80% of session is happening on that domain {}.".format(websiteUrl),
+            "text": "Check out the website url specified in view setting because {maxHostname} is getting more traffic than specified domain {websiteUrl}.".format(websiteUrl),
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
