@@ -44,8 +44,8 @@ def analyticsAudit(slack_token, dataSource):
                     enhancedECommerceActivity,
                     customMetric,
                     samplingCheck,
-                    internalSearchTermConsistency,
-                    domainControl]
+                    internalSearchTermConsistency
+                    ]
     attachments = []
     for function in subfunctions:
         trycount = 0
@@ -73,7 +73,7 @@ def analyticsAudit(slack_token, dataSource):
     #    attachments += enhancedECommerceActivity(slack_token, dataSource)
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
-
+        attachments += domainControl(slack_token, dataSource)
     if len(attachments):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
