@@ -44,7 +44,8 @@ def analyticsAudit(slack_token, dataSource):
                     enhancedECommerceActivity,
                     customMetric,
                     samplingCheck,
-                    internalSearchTermConsistency
+                    internalSearchTermConsistency,
+                    domainControl
                     ]
     attachments = []
     for function in subfunctions:
@@ -73,7 +74,6 @@ def analyticsAudit(slack_token, dataSource):
     #    attachments += enhancedECommerceActivity(slack_token, dataSource)
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
-        attachments += domainControl(slack_token, dataSource)
     if len(attachments):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
@@ -1036,7 +1036,7 @@ def domainControl(slack_token, dataSource):
     if(websiteUrl in  maxHostname or maxHostname in websiteUrl):
         if percentage > 95:
             attachments += [{
-                "text": "Most of the visits {round(percentage,2)}% in the view are happening on the domain, specified in the view settings {websiteUrl}.",
+                "text": f"Most of the visits {round(percentage,2)}% in the view are happening on the domain, specified in the view settings {websiteUrl}.",
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -1044,7 +1044,7 @@ def domainControl(slack_token, dataSource):
             }]
         else:
             attachments += [{
-                "text": "Check out the website url specified in view setting because only {round(percentage,2)}% of session is happening on that domain {websiteUrl}.",
+                "text": f"Check out the website url specified in view setting because only {round(percentage,2)}% of session is happening on that domain {websiteUrl}.",
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -1052,7 +1052,7 @@ def domainControl(slack_token, dataSource):
             }]
     else:
         attachments += [{
-            "text": "Check out the website url specified in view setting because {maxHostname} is getting more traffic than specified domain {websiteUrl}.",
+            "text": f"Check out the website url specified in view setting because {maxHostname} is getting more traffic than specified domain {websiteUrl}.",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
