@@ -1031,8 +1031,8 @@ def domainControl(slack_token, dataSource):
     maxHostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
     maxSession = int(results['reports'][0]['data']['rows'][0]['metrics'][0]['values'][0])
     totalSession = int(results['reports'][0]['data']['totals'][0]['values'][0])
-    percentage = maxSession / totalSession
-    
+    percentage = maxSession / totalSession * 100
+    print(maxHostname, maxSession, totalSession, percentage, '%')
     if(websiteUrl in  maxHostname or maxHostname in websiteUrl):
         if percentage > 95:
             attachments += [{
