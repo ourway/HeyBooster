@@ -1002,7 +1002,7 @@ def domainControl(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
+    hostnameResults = service.reports().batchGet(
         body={
             'reportRequests': [
                 {
@@ -1012,7 +1012,17 @@ def domainControl(slack_token, dataSource):
                     'dimensions': [{'name': 'ga:hostname'}]
                 }]}).execute()
 
-    hostname = results['reports'][0]['data']['totals'][0]['values'][0]
+    totalResults = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics
+                }]}).execute()
+
+    hostname = hostnameResults['reports'][0]['data']['totals'][0]['values'][0]
+    totalSession = totalResults['reports'][0]['data']['totals'][0]['values'][0]
 
     try:
         mservice = google_analytics.build_management_api_v3_woutSession(email)
@@ -1024,11 +1034,11 @@ def domainControl(slack_token, dataSource):
     except TypeError:
         print('There was an error in constructing your query : %s' % TypeError)
 
-    totalResult = domainControls.get('totalResults')
+    # domainControlsResult = domainControls.get('totalResults')
     for item in domainControls.get('items', []):
         websiteUrl = item('websiteUrl')
 
-    if totalResult == 1:
+    if hostname / totalSession:
         attachments += [{
             "text": "Most of the visits (97.17%) in the view are happening on the domain, specified in the view settings {}.".format(websiteUrl),
             "color": "good",
