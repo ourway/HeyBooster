@@ -1019,7 +1019,7 @@ def defaultPageControl(slack_token, dataSource):
     else:
         attachments += [{
             "text": "Default page is not set as it should be.",
-            "color": "red",
+            "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
@@ -1030,7 +1030,7 @@ def defaultPageControl(slack_token, dataSource):
         return attachments
     else:
         return []
-    
+
 
 def domainControl(slack_token, dataSource):
     text = "*Domain Control*"
