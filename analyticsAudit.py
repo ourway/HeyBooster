@@ -45,6 +45,7 @@ def analyticsAudit(slack_token, dataSource):
                     customMetric,
                     samplingCheck,
                     internalSearchTermConsistency,
+                    defaultPageControl,
                     domainControl
                     ]
     attachments = []
@@ -985,6 +986,44 @@ def internalSearchTermConsistency(slack_token, dataSource):
         return attachments
     else:
         return []
+
+
+def defaultPageControl(slack_token, dataSource):
+    text = "*Default Page Control*"
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    viewId = dataSource['viewID']
+
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    profile = mservice.management().profiles().get(
+          accountId=accountId,
+          webPropertyId=propertyId,
+          profileId=viewId).execute()
+
+    try:
+        defaultPage = profile['defaultPage']
+    except Exception:
+        defaultPage = None
+
+    if defaultPage != None:
+        attachments += [{
+            "text": "Don’t use default page setting, it is moderately error prone method to fix splitting data issue.",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "Default page is not set as it should be.",
+            "color": "red",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
 
 
 def domainControl(slack_token, dataSource):
