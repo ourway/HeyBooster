@@ -1025,6 +1025,12 @@ def defaultPageControl(slack_token, dataSource):
             "attachment_type": "default",
         }]
 
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+    
 
 def domainControl(slack_token, dataSource):
     text = "*Domain Control*"
