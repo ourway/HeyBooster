@@ -46,7 +46,8 @@ def analyticsAudit(slack_token, dataSource):
                     samplingCheck,
                     internalSearchTermConsistency,
                     defaultPageControl,
-                    domainControl
+                    domainControl,
+                    eventTracking
                     ]
     attachments = []
     for function in subfunctions:
@@ -999,9 +1000,9 @@ def defaultPageControl(slack_token, dataSource):
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
     profile = mservice.management().profiles().get(
-          accountId=accountId,
-          webPropertyId=propertyId,
-          profileId=viewId).execute()
+        accountId=accountId,
+        webPropertyId=propertyId,
+        profileId=viewId).execute()
 
     try:
         defaultPage = profile['defaultPage']
@@ -1047,15 +1048,14 @@ def domainControl(slack_token, dataSource):
 
     start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
-    
-    #Obtain websiteURL
+
+    # Obtain websiteURL
     mservice = google_analytics.build_management_api_v3_woutSession(email)
     webProperty = mservice.management().webproperties().get(
-                                                accountId=accountId,
-                                                webPropertyId=propertyId,
-                                            ).execute()
-    websiteUrl = webProperty['websiteUrl'].replace('https://','')
-
+        accountId=accountId,
+        webPropertyId=propertyId,
+    ).execute()
+    websiteUrl = webProperty['websiteUrl'].replace('https://', '')
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     results = service.reports().batchGet(
@@ -1072,16 +1072,16 @@ def domainControl(slack_token, dataSource):
                             "sortOrder": "DESCENDING"
                         }]
                 }]}).execute()
-    
+
     maxHostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
     maxSession = int(results['reports'][0]['data']['rows'][0]['metrics'][0]['values'][0])
     totalSession = int(results['reports'][0]['data']['totals'][0]['values'][0])
     percentage = maxSession / totalSession * 100
     print(maxHostname, maxSession, totalSession, percentage, '%')
-    if(websiteUrl in  maxHostname or maxHostname in websiteUrl):
+    if (websiteUrl in maxHostname or maxHostname in websiteUrl):
         if percentage > 95:
             attachments += [{
-                "text": f"Most of the visits {round(percentage,2)}% in the view are happening on the domain, specified in the view settings {websiteUrl}.",
+                "text": f"Most of the visits {round(percentage, 2)}% in the view are happening on the domain, specified in the view settings {websiteUrl}.",
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -1089,7 +1089,7 @@ def domainControl(slack_token, dataSource):
             }]
         else:
             attachments += [{
-                "text": f"Check out the website url specified in view setting because only {round(percentage,2)}% of session is happening on that domain {websiteUrl}.",
+                "text": f"Check out the website url specified in view setting because only {round(percentage, 2)}% of session is happening on that domain {websiteUrl}.",
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
@@ -1098,6 +1098,56 @@ def domainControl(slack_token, dataSource):
     else:
         attachments += [{
             "text": f"Check out the website url specified in view setting because {maxHostname} is getting more traffic than specified domain {websiteUrl}.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def eventTracking(slack_token, dataSource):
+    text = "*Event Tracking*"
+    attachments = []
+
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    metrics = [{'expression': 'ga:totalEvents'}]
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics
+                }]}).execute()
+
+    result = int(results['reports'][0]['data']['totals'][0]['values'][0])
+
+    if result > 0:
+        attachments += [{
+            "text": "You are using event tracking but do you know that every action users take can measure as event and then retargeting?",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": " You are missing the opportunity to measure and optimize actions users take on your website like video watching, button clicking, error page views etc.",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
