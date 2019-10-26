@@ -1537,6 +1537,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         default_time = str(7 - (usr_tz_offset - lc_tz_offset)).zfill(2)
     else:
         default_time = str(24 + (7 - (usr_tz_offset - lc_tz_offset))).zfill(2)
+    dataSource = db.find_one("datasource", query={"_id": dataSourceID})
     db.insert('notification', data={
         'type': 'performancechangetracking',
         'email': email,
@@ -1616,6 +1617,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
                 "callback_id": "notification_form",
                 "color": "#3AA3E3",
                 "attachment_type": "default",
+                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "actions": [
                     {
                         "name": "change",
