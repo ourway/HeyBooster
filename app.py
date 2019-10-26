@@ -457,7 +457,7 @@ def message_actions():
             datasourceID = datasourceIDs[0]
         #Check if the datasource owner clicked the button
         if(datasourceID in datasourceIDs):
-            dataSource = dataSources.index(datasourceIDs.index(datasourceID))
+            dataSource = dataSources[datasourceIDs.index(datasourceID)]
         else:
             return make_response("", 200)
 #        if (message_action['actions'][-1]['value'] == 'track'):
@@ -1277,7 +1277,7 @@ def message_actions():
             datasourceID = datasourceIDs[0]
         #Check if the datasource owner clicked the button
         if(datasourceID in datasourceIDs):
-            dataSource = dataSources.index(datasourceIDs.index(datasourceID))
+            dataSource = dataSources[datasourceIDs.index(datasourceID)]
         else:
             return make_response("", 200)
         if ('module_types' in submission.keys()):
