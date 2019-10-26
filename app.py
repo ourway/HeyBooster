@@ -453,7 +453,7 @@ def message_actions():
         messagevalue = message_action['actions'][-1]['value']
         if('_' in messagevalue):
             datasourceID = messagevalue.split('_')[-1]
-            datasourceID = ObjectId[datasourceID]
+            datasourceID = ObjectId(datasourceID)
         else:
             datasourceID = datasourceIDs[0]
         #Check if the datasource owner clicked the button
