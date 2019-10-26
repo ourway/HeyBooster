@@ -453,6 +453,7 @@ def message_actions():
         messagevalue = message_action['actions'][-1]['value']
         if('_' in messagevalue):
             datasourceID = messagevalue.split('_')[-1]
+            datasourceID = ObjectId[datasourceID]
         else:
             datasourceID = datasourceIDs[0]
         #Check if the datasource owner clicked the button
@@ -781,7 +782,7 @@ def message_actions():
                         "title": "Notification Settings",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
-                        "state": datasourceID,
+                        "state": str(datasourceID),
                         "elements": [
                             {
                                 "label": "Hour",
@@ -821,7 +822,7 @@ def message_actions():
                         "title": "Set My Goal",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
-                        "state": datasourceID,
+                        "state": str(datasourceID),
                         "elements": [
                             {
                                 "label": "Metric",
@@ -979,7 +980,7 @@ def message_actions():
                         "title": "Set My Daily Alert",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
-                        "state": datasourceID,
+                        "state": str(datasourceID),
                         "elements": [
                             {
                                 "label": "Metric",
@@ -1099,7 +1100,7 @@ def message_actions():
                         "title": "Set My Budget",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
-                        "state": datasourceID,
+                        "state": str(datasourceID),
                         "elements": [
                             {
                                 "label": "Interval Type",
@@ -1272,7 +1273,7 @@ def message_actions():
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
         try:
-            datasourceID = message_action['state']
+            datasourceID = ObjectId(message_action['state'])
         except:
             datasourceID = datasourceIDs[0]
         #Check if the datasource owner clicked the button
