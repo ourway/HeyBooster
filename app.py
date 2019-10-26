@@ -742,32 +742,8 @@ def message_actions():
         #            attachments=[]
         #        )
         
-#        elif (message_action['actions'][-1]['value'] == 'ignore'):
-        if ('ignore' in messagevalue):
-            text = message_action['original_message']['attachments'][0]['pretext']
-#            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
-            if (("performance" in text.lower()) and ("tracking" in text.lower())):
-                db.find_and_modify('notification', query={'datasourceID': datasourceID,
-                                                          'type': 'performancechangetracking'},
-                                   status='0')
-            elif (("performance" in text.lower()) and ("alert" in text.lower())):
-                db.find_and_modify('notification', query={'datasourceID': datasourceID,
-                                                          'type': 'performancechangealert'},
-                                   status='0')
-            elif (("funnel" in text.lower()) and ("change" in text.lower())):
-                db.find_and_modify('notification', query={'datasourceID': datasourceID,
-                                                          'type': 'shoppingfunnelchangetracking'},
-                                   status='0')
-            elif (("cost" in text.lower()) and ("prediction" in text.lower())):
-                db.find_and_modify('notification', query={'datasourceID': datasourceID,
-                                                          'type': 'costprediction'},
-                                   status='0')
-            elif (("performance" in text.lower()) and ("goal" in text.lower())):
-                db.find_and_modify('notification', query={'datasourceID': datasourceID,
-                                                          'type': 'performancegoaltracking'},
-                                   status='0')
 #        elif (message_action['actions'][-1]['value'] == 'change'):
-        elif ('change' in messagevalue):
+        if ('change' in messagevalue):
             text = message_action['original_message']['text']
             if (True):
                 houroptions = []
@@ -1136,6 +1112,7 @@ def message_actions():
 
         elif ('ignoreone' in messagevalue):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
+            metric = metric.split('_')[0]
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
             print("Message TS:", message_ts)
@@ -1183,6 +1160,7 @@ def message_actions():
                                      attachments=attachments)
         elif ('ignoreanalert' in messagevalue):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
+            metric = metric.split('_')[0]
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
             print("Message TS:", message_ts)
@@ -1229,6 +1207,30 @@ def message_actions():
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
+        #        elif (message_action['actions'][-1]['value'] == 'ignore'):
+        elif ('ignore' in messagevalue):
+            text = message_action['original_message']['attachments'][0]['pretext']
+#            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
+            if (("performance" in text.lower()) and ("tracking" in text.lower())):
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                          'type': 'performancechangetracking'},
+                                   status='0')
+            elif (("performance" in text.lower()) and ("alert" in text.lower())):
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                          'type': 'performancechangealert'},
+                                   status='0')
+            elif (("funnel" in text.lower()) and ("change" in text.lower())):
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                          'type': 'shoppingfunnelchangetracking'},
+                                   status='0')
+            elif (("cost" in text.lower()) and ("prediction" in text.lower())):
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                          'type': 'costprediction'},
+                                   status='0')
+            elif (("performance" in text.lower()) and ("goal" in text.lower())):
+                db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                          'type': 'performancegoaltracking'},
+                                   status='0')
 #        elif message_action['actions'][-1]['name'] == "showgraph":
         elif ("showgraph" in message_action['actions'][-1]['name']):
             imageId = message_action['actions'][-1]['value']
