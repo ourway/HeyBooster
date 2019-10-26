@@ -445,39 +445,233 @@ def message_actions():
     slack_token = user['sl_accesstoken']
     email = user['email']
     slack_client = WebClient(token=slack_token)
-    dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
+    userdataSources = db.find("datasource", query={'sl_userid': sl_userid,
                                                   'channelID': channel})
-    datasourceID = dataSource['_id']
+    dataSources = [dataSource for dataSource in userdataSources]
+    datasourceIDs = [dataSource['_id'] for dataSource in dataSources]
     if message_action["type"] == "interactive_message":
-        if (message_action['actions'][-1]['value'] == 'track'):
-            houroptions = []
-            for i in range(0, 24):
-                houroptions.append({'label': str(i), 'value': i})
-            minuteoptions = []
-            for i in range(0, 60):
-                minuteoptions.append({'label': str(i), 'value': i})
-            text = message_action['original_message']['attachments'][0]['pretext']
-            if (("performance" in text.lower()) and ("change" in text.lower())):
-                slack_client.dialog_open(
-                    trigger_id=message_action["trigger_id"],
-                    dialog={
-                        "title": "Notification Settings",
-                        "submit_label": "Submit",
-                        "callback_id": "notification_form",
-                        "elements": [
-                            {
-                                "label": "Module Type",
-                                "type": "select",
-                                "name": "module_types",
-                                "placeholder": "Select a module type",
-                                "value": "performancechangetracking",
-                                "options": [
-                                    {
-                                        "label": "Performance Changes Tracking",
-                                        "value": "performancechangetracking"
-                                    }
-                                ]
-                            },
+        messagevalue = message_action['actions'][-1]['value']
+        if('_' in messagevalue):
+            datasourceID = messagevalue.split('_')[-1]
+        else:
+            datasourceID = datasourceIDs[0]
+        #Check if the datasource owner clicked the button
+        if(datasourceID in datasourceIDs):
+            dataSource = dataSources.index(datasourceIDs.index(datasourceID))
+        else:
+            return make_response("", 200)
+#        if (message_action['actions'][-1]['value'] == 'track'):
+#            houroptions = []
+#            for i in range(0, 24):
+#                houroptions.append({'label': str(i), 'value': i})
+#            minuteoptions = []
+#            for i in range(0, 60):
+#                minuteoptions.append({'label': str(i), 'value': i})
+#            text = message_action['original_message']['attachments'][0]['pretext']
+#            if (("performance" in text.lower()) and ("change" in text.lower())):
+#                slack_client.dialog_open(
+#                    trigger_id=message_action["trigger_id"],
+#                    dialog={
+#                        "title": "Notification Settings",
+#                        "submit_label": "Submit",
+#                        "callback_id": "notification_form",
+#                        "elements": [
+#                            {
+#                                "label": "Module Type",
+#                                "type": "select",
+#                                "name": "module_types",
+#                                "placeholder": "Select a module type",
+#                                "value": "performancechangetracking",
+#                                "options": [
+#                                    {
+#                                        "label": "Performance Changes Tracking",
+#                                        "value": "performancechangetracking"
+#                                    }
+#                                ]
+#                            },
+#                            #                            {
+#                            #                                "label": "Schedule Type",
+#                            #                                "type": "select",
+#                            #                                "name": "schedule_types",
+#                            #                                "placeholder": "Select a schedule type",
+#                            #                                "options": [
+#                            #                                    {
+#                            #                                        "label": "Daily",
+#                            #                                        "value": "daily"
+#                            #                                    },
+#                            #                                    {
+#                            #                                        "label": "Weekly",
+#                            #                                        "value": "weekly"
+#                            #                                    }
+#                            #                                ]
+#                            #                            },
+#                            {
+#                                "label": "Hour",
+#                                "type": "select",
+#                                "name": "hour",
+#                                "placeholder": "Select an hour",
+#                                "options": houroptions
+#                            },
+#                            {
+#                                "label": "Minute",
+#                                "type": "select",
+#                                "name": "minute",
+#                                "placeholder": "Select a minute",
+#                                "options": minuteoptions
+#                            },
+#                            #                            {
+#                            #                                "label": "Threshold (%)",
+#                            #                                "name": "threshold",
+#                            #                                "type": "text",
+#                            #                                "subtype": "number",
+#                            #                                "placeholder": "Enter a number"
+#                            #                            }
+#                        ]
+#                    }
+#                )
+#            elif (("funnel" in text.lower()) and ("change" in text.lower())):
+#                slack_client.dialog_open(
+#                    trigger_id=message_action["trigger_id"],
+#                    dialog={
+#                        "title": "Notification Settings",
+#                        "submit_label": "Submit",
+#                        "callback_id": "notification_form",
+#                        "elements": [
+#                            {
+#                                "label": "Module Type",
+#                                "type": "select",
+#                                "name": "module_types",
+#                                "placeholder": "Select a module type",
+#                                "value": "shoppingfunnelchangetracking",
+#                                "options": [
+#                                    {
+#                                        "label": "Shopping Funnel Changes Tracking",
+#                                        "value": "shoppingfunnelchangetracking"
+#                                    }
+#                                ]
+#                            },
+#                            #                            {
+#                            #                                "label": "Schedule Type",
+#                            #                                "type": "select",
+#                            #                                "name": "schedule_types",
+#                            #                                "placeholder": "Select a schedule type",
+#                            #                                "options": [
+#                            #                                    {
+#                            #                                        "label": "Daily",
+#                            #                                        "value": "daily"
+#                            #                                    },
+#                            #                                    {
+#                            #                                        "label": "Weekly",
+#                            #                                        "value": "weekly"
+#                            #                                    }
+#                            #                                ]
+#                            #                            },
+#                            {
+#                                "label": "Hour",
+#                                "type": "select",
+#                                "name": "hour",
+#                                "placeholder": "Select an hour",
+#                                "options": houroptions
+#                            },
+#                            {
+#                                "label": "Minute",
+#                                "type": "select",
+#                                "name": "minute",
+#                                "placeholder": "Select a minute",
+#                                "options": minuteoptions
+#                            },
+#                            #                            {
+#                            #                                "label": "Threshold (%)",
+#                            #                                "name": "threshold",
+#                            #                                "type": "text",
+#                            #                                "subtype": "number",
+#                            #                                "placeholder": "Enter a number"
+#                            #                            }
+#                        ]
+#                    }
+#                )
+#            elif (("cost" in text.lower()) and ("prediction" in text.lower())):
+#                slack_client.dialog_open(
+#                    trigger_id=message_action["trigger_id"],
+#                    dialog={
+#                        "title": "Notification Settings",
+#                        "submit_label": "Submit",
+#                        "callback_id": "notification_form",
+#                        "elements": [
+#                            {
+#                                "label": "Module Type",
+#                                "type": "select",
+#                                "name": "module_types",
+#                                "placeholder": "Select a module type",
+#                                "value": "costprediction",
+#                                "options": [
+#                                    {
+#                                        "label": "Cost Prediction",
+#                                        "value": "costprediction"
+#                                    }
+#                                ]
+#                            },
+#                            #                            {
+#                            #                                "label": "Schedule Type",
+#                            #                                "type": "select",
+#                            #                                "name": "schedule_types",
+#                            #                                "placeholder": "Select a schedule type",
+#                            #                                "options": [
+#                            #                                    {
+#                            #                                        "label": "Daily",
+#                            #                                        "value": "daily"
+#                            #                                    },
+#                            #                                    {
+#                            #                                        "label": "Weekly",
+#                            #                                        "value": "weekly"
+#                            #                                    }
+#                            #                                ]
+#                            #                            },
+#                            {
+#                                "label": "Hour",
+#                                "type": "select",
+#                                "name": "hour",
+#                                "placeholder": "Select an hour",
+#                                "options": houroptions
+#                            },
+#                            {
+#                                "label": "Minute",
+#                                "type": "select",
+#                                "name": "minute",
+#                                "placeholder": "Select a minute",
+#                                "options": minuteoptions
+#                            },
+#                            #                            {
+#                            #                                "label": "Monthly Adwords Budget",
+#                            #                                "name": "target",
+#                            #                                "type": "text",
+#                            #                                "subtype": "number",
+#                            #                                "placeholder": "Enter a number"
+#                            #                            }
+#                        ]
+#                    }
+#                )
+#            elif (("performance" in text.lower()) and ("goal" in text.lower())):
+#                slack_client.dialog_open(
+#                    trigger_id=message_action["trigger_id"],
+#                    dialog={
+#                        "title": "Notification Settings",
+#                        "submit_label": "Submit",
+#                        "callback_id": "notification_form",
+#                        "elements": [
+#                            {
+#                                "label": "Module Type",
+#                                "type": "select",
+#                                "name": "module_types",
+#                                "placeholder": "Select a module type",
+#                                "value": "performancegoaltracking",
+#                                "options": [
+#                                    {
+#                                        "label": "Performance Goal Tracking",
+#                                        "value": "performancegoaltracking"
+#                                    }
+#                                ]
+#                            },
                             #                            {
                             #                                "label": "Schedule Type",
                             #                                "type": "select",
@@ -494,203 +688,20 @@ def message_actions():
                             #                                    }
                             #                                ]
                             #                            },
-                            {
-                                "label": "Hour",
-                                "type": "select",
-                                "name": "hour",
-                                "placeholder": "Select an hour",
-                                "options": houroptions
-                            },
-                            {
-                                "label": "Minute",
-                                "type": "select",
-                                "name": "minute",
-                                "placeholder": "Select a minute",
-                                "options": minuteoptions
-                            },
-                            #                            {
-                            #                                "label": "Threshold (%)",
-                            #                                "name": "threshold",
-                            #                                "type": "text",
-                            #                                "subtype": "number",
-                            #                                "placeholder": "Enter a number"
-                            #                            }
-                        ]
-                    }
-                )
-            elif (("funnel" in text.lower()) and ("change" in text.lower())):
-                slack_client.dialog_open(
-                    trigger_id=message_action["trigger_id"],
-                    dialog={
-                        "title": "Notification Settings",
-                        "submit_label": "Submit",
-                        "callback_id": "notification_form",
-                        "elements": [
-                            {
-                                "label": "Module Type",
-                                "type": "select",
-                                "name": "module_types",
-                                "placeholder": "Select a module type",
-                                "value": "shoppingfunnelchangetracking",
-                                "options": [
-                                    {
-                                        "label": "Shopping Funnel Changes Tracking",
-                                        "value": "shoppingfunnelchangetracking"
-                                    }
-                                ]
-                            },
-                            #                            {
-                            #                                "label": "Schedule Type",
-                            #                                "type": "select",
-                            #                                "name": "schedule_types",
-                            #                                "placeholder": "Select a schedule type",
-                            #                                "options": [
-                            #                                    {
-                            #                                        "label": "Daily",
-                            #                                        "value": "daily"
-                            #                                    },
-                            #                                    {
-                            #                                        "label": "Weekly",
-                            #                                        "value": "weekly"
-                            #                                    }
-                            #                                ]
-                            #                            },
-                            {
-                                "label": "Hour",
-                                "type": "select",
-                                "name": "hour",
-                                "placeholder": "Select an hour",
-                                "options": houroptions
-                            },
-                            {
-                                "label": "Minute",
-                                "type": "select",
-                                "name": "minute",
-                                "placeholder": "Select a minute",
-                                "options": minuteoptions
-                            },
-                            #                            {
-                            #                                "label": "Threshold (%)",
-                            #                                "name": "threshold",
-                            #                                "type": "text",
-                            #                                "subtype": "number",
-                            #                                "placeholder": "Enter a number"
-                            #                            }
-                        ]
-                    }
-                )
-            elif (("cost" in text.lower()) and ("prediction" in text.lower())):
-                slack_client.dialog_open(
-                    trigger_id=message_action["trigger_id"],
-                    dialog={
-                        "title": "Notification Settings",
-                        "submit_label": "Submit",
-                        "callback_id": "notification_form",
-                        "elements": [
-                            {
-                                "label": "Module Type",
-                                "type": "select",
-                                "name": "module_types",
-                                "placeholder": "Select a module type",
-                                "value": "costprediction",
-                                "options": [
-                                    {
-                                        "label": "Cost Prediction",
-                                        "value": "costprediction"
-                                    }
-                                ]
-                            },
-                            #                            {
-                            #                                "label": "Schedule Type",
-                            #                                "type": "select",
-                            #                                "name": "schedule_types",
-                            #                                "placeholder": "Select a schedule type",
-                            #                                "options": [
-                            #                                    {
-                            #                                        "label": "Daily",
-                            #                                        "value": "daily"
-                            #                                    },
-                            #                                    {
-                            #                                        "label": "Weekly",
-                            #                                        "value": "weekly"
-                            #                                    }
-                            #                                ]
-                            #                            },
-                            {
-                                "label": "Hour",
-                                "type": "select",
-                                "name": "hour",
-                                "placeholder": "Select an hour",
-                                "options": houroptions
-                            },
-                            {
-                                "label": "Minute",
-                                "type": "select",
-                                "name": "minute",
-                                "placeholder": "Select a minute",
-                                "options": minuteoptions
-                            },
-                            #                            {
-                            #                                "label": "Monthly Adwords Budget",
-                            #                                "name": "target",
-                            #                                "type": "text",
-                            #                                "subtype": "number",
-                            #                                "placeholder": "Enter a number"
-                            #                            }
-                        ]
-                    }
-                )
-            elif (("performance" in text.lower()) and ("goal" in text.lower())):
-                slack_client.dialog_open(
-                    trigger_id=message_action["trigger_id"],
-                    dialog={
-                        "title": "Notification Settings",
-                        "submit_label": "Submit",
-                        "callback_id": "notification_form",
-                        "elements": [
-                            {
-                                "label": "Module Type",
-                                "type": "select",
-                                "name": "module_types",
-                                "placeholder": "Select a module type",
-                                "value": "performancegoaltracking",
-                                "options": [
-                                    {
-                                        "label": "Performance Goal Tracking",
-                                        "value": "performancegoaltracking"
-                                    }
-                                ]
-                            },
-                            #                            {
-                            #                                "label": "Schedule Type",
-                            #                                "type": "select",
-                            #                                "name": "schedule_types",
-                            #                                "placeholder": "Select a schedule type",
-                            #                                "options": [
-                            #                                    {
-                            #                                        "label": "Daily",
-                            #                                        "value": "daily"
-                            #                                    },
-                            #                                    {
-                            #                                        "label": "Weekly",
-                            #                                        "value": "weekly"
-                            #                                    }
-                            #                                ]
-                            #                            },
-                            {
-                                "label": "Hour",
-                                "type": "select",
-                                "name": "hour",
-                                "placeholder": "Select an hour",
-                                "options": houroptions
-                            },
-                            {
-                                "label": "Minute",
-                                "type": "select",
-                                "name": "minute",
-                                "placeholder": "Select a minute",
-                                "options": minuteoptions
-                            },
+#                            {
+#                                "label": "Hour",
+#                                "type": "select",
+#                                "name": "hour",
+#                                "placeholder": "Select an hour",
+#                                "options": houroptions
+#                            },
+#                            {
+#                                "label": "Minute",
+#                                "type": "select",
+#                                "name": "minute",
+#                                "placeholder": "Select a minute",
+#                                "options": minuteoptions
+#                            },
                             #                            {
                             #                                "label": "Metric Type",
                             #                                "type": "select",
@@ -718,9 +729,9 @@ def message_actions():
                             #                                "subtype": "number",
                             #                                "placeholder": "Enter a number"
                             #                            }
-                        ]
-                    }
-                )
+#                        ]
+#                    }
+#                )
         #        # Update the message to show that we're in the process of taking their order
         #        resp = slack_client.api_call(
         #            "chat.update",
@@ -729,9 +740,11 @@ def message_actions():
         #            text=message_action['original_message']['text'] + ":pencil: Taking your order...",
         #            attachments=[]
         #        )
-        elif (message_action['actions'][-1]['value'] == 'ignore'):
+        
+#        elif (message_action['actions'][-1]['value'] == 'ignore'):
+        if ('ignore' in messagevalue):
             text = message_action['original_message']['attachments'][0]['pretext']
-            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
+#            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
             if (("performance" in text.lower()) and ("tracking" in text.lower())):
                 db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'performancechangetracking'},
@@ -752,7 +765,8 @@ def message_actions():
                 db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'performancegoaltracking'},
                                    status='0')
-        elif (message_action['actions'][-1]['value'] == 'change'):
+#        elif (message_action['actions'][-1]['value'] == 'change'):
+        elif ('change' in messagevalue):
             text = message_action['original_message']['text']
             if (True):
                 houroptions = []
@@ -767,6 +781,7 @@ def message_actions():
                         "title": "Notification Settings",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
+                        "state": datasourceID,
                         "elements": [
                             {
                                 "label": "Hour",
@@ -786,7 +801,8 @@ def message_actions():
                     }
                 )
 
-        elif (message_action['actions'][-1]['value'] == 'setmygoal'):
+#        elif (message_action['actions'][-1]['value'] == 'setmygoal'):
+        elif('setmygoal' in messagevalue): 
             text = message_action['original_message']['text']
             mservice = google_analytics.build_management_api_v3_woutSession(email)
             goals = mservice.management().goals().list(accountId=dataSource['accountID'],
@@ -805,6 +821,7 @@ def message_actions():
                         "title": "Set My Goal",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
+                        "state": datasourceID,
                         "elements": [
                             {
                                 "label": "Metric",
@@ -952,7 +969,8 @@ def message_actions():
                         ]
                     }
                 )
-        elif (message_action['actions'][-1]['value'] == 'setmyalert'):
+#        elif (message_action['actions'][-1]['value'] == 'setmyalert'):
+        elif('setmyalert' in messagevalue):
             text = message_action['original_message']['text']
             if (True):
                 slack_client.dialog_open(
@@ -961,6 +979,7 @@ def message_actions():
                         "title": "Set My Daily Alert",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
+                        "state": datasourceID,
                         "elements": [
                             {
                                 "label": "Metric",
@@ -1069,7 +1088,8 @@ def message_actions():
                     }
                 )
 
-        elif (message_action['actions'][-1]['value'] == 'setmybudget'):
+#        elif (message_action['actions'][-1]['value'] == 'setmybudget'):
+        elif('setmybudget' in messagevalue):
             text = message_action['original_message']['text']
             currency = babel.numbers.format_currency(0, dataSource['currency']).replace('0.00', '')
             if (True):
@@ -1079,6 +1099,7 @@ def message_actions():
                         "title": "Set My Budget",
                         "submit_label": "Submit",
                         "callback_id": "notification_form",
+                        "state": datasourceID,
                         "elements": [
                             {
                                 "label": "Interval Type",
@@ -1106,12 +1127,13 @@ def message_actions():
                         ]
                     }
                 )
-        elif message_action['actions'][-1]['value'] == 'analyticsAudit':
-            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                          'channelID': channel})
+#        elif message_action['actions'][-1]['value'] == 'analyticsAudit':
+        elif('analyticsAudit' in messagevalue):
+#            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
+#                                                          'channelID': channel})
             analyticsAudit(slack_token, dataSource)
 
-        elif ('ignoreone' in message_action['actions'][-1]['value']):
+        elif ('ignoreone' in messagevalue):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
@@ -1138,8 +1160,8 @@ def message_actions():
                     att["text"] = ""
 
             print("Last Attachments:", attachments)
-            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                            'channelID': channel})['_id']
+#            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
+#                                                            'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
@@ -1158,7 +1180,7 @@ def message_actions():
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
-        elif ('ignoreanalert' in message_action['actions'][-1]['value']):
+        elif ('ignoreanalert' in messagevalue):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
@@ -1185,8 +1207,8 @@ def message_actions():
                     att["text"] = ""
 
             print("Last Attachments:", attachments)
-            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                            'channelID': channel})['_id']
+#            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
+#                                                            'channelID': channel})['_id']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancechangealert'})
             module_id = module['_id']
@@ -1206,7 +1228,8 @@ def message_actions():
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
-        elif message_action['actions'][-1]['name'] == "showgraph":
+#        elif message_action['actions'][-1]['name'] == "showgraph":
+        elif ("showgraph" in messagevalue):
             imageId = message_action['actions'][-1]['value']
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
@@ -1235,7 +1258,8 @@ def message_actions():
                                      ts=message_ts,
                                      text="",
                                      attachments=attachments)
-        elif message_action['actions'][-1]['name'] == "viewmore":
+#        elif message_action['actions'][-1]['name'] == "viewmore":
+        elif "viewmore" in messagevalue:
             UUID = ObjectId(message_action['actions'][-1]['value'])
             message_ts = message_action['message_ts']
             attachments = db2.find_one('attachment', query = {'_id': UUID})
@@ -1247,6 +1271,15 @@ def message_actions():
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
+        try:
+            datasourceID = message_action['state']
+        except:
+            datasourceID = datasourceIDs[0]
+        #Check if the datasource owner clicked the button
+        if(datasourceID in datasourceIDs):
+            dataSource = dataSources.index(datasourceIDs.index(datasourceID))
+        else:
+            return make_response("", 200)
         if ('module_types' in submission.keys()):
             lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
             #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
@@ -1305,8 +1338,8 @@ def message_actions():
                                    # status='1'
                                    )
         elif ('hour' in submission.keys() and 'minute' in submission.keys()):
-            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                            'channelID': channel})['_id']
+#            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid,
+#                                                            'channelID': channel})['_id']
             modules = db.find("notification", query={'datasourceID': datasourceID})
             lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
             #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
@@ -1324,9 +1357,9 @@ def message_actions():
             slack_client.chat_postMessage(channel=channel,
                                           text=f"Time of Day is set to {str(selectedhour).zfill(2)}:{selectedminute}  ")
         elif ('metric' in submission.keys() and 'target' in submission.keys()):
-            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                          'channelID': channel})
-            datasourceID = dataSource['_id']
+#            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
+#                                                          'channelID': channel})
+#            datasourceID = dataSource['_id']
             viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancegoaltracking'})
@@ -1392,9 +1425,9 @@ def message_actions():
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
         elif ('budget' in submission.keys()):
-            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                          'channelID': channel})
-            datasourceID = dataSource['_id']
+#            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
+#                                                          'channelID': channel})
+#            datasourceID = dataSource['_id']
             viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'costprediction'})
@@ -1412,9 +1445,9 @@ def message_actions():
             costprediction(slack_token, module, dataSource)
 
         elif ('threshold' in submission.keys()):
-            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
-                                                          'channelID': channel})
-            datasourceID = dataSource['_id']
+#            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
+#                                                          'channelID': channel})
+#            datasourceID = dataSource['_id']
             viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancechangealert'})
@@ -1587,31 +1620,31 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
                         "name": "change",
                         "text": "Reschedule",
                         "type": "button",
-                        "value": "change"
+                        "value": f"change_{dataSourceID}"
                     },
                     {
                         "name": "setmygoal",
                         "text": "Set My Goal",
                         "type": "button",
-                        "value": "setmygoal"
+                        "value": f"setmygoal_{dataSourceID}"
                     },
                     {
                         "name": "setmybudget",
                         "text": "Set My Budget",
                         "type": "button",
-                        "value": "setmybudget"
+                        "value": f"setmybudget_{dataSourceID}"
                     },
                     {
                         "name": "setmyalert",
                         "text": "Set My Alert",
                         "type": "button",
-                        "value": "setmyalert"
+                        "value": f"setmyalert_{dataSourceID}"
                     },
                     {
                         "name": "analyticsAudit",
                         "text": "Analytics Audit",
                         "type": "button",
-                        "value": "analyticsAudit"
+                        "value": f"analyticsAudit_{dataSourceID}"
                     },
                 ]
             }]}

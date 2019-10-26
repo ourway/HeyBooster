@@ -35,6 +35,7 @@ def performancechangetracking(slack_token, task, dataSource):
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
+    dataSourceID = dataSource['_id']
     text = "*Performance Changes Tracking*"
     attachments = []
     actions = []
@@ -113,7 +114,7 @@ def performancechangetracking(slack_token, task, dataSource):
             "name": "ignore",
             "text": "Ignore",
             "type": "button",
-            "value": "ignore",
+            "value": f"ignore_{dataSourceID}",
             "confirm": {
                 "title": "Warning",
                 "text": "Are you sure you want to close your Performance Change Tracking notifications?",
@@ -224,6 +225,7 @@ def performancechangealert(slack_token, task, dataSource):
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
+    dataSourceID = dataSource['_id']
     text = "*Custom Performance Change Alerts*"
     attachments = []
     actions = [
@@ -231,7 +233,7 @@ def performancechangealert(slack_token, task, dataSource):
             "name": "setmyalert",
             "text": "Set/Change Alert",
             "type": "button",
-            "value": "setmyalert"
+            "value": f"setmyalert_{dataSourceID}"
         },
         #        {
         #            "name": "track",
@@ -354,7 +356,7 @@ def performancechangealert(slack_token, task, dataSource):
                         "name": "ignore",
                         "text": "Remove",
                         "type": "button",
-                        "value": "ignoreanalert " + metrics[i]['expression'],
+                        "value": f"ignoreanalert {metrics[i]['expression']}_{dataSourceID}",
                         "confirm": {
                             "title": "Warning",
                             "text": f"If you remove {metricname} performance change alert, you will not track your {metricname} performance change alert anymore. Are you still sure you want to remove it?",
@@ -428,6 +430,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
+    dataSourceID = dataSource['_id']
     text = {}
     text['desktop'] = "*Desktop Shopping Funnel Changes Tracking*"
     text['mobile'] = "* Mobile Shopping Funnel Changes Tracking*"
@@ -463,7 +466,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
             "name": "ignore",
             "text": "Ignore",
             "type": "button",
-            "value": "ignore",
+            "value": f"ignore_{dataSourceID}",
             "confirm": {
                 "title": "Warning",
                 "text": "Are you sure you want to close your Shopping Funnel Changes Tracking notifications?",
@@ -611,6 +614,7 @@ def costprediction(slack_token, task, dataSource):
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
+    dataSourceID = dataSource['_id']
     text = "*Cost Prediction*"
     attachments = []
     actions = [
@@ -618,7 +622,7 @@ def costprediction(slack_token, task, dataSource):
             "name": "setmybudget",
             "text": "Set My Budget",
             "type": "button",
-            "value": "setmybudget"
+            "value": f"setmybudget_{dataSourceID}"
         },
         #        {
         #            "name": "track",
@@ -630,7 +634,7 @@ def costprediction(slack_token, task, dataSource):
             "name": "ignore",
             "text": "Ignore",
             "type": "button",
-            "value": "ignore",
+            "value": f"ignore_{dataSourceID}",
             "confirm": {
                 "title": "Warning",
                 "text": "Are you sure you want to close your Cost Prediction notification?",
@@ -775,6 +779,7 @@ def performancegoaltracking(slack_token, task, dataSource):
     task['channel'] = dataSource['channelID']
     task['viewId'] = dataSource['viewID']
     task['currency'] = dataSource['currency']
+    dataSourceID = dataSource['_id']
     text = "*Performance Goal Tracking*"
     attachments = []
     actions = [
@@ -782,7 +787,7 @@ def performancegoaltracking(slack_token, task, dataSource):
             "name": "setmygoal",
             "text": "Track More/Change",
             "type": "button",
-            "value": "setmygoal"
+            "value": f"setmygoal_{dataSourceID}"
         },
         #        {
         #            "name": "track",
@@ -977,7 +982,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                      "name": "ignore",
                      "text": "Remove",
                      "type": "button",
-                     "value": "ignoreone " + metrics[i]['expression'],
+                     "value": f"ignoreone {metrics[i]['expression']}_{dataSourceID}",
                      "confirm": {
                          "title": "Warning",
                          "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
