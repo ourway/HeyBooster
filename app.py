@@ -1230,7 +1230,7 @@ def message_actions():
                                      text="",
                                      attachments=attachments)
 #        elif message_action['actions'][-1]['name'] == "showgraph":
-        elif ("showgraph" in messagevalue):
+        elif ("showgraph" in message_action['actions'][-1]['name']):
             imageId = message_action['actions'][-1]['value']
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
@@ -1260,7 +1260,7 @@ def message_actions():
                                      text="",
                                      attachments=attachments)
 #        elif message_action['actions'][-1]['name'] == "viewmore":
-        elif "viewmore" in messagevalue:
+        elif "viewmore" in message_action['actions'][-1]['name']:
             UUID = ObjectId(message_action['actions'][-1]['value'])
             message_ts = message_action['message_ts']
             attachments = db2.find_one('attachment', query = {'_id': UUID})
