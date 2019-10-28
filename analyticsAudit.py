@@ -47,7 +47,8 @@ def analyticsAudit(slack_token, dataSource):
                     internalSearchTermConsistency,
                     defaultPageControl,
                     domainControl,
-                    eventTracking
+                    eventTracking,
+                    errorPage
                     ]
     attachments = []
     for function in subfunctions:
@@ -1153,6 +1154,65 @@ def eventTracking(slack_token, dataSource):
             "callback_id": "notification_form",
             "attachment_type": "default",
         }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def errorPage(slack_token, dataSource):
+    text = "*404 Error Page*"
+    attachments = []
+    not_found = 0
+
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    metrics = [{'expression': 'ga:pageviews'}]
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': [{'name': 'ga:pageTitle'}]
+                }]}).execute()
+
+    if 'rows' in results['reports'][0]['data'].keys():
+        for row in results['reports'][0]['data']['rows']:
+            result = int(row['metrics'][0]['values'][0])
+            if result == "404" or result == "Page Not Found":
+                not_found = 1
+    else:
+        result = 0
+
+    if result > 0:
+        if not_found == 1:
+            attachments += [{
+                "text": "You are tracking how many people ended up in 404 page, set custom alert to let know about spikes in these pages.",
+                "color": "good",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
+        else:
+            attachments += [{
+                "text": "You are not tracking 404 error pages which might hurt your conversion, brand recognition and Google ranking.",
+                "color": "danger",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
 
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
