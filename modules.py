@@ -407,7 +407,7 @@ def performancechangealert(slack_token, task, dataSource):
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
-                 "value": f"{UUID}"}] # + actions
+                 "value": f"{UUID}_{dataSourceID}"}] # + actions
         attachments = [{"text": viewmoretext,
                         "pretext": text,
                         "color": "danger" if viewmoretext == text_r else "good",
@@ -593,7 +593,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
-                 "value": f"{UUID}"}] # + actions
+                 "value": f"{UUID}_{dataSourceID}"}] # + actions
         attachments = [{"text": viewmoretext,
                         "pretext": "*Shopping Funnel Changes Tracking*",
                         "color": "danger" if viewmoretext == text_r else "good",

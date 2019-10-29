@@ -1300,7 +1300,7 @@ def timezone(slack_token, dataSource):
 
     if currentTimezone == maxTrafficTimezone:
         attachments += [{
-            "text": f"You are getting traffic mostly from your preset timezone {currentTimezone}.",
+            "text": f"It is okay, timezone which you get the most traffic is same with timezone set on your google analytics account({currentTimezone}).",
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
@@ -1339,25 +1339,17 @@ def rawDataView(slack_token, dataSource):
     views = mservice.management().profiles().list(accountId=accountId,
                                                   webPropertyId=propertyId
                                                   ).execute()
-    nubmerofFilters = len(filters.get('items', []))
+    
+    numberofFilters = len(filters.get('items', []))
     numberofViews = len(views.get('items', []))
-    if numberofViews > 1:
-        if nubmerofFilters < numberofViews:
-            attachments += [{
-                "text": "Raw data view is correctly set, it is your backup view against to any wrong filter changes.",
-                "color": "good",
-                "pretext": text,
-                "callback_id": "notification_form",
-                "attachment_type": "default",
-            }]
-        else:
-            attachments += [{
-                "text": "You must set the raw data view to protect your data from any wrong filter changes and have backup view.",
-                "color": "danger",
-                "pretext": text,
-                "callback_id": "notification_form",
-                "attachment_type": "default",
-            }]
+    if numberofFilters < numberofViews:
+        attachments += [{
+            "text": "Raw data view is correctly set, it is your backup view against to any wrong filter changes.",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
     else:
         attachments += [{
             "text": "You must set the raw data view to protect your data from any wrong filter changes and have backup view.",
@@ -1366,6 +1358,7 @@ def rawDataView(slack_token, dataSource):
             "callback_id": "notification_form",
             "attachment_type": "default",
         }]
+    
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
         return attachments
