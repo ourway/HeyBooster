@@ -1470,7 +1470,7 @@ def othersInChannelGrouping(slack_token, dataSource):
             if status == 'Other':
                 other_session = int(row['metrics'][0]['values'][0])
             else:
-                other_sessions = 0
+                other_session = 0
     else:
         result = 0
 
