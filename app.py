@@ -441,26 +441,39 @@ def message_actions():
     # Open a slack client
     sl_userid = message_action['user']['id']
     channel = message_action['channel']['id']
+    
     user = db.find_one('user', {'sl_userid': sl_userid})
-    slack_token = user['sl_accesstoken']
-    email = user['email']
-    slack_client = WebClient(token=slack_token)
-    userdataSources = db.find("datasource", query={'sl_userid': sl_userid,
-                                                  'channelID': channel})
-    dataSources = [dataSource for dataSource in userdataSources]
-    datasourceIDs = [dataSource['_id'] for dataSource in dataSources]
+    if user:
+        slack_token = user['sl_accesstoken']
+        email = user['email']
+        slack_client = WebClient(token=slack_token)
+        userdataSources = db.find("datasource", query={'sl_userid': sl_userid,
+                                                      'channelID': channel})
+        dataSources = [dataSource for dataSource in userdataSources]
+        datasourceIDs = [dataSource['_id'] for dataSource in dataSources]
+    else:
+        print("User is not registered to app")
+        dataSources = []
+        datasourceIDs = []
     if message_action["type"] == "interactive_message":
         messagevalue = message_action['actions'][-1]['value']
+        messagename = message_action['actions'][-1]['name']
         if('_' in messagevalue):
             datasourceID = messagevalue.split('_')[-1]
             datasourceID = ObjectId(datasourceID)
         else:
             datasourceID = datasourceIDs[0]
         #Check if the datasource owner clicked the button
-#        if(datasourceID in datasourceIDs):
-#            dataSource = dataSources[datasourceIDs.index(datasourceID)]
-#        else:
-#            return make_response("", 200)
+        if(datasourceID in datasourceIDs):
+            dataSource = dataSources[datasourceIDs.index(datasourceID)]
+        else:
+            print("Data Source is not owned by this user")
+            if "showgraph" in messagename or "viewmore" in messagename:
+                dS = db.find_one("datasource",{"_id":datasourceID})
+                usr = db.find_one("user", {"email": dS['email']})
+                slack_client = WebClient(token=usr['sl_accesstoken'])
+            else:
+                return make_response("", 200)
 #        if (message_action['actions'][-1]['value'] == 'track'):
 #            houroptions = []
 #            for i in range(0, 24):
@@ -744,10 +757,6 @@ def message_actions():
         
 #        elif (message_action['actions'][-1]['value'] == 'change'):
         if ('change' in messagevalue):
-            if(datasourceID in datasourceIDs):
-                dataSource = dataSources[datasourceIDs.index(datasourceID)]
-            else:
-               return make_response("", 200)
             text = message_action['original_message']['text']
             if (True):
                 houroptions = []
@@ -784,10 +793,6 @@ def message_actions():
 
 #        elif (message_action['actions'][-1]['value'] == 'setmygoal'):
         elif('setmygoal' in messagevalue): 
-            if(datasourceID in datasourceIDs):
-                dataSource = dataSources[datasourceIDs.index(datasourceID)]
-            else:
-               return make_response("", 200)
             text = message_action['original_message']['text']
             mservice = google_analytics.build_management_api_v3_woutSession(email)
             goals = mservice.management().goals().list(accountId=dataSource['accountID'],
@@ -956,10 +961,6 @@ def message_actions():
                 )
 #        elif (message_action['actions'][-1]['value'] == 'setmyalert'):
         elif('setmyalert' in messagevalue):
-            if(datasourceID in datasourceIDs):
-                dataSource = dataSources[datasourceIDs.index(datasourceID)]
-            else:
-               return make_response("", 200)
             text = message_action['original_message']['text']
             if (True):
                 slack_client.dialog_open(
@@ -1079,10 +1080,6 @@ def message_actions():
 
 #        elif (message_action['actions'][-1]['value'] == 'setmybudget'):
         elif('setmybudget' in messagevalue):
-            if(datasourceID in datasourceIDs):
-                dataSource = dataSources[datasourceIDs.index(datasourceID)]
-            else:
-               return make_response("", 200)
             text = message_action['original_message']['text']
             currency = babel.numbers.format_currency(0, dataSource['currency']).replace('0.00', '')
             if (True):
@@ -1122,19 +1119,11 @@ def message_actions():
                 )
 #        elif message_action['actions'][-1]['value'] == 'analyticsAudit':
         elif('analyticsAudit' in messagevalue):
-            if(datasourceID in datasourceIDs):
-                dataSource = dataSources[datasourceIDs.index(datasourceID)]
-            else:
-               return make_response("", 200)
 #            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
 #                                                          'channelID': channel})
             analyticsAudit(slack_token, dataSource)
 
         elif ('ignoreone' in messagevalue):
-            if(datasourceID in datasourceIDs):
-                dataSource = dataSources[datasourceIDs.index(datasourceID)]
-            else:
-               return make_response("", 200)
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
             metric = metric.split('_')[0]
             message_ts = message_action['message_ts']
@@ -1183,10 +1172,6 @@ def message_actions():
                                      text="",
                                      attachments=attachments)
         elif ('ignoreanalert' in messagevalue):
-            if(datasourceID in datasourceIDs):
-                dataSource = dataSources[datasourceIDs.index(datasourceID)]
-            else:
-               return make_response("", 200)
             metric = message_action['actions'][-1]['value'].split(' ')[-1]
             metric = metric.split('_')[0]
             message_ts = message_action['message_ts']
@@ -1237,10 +1222,6 @@ def message_actions():
                                      attachments=attachments)
         #        elif (message_action['actions'][-1]['value'] == 'ignore'):
         elif ('ignore' in messagevalue):
-            if(datasourceID in datasourceIDs):
-                dataSource = dataSources[datasourceIDs.index(datasourceID)]
-            else:
-               return make_response("", 200)
             text = message_action['original_message']['attachments'][0]['pretext']
 #            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
             if (("performance" in text.lower()) and ("tracking" in text.lower())):
@@ -1264,7 +1245,7 @@ def message_actions():
                                                           'type': 'performancegoaltracking'},
                                    status='0')
 #        elif message_action['actions'][-1]['name'] == "showgraph":
-        elif ("showgraph" in message_action['actions'][-1]['name']):
+        elif "showgraph" in messagename:
             imageId = message_action['actions'][-1]['value']
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
@@ -1294,7 +1275,7 @@ def message_actions():
                                      text="",
                                      attachments=attachments)
 #        elif message_action['actions'][-1]['name'] == "viewmore":
-        elif "viewmore" in message_action['actions'][-1]['name']:
+        elif "viewmore" in messagename:
             UUID = ObjectId(message_action['actions'][-1]['value'])
             message_ts = message_action['message_ts']
             attachments = db2.find_one('attachment', query = {'_id': UUID})
