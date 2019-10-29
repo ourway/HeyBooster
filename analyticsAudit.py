@@ -2,6 +2,7 @@ import google_analytics
 from datetime import datetime, timedelta
 from slack import WebClient
 import time
+from timezonefinder import TimezoneFinder
 
 
 ###TIME ISSUES##
@@ -48,7 +49,8 @@ def analyticsAudit(slack_token, dataSource):
                     defaultPageControl,
                     domainControl,
                     eventTracking,
-                    errorPage
+                    errorPage,
+                    timezone
                     ]
     attachments = []
     for function in subfunctions:
@@ -1013,7 +1015,7 @@ def defaultPageControl(slack_token, dataSource):
     if defaultPage != None:
         attachments += [{
             "text": "Don’t use default page setting, it is moderately error prone method to fix splitting data issue.",
-            "color": "good",
+            "color": "red",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
@@ -1021,7 +1023,7 @@ def defaultPageControl(slack_token, dataSource):
     else:
         attachments += [{
             "text": "Default page is not set as it should be.",
-            "color": "danger",
+            "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
@@ -1213,6 +1215,228 @@ def errorPage(slack_token, dataSource):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
             }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def timezone(slack_token , dataSource):
+    text = "*Timezone*"
+    attachments = []
+
+    metrics = [{
+        'expression': 'ga:sessions'
+    }]
+    
+    dimensions = [{'name': 'ga:longitude'},
+                  {'name': 'ga:latitude'},
+                  {'name': 'ga:countryIsoCode'},
+                  {'name': 'ga:region'},
+                  {'name': 'ga:city'}]
+    
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+    
+    rservice = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = rservice.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': dimensions,
+                    "orderBys": [
+                        {
+                            "fieldName": metrics[0]['expression'],
+                            "sortOrder": "DESCENDING"
+                        }],
+                    "pageSize": 100000,
+                }]}).execute()
+    
+    tf = TimezoneFinder(in_memory=True)
+    mapping = {}
+    if 'rows' in results['reports'][0]['data'].keys():
+        for row in results['reports'][0]['data']['rows']:
+            sessions = int(row['metrics'][0]['values'][0])
+            longitude = float(row['dimensions'][0])
+            latitude = float(row['dimensions'][1])
+#            countryIsoCode = row['dimensions'][2]
+            region = row['dimensions'][3]
+#            city = row['dimensions'][4]
+            timezone = tf.timezone_at(lng=longitude, lat=latitude)
+            if timezone:
+                if timezone in mapping.keys():
+                    mapping[timezone]  +=  sessions
+                else:
+                    mapping[timezone]  =  sessions
+            else:
+                print('Timezone Yok')
+                if region in mapping.keys():
+                    mapping[region] += sessions
+                else:
+                    mapping[region] = sessions
+    inversemapping = [(value, key) for key, value in mapping.items()]
+    maxTrafficTimezone = max(inversemapping)[1].replace('_', ' ') #Google uses '_' instead of ' '
+    
+    
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    profile = mservice.management().profiles().get(accountId=accountId,
+                                                   webPropertyId=propertyId,
+                                                   profileId=viewId
+                                                   ).execute()
+    currentTimezone = profile['timezone'].replace('_', ' ')
+    
+    if(currentTimezone == maxTrafficTimezone):
+        attachments += [{
+            "text": f"You are getting traffic mostly from your preset timezone {currentTimezone}.",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": f"Your preset timezone is {currentTimezone} but you are getting traffic mostly from {currentTimezone}.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+    
+    
+def rawDataView(slack_token, dataSource):
+    text = "*Raw Data View*"
+
+    attachments = []
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    
+    filters = mservice.management().filters().list(accountId=accountId
+                                                            ).execute()
+    
+    views = mservice.management().profiles().list(accountId=accountId,
+                                                   webPropertyId=propertyId
+                                                   ).execute()
+    nubmerofFilters = len(filters)
+    numberofViews = len(views)
+    if numberofViews > 1:
+        if nubmerofFilters < numberofViews:
+            attachments += [{
+                "text": "Raw data view is correctly set, it is your backup view against to any wrong filter changes.",
+                "color": "good",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
+        else:
+            attachments += [{
+                "text": "You must set the raw data view to protect your data from any wrong filter changes and have backup view.",
+                "color": "danger",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
+    else:
+        attachments += [{
+                "text": "You must set the raw data view to protect your data from any wrong filter changes and have backup view.",
+                "color": "danger",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+    
+
+def contentGrouping(slack_token, dataSource):
+    text = "*Content Grouping*"
+    attachments = []
+
+    metrics = [
+        {'expression': 'ga:sessions'}
+    ]
+    
+    dimensions = [{'name': 'ga:landingContentGroup1'},
+                  {'name': 'ga:landingContentGroup2'},
+                  {'name': 'ga:landingContentGroup3'},
+                  {'name': 'ga:landingContentGroup4'},
+                  {'name': 'ga:landingContentGroup5'}]
+    
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    today = datetime.today()
+
+    start_date = datetime(today.year, today.month, 1)
+
+    start_date_1 = dtimetostrf(start_date)
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimension': dimensions
+                }]}).execute()
+    cond = False
+    if 'rows' in results['reports'][0]['data'].keys():
+        for row in results['reports'][0]['data']['rows']:
+            group1 = float(row['dimensions'][0])
+            group2 = float(row['dimensions'][1])
+            group3 = row['dimensions'][2]
+            group4 = row['dimensions'][3]
+            group5 = row['dimensions'][4]
+            for group in [group1, group2, group3, group4, group5]:
+                if not 'not set' in group:
+                    cond = True
+                    break
+            if cond:
+                break
+
+    if cond:
+        attachments += [{
+            "text": "You have made content grouping before, but do you know the alternative usage of content grouping?",
+            "color": "good",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "There is no content grouping in your account, to compare related group pages like men tshirts and woman dresses create your own grouping.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
 
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
