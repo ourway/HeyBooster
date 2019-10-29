@@ -1246,7 +1246,7 @@ def message_actions():
                                    status='0')
 #        elif message_action['actions'][-1]['name'] == "showgraph":
         elif "showgraph" in messagename:
-            imageId = message_action['actions'][-1]['value']
+            imageId = message_action['actions'][-1]['value'].split('_')[0]
             message_ts = message_action['message_ts']
             attachment_id = message_action['attachment_id']
             attachments = message_action['original_message']['attachments']
@@ -1276,7 +1276,7 @@ def message_actions():
                                      attachments=attachments)
 #        elif message_action['actions'][-1]['name'] == "viewmore":
         elif "viewmore" in messagename:
-            UUID = ObjectId(message_action['actions'][-1]['value'])
+            UUID = ObjectId(message_action['actions'][-1]['value']).split('_')[0]
             message_ts = message_action['message_ts']
             attachments = db2.find_one('attachment', query = {'_id': UUID})
             del attachments['_id']
