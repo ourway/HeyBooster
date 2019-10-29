@@ -1462,7 +1462,7 @@ def othersInChannelGrouping(slack_token, dataSource):
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:channelGrouping'}]
                 }]}).execute()
-    
+
     total_session = int(results['reports'][0]['data']['totals'][0]['values'][0])
     other_session = 0
     if 'rows' in results['reports'][0]['data'].keys():
@@ -1490,6 +1490,43 @@ def othersInChannelGrouping(slack_token, dataSource):
                 "callback_id": "notification_form",
                 "attachment_type": "default",
             }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def userPermission(slack_token, dataSource):
+    text = "*User Permission*"
+    attachments = []
+
+    email = dataSource['email']
+
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    try:
+        webProperty = mservice.management().accountUserLinks().list(
+            accountId='123456'
+        ).execute()
+        result = 1
+    except Exception:
+        result = 0
+
+    if result == 0:
+        attachments += [{
+            "text": "You don’t have enough permission to view users had access to your analytics account.",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "There are {} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
 
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
