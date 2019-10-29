@@ -202,7 +202,7 @@ def performancechangetracking(slack_token, task, dataSource):
         actions = [{"name": "viewmore",
                  "text": "View More",
                  "type": "button",
-                 "value": f"{UUID}"}] # + actions
+                 "value": f"{UUID}_{dataSourceID}"}] # + actions
         attachments = [{"text": viewmoretext,
                         "pretext": text,
                         "color": "danger" if viewmoretext == text_r else "good",
@@ -713,7 +713,7 @@ def costprediction(slack_token, task, dataSource):
     actions += [{"name": "showgraph",
                  "text": "Show Graph",
                  "type": "button",
-                 "value": f"{imageId}"}]
+                 "value": f"{imageId}_{dataSourceID}"}]
     if (prediction > target):
         # Prediction is more than target
         if ((prediction - target < (tol * target))):
@@ -993,7 +993,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                      {"name": "showgraph",
                       "text": "Show Graph",
                       "type": "button",
-                      "value": f"{imageId}"}],
+                      "value": f"{imageId}_{dataSourceID}"}],
 
                  }]
 #        if ((abs(querytotal - target) / target) <= tol):
