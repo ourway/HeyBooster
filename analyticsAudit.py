@@ -1462,20 +1462,18 @@ def othersInChannelGrouping(slack_token, dataSource):
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:channelGrouping'}]
                 }]}).execute()
-
+    
+    total_session = int(results['reports'][0]['data']['totals'][0]['values'][0])
+    other_session = 0
     if 'rows' in results['reports'][0]['data'].keys():
         for row in results['reports'][0]['data']['rows']:
             status = row['dimensions'][0]
-            total_session = int(row['metrics'][0]['values'][0])
             if status == 'Other':
                 other_session = int(row['metrics'][0]['values'][0])
-            else:
-                other_session = 0
-    else:
-        result = 0
+                break
 
-    session_result = total_session / other_session * 100
-    if result > 0:
+    session_result = other_session / total_session * 100
+    if 'rows' in results['reports'][0]['data'].keys():
         if session_result > 0.05:
             attachments += [{
                 "text": "Default channel grouping is not suitable for analysis since there is *(other)* channel which is collecting non-group traffic sources.",
