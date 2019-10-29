@@ -1392,10 +1392,7 @@ def contentGrouping(slack_token, dataSource):
     viewId = dataSource['viewID']
 
     today = datetime.today()
-
-    start_date = datetime(today.year, today.month, 1)
-
-    start_date_1 = dtimetostrf(start_date)
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -1408,11 +1405,12 @@ def contentGrouping(slack_token, dataSource):
                     'metrics': metrics,
                     'dimension': dimensions
                 }]}).execute()
+    
     cond = False
     if 'rows' in results['reports'][0]['data'].keys():
         for row in results['reports'][0]['data']['rows']:
-            group1 = float(row['dimensions'][0])
-            group2 = float(row['dimensions'][1])
+            group1 = row['dimensions'][0]
+            group2 = row['dimensions'][1]
             group3 = row['dimensions'][2]
             group4 = row['dimensions'][3]
             group5 = row['dimensions'][4]
