@@ -1299,7 +1299,7 @@ def timezone(slack_token , dataSource):
                                                    ).execute()
     currentTimezone = profile['timezone'].replace('_', ' ')
     
-    if(currentTimezone == maxTrafficTimezone):
+    if currentTimezone == maxTrafficTimezone:
         attachments += [{
             "text": f"You are getting traffic mostly from your preset timezone {currentTimezone}.",
             "color": "good",
@@ -1309,7 +1309,7 @@ def timezone(slack_token , dataSource):
         }]
     else:
         attachments += [{
-            "text": f"Your preset timezone is {currentTimezone} but you are getting traffic mostly from {currentTimezone}.",
+            "text": f"Your preset timezone is {currentTimezone} but you are getting traffic mostly from {maxTrafficTimezone}.",
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
@@ -1340,8 +1340,8 @@ def rawDataView(slack_token, dataSource):
     views = mservice.management().profiles().list(accountId=accountId,
                                                    webPropertyId=propertyId
                                                    ).execute()
-    nubmerofFilters = len(filters)
-    numberofViews = len(views)
+    nubmerofFilters = len(filters.get('items', []))
+    numberofViews = len(views.get('items', []))
     if numberofViews > 1:
         if nubmerofFilters < numberofViews:
             attachments += [{
