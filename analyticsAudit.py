@@ -81,7 +81,6 @@ def analyticsAudit(slack_token, dataSource):
     #    attachments += enhancedECommerceActivity(slack_token, dataSource)
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
-    attachments += timezone(slack_token, dataSource)
     if len(attachments):
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
