@@ -1225,20 +1225,20 @@ def errorPage(slack_token, dataSource):
         return []
 
 
-def timezone(slack_token , dataSource):
+def timezone(slack_token, dataSource):
     text = "*Timezone*"
     attachments = []
 
     metrics = [{
         'expression': 'ga:sessions'
     }]
-    
+
     dimensions = [{'name': 'ga:longitude'},
                   {'name': 'ga:latitude'},
                   {'name': 'ga:countryIsoCode'},
                   {'name': 'ga:region'},
                   {'name': 'ga:city'}]
-    
+
     email = dataSource['email']
     accountId = dataSource['accountID']
     propertyId = dataSource['propertyID']
@@ -1248,7 +1248,7 @@ def timezone(slack_token , dataSource):
 
     start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
-    
+
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
     results = rservice.reports().batchGet(
         body={
@@ -1265,7 +1265,7 @@ def timezone(slack_token , dataSource):
                         }],
                     "pageSize": 100000,
                 }]}).execute()
-    
+
     tf = TimezoneFinder(in_memory=True)
     mapping = {}
     if 'rows' in results['reports'][0]['data'].keys():
@@ -1273,15 +1273,15 @@ def timezone(slack_token , dataSource):
             sessions = int(row['metrics'][0]['values'][0])
             longitude = float(row['dimensions'][0])
             latitude = float(row['dimensions'][1])
-#            countryIsoCode = row['dimensions'][2]
+            #            countryIsoCode = row['dimensions'][2]
             region = row['dimensions'][3]
-#            city = row['dimensions'][4]
+            #            city = row['dimensions'][4]
             timezone = tf.timezone_at(lng=longitude, lat=latitude)
             if timezone:
                 if timezone in mapping.keys():
-                    mapping[timezone]  +=  sessions
+                    mapping[timezone] += sessions
                 else:
-                    mapping[timezone]  =  sessions
+                    mapping[timezone] = sessions
             else:
                 print('Timezone Yok')
                 if region in mapping.keys():
@@ -1289,16 +1289,15 @@ def timezone(slack_token , dataSource):
                 else:
                     mapping[region] = sessions
     inversemapping = [(value, key) for key, value in mapping.items()]
-    maxTrafficTimezone = max(inversemapping)[1].replace('_', ' ') #Google uses '_' instead of ' '
-    
-    
+    maxTrafficTimezone = max(inversemapping)[1].replace('_', ' ')  # Google uses '_' instead of ' '
+
     mservice = google_analytics.build_management_api_v3_woutSession(email)
     profile = mservice.management().profiles().get(accountId=accountId,
                                                    webPropertyId=propertyId,
                                                    profileId=viewId
                                                    ).execute()
     currentTimezone = profile['timezone'].replace('_', ' ')
-    
+
     if currentTimezone == maxTrafficTimezone:
         attachments += [{
             "text": f"You are getting traffic mostly from your preset timezone {currentTimezone}.",
@@ -1321,8 +1320,8 @@ def timezone(slack_token , dataSource):
         return attachments
     else:
         return []
-    
-    
+
+
 def rawDataView(slack_token, dataSource):
     text = "*Raw Data View*"
 
@@ -1331,15 +1330,15 @@ def rawDataView(slack_token, dataSource):
     email = dataSource['email']
     accountId = dataSource['accountID']
     propertyId = dataSource['propertyID']
-    
+
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    
+
     filters = mservice.management().filters().list(accountId=accountId
-                                                            ).execute()
-    
-    views = mservice.management().profiles().list(accountId=accountId,
-                                                   webPropertyId=propertyId
                                                    ).execute()
+
+    views = mservice.management().profiles().list(accountId=accountId,
+                                                  webPropertyId=propertyId
+                                                  ).execute()
     nubmerofFilters = len(filters.get('items', []))
     numberofViews = len(views.get('items', []))
     if numberofViews > 1:
@@ -1361,18 +1360,18 @@ def rawDataView(slack_token, dataSource):
             }]
     else:
         attachments += [{
-                "text": "You must set the raw data view to protect your data from any wrong filter changes and have backup view.",
-                "color": "danger",
-                "pretext": text,
-                "callback_id": "notification_form",
-                "attachment_type": "default",
-            }]
+            "text": "You must set the raw data view to protect your data from any wrong filter changes and have backup view.",
+            "color": "danger",
+            "pretext": text,
+            "callback_id": "notification_form",
+            "attachment_type": "default",
+        }]
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
         return attachments
     else:
         return []
-    
+
 
 def contentGrouping(slack_token, dataSource):
     text = "*Content Grouping*"
@@ -1381,13 +1380,13 @@ def contentGrouping(slack_token, dataSource):
     metrics = [
         {'expression': 'ga:sessions'}
     ]
-    
+
     dimensions = [{'name': 'ga:landingContentGroup1'},
                   {'name': 'ga:landingContentGroup2'},
                   {'name': 'ga:landingContentGroup3'},
                   {'name': 'ga:landingContentGroup4'},
                   {'name': 'ga:landingContentGroup5'}]
-    
+
     email = dataSource['email']
     viewId = dataSource['viewID']
 
@@ -1405,7 +1404,7 @@ def contentGrouping(slack_token, dataSource):
                     'metrics': metrics,
                     'dimensions': dimensions
                 }]}).execute()
-    
+
     cond = False
     if 'rows' in results['reports'][0]['data'].keys():
         for row in results['reports'][0]['data']['rows']:
@@ -1437,6 +1436,64 @@ def contentGrouping(slack_token, dataSource):
             "callback_id": "notification_form",
             "attachment_type": "default",
         }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+
+
+def othersInChannelGrouping(slack_token, dataSource):
+    text = "*Others in Channel Grouping*"
+    attachments = []
+
+    email = dataSource['email']
+    viewId = dataSource['viewID']
+
+    metrics = [{'expression': 'ga:sessions'}]
+
+    today = datetime.today()
+
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    service = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = service.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': [{'name': 'ga:channelGrouping'}]
+                }]}).execute()
+
+    if 'rows' in results['reports'][0]['data'].keys():
+        for row in results['reports'][0]['data']['rows']:
+            result = int(row['metrics'][0]['values'][0])
+            if result == "404" or result == "Page Not Found":
+                not_found = 1
+    else:
+        result = 0
+
+    if result > 0:
+        if not_found == 1:
+            attachments += [{
+                "text": "Default channel grouping is not suitable for analysis since there is *(other)* channel which is collecting non-group traffic sources.",
+                "color": "danger",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
+        else:
+            attachments += [{
+                "text": "Negligible percentage of your total traffic is collecting under other channel.",
+                "color": "good",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
 
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
