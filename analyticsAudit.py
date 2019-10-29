@@ -1403,7 +1403,7 @@ def contentGrouping(slack_token, dataSource):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'dimension': dimensions
+                    'dimensions': dimensions
                 }]}).execute()
     
     cond = False
