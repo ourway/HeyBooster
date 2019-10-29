@@ -52,7 +52,8 @@ def analyticsAudit(slack_token, dataSource):
                     errorPage,
                     timezone,
                     rawDataView,
-                    contentGrouping
+                    contentGrouping,
+                    othersInChannelGrouping
                     ]
     attachments = []
     for function in subfunctions:
@@ -1339,7 +1340,7 @@ def rawDataView(slack_token, dataSource):
     views = mservice.management().profiles().list(accountId=accountId,
                                                   webPropertyId=propertyId
                                                   ).execute()
-    
+
     numberofFilters = len(filters.get('items', []))
     numberofViews = len(views.get('items', []))
     if numberofFilters < numberofViews:
@@ -1358,7 +1359,7 @@ def rawDataView(slack_token, dataSource):
             "callback_id": "notification_form",
             "attachment_type": "default",
         }]
-    
+
     if len(attachments) != 0:
         attachments[0]['pretext'] = text
         return attachments
@@ -1464,14 +1465,18 @@ def othersInChannelGrouping(slack_token, dataSource):
 
     if 'rows' in results['reports'][0]['data'].keys():
         for row in results['reports'][0]['data']['rows']:
-            result = int(row['metrics'][0]['values'][0])
-            if result == "404" or result == "Page Not Found":
-                not_found = 1
+            status = row['dimensions'][0]
+            total_session = int(row['metrics'][0]['values'][0])
+            if status == 'Other':
+                other_session = int(row['metrics'][0]['values'][0])
+            else:
+                other_sessions = 0
     else:
         result = 0
 
+    session_result = total_session / other_session * 100
     if result > 0:
-        if not_found == 1:
+        if session_result > 0.05:
             attachments += [{
                 "text": "Default channel grouping is not suitable for analysis since there is *(other)* channel which is collecting non-group traffic sources.",
                 "color": "danger",
