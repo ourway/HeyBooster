@@ -1276,7 +1276,7 @@ def message_actions():
                                      attachments=attachments)
 #        elif message_action['actions'][-1]['name'] == "viewmore":
         elif "viewmore" in messagename:
-            UUID = ObjectId(message_action['actions'][-1]['value']).split('_')[0]
+            UUID = ObjectId(message_action['actions'][-1]['value'].split('_')[0])
             message_ts = message_action['message_ts']
             attachments = db2.find_one('attachment', query = {'_id': UUID})
             del attachments['_id']
