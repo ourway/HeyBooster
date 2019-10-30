@@ -1504,13 +1504,18 @@ def userPermission(slack_token, dataSource):
     attachments = []
 
     email = dataSource['email']
+    result = 1
+    i = 0
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
     try:
-        webProperty = mservice.management().accountUserLinks().list(
+        account_links = mservice.management().accountUserLinks().list(
             accountId='123456'
         ).execute()
-        result = 1
+        for accountUserLink in account_links.get('items', []):
+            totalResults = accountUserLink.get('totalResults')
+            i += 1
+
     except Exception:
         result = 0
 
@@ -1523,7 +1528,7 @@ def userPermission(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "There are {} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.",
+            "text": "There are {i} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.".format(i),
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
