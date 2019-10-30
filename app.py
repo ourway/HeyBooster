@@ -1108,7 +1108,67 @@ def message_actions():
                                 ]
                             },
                             {
-                                "label": f"Adwords Budget ({currency})",
+                                "label": "Filter : Dimension",
+                                "type": "select",
+                                "name": "dimension",
+                                "placeholder": "Select a dimension",
+                                "optional": True,
+                                "hint": "This will be used for filtering",
+                                "options": [
+                                    {
+                                        "label": "Campaign",
+                                        "value": "ga:campaign"
+                                    },
+                                    {
+                                        "label": "Google Ad Account ID",
+                                        "value": "ga:adwordsCustomerID",
+                                    },
+                                    {
+                                        "label": "Ad Group",
+                                        "value": "ga:adGroup",
+                                    },
+                                    {
+                                        "label": "Keyword",
+                                        "value": "ga:keyword",
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "Operator",
+                                "type": "select",
+                                "name": "operator",
+                                "placeholder": "Select an operator",
+                                "optional": True,
+                                "hint": "This will be used for filtering",
+                                "options": [
+                                    {
+                                        "label": "Exact Match",
+                                        "value": "=="
+                                    },
+                                    {
+                                        "label": "Does Not Match",
+                                        "value": "!="
+                                    },
+                                    {
+                                        "label": "Contains",
+                                        "value": "=@"
+                                    },
+                                    {
+                                        "label": "Does Not Contain",
+                                        "value": "!@",
+                                    },
+                                ]
+                            },
+                            {
+                                "label": "Expression",
+                                "type": "text",
+                                "name": "expression",
+                                "placeholder": "Enter an expression",
+                                "hint": "This will be used for filtering",
+                                "optional": True
+                            },
+                            {
+                                "label": f"Adwords Budget ({currency.strip()})",
                                 "name": "budget",
                                 "type": "text",
                                 "subtype": "number",
@@ -1376,7 +1436,6 @@ def message_actions():
 #            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
 #                                                          'channelID': channel})
 #            datasourceID = dataSource['_id']
-            viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancegoaltracking'})
             module_id = module['_id']
@@ -1441,30 +1500,30 @@ def message_actions():
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
         elif ('budget' in submission.keys()):
-#            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
-#                                                          'channelID': channel})
-#            datasourceID = dataSource['_id']
-            viewId = dataSource['viewID']
+            if (submission['dimension'] != None and submission['operator'] != None and submission[
+                'expression'] != None):
+                filterExpression = submission['dimension'] + submission['operator'] + submission['expression']
+            else:
+                filterExpression = ''
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'costprediction'})
-            module_id = module['_id']
-            target = float(submission['budget'])
-            db.find_and_modify(collection='notification', query={'_id': module['_id']},
-                               target=target,
-                               period=submission['period'],
-                               status='1'
-                               )
-            module['viewId'] = viewId
-            module['channel'] = channel
-            module['target'] = target
+            
+            module['target'] = submission['budget']
+            module['filterExpression'] = filterExpression
             module['period'] = submission['period']
             costprediction(slack_token, module, dataSource)
+            db.find_and_modify(collection='notification', query={'_id': module['_id']},
+                               target=submission['budget'],
+                               period=submission['period'],
+                               filterExpression=filterExpression,
+                               status='1'
+                               )
+
 
         elif ('threshold' in submission.keys()):
 #            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
 #                                                          'channelID': channel})
 #            datasourceID = dataSource['_id']
-            viewId = dataSource['viewID']
             module = db.find_one("notification", query={'datasourceID': datasourceID,
                                                         'type': 'performancechangealert'})
             module_id = module['_id']

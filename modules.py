@@ -654,6 +654,12 @@ def costprediction(slack_token, task, dataSource):
 
     target = float(str(task['target']).replace(',', '.'))
     period = int(task['period'])
+    if 'filterExpression' in task.keys():
+        filterExpression = task['filterExpression']
+    else:
+        filterExpression = ''
+    filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
+    
     today = datetime.today()
 
     if period == 7:
@@ -681,7 +687,7 @@ def costprediction(slack_token, task, dataSource):
                     #                                   {'startDate': start_date_2, 'endDate': end_date_2}],
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'filtersExpression': 'ga:sourceMedium==google / cpc',
+                    'filtersExpression': filterExpression,
                     'dimensions': [{'name': 'ga:day'}],
                     'includeEmptyRows': True
                 }]}).execute()
