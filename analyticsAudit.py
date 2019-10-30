@@ -1528,7 +1528,7 @@ def userPermission(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "There are {i} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.".format(i),
+            "text": "There are {} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.".format(i),
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
