@@ -5,23 +5,11 @@ import time
 from timezonefinder import TimezoneFinder
 
 
-###TIME ISSUES##
-# - reporting and management service is created within each function.
-# - attachments are running in a row. This can be done using multithreading 
-#   and then sorting can be applied
+def log_write(ex):
+    file = open('../analyticsAudit_log_files.txt', 'w')
+    file.write('{}: Analytics audit patladı \n {}'.format(datetime.today(), ex))
+    file.close()
 
-###ERROR##
-# File "/home/app/HeyBooster/app.py", line 1042, in message_actions
-# Oct 07 08:19:41 heybooster gunicorn[1953]:     analyticsAudit(slack_token, dataSource)
-# Oct 07 08:19:41 heybooster gunicorn[1953]:   File "/home/app/HeyBooster/analyticsAudit.py", line 22, in analyticsAudit
-# Oct 07 08:19:41 heybooster gunicorn[1953]:     attachments += bounceRateTracking(slack_token, dataSource)
-# Oct 07 08:19:41 heybooster gunicorn[1953]:   File "/home/app/HeyBooster/analyticsAudit.py", line 66, in bounceRateTracking
-# Oct 07 08:19:41 heybooster gunicorn[1953]:     'includeEmptyRows': True
-# Oct 07 08:19:41 heybooster gunicorn[1953]:   File "/home/app/HeyBooster/env/lib/python3.6/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
-# Oct 07 08:19:41 heybooster gunicorn[1953]:     return wrapped(*args, **kwargs)
-# Oct 07 08:19:41 heybooster gunicorn[1953]:   File "/home/app/HeyBooster/env/lib/python3.6/site-packages/googleapiclient/http.py", line 855, in execute
-# Oct 07 08:19:41 heybooster gunicorn[1953]:     raise HttpError(resp, content, uri=self.uri)
-# Oct 07 08:19:41 heybooster gunicorn[1953]: googleapiclient.errors.HttpError: <HttpError 403 when requesting https://analyticsreporting.googleapis.com/v4/reports:batchGet?alt=json returned
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
@@ -64,7 +52,7 @@ def analyticsAudit(slack_token, dataSource):
                 attachments += function(slack_token, dataSource)
                 break
             except Exception as ex:
-                print(str(ex))
+                log_write(ex)
                 trycount += 1
                 time.sleep(0.2)
     #    attachments += bounceRateTracking(slack_token, dataSource)
@@ -1502,7 +1490,7 @@ def othersInChannelGrouping(slack_token, dataSource):
 def userPermission(slack_token, dataSource):
     text = "*User Permission*"
     attachments = []
-
+    a =
     email = dataSource['email']
     result = 1
     i = 0

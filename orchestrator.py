@@ -3,7 +3,8 @@ import time
 from datetime import datetime
 import queue  # imported for using queue.Empty exception
 from database import db, db2
-from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction, performancegoaltracking, performancechangealert
+from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction, performancegoaltracking, \
+    performancechangealert
 
 
 def dtimetostrf(x):
@@ -75,13 +76,19 @@ def main():
     return True
 
 
+def log_write():
+    file = open('../orchestrator_log_files', 'w')
+    file.write('Orchestrator patladı {} \n'.format(datetime.today()))
+    file.close()
+
+
 if __name__ == '__main__':
     db.init()
     db2.init()
     while (True):
         try:
             time.sleep(59.5 - datetime.now().second)
-        except:
-            pass
+        except Exception:
+            log_write()
         if (datetime.now().second == 0):
             main()
