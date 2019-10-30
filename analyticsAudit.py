@@ -53,6 +53,7 @@ def analyticsAudit(slack_token, dataSource):
                     timezone,
                     rawDataView,
                     contentGrouping,
+                    userPermission,
                     othersInChannelGrouping
                     ]
     attachments = []
