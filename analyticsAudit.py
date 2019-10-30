@@ -40,6 +40,7 @@ def analyticsAudit(slack_token, dataSource):
                     eventTracking,
                     errorPage,
                     timezone,
+                    currency,
                     rawDataView,
                     contentGrouping,
                     userPermission,
