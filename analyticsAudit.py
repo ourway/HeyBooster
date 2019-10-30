@@ -1490,7 +1490,7 @@ def othersInChannelGrouping(slack_token, dataSource):
 def userPermission(slack_token, dataSource):
     text = "*User Permission*"
     attachments = []
-    a =
+
     email = dataSource['email']
     result = 1
     i = 0
