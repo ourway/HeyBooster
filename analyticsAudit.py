@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from slack import WebClient
 import time
 from timezonefinder import TimezoneFinder
+import ccy
 
 
 def log_write(ex):
@@ -1312,6 +1313,76 @@ def timezone(slack_token, dataSource):
         return []
 
 
+def currency(slack_token, dataSource):
+    text = "*Currency*"
+    attachments = []
+
+    metrics = [{
+        'expression': 'ga:sessions'
+    }]
+
+    dimensions = [{'name': 'ga:countryIsoCode'}]
+
+    email = dataSource['email']
+    accountId = dataSource['accountID']
+    propertyId = dataSource['propertyID']
+    viewId = dataSource['viewID']
+    
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    profile = mservice.management().profiles().get(accountId=accountId,
+                                                   webPropertyId=propertyId,
+                                                   profileId=viewId
+                                                   ).execute()
+    currentCurrency = profile['currency']
+    
+    today = datetime.today()
+    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+
+    rservice = google_analytics.build_reporting_api_v4_woutSession(email)
+    results = rservice.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'dimensions': dimensions,
+                    "orderBys": [
+                        {
+                            "fieldName": metrics[0]['expression'],
+                            "sortOrder": "DESCENDING"
+                        }]
+                }]}).execute()
+
+    if 'rows' in results['reports'][0]['data'].keys():
+        countryIsoCode = results['reports'][0]['data']['rows'][0]['dimensions'][0]
+        maxCurrency = ccy.countryccy(countryIsoCode.lower())
+        
+        if currentCurrency == maxCurrency:
+            attachments += [{
+                "text": f"It is okay, currency which you get the most traffic is same with currency set on your google analytics account({currentCurrency}).",
+                "color": "good",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
+        else:
+            attachments += [{
+                "text": f"Your preset currency is {currentCurrency} but you are getting traffic mostly from {maxCurrency}.",
+                "color": "danger",
+                "pretext": text,
+                "callback_id": "notification_form",
+                "attachment_type": "default",
+            }]
+
+    if len(attachments) != 0:
+        attachments[0]['pretext'] = text
+        return attachments
+    else:
+        return []
+    
+    
 def rawDataView(slack_token, dataSource):
     text = "*Raw Data View*"
 
