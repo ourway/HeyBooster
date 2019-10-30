@@ -658,7 +658,11 @@ def costprediction(slack_token, task, dataSource):
         filterExpression = task['filterExpression']
     else:
         filterExpression = ''
-    filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
+        
+    if filterExpression != '':
+        filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
+    else:
+        filterExpression = 'ga:sourceMedium==google / cpc'
     
     today = datetime.today()
 
