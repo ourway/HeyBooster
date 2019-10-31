@@ -15,7 +15,7 @@ import babel.numbers
 from flask import session, request
 from database import db, db2
 from forms import DataSourceForm
-
+from bson.objectid import ObjectId
 # from analyticsAudit import adwordsAccountConnection
 
 
@@ -68,7 +68,7 @@ def performancechangetracking(slack_token, task, dataSource):
 
 #    period = task['period']
     period = 1
-    tol = 0.30
+    tol = 0.10
 
     filters = [
         {
@@ -195,22 +195,25 @@ def performancechangetracking(slack_token, task, dataSource):
     if (len(attachments) != 0):
         attachments[0]['pretext'] = text
         attachments[-1]['actions'] = actions
-        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments,
-                                                        'datasourceID': dataSource['_id'],
-                                                        'ts': time.time()
-                                                        }).inserted_id)
-        actions = [{"name": "viewmore",
-                 "text": "View More",
-                 "type": "button",
-                 "value": f"{UUID}_{dataSourceID}"}] # + actions
-        attachments = [{"text": viewmoretext,
-                        "pretext": text,
-                        "color": "danger" if viewmoretext == text_r else "good",
-                        "callback_id": "notification_form",
-                        "attachment_type": "default",
-                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                        "actions": actions
-                        }]
+        if(len(attachments) > 0):
+            #If there is more than one message, compress it and send with View More
+            UUID = str(db2.insert_one("attachment", data = {'attachments': attachments,
+                                                            'datasourceID': dataSource['_id'],
+                                                            'ts': time.time()
+                                                            }).inserted_id)
+            actions = [{"name": "viewmore",
+                     "text": "View More",
+                     "type": "button",
+                     "value": f"{UUID}_{dataSourceID}"}] # + actions
+            attachments = [{"text": viewmoretext,
+                            "pretext": text,
+                            "color": "danger" if viewmoretext == text_r else "good",
+                            "callback_id": "notification_form",
+                            "attachment_type": "default",
+                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                            "actions": actions
+                            }]
+            db2.find_and_modify("attachment", query = {'_id': ObjectId(UUID)}, attachments_short = attachments)
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
                                             attachments=attachments)
@@ -400,22 +403,25 @@ def performancechangealert(slack_token, task, dataSource):
                          "callback_id": "notification_form",
                          "attachment_type": "default",
                          "actions": actions}]
-        UUID = str(db2.insert_one("attachment", data = {'attachments': attachments,
-                                                        'datasourceID': dataSource['_id'],
-                                                        'ts': time.time()
-                                                        }).inserted_id)
-        actions = [{"name": "viewmore",
-                 "text": "View More",
-                 "type": "button",
-                 "value": f"{UUID}_{dataSourceID}"}] # + actions
-        attachments = [{"text": viewmoretext,
-                        "pretext": text,
-                        "color": "danger" if viewmoretext == text_r else "good",
-                        "callback_id": "notification_form",
-                        "attachment_type": "default",
-                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                        "actions": actions
-                        }]
+        if(len(attachments) > 0):
+            #If there is more than one message, compress it and send with View More
+            UUID = str(db2.insert_one("attachment", data = {'attachments': attachments,
+                                                            'datasourceID': dataSource['_id'],
+                                                            'ts': time.time()
+                                                            }).inserted_id)
+            actions = [{"name": "viewmore",
+                     "text": "View More",
+                     "type": "button",
+                     "value": f"{UUID}_{dataSourceID}"}] # + actions
+            attachments = [{"text": viewmoretext,
+                            "pretext": text,
+                            "color": "danger" if viewmoretext == text_r else "good",
+                            "callback_id": "notification_form",
+                            "attachment_type": "default",
+                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                            "actions": actions
+                            }]
+            db2.find_and_modify("attachment", query = {'_id': ObjectId(UUID)}, attachments_short = attachments)
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
                                             attachments=attachments)
@@ -480,7 +486,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
     channel = task['channel']
     period = task['period']
 
-    tol = 0.30
+    tol = 0.10
     today = datetime.today()
 
     if (period == 1):
@@ -586,22 +592,25 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                               "callback_id": "notification_form",
                               "attachment_type": "default",
                               "actions": actions}]
-        UUID = str(db2.insert_one("attachment", data = {'attachments': totalattachments,
-                                                        'datasourceID': dataSource['_id'],
-                                                        'ts': time.time()
-                                                        }).inserted_id)
-        actions = [{"name": "viewmore",
-                 "text": "View More",
-                 "type": "button",
-                 "value": f"{UUID}_{dataSourceID}"}] # + actions
-        attachments = [{"text": viewmoretext,
-                        "pretext": "*Shopping Funnel Changes Tracking*",
-                        "color": "danger" if viewmoretext == text_r else "good",
-                        "callback_id": "notification_form",
-                        "attachment_type": "default",
-                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                        "actions": actions
-                        }]
+        if len(totalattachments) > 0:
+            #If there is more than one message, compress it and send with View More
+            UUID = str(db2.insert_one("attachment", data = {'attachments': totalattachments,
+                                                            'datasourceID': dataSource['_id'],
+                                                            'ts': time.time()
+                                                            }).inserted_id)
+            actions = [{"name": "viewmore",
+                     "text": "View More",
+                     "type": "button",
+                     "value": f"{UUID}_{dataSourceID}"}] # + actions
+            attachments = [{"text": viewmoretext,
+                            "pretext": "*Shopping Funnel Changes Tracking*",
+                            "color": "danger" if viewmoretext == text_r else "good",
+                            "callback_id": "notification_form",
+                            "attachment_type": "default",
+                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                            "actions": actions
+                            }]
+            db2.find_and_modify("attachment", query = {'_id': ObjectId(UUID)}, attachments_short = attachments)
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(
             channel=channel,

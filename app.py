@@ -1338,12 +1338,23 @@ def message_actions():
         elif "viewmore" in messagename:
             UUID = ObjectId(message_action['actions'][-1]['value'].split('_')[0])
             message_ts = message_action['message_ts']
-            attachments = db2.find_one('attachment', query = {'_id': UUID})
-            del attachments['_id']
+            if ('More' in (message_action['actions'][-1]['text'])):
+                attachments = db2.find_one('attachment', query = {'_id': UUID})
+                actions = [{"name": "viewmore",
+                            "text": "View Less",
+                            "type": "button",
+                            "value": message_action['actions'][-1]['value']}]
+                attachments['attachments'][-1]['actions'] += actions
+                upd_attachments = attachments['attachments']
+            else:
+                attachments = db2.find_one('attachment', query = {'_id': UUID})
+                upd_attachments = attachments['attachments_short']
             slack_client.chat_update(channel=channel,
                                      ts=message_ts,
                                      text="",
-                                     attachments=attachments['attachments'])
+                                     attachments=upd_attachments)
+                
+            
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
