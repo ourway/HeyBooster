@@ -68,7 +68,7 @@ def performancechangetracking(slack_token, task, dataSource):
 
 #    period = task['period']
     period = 1
-    tol = 0.10
+    tol = 0.30
 
     filters = [
         {
@@ -486,7 +486,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
     channel = task['channel']
     period = task['period']
 
-    tol = 0.10
+    tol = 0.30
     today = datetime.today()
 
     if (period == 1):
@@ -655,7 +655,7 @@ def costprediction(slack_token, task, dataSource):
         {'expression': 'ga:adCost'},
     ]
 
-    tol = 0.10
+    tol = 0.30
     email = task['email']
     service = google_analytics.build_reporting_api_v4_woutSession(email)
     viewId = task['viewId']
