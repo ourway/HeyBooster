@@ -986,7 +986,7 @@ def performancegoaltracking(slack_token, task, dataSource):
                  "color": color,
                  "callback_id": "notification_form",
                  "attachment_type": "default",
-                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']} - {filterExpression}",
+                 "footer": f"Filter: {filterExpression}\n{dataSource['propertyName']} & {dataSource['viewName']}\n",
                  #                             "image_url": imageurl.format(imageId),
                  "actions": [{
                      "name": "ignore",
