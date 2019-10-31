@@ -1338,8 +1338,8 @@ def message_actions():
         elif "viewmore" in messagename:
             UUID = ObjectId(message_action['actions'][-1]['value'].split('_')[0])
             message_ts = message_action['message_ts']
-            print(str(message_action['actions'][-1].items()))
-            if ('More' in (message_action['actions'][-1]['text'])):
+            button = attachments = message_action['original_message']['attachments'][-1]['actions'][-1]
+            if 'More' in button['text']:
                 attachments = db2.find_one('attachment', query = {'_id': UUID})
                 actions = [{"name": "viewmore",
                             "text": "View Less",
