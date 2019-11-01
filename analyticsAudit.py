@@ -10,9 +10,6 @@ import logging
 def log_write():
     logging.basicConfig(filename="analyticsAudit.log", filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-    logging.info('Info Analytics Audit')
-    logging.warning('Warning Analytics Audit')
-    logging.error('Error Analytics Audit')
 
 
 def dtimetostrf(x):

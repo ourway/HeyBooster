@@ -8,12 +8,6 @@ from modules import performancechangetracking, shoppingfunnelchangetracking, cos
 import logging
 
 
-def log_write():
-    logging.info('Info Orchestrator')
-    logging.warning('Warning Orchestrator')
-    logging.error('Error Orchestrator')
-
-
 def dtimetostrf(x):
     return x.strftime('%H.%M')
 
@@ -46,8 +40,8 @@ def do_job(tasks_to_accomplish):
                                lastRunDate=time.time())
         except queue.Empty:
             break
-        except Exception:
-            log_write()
+        except Exception as ex:
+            logging.error(str(ex))
     return True
 
 
@@ -93,7 +87,7 @@ if __name__ == '__main__':
     while (True):
         try:
             time.sleep(59.5 - datetime.now().second)
-        except Exception:
-            log_write()
+        except Exception as ex:
+            logging.error(str(ex))
         if (datetime.now().second == 0):
             main()
