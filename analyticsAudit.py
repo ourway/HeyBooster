@@ -5,7 +5,8 @@ import time
 from timezonefinder import TimezoneFinder
 import ccy
 import logging
-import db
+from database import db
+
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
