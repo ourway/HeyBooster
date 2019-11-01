@@ -9,13 +9,9 @@ import logging
 
 
 def log_write():
-    logging.basicConfig(filename="orchestrator.log", filemode='a',
-                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-    logging.debug('Debug Orchestrator')
     logging.info('Info Orchestrator')
     logging.warning('Warning Orchestrator')
     logging.error('Error Orchestrator')
-    logging.critical('Critical Orchestrator')
 
 
 def dtimetostrf(x):
@@ -90,6 +86,8 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(filename="orchestrator.log", filemode='a',
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     db.init()
     db2.init()
     while (True):
