@@ -54,7 +54,7 @@ def analyticsAudit(slack_token, dataSource):
                 attachments += function(slack_token, dataSource)
                 break
             except Exception as ex:
-                log_write(ex)
+                log_write()
                 trycount += 1
                 time.sleep(0.2)
     #    attachments += bounceRateTracking(slack_token, dataSource)
