@@ -5,6 +5,7 @@ import queue  # imported for using queue.Empty exception
 from database import db, db2
 from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction, performancegoaltracking, \
     performancechangealert
+from analyticsAudit import analyticsAudit
 import logging
 
 
@@ -26,6 +27,7 @@ def do_job(tasks_to_accomplish):
             user = db.find_one('user', {'email': task['email']})
             slack_token = user['sl_accesstoken']
             dataSource = db.find_one('datasource', query={'_id': task['datasourceID']})
+            logging.info(f"User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']}")
             if (task['type'] == 'performancechangetracking'):
                 performancechangetracking(slack_token, task, dataSource)
             elif (task['type'] == 'shoppingfunnelchangetracking'):
@@ -36,12 +38,14 @@ def do_job(tasks_to_accomplish):
                 performancegoaltracking(slack_token, task, dataSource)
             elif (task['type'] == 'performancechangealert'):
                 performancechangealert(slack_token, task, dataSource)
+            elif task['type'] == 'analyticsAudit':
+                analyticsAudit(slack_token, task, dataSource)
             db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']},
                                lastRunDate=time.time())
         except queue.Empty:
             break
         except Exception as ex:
-            logging.error(str(ex))
+            logging.error(f"TASK DID NOT RUN - User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']}\n{str(ex)}")
     return True
 
 

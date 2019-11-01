@@ -1181,7 +1181,7 @@ def message_actions():
         elif('analyticsAudit' in messagevalue):
 #            dataSource = db.find_one("datasource", query={'sl_userid': sl_userid,
 #                                                          'channelID': channel})
-            analyticsAudit(slack_token, dataSource)
+            analyticsAudit(slack_token, task=None, dataSource = dataSource)
 
         elif ('ignoreone' in messagevalue):
             metric = message_action['actions'][-1]['value'].split(' ')[-1]

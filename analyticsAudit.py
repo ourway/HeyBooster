@@ -5,18 +5,16 @@ import time
 from timezonefinder import TimezoneFinder
 import ccy
 import logging
-
-
-def log_write():
-    logging.basicConfig(filename="analyticsAudit.log", filemode='a',
-                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
+import db
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
 
-def analyticsAudit(slack_token, dataSource):
+def analyticsAudit(slack_token, task, dataSource):
+    db.init()
+    logging.basicConfig(filename="analyticsAudit.log", filemode='a',
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     channel = dataSource['channelID']
     subfunctions = [bounceRateTracking,
                     notSetLandingPage,
@@ -47,16 +45,34 @@ def analyticsAudit(slack_token, dataSource):
                     othersInChannelGrouping
                     ]
     attachments = []
+    currentStates = {}
     for function in subfunctions:
         trycount = 0
         while trycount < 3:
             try:
-                attachments += function(slack_token, dataSource)
+                attachment = function(slack_token, dataSource)
+                if 'color' in attachment[0]:
+                    currentState = attachment[0]['color']
+                else:
+                    currentState = None
+                currentStates[function.__name__] = currentState
+                if task:
+                    lastState = task['lastStates'][function.__name__]
+                    
+                    if lastState != currentState:
+                        attachments += attachment
+                else:
+                    attachments += attachment
                 break
             except Exception as ex:
-                log_write()
+                logging.error(f"TASK DID NOT RUN - User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__}\n{str(ex)}")
                 trycount += 1
                 time.sleep(0.2)
+    if task:
+        db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates)
+    else:
+        db.find_and_modify('notification', query={'datasourceID': dataSource['_id'],
+                                              'type': 'analyticsAudit'},  lastStates = currentStates)
     #    attachments += bounceRateTracking(slack_token, dataSource)
     #    attachments += notSetLandingPage(slack_token, dataSource)
     #    attachments += adwordsAccountConnection(slack_token, dataSource)
