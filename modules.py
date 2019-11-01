@@ -16,6 +16,7 @@ from flask import session, request
 from database import db, db2
 from forms import DataSourceForm
 from bson.objectid import ObjectId
+
 # from analyticsAudit import adwordsAccountConnection
 
 
@@ -28,7 +29,7 @@ def dtimetostrf(x):
 
 
 def performancechangetracking(slack_token, task, dataSource):
-#    Performance Changes Tracking
+    #    Performance Changes Tracking
     text_r = "Checkout website performans metrics, something is going down click view more for details."
     text_g = "You are on the right track, everything is superamazing!"
     viewmoretext = text_g
@@ -66,7 +67,7 @@ def performancechangetracking(slack_token, task, dataSource):
     viewId = task['viewId']
     channel = task['channel']
 
-#    period = task['period']
+    #    period = task['period']
     period = 1
     tol = 0.30
 
@@ -139,10 +140,10 @@ def performancechangetracking(slack_token, task, dataSource):
             changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
         except:
             changerate = abs(data_old - data_new)
-        if(currency):
+        if (currency):
             datanewtext = babel.numbers.format_currency(decimal.Decimal(str(data_new)), task['currency'])
         else:
-            datanewtext = round(data_new,2)
+            datanewtext = round(data_new, 2)
         if (data_new < data_old):
             if ((data_old - data_new) <= (tol * data_old)):
                 color = "good"
@@ -151,15 +152,15 @@ def performancechangetracking(slack_token, task, dataSource):
             #                    "attachment_type": "default",
             #                }]
             else:
-                if(condition == "Equal"):
+                if (condition == "Equal"):
                     color = None
-                elif(condition == "More"):
+                elif (condition == "More"):
                     color = "danger"
                     viewmoretext = text_r
-                elif(condition == "Less"):
+                elif (condition == "Less"):
                     color = "good"
 
-                if(color != "good"):
+                if (color != "good"):
                     attachments += [{
                         "text": f"{str_period_1} you got {changerate} less {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                         "callback_id": "notification_form",
@@ -170,20 +171,20 @@ def performancechangetracking(slack_token, task, dataSource):
         else:
             if ((data_new - data_old) <= (tol * data_old)):
                 color = "good"
-#                pass
+            #                pass
             #                attachments += [{"text": f"Yesterday you got {changerate} more {metricname} than previous day. {metricname} : {round(data_new,2)}\n",
             #                    "callback_id": "notification_form",
             #                    "attachment_type": "default",
             #                }]
             else:
-                if(condition == "Equal"):
+                if (condition == "Equal"):
                     color = None
-                elif(condition == "More"):
+                elif (condition == "More"):
                     color = "good"
-                elif(condition == "Less"):
+                elif (condition == "Less"):
                     color = "danger"
                     viewmoretext = text_r
-                if(color != "good"):
+                if (color != "good"):
                     attachments += [{
                         "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
                         "callback_id": "notification_form",
@@ -195,16 +196,16 @@ def performancechangetracking(slack_token, task, dataSource):
     if (len(attachments) != 0):
         attachments[0]['pretext'] = text
         attachments[-1]['actions'] = actions
-        if(len(attachments) > 0):
-            #If there is more than one message, compress it and send with View More
-            UUID = str(db2.insert_one("attachment", data = {'attachments': attachments,
-                                                            'datasourceID': dataSource['_id'],
-                                                            'ts': time.time()
-                                                            }).inserted_id)
+        if (len(attachments) > 0):
+            # If there is more than one message, compress it and send with View More
+            UUID = str(db2.insert_one("attachment", data={'attachments': attachments,
+                                                          'datasourceID': dataSource['_id'],
+                                                          'ts': time.time()
+                                                          }).inserted_id)
             actions = [{"name": "viewmore",
-                     "text": "View More",
-                     "type": "button",
-                     "value": f"{UUID}_{dataSourceID}"}] # + actions
+                        "text": "View More",
+                        "type": "button",
+                        "value": f"{UUID}_{dataSourceID}"}]  # + actions
             attachments = [{"text": viewmoretext,
                             "pretext": text,
                             "color": "danger" if viewmoretext == text_r else "good",
@@ -213,10 +214,10 @@ def performancechangetracking(slack_token, task, dataSource):
                             "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                             "actions": actions
                             }]
-            db2.find_and_modify("attachment", query = {'_id': ObjectId(UUID)}, attachments_short = attachments)
+            db2.find_and_modify("attachment", query={'_id': ObjectId(UUID)}, attachments_short=attachments)
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
-                                            attachments=attachments)
+                                             attachments=attachments)
         return resp['ts']
 
 
@@ -264,9 +265,9 @@ def performancechangealert(slack_token, task, dataSource):
                   'ga:adCost': 'Adwords Cost'}
 
     currencydict = {'ga:ROAS': False,
-                  'ga:CPC': False,
-                  'ga:costPerTransaction': True,
-                  'ga:adCost': True}
+                    'ga:CPC': False,
+                    'ga:costPerTransaction': True,
+                    'ga:adCost': True}
 
     metrics = []
     metricnames = []
@@ -337,10 +338,10 @@ def performancechangealert(slack_token, task, dataSource):
             changerate = str(round(abs(data_old - data_new) / data_old * 100, 2)) + '%'
         except:
             changerate = abs(data_old - data_new)
-        if(currency):
+        if (currency):
             datanewtext = babel.numbers.format_currency(decimal.Decimal(str(data_new)), task['currency'])
         else:
-            datanewtext = round(data_new,2)
+            datanewtext = round(data_new, 2)
         if (data_new < data_old):
             if ((data_old - data_new) <= (threshold * data_old)):
                 pass
@@ -377,24 +378,24 @@ def performancechangealert(slack_token, task, dataSource):
             #                }]
             else:
                 pass
-#                attachments += [{
-#                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
-#                    "callback_id": "notification_form",
-#                    'color': "good",
-#                    "attachment_type": "default",
-#                    "actions": [{
-#                        "name": "ignore",
-#                        "text": "Remove",
-#                        "type": "button",
-#                        "value": "ignoreanalert " + metrics[i]['expression'],
-#                        "confirm": {
-#                            "title": "Warning",
-#                            "text": f"If you remove {metricname} performance change alert, you will not track your {metricname} performance change alert anymore. Are you still sure you want to remove it?",
-#                            "ok_text": "Yes",
-#                            "dismiss_text": "No"
-#                        }
-#                    }]
-#                }]
+    #                attachments += [{
+    #                    "text": f"{str_period_1} you got {changerate} more {metricname} than {str_period_2}. {metricname} : {datanewtext}\n",
+    #                    "callback_id": "notification_form",
+    #                    'color': "good",
+    #                    "attachment_type": "default",
+    #                    "actions": [{
+    #                        "name": "ignore",
+    #                        "text": "Remove",
+    #                        "type": "button",
+    #                        "value": "ignoreanalert " + metrics[i]['expression'],
+    #                        "confirm": {
+    #                            "title": "Warning",
+    #                            "text": f"If you remove {metricname} performance change alert, you will not track your {metricname} performance change alert anymore. Are you still sure you want to remove it?",
+    #                            "ok_text": "Yes",
+    #                            "dismiss_text": "No"
+    #                        }
+    #                    }]
+    #                }]
 
     if (len(attachments) != 0):
         attachments[0]['pretext'] = text
@@ -403,16 +404,16 @@ def performancechangealert(slack_token, task, dataSource):
                          "callback_id": "notification_form",
                          "attachment_type": "default",
                          "actions": actions}]
-        if(len(attachments) > 0):
-            #If there is more than one message, compress it and send with View More
-            UUID = str(db2.insert_one("attachment", data = {'attachments': attachments,
-                                                            'datasourceID': dataSource['_id'],
-                                                            'ts': time.time()
-                                                            }).inserted_id)
+        if (len(attachments) > 0):
+            # If there is more than one message, compress it and send with View More
+            UUID = str(db2.insert_one("attachment", data={'attachments': attachments,
+                                                          'datasourceID': dataSource['_id'],
+                                                          'ts': time.time()
+                                                          }).inserted_id)
             actions = [{"name": "viewmore",
-                     "text": "View More",
-                     "type": "button",
-                     "value": f"{UUID}_{dataSourceID}"}] # + actions
+                        "text": "View More",
+                        "type": "button",
+                        "value": f"{UUID}_{dataSourceID}"}]  # + actions
             attachments = [{"text": viewmoretext,
                             "pretext": text,
                             "color": "danger" if viewmoretext == text_r else "good",
@@ -421,10 +422,10 @@ def performancechangealert(slack_token, task, dataSource):
                             "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                             "actions": actions
                             }]
-            db2.find_and_modify("attachment", query = {'_id': ObjectId(UUID)}, attachments_short = attachments)
+            db2.find_and_modify("attachment", query={'_id': ObjectId(UUID)}, attachments_short=attachments)
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
-                                            attachments=attachments)
+                                             attachments=attachments)
         return resp['ts']
 
 
@@ -450,17 +451,17 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
 
     dimensions = {}
     dimensions['desktop'] = {'ALL_VISITS': 'Number of desktop session',
-                  'PRODUCT_VIEW': 'Number of desktop session with product view',
-                  'ADD_TO_CART': 'Number of desktop session with add to cart',
-                  'CHECKOUT': 'Number of desktop session with checkout',
-                  'TRANSACTION': 'Number of desktop session with transaction'
-                  }
+                             'PRODUCT_VIEW': 'Number of desktop session with product view',
+                             'ADD_TO_CART': 'Number of desktop session with add to cart',
+                             'CHECKOUT': 'Number of desktop session with checkout',
+                             'TRANSACTION': 'Number of desktop session with transaction'
+                             }
     dimensions['mobile'] = {'ALL_VISITS': 'Number of mobile session',
-                  'PRODUCT_VIEW': 'Number of mobile session with product view',
-                  'ADD_TO_CART': 'Number of mobile session with add to cart',
-                  'CHECKOUT': 'Number of mobile session with checkout',
-                  'TRANSACTION': 'Number of mobile session with transaction'
-                  }
+                            'PRODUCT_VIEW': 'Number of mobile session with product view',
+                            'ADD_TO_CART': 'Number of mobile session with add to cart',
+                            'CHECKOUT': 'Number of mobile session with checkout',
+                            'TRANSACTION': 'Number of mobile session with transaction'
+                            }
     actions = [
         #            {
         #        "name": "track",
@@ -574,13 +575,13 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                     #                    }]
                     else:
                         pass
-#                        attachments[seg] += [{
-#                            "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
-#                            "callback_id": "notification_form",
-#                            'color': "good",
-#                            "attachment_type": "default",
-#                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-#                        }]
+        #                        attachments[seg] += [{
+        #                            "text": f"Yesterday {dimname} is {changerate} more than previous day. {dimname} : {int(data_new)}\n",
+        #                            "callback_id": "notification_form",
+        #                            'color': "good",
+        #                            "attachment_type": "default",
+        #                            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+        #                        }]
         if (len(attachments[seg]) > 0):
             attachments[seg][0]['pretext'] = text[seg]
 
@@ -593,15 +594,15 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                               "attachment_type": "default",
                               "actions": actions}]
         if len(totalattachments) > 0:
-            #If there is more than one message, compress it and send with View More
-            UUID = str(db2.insert_one("attachment", data = {'attachments': totalattachments,
-                                                            'datasourceID': dataSource['_id'],
-                                                            'ts': time.time()
-                                                            }).inserted_id)
+            # If there is more than one message, compress it and send with View More
+            UUID = str(db2.insert_one("attachment", data={'attachments': totalattachments,
+                                                          'datasourceID': dataSource['_id'],
+                                                          'ts': time.time()
+                                                          }).inserted_id)
             actions = [{"name": "viewmore",
-                     "text": "View More",
-                     "type": "button",
-                     "value": f"{UUID}_{dataSourceID}"}] # + actions
+                        "text": "View More",
+                        "type": "button",
+                        "value": f"{UUID}_{dataSourceID}"}]  # + actions
             attachments = [{"text": viewmoretext,
                             "pretext": "*Shopping Funnel Changes Tracking*",
                             "color": "danger" if viewmoretext == text_r else "good",
@@ -610,7 +611,7 @@ def shoppingfunnelchangetracking(slack_token, task, dataSource):
                             "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                             "actions": actions
                             }]
-            db2.find_and_modify("attachment", query = {'_id': ObjectId(UUID)}, attachments_short = attachments)
+            db2.find_and_modify("attachment", query={'_id': ObjectId(UUID)}, attachments_short=attachments)
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(
             channel=channel,
@@ -667,12 +668,12 @@ def costprediction(slack_token, task, dataSource):
         filterExpression = task['filterExpression']
     else:
         filterExpression = ''
-        
+
     if filterExpression != '':
         filterExpression = "ga:sourceMedium==google / cpc;" + filterExpression
     else:
         filterExpression = 'ga:sourceMedium==google / cpc'
-    
+
     today = datetime.today()
 
     if period == 7:
@@ -827,15 +828,15 @@ def performancegoaltracking(slack_token, task, dataSource):
         #                    }
         #        }
     ]
-##FASTER BUT STATIC SOLUTION
-#    goalCompletions = []
-#    for i in range(1,21):
-#        goalCompletions += [{f'ga:goal{i}Completion': 'Goal {} Completions'}]
+    ##FASTER BUT STATIC SOLUTION
+    #    goalCompletions = []
+    #    for i in range(1,21):
+    #        goalCompletions += [{f'ga:goal{i}Completion': 'Goal {} Completions'}]
 
     mservice = google_analytics.build_management_api_v3_woutSession(dataSource['email'])
     goals = mservice.management().goals().list(accountId=dataSource['accountID'],
-                                              webPropertyId=dataSource['propertyID'],
-                                              profileId=dataSource['viewID']).execute()
+                                               webPropertyId=dataSource['propertyID'],
+                                               profileId=dataSource['viewID']).execute()
 
     metricdict = {'ga:ROAS': 'Adwords ROAS',
                   'ga:CPC': 'Adwords CPC',
@@ -848,25 +849,25 @@ def performancegoaltracking(slack_token, task, dataSource):
                   'ga:newUsers': 'New User'}
 
     conditiondict = {'ga:ROAS': 'More',
-                  'ga:CPC': 'Less',
-                  'ga:sessions': 'More',
-                  'ga:costPerTransaction': 'Less',
-                  'ga:adCost': "Equal",
-                  'ga:transactionRevenue': 'More',
-                  'ga:impressions': 'More',
-                  'ga:adClicks': 'More',
-                  'ga:newUsers': 'More'}
+                     'ga:CPC': 'Less',
+                     'ga:sessions': 'More',
+                     'ga:costPerTransaction': 'Less',
+                     'ga:adCost': "Equal",
+                     'ga:transactionRevenue': 'More',
+                     'ga:impressions': 'More',
+                     'ga:adClicks': 'More',
+                     'ga:newUsers': 'More'}
 
     currencydict = {'ga:ROAS': False,
-                  'ga:CPC': False,
-                  'ga:sessions': False,
-                  'ga:costPerTransaction': True,
-                  'ga:adCost': True,
-                  'ga:transactionRevenue': True,
-                  'ga:impressions': False,
-                  'ga:adClicks': False,
-                  'ga:newUsers': False}
-##SLOW BUT DYNAMIC SOLUTION
+                    'ga:CPC': False,
+                    'ga:sessions': False,
+                    'ga:costPerTransaction': True,
+                    'ga:adCost': True,
+                    'ga:transactionRevenue': True,
+                    'ga:impressions': False,
+                    'ga:adClicks': False,
+                    'ga:newUsers': False}
+    ##SLOW BUT DYNAMIC SOLUTION
     for goal in goals.get('items', []):
         goalnumber = goal.get('id')
         goalname = goal.get('name')
@@ -880,7 +881,7 @@ def performancegoaltracking(slack_token, task, dataSource):
     filters = []
     periods = []
     conditions = []
-    currencies  = []
+    currencies = []
     tol = 0.05
     for i in range(len(task['metric'])):
         metrics += [{'expression': task['metric'][i]}]
@@ -924,7 +925,7 @@ def performancegoaltracking(slack_token, task, dataSource):
             start_date_1 = dtimetostrf((today - timedelta(days=today.weekday())))  # Convert it to string format
             end_date_1 = dtimetostrf((today - timedelta(days=1)))
             str_period = "This week"
-            if(start_date_1 > end_date_1):
+            if (start_date_1 > end_date_1):
                 start_date_1 = dtimetostrf(today)  # Convert it to string format
                 end_date_1 = start_date_1
         elif (period == 30):
@@ -961,112 +962,118 @@ def performancegoaltracking(slack_token, task, dataSource):
         if ((abs(querytotal - target) / target) <= tol):
             color = "good"
         else:
-            if(condition == "Equal"):
+            if (condition == "Equal"):
                 color = "danger"
-                #viewmoretext = text_r
-            elif(condition == "More"):
-                if(querytotal > target):
-                    if(querytotal < target*(1+0.81)):
+                # viewmoretext = text_r
+            elif (condition == "More"):
+                if (querytotal > target):
+                    if (querytotal < target * (1 + 0.81)):
                         color = "good"
                     else:
                         color = None
                 else:
                     color = "danger"
-                    #viewmoretext = text_r
-            elif(condition == "Less"):
-                if(querytotal < target):
-                    if(querytotal > target*(1-0.81)):
+                    # viewmoretext = text_r
+            elif (condition == "Less"):
+                if (querytotal < target):
+                    if (querytotal > target * (1 - 0.81)):
                         color = "good"
                     else:
                         color = None
                 else:
                     color = "danger"
-                    #viewmoretext = text_r
+                    # viewmoretext = text_r
             else:
                 color = None
-        if(currency):
+        if (currency):
             querytotaltext = babel.numbers.format_currency(decimal.Decimal(str(querytotal)), task['currency'])
             targettext = babel.numbers.format_currency(decimal.Decimal(str(target)), task['currency'])
         else:
-            querytotaltext =  round(querytotal,2)
-            targettext = round(target,2)
-        attachments += [
-                {"text": f"{str_period}, {metricname} is {querytotaltext}, Your Target {metricname}: {targettext}",
-                 "color": color,
-                 "callback_id": "notification_form",
-                 "attachment_type": "default",
-                 "footer": f"Filter: {filterExpression}\n{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                 #                             "image_url": imageurl.format(imageId),
-                 "actions": [{
-                     "name": "ignore",
-                     "text": "Remove",
-                     "type": "button",
-                     "value": f"ignoreone {metrics[i]['expression']}_{dataSourceID}",
-                     "confirm": {
-                         "title": "Warning",
-                         "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
-                         "ok_text": "Yes",
-                         "dismiss_text": "No"
-                     }
-                 },
-                     {"name": "showgraph",
-                      "text": "Show Graph",
-                      "type": "button",
-                      "value": f"{imageId}_{dataSourceID}"}],
+            querytotaltext = round(querytotal, 2)
+            targettext = round(target, 2)
 
-                 }]
-#        if ((abs(querytotal - target) / target) <= tol):
-#            attachments += [
-#                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
-#                 "color": "good",
-#                 "callback_id": "notification_form",
-#                 "attachment_type": "default",
-#                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-#                 #                             "image_url": imageurl.format(imageId),
-#                 "actions": [{
-#                     "name": "ignore",
-#                     "text": "Remove",
-#                     "type": "button",
-#                     "value": "ignoreone " + metrics[i]['expression'],
-#                     "confirm": {
-#                         "title": "Warning",
-#                         "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
-#                         "ok_text": "Yes",
-#                         "dismiss_text": "No"
-#                     }
-#                 },
-#                     {"name": "showgraph",
-#                      "text": "Show Graph",
-#                      "type": "button",
-#                      "value": f"{imageId}"}],
-#
-#                 }]
-#
-#        else:
-#            attachments += [
-#                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
-#                 "color": "danger",
-#                 "callback_id": "notification_form",
-#                 "attachment_type": "default",
-#                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-#                 #                             "image_url": imageurl.format(imageId),
-#                 "actions": [{
-#                     "name": "ignore",
-#                     "text": "Remove",
-#                     "type": "button",
-#                     "value": "ignoreone " + metrics[i]['expression'],
-#                     "confirm": {
-#                         "title": "Warning",
-#                         "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
-#                         "ok_text": "Yes",
-#                         "dismiss_text": "No"
-#                     }
-#                 },
-#                     {"name": "showgraph",
-#                      "text": "Show Graph",
-#                      "type": "button",
-#                      "value": f"{imageId}"}]
-#                 }]
+        if filterExpression:
+            filterExpressionText = "Filter: {}".format(filterExpression)
+        else:
+            filterExpressionText = ""
+
+        attachments += [
+            {"text": f"{str_period}, {metricname} is {querytotaltext}, Your Target {metricname}: {targettext}",
+             "color": color,
+             "callback_id": "notification_form",
+             "attachment_type": "default",
+             "footer": f"{filterExpressionText}\n{dataSource['propertyName']} & {dataSource['viewName']}\n",
+             #                             "image_url": imageurl.format(imageId),
+             "actions": [{
+                 "name": "ignore",
+                 "text": "Remove",
+                 "type": "button",
+                 "value": f"ignoreone {metrics[i]['expression']}_{dataSourceID}",
+                 "confirm": {
+                     "title": "Warning",
+                     "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
+                     "ok_text": "Yes",
+                     "dismiss_text": "No"
+                 }
+             },
+                 {"name": "showgraph",
+                  "text": "Show Graph",
+                  "type": "button",
+                  "value": f"{imageId}_{dataSourceID}"}],
+
+             }]
+    #        if ((abs(querytotal - target) / target) <= tol):
+    #            attachments += [
+    #                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
+    #                 "color": "good",
+    #                 "callback_id": "notification_form",
+    #                 "attachment_type": "default",
+    #                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+    #                 #                             "image_url": imageurl.format(imageId),
+    #                 "actions": [{
+    #                     "name": "ignore",
+    #                     "text": "Remove",
+    #                     "type": "button",
+    #                     "value": "ignoreone " + metrics[i]['expression'],
+    #                     "confirm": {
+    #                         "title": "Warning",
+    #                         "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
+    #                         "ok_text": "Yes",
+    #                         "dismiss_text": "No"
+    #                     }
+    #                 },
+    #                     {"name": "showgraph",
+    #                      "text": "Show Graph",
+    #                      "type": "button",
+    #                      "value": f"{imageId}"}],
+    #
+    #                 }]
+    #
+    #        else:
+    #            attachments += [
+    #                {"text": f"{str_period}, {metricname} is {round(querytotal, 2)}, Your Target {metricname}: {target}",
+    #                 "color": "danger",
+    #                 "callback_id": "notification_form",
+    #                 "attachment_type": "default",
+    #                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+    #                 #                             "image_url": imageurl.format(imageId),
+    #                 "actions": [{
+    #                     "name": "ignore",
+    #                     "text": "Remove",
+    #                     "type": "button",
+    #                     "value": "ignoreone " + metrics[i]['expression'],
+    #                     "confirm": {
+    #                         "title": "Warning",
+    #                         "text": f"If you remove {metricname} notification, you will not track your {metricname} goal anymore. Are you still sure you want to remove it?",
+    #                         "ok_text": "Yes",
+    #                         "dismiss_text": "No"
+    #                     }
+    #                 },
+    #                     {"name": "showgraph",
+    #                      "text": "Show Graph",
+    #                      "type": "button",
+    #                      "value": f"{imageId}"}]
+    #                 }]
 
     attachments[0]['pretext'] = text
     attachments += [{"text": "",
