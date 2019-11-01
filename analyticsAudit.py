@@ -4,12 +4,17 @@ from slack import WebClient
 import time
 from timezonefinder import TimezoneFinder
 import ccy
+import logging
 
 
-def log_write(ex):
-    file = open('../analyticsAudit_log_files.txt', 'a')
-    file.write('{}: Analytics audit patladı \n {}'.format(datetime.today(), ex))
-    file.close()
+def log_write():
+    logging.basicConfig(filename="analyticsAudit.log", filemode='a',
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logging.debug('Debug Analytics Audit')
+    logging.info('Info Analytics Audit')
+    logging.warning('Warning Analytics Audit')
+    logging.error('Error Analytics Audit')
+    logging.critical('Critical Analytics Audit')
 
 
 def dtimetostrf(x):
@@ -1328,14 +1333,14 @@ def currency(slack_token, dataSource):
     accountId = dataSource['accountID']
     propertyId = dataSource['propertyID']
     viewId = dataSource['viewID']
-    
+
     mservice = google_analytics.build_management_api_v3_woutSession(email)
     profile = mservice.management().profiles().get(accountId=accountId,
                                                    webPropertyId=propertyId,
                                                    profileId=viewId
                                                    ).execute()
     currentCurrency = profile['currency']
-    
+
     today = datetime.today()
     start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
@@ -1359,7 +1364,7 @@ def currency(slack_token, dataSource):
     if 'rows' in results['reports'][0]['data'].keys():
         countryIsoCode = results['reports'][0]['data']['rows'][0]['dimensions'][0]
         maxCurrency = ccy.countryccy(countryIsoCode.lower())
-        
+
         if currentCurrency == maxCurrency:
             attachments += [{
                 "text": f"It is okay, currency which you get the most traffic is same with currency set on your google analytics account({currentCurrency}).",
@@ -1382,8 +1387,8 @@ def currency(slack_token, dataSource):
         return attachments
     else:
         return []
-    
-    
+
+
 def rawDataView(slack_token, dataSource):
     text = "*Raw Data View*"
 
@@ -1588,7 +1593,8 @@ def userPermission(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "There are {} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.".format(i),
+            "text": "There are {} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.".format(
+                i),
             "pretext": text,
             "callback_id": "notification_form",
             "attachment_type": "default",
