@@ -1688,6 +1688,44 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'lastRunDate': '',
         'datasourceID': dataSourceID
     })
+    db.insert('notification', data={
+            'type': 'analyticsAudit',
+            'email': email,
+            'scheduleType': 'daily',
+            'frequency': 0,
+            'timeofDay': "05.30",
+            'status': '0',
+            'lastRunDate': '',
+            'datasourceID': dataSourceID,
+            'lastStates': [{"bounceRateTracking":"",
+                            "notSetLandingPage":"",
+                            "adwordsAccountConnection":"",
+                            "sessionClickDiscrepancy":"",
+                            "selfReferral":"",
+                            "paymentReferral":"",
+                            "goalSettingActivity":"",
+                            "botSpamExcluding":"",
+                            "customDimension":"",
+                            "siteSearchTracking":"",
+                            "gdprCompliant":"",
+                            "dataRetentionPeriod":"",
+                            "remarketingLists":"",
+                            "enhancedECommerceActivity":"",
+                            "customMetric":"",
+                            "samplingCheck":"",
+                            "internalSearchTermConsistency":"",
+                            "defaultPageControl":"",
+                            "domainControl":"",
+                            "eventTracking":"",
+                            "errorPage":"",
+                            "timezone":"",
+                            "currency":"",
+                            "rawDataView":"",
+                            "contentGrouping":"",
+                            "userPermission":"",
+                            "othersInChannelGrouping":"",
+                            }]
+        })
     # When the slack connection is completed send notification user to set time
     headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
     data = {
