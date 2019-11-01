@@ -48,6 +48,7 @@ def analyticsAudit(slack_token, task, dataSource):
     attachments = []
     currentStates = {}
     for function in subfunctions:
+        currentStates[function.__name__] = None
         trycount = 0
         while trycount < 3:
             try:
@@ -916,7 +917,7 @@ def samplingCheck(slack_token, dataSource):
 
     start_date = datetime(today.year, today.month, 1)
 
-    start_date_1 = dtimetostrf(start_date)
+    start_date_1 = dtimetostrf((today - timedelta(days=30)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
