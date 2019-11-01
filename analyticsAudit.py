@@ -66,7 +66,7 @@ def analyticsAudit(slack_token, task, dataSource):
                     attachments += attachment
                 break
             except Exception as ex:
-                logging.error(f"TASK DID NOT RUN - User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__}\n{str(ex)}")
+                logging.error(f"TASK DID NOT RUN --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__} --- {str(ex)}")
                 trycount += 1
                 time.sleep(0.2)
     if task:

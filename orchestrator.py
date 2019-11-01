@@ -45,7 +45,7 @@ def do_job(tasks_to_accomplish):
         except queue.Empty:
             break
         except Exception as ex:
-            logging.error(f"TASK DID NOT RUN - User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']}\n{str(ex)}")
+            logging.error(f"TASK DID NOT RUN --- User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']} --- {str(ex)}")
     return True
 
 
