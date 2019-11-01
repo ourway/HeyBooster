@@ -7,7 +7,7 @@ import ccy
 
 
 def log_write(ex):
-    file = open('../analyticsAudit_log_files.txt', 'w')
+    file = open('../analyticsAudit_log_files.txt', 'a')
     file.write('{}: Analytics audit patladı \n {}'.format(datetime.today(), ex))
     file.close()
 

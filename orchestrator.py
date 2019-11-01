@@ -39,6 +39,8 @@ def do_job(tasks_to_accomplish):
                                lastRunDate=time.time())
         except queue.Empty:
             break
+        except Exception:
+            log_write()
     return True
 
 
@@ -77,7 +79,7 @@ def main():
 
 
 def log_write():
-    file = open('../orchestrator_log_files', 'w')
+    file = open('../orchestrator_log_files', 'a')
     file.write('Orchestrator patladı {} \n'.format(datetime.today()))
     file.close()
 
