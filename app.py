@@ -1282,7 +1282,7 @@ def message_actions():
                                      text="",
                                      attachments=attachments)
         #        elif (message_action['actions'][-1]['value'] == 'ignore'):
-        elif 'ignore' in messagevalue:
+        elif messagename == 'ignore':
             text = message_action['original_message']['attachments'][0]['pretext']
 #            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
             if (("performance" in text.lower()) and ("tracking" in text.lower())):
