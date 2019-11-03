@@ -460,6 +460,7 @@ def message_actions():
         messagename = message_action['actions'][-1]['name']
         if('_' in messagevalue):
             datasourceID = messagevalue.split('_')[-1]
+            print(datasourceID)
             datasourceID = ObjectId(datasourceID)
         else:
             datasourceID = datasourceIDs[0]
