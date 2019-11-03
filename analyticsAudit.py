@@ -17,13 +17,13 @@ def analyticsAudit(slack_token, task, dataSource):
     actions = [
 		{
 			"name": "trackAnalyticsAudit",
-			"text": "Track",
+			"text": "Yes",
 			"type": "button",
 			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
 		},
 		{
 			"name": "ignoreAnalyticsAudit",
-			"text": "Ignore",
+			"text": "No",
 			"type": "button",
 			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
 			"confirm": {
