@@ -25,7 +25,7 @@ def analyticsAudit(slack_token, task, dataSource):
 			"name": "ignoreAnalyticsAudit",
 			"text": "Ignore",
 			"type": "button",
-			"value": "trackAnalyticsAudit_{dataSource['_id']}",
+			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
 			"confirm": {
 						"title": "Warning",
 						"text": "Are you sure you want to close your Analytics Audit Notifications?",
