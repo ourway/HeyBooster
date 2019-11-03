@@ -1281,7 +1281,7 @@ def message_actions():
                                      text="",
                                      attachments=attachments)
         #        elif (message_action['actions'][-1]['value'] == 'ignore'):
-        elif ('ignore' in messagevalue):
+        elif messagevalue == 'ignore':
             text = message_action['original_message']['attachments'][0]['pretext']
 #            datasourceID = db.find_one("datasource", query={'sl_userid': sl_userid, 'channelID': channel})['_id']
             if (("performance" in text.lower()) and ("tracking" in text.lower())):
@@ -1303,6 +1303,14 @@ def message_actions():
             elif (("performance" in text.lower()) and ("goal" in text.lower())):
                 db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'performancegoaltracking'},
+                                   status='0')
+        elif messagevalue == 'trackAnalyticsAudit':
+            db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                          'type': 'analyticsAudit'},
+                                   status='1')
+        elif messagevalue == 'ignoreAnalyticsAudit': 
+            db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                          'type': 'analyticsAudit'},
                                    status='0')
 #        elif message_action['actions'][-1]['name'] == "showgraph":
         elif "showgraph" in messagename:
