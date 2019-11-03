@@ -115,7 +115,7 @@ def analyticsAudit(slack_token, task, dataSource):
     #    attachments += samplingCheck(slack_token, dataSource)
     if len(attachments):
         attachments += [{"text": "If anything changes, let me know",
-                         "color": "FFFFFF",
+#                         "color": "FFFFFF",
                          "callback_id": "notification_form",
                          "attachment_type": "default",
                          "actions": actions}]
