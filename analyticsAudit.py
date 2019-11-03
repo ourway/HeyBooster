@@ -16,23 +16,25 @@ def analyticsAudit(slack_token, task, dataSource):
     db.init()
     actions = [
 		{
-			"name": "trackAnalyticsAudit",
-			"text": "Yes",
-			"type": "button",
-			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
-		},
-		{
 			"name": "ignoreAnalyticsAudit",
 			"text": "No",
 			"type": "button",
 			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
+            "style": "danger",
 			"confirm": {
 						"title": "Warning",
 						"text": "Are you sure you want to close your Analytics Audit Notifications?",
 						"ok_text": "Yes",
 						"dismiss_text": "No"
 					}
-		}
+		},
+        {
+			"name": "trackAnalyticsAudit",
+			"text": "Yes",
+			"type": "button",
+            "style": "primary",
+			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+		},
     ]
     logging.basicConfig(filename="analyticsAudit.log", filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
