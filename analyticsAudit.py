@@ -14,21 +14,18 @@ def dtimetostrf(x):
 
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
-    datasourceID = dataSource['_id']
-    trackvalue = "trackAnalyticsAudit_{}".format(datasourceID)
-    ignorevalue = "ignoreAnalyticsAudit_{}".format(datasourceID)
     actions = [
 		{
 			"name": "trackAnalyticsAudit",
 			"text": "Track",
 			"type": "button",
-			"value": trackvalue,
+			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
 		},
 		{
 			"name": "ignoreAnalyticsAudit",
 			"text": "Ignore",
 			"type": "button",
-			"value": ignorevalue,
+			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
 			"confirm": {
 						"title": "Warning",
 						"text": "Are you sure you want to close your Analytics Audit Notifications?",
