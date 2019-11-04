@@ -253,7 +253,8 @@ def notSetLandingPage(slack_token, dataSource):
         attachments += [{
             "text": "(not set) landing pages are seen on your landing page report, it is indicated that there is an issue in your page tracking.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -262,7 +263,8 @@ def notSetLandingPage(slack_token, dataSource):
         attachments += [{
             "text": "Well done, nothing to worry!",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -309,7 +311,8 @@ def adwordsAccountConnection(slack_token, dataSource):
         attachments += [{
             "text": "Google Ads Account and Google Analytics don’t link them, to track properly you need to connect your account.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -318,7 +321,8 @@ def adwordsAccountConnection(slack_token, dataSource):
         attachments += [{
             "text": "Well done, nothing to worry!",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -367,7 +371,8 @@ def sessionClickDiscrepancy(slack_token, dataSource):
         attachments += [{
             "text": "There is session click discrepancy, you don’t measure your adwords performans properly.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -413,7 +418,8 @@ def goalSettingActivity(slack_token, dataSource):
         attachments += [{
             "text": "Goals are not set up yet, you should configure your macro and micro goals.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -475,7 +481,8 @@ def selfReferral(slack_token, dataSource):
         attachments += [{
             "text": "Your own domain shows up in your referral report, it causes one visitor to trigger multiple sessions when there should only be one.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -484,7 +491,8 @@ def selfReferral(slack_token, dataSource):
         attachments += [{
             "text": "Well done, nothing to worry!",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -534,7 +542,8 @@ def paymentReferral(slack_token, dataSource):
         attachments += [{
             "text": "You got traffic from payment referral gateway, it causes to lose the original traffic sources which brings you transaction.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -543,7 +552,8 @@ def paymentReferral(slack_token, dataSource):
         attachments += [{
             "text": "No worries, you had good job, but don’t forget to track your payment referral if any payment method is added.",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -577,7 +587,8 @@ def botSpamExcluding(slack_token, dataSource):
         attachments += [{
             "text": "Well done, you already switch on bot filtering feature of google analytics.",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -586,7 +597,8 @@ def botSpamExcluding(slack_token, dataSource):
         attachments += [{
             "text": "You need to switch on bot filtering feature on google analytics to get rid of traffic from bots, spiders and computer programs",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -656,7 +668,8 @@ def customDimension(slack_token, dataSource):
         attachments += [{
             "text": "Well done! You are using custom dimensions, do you know about how you can boost your performance to use them all?",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -665,7 +678,8 @@ def customDimension(slack_token, dataSource):
         attachments += [{
             "text": "Custom dimensions are not set yet, you are missing the chance to use google analytics advance version effectively.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -715,7 +729,8 @@ def siteSearchTracking(slack_token, dataSource):
         attachments += [{
             "text": "Nothing to worry! You had a great job.",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -724,7 +739,8 @@ def siteSearchTracking(slack_token, dataSource):
         attachments += [{
             "text": "Do you wonder what users search on your website? You can track site search data via google analytics.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -769,7 +785,8 @@ def gdprCompliant(slack_token, dataSource):
         attachments += [{
             "text": "Check your page paths, there is information which is not compatible with GDPR.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -778,7 +795,8 @@ def gdprCompliant(slack_token, dataSource):
         attachments += [{
             "text": "Nothing to worry, there is no risky page path in terms of GDPR.",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -811,7 +829,8 @@ def dataRetentionPeriod(slack_token, dataSource):
         attachments += [{
             "text": "If you wanna play safe, it is okay your user and event data will be deleted at the end of data retention period, otherwise change it to indefinite one.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -820,7 +839,8 @@ def dataRetentionPeriod(slack_token, dataSource):
         attachments += [{
             "text": "Data retention period is already set as indefinite, you will never lose your user and event data but be sure about GDPR Compliancy.",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -854,7 +874,8 @@ def remarketingLists(slack_token, dataSource):
         attachments += [{
             "text": "You have at least one remarketing list, do you know how you can use them to boost your performance?",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -863,7 +884,8 @@ def remarketingLists(slack_token, dataSource):
         attachments += [{
             "text": "Sorry, there is no remarketing list, check out remarketing lists which double up revenue you get",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -898,7 +920,8 @@ def enhancedECommerceActivity(slack_token, dataSource):
         attachments += [{
             "text": "Your enhanced ecommerce setting is active but how you can sure that it is implemented correctly. heybooster will be sure for you soon",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -907,7 +930,8 @@ def enhancedECommerceActivity(slack_token, dataSource):
         attachments += [{
             "text": "Enhanced ecommerce is not active for related view, to track your all ecommerce switch it on.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -971,7 +995,8 @@ def customMetric(slack_token, dataSource):
         attachments += [{
             "text": "Great! You are using custom metrics",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -980,7 +1005,8 @@ def customMetric(slack_token, dataSource):
         attachments += [{
             "text": "There is no custom metric set up on your google analytics account",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1027,7 +1053,8 @@ def samplingCheck(slack_token, dataSource):
     if sessions_result > 500000:
         attachments += [{
             "text": "Your analytics reports are sampling when you try to create monthly report because there is more than 500000 session without any filter.",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1035,7 +1062,8 @@ def samplingCheck(slack_token, dataSource):
     else:
         attachments += [{
             "text": "No worries for now, however sampling occurs at 500000 session for the date range you are using",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1077,7 +1105,8 @@ def internalSearchTermConsistency(slack_token, dataSource):
         attachments += [{
             "text": "No worries! There is no duplicated internal search term because of case sensitivity",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1086,7 +1115,8 @@ def internalSearchTermConsistency(slack_token, dataSource):
         attachments += [{
             "text": "Internal search term performans may not be measure properly because of case sensitivity of terms, use lowercase filter to get rid of duplicated terms",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1123,7 +1153,8 @@ def defaultPageControl(slack_token, dataSource):
         attachments += [{
             "text": "Don’t use default page setting, it is moderately error prone method to fix splitting data issue.",
             "color": "red",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1132,7 +1163,8 @@ def defaultPageControl(slack_token, dataSource):
         attachments += [{
             "text": "Default page is not set as it should be.",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1195,7 +1227,8 @@ def domainControl(slack_token, dataSource):
             attachments += [{
                 "text": f"Most of the visits {round(percentage, 2)}% in the view are happening on the domain, specified in the view settings {websiteUrl}.",
                 "color": "good",
-                "pretext": text,
+#                "pretext": text,
+                "title": text,
                 "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
@@ -1204,7 +1237,8 @@ def domainControl(slack_token, dataSource):
             attachments += [{
                 "text": f"Check out the website url specified in view setting because only {round(percentage, 2)}% of session is happening on that domain {websiteUrl}.",
                 "color": "danger",
-                "pretext": text,
+#                "pretext": text,
+                "title": text,
                 "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
@@ -1213,7 +1247,8 @@ def domainControl(slack_token, dataSource):
         attachments += [{
             "text": f"Check out the website url specified in view setting because {maxHostname} is getting more traffic than specified domain {websiteUrl}.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1256,7 +1291,8 @@ def eventTracking(slack_token, dataSource):
         attachments += [{
             "text": "You are using event tracking but do you know that every action users take can measure as event and then retargeting?",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1265,7 +1301,8 @@ def eventTracking(slack_token, dataSource):
         attachments += [{
             "text": " You are missing the opportunity to measure and optimize actions users take on your website like video watching, button clicking, error page views etc.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1317,7 +1354,8 @@ def errorPage(slack_token, dataSource):
             attachments += [{
                 "text": "You are tracking how many people ended up in 404 page, set custom alert to let know about spikes in these pages.",
                 "color": "good",
-                "pretext": text,
+#                "pretext": text,
+                "title": text,
                 "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
@@ -1326,7 +1364,8 @@ def errorPage(slack_token, dataSource):
             attachments += [{
                 "text": "You are not tracking 404 error pages which might hurt your conversion, brand recognition and Google ranking.",
                 "color": "danger",
-                "pretext": text,
+#                "pretext": text,
+                "title": text,
                 "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
@@ -1416,7 +1455,8 @@ def timezone(slack_token, dataSource):
         attachments += [{
             "text": f"It is okay, timezone which you get the most traffic is same with timezone set on your google analytics account({currentTimezone}).",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1425,7 +1465,8 @@ def timezone(slack_token, dataSource):
         attachments += [{
             "text": f"Your preset timezone is {currentTimezone} but you are getting traffic mostly from {maxTrafficTimezone}.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1488,7 +1529,8 @@ def currency(slack_token, dataSource):
             attachments += [{
                 "text": f"It is okay, currency which you get the most traffic is same with currency set on your google analytics account({currentCurrency}).",
                 "color": "good",
-                "pretext": text,
+#                "pretext": text,
+                "title": text,
                 "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
@@ -1497,7 +1539,8 @@ def currency(slack_token, dataSource):
             attachments += [{
                 "text": f"Your preset currency is {currentCurrency} but you are getting traffic mostly from {maxCurrency}.",
                 "color": "danger",
-                "pretext": text,
+#                "pretext": text,
+                "title": text,
                 "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
@@ -1534,7 +1577,8 @@ def rawDataView(slack_token, dataSource):
         attachments += [{
             "text": "Raw data view is correctly set, it is your backup view against to any wrong filter changes.",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1543,7 +1587,8 @@ def rawDataView(slack_token, dataSource):
         attachments += [{
             "text": "You must set the raw data view to protect your data from any wrong filter changes and have backup view.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1607,7 +1652,8 @@ def contentGrouping(slack_token, dataSource):
         attachments += [{
             "text": "You have made content grouping before, but do you know the alternative usage of content grouping?",
             "color": "good",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1616,7 +1662,8 @@ def contentGrouping(slack_token, dataSource):
         attachments += [{
             "text": "There is no content grouping in your account, to compare related group pages like men tshirts and woman dresses create your own grouping.",
             "color": "danger",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1669,7 +1716,8 @@ def othersInChannelGrouping(slack_token, dataSource):
             attachments += [{
                 "text": "Default channel grouping is not suitable for analysis since there is *(other)* channel which is collecting non-group traffic sources.",
                 "color": "danger",
-                "pretext": text,
+#                "pretext": text,
+                "title": text,
                 "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
@@ -1678,7 +1726,8 @@ def othersInChannelGrouping(slack_token, dataSource):
             attachments += [{
                 "text": "Negligible percentage of your total traffic is collecting under other channel.",
                 "color": "good",
-                "pretext": text,
+#                "pretext": text,
+                "title": text,
                 "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
@@ -1714,7 +1763,8 @@ def userPermission(slack_token, dataSource):
     if result == 0:
         attachments += [{
             "text": "You don’t have enough permission to view users had access to your analytics account.",
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
@@ -1723,7 +1773,8 @@ def userPermission(slack_token, dataSource):
         attachments += [{
             "text": "There are {} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.".format(
                 i),
-            "pretext": text,
+#            "pretext": text,
+            "title": text,
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
