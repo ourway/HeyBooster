@@ -185,7 +185,24 @@ def login():
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
-    return render_template('auths/register.html')
+    if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
+        return redirect('/datasourcesinfo')
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate:
+        user = db.find_one('user', {'email': form.email.data})
+
+        if user:
+            if user['password'] != "":
+                if check_password_hash(user['password'], form.password.data):
+
+                    session['logged_in'] = True
+                    session['email'] = user['email']
+
+                    return redirect(url_for('home'))
+                else:
+                    return redirect(url_for('login'))
+
+    return render_template('auths/register.html', form=form)
 
 
 @app.route('/logout')
@@ -1300,7 +1317,7 @@ def message_actions():
                                status='1')
             slack_client.chat_postMessage(channel=channel,
                                           text="We will audit your account weekly " + \
-                                          "and get to know you about changes.")
+                                               "and get to know you about changes.")
         elif messagename == 'ignoreAnalyticsAudit':
             db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                       'type': 'analyticsAudit'},
