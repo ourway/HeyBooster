@@ -102,12 +102,12 @@
                                 </ul>
                             {% endif %}
                         {% endwith %}
-                        <br>
+                        <br> {{ message }}
                         <h5>Your Analytics Account:</h5>
                         {% if current_analyticsemail %}
                             {{ current_analyticsemail }} <span style="color: blue; cursor: pointer; font-size: 10px;" onclick="myFunction()">(Wrong Account?)</span>
                         {% else %}
-                            <script>
+                            <script> {{ message }}
                                 location.reload();
                             </script>
                         {% endif %}
@@ -141,7 +141,7 @@
                                         <tbody>
                                         <tr>
                                             <td>{{ arg.viewName }} && {{ arg.channelName }}</td>
-                                            <td>{{ arg.accountName }}</td>
+                                            <td>{{ arg.accountName }}</td> {{ message }}
                                             <td><label class="badge badge-success">Connected</label></td>
                                             <td><a type="submit" class="btn btn-outline-danger btn-fw"
                                                    href="/removedatasources/{{ arg._id }}">x</a></td>
