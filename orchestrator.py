@@ -8,7 +8,7 @@ from modules import performancechangetracking, shoppingfunnelchangetracking, cos
 from analyticsAudit import analyticsAudit
 import logging
 
-
+WAITTIME = 1
 def dtimetostrf(x):
     return x.strftime('%H.%M')
 
@@ -43,7 +43,7 @@ def do_job(tasks_to_accomplish):
             db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']},
                                lastRunDate=time.time())
         except queue.Empty:
-            time.sleep(59.5 - datetime.now().second)
+            time.sleep(WAITTIME)
         except Exception as ex:
             logging.error(f"TASK DID NOT RUN --- User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']} --- {str(ex)}")
     return True
