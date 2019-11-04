@@ -8,7 +8,16 @@ from modules import performancechangetracking, shoppingfunnelchangetracking, cos
 from analyticsAudit import analyticsAudit
 import logging
 
+number_of_processes = 4
+tasks_to_accomplish = Queue()
+processes = []
 
+for w in range(number_of_processes):
+        p = Process(target=do_job, args=(tasks_to_accomplish,))
+        processes.append(p)
+        p.start()
+
+        
 def dtimetostrf(x):
     return x.strftime('%H.%M')
 
@@ -43,17 +52,15 @@ def do_job(tasks_to_accomplish):
             db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']},
                                lastRunDate=time.time())
         except queue.Empty:
-            break
+            pass
         except Exception as ex:
             logging.error(f"TASK DID NOT RUN --- User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']} --- {str(ex)}")
     return True
 
 
 def main():
-    number_of_processes = 4
-    tasks_to_accomplish = Queue()
-    processes = []
-
+    global tasks_to_accomplish
+    
     mday = datetime.today().day  # Month of Day
     wday = datetime.today().weekday() + 1
     timeofDay = dtimetostrf(datetime.now())
@@ -69,19 +76,6 @@ def main():
 
     for task in tasks:
         tasks_to_accomplish.put(task)
-
-    # creating processes
-    for w in range(number_of_processes):
-        p = Process(target=do_job, args=(tasks_to_accomplish,))
-        processes.append(p)
-        p.start()
-
-    # completing process
-    for p in processes:
-        p.join()
-
-    return True
-
 
 if __name__ == '__main__':
     logging.basicConfig(filename="orchestrator.log", filemode='a',
