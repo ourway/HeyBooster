@@ -185,13 +185,7 @@ def login():
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
-    form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate:
-        user = db.find_one('user', {'email': form.email.data})
-        if user:
-            return redirect('login')
-
-    return render_template('auths/register.html', form=form)
+    return render_template('auths/register.html')
 
 
 @app.route('/logout')
