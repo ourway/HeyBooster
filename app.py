@@ -188,17 +188,8 @@ def register():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
         user = db.find_one('user', {'email': form.email.data})
-
         if user:
-            if user['password'] != "":
-                if check_password_hash(user['password'], form.password.data):
-
-                    session['logged_in'] = True
-                    session['email'] = user['email']
-
-                    return redirect(url_for('login'))
-                else:
-                    return redirect(url_for('login'))
+            return redirect('login')
 
     return render_template('auths/register.html', form=form)
 
