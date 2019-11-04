@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href={{ url_for('static', filename="css/sign-up.css") }}>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=McLaren&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Jomolhari&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <title>Sıgn In</title>
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');</script>
+    <!-- End Google Tag Manager -->
+</head>
+
+<body>
+    <section class="sign-up">
+        <div class="left-div">
+            <div class="logo">
+                <img src="/static/icon/heybooster-preview.png">
+            </div>
+
+            <div class="head-div-3">
+                <h1 class="text-">Empower your marketing team by getting data driven insights!</h1>
+            </div>
+
+            <div class="wrapper">
+                <div class="arrow-steps clearfix">
+                    <div class="step current"> <span> Sign up</span> </div>
+                    <div class="step"> <span>Connect Data Sources & Channels</span> </div>
+                    <div class="step"> <span>Get First Insight</span> </div>
+                </div>
+            </div>
+
+            <div class="google-btn">
+                <a href="/google/connect">
+                    <img id="clipping" src="/static/btn/btn-light-1.png">
+                </a>
+            </div>
+
+            <div class="btn-down-link">
+                <button><a href="/test_sing_in">Already booster? Login</a></button>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

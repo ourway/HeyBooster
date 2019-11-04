@@ -63,9 +63,9 @@ app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
 
-@app.route('/test_sing_in')
-def test_sing_in():
-    return render_template('index.html')
+@app.route('/test_sign_in')
+def test_sign_in():
+    return render_template('test_sign_in.html')
 
 @app.route('/images/<pid>.png')
 def get_image(pid):

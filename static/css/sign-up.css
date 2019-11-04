@@ -4,7 +4,7 @@ body {
     text-align: justify;
     background-image:
         linear-gradient(to left bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
-        url(img/bg-geo.png);
+        url(../img/bg-geo.png);
     height: 85vh;
     object-fit: cover;
     background-size: cover;
@@ -48,7 +48,7 @@ body {
     background-position: center;
     background-image:
         linear-gradient(to left bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
-        url(img/001.png);
+        url(../img/001.png);
     background-repeat: no-repeat;
     background-size: cover;
 
@@ -513,33 +513,6 @@ body {
 .btn-down-link a:hover {
     color: #356ad4;
     font-weight: 100;
-
-}
-
-.right-div {
-    display: none;
-    float: left;
-    width: 40%;
-    height: 70vh;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0);
-    -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0);
-    box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0);
-    transition: 0.3s box-shadow;
-
-    min-height: auto;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-    -o-background-size: cover;
-    background-position: center;
-    background-image:
-        linear-gradient(to left bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url(img/sur1.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
-
 
 }
 
