@@ -161,7 +161,7 @@ def analyticsAudit(slack_token, task, dataSource):
 
 
 def bounceRateTracking(slack_token, dataSource):
-    text = "*Bounce Rate Tracking*"
+    text = "Bounce Rate Tracking"
     attachments = []
 
     metrics = [{'expression': 'ga:bounceRate'}
@@ -194,6 +194,8 @@ def bounceRateTracking(slack_token, dataSource):
             "color": "danger",
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "pretext": text,
+            "title": text,
             "attachment_type": "default",
         }]
     elif bounceRate < 30:
@@ -202,6 +204,8 @@ def bounceRateTracking(slack_token, dataSource):
             "color": "danger",
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "pretext": text,
+            "title": text,
             "attachment_type": "default",
         }]
     else:
@@ -210,18 +214,20 @@ def bounceRateTracking(slack_token, dataSource):
             "color": "good",
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "pretext": text,
+            "title": text,
             "attachment_type": "default",
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def notSetLandingPage(slack_token, dataSource):
-    text = "*Not Set Landing Page Tracking*"
+    text = "Not Set Landing Page Tracking"
     attachments = []
 
     metrics = [{
@@ -271,14 +277,14 @@ def notSetLandingPage(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def adwordsAccountConnection(slack_token, dataSource):
-    text = "*Adwords Account Connection*"
+    text = "Adwords Account Connection"
     attachments = []
 
     metrics = [{
@@ -329,14 +335,14 @@ def adwordsAccountConnection(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def sessionClickDiscrepancy(slack_token, dataSource):
-    text = "*Session Click Discrepancy*"
+    text = "Session Click Discrepancy"
     attachments = []
 
     metrics = [
@@ -379,14 +385,14 @@ def sessionClickDiscrepancy(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def goalSettingActivity(slack_token, dataSource):
-    text = "*Goal Setting Activity*"
+    text = "Goal Setting Activity"
     attachments = []
 
     metrics = [{
@@ -426,14 +432,14 @@ def goalSettingActivity(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def selfReferral(slack_token, dataSource):
-    text = "*Self Referral*"
+    text = "Self Referral"
     attachments = []
 
     metrics = [{
@@ -499,14 +505,14 @@ def selfReferral(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def paymentReferral(slack_token, dataSource):
-    text = "*Payment Referral*"
+    text = "Payment Referral"
     attachments = []
 
     metrics = [{'expression': 'ga:newUsers'},
@@ -560,14 +566,14 @@ def paymentReferral(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def botSpamExcluding(slack_token, dataSource):
-    text = "*Bot & Spam Excluding*"
+    text = "Bot & Spam Excluding"
 
     attachments = []
 
@@ -605,14 +611,14 @@ def botSpamExcluding(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def customDimension(slack_token, dataSource):
-    text = "*Custom Dimension*"
+    text = "Custom Dimension"
     attachments = []
 
     metrics = [{'expression': 'ga:pageviews'}
@@ -686,14 +692,14 @@ def customDimension(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def siteSearchTracking(slack_token, dataSource):
-    text = "*Site Search Tracking*"
+    text = "Site Search Tracking"
     attachments = []
 
     metrics = [{'expression': 'ga:sessions'}
@@ -747,14 +753,14 @@ def siteSearchTracking(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def gdprCompliant(slack_token, dataSource):
-    text = "*GDPR Compliant*"
+    text = "GDPR Compliant"
     attachments = []
 
     metrics = [{
@@ -803,14 +809,14 @@ def gdprCompliant(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def dataRetentionPeriod(slack_token, dataSource):
-    text = "*Data Retention Period *"
+    text = "Data Retention Period"
 
     attachments = []
 
@@ -847,14 +853,14 @@ def dataRetentionPeriod(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def remarketingLists(slack_token, dataSource):
-    text = "*Remarketing Lists*"
+    text = "Remarketing Lists"
 
     attachments = []
 
@@ -892,14 +898,14 @@ def remarketingLists(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def enhancedECommerceActivity(slack_token, dataSource):
-    text = "*Enhanced Ecommerce Activity*"
+    text = "Enhanced Ecommerce Activity"
 
     attachments = []
 
@@ -938,14 +944,14 @@ def enhancedECommerceActivity(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def customMetric(slack_token, dataSource):
-    text = "*Custom Metric*"
+    text = "Custom Metric"
     attachments = []
 
     email = dataSource['email']
@@ -1013,14 +1019,14 @@ def customMetric(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def samplingCheck(slack_token, dataSource):
-    text = "*Sampling Check*"
+    text = "Sampling Check"
     attachments = []
 
     metrics = [
@@ -1070,14 +1076,14 @@ def samplingCheck(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def internalSearchTermConsistency(slack_token, dataSource):
-    text = "*Internal Search Term Consistency*"
+    text = "Internal Search Term Consistency"
     attachments = []
 
     email = dataSource['email']
@@ -1123,14 +1129,14 @@ def internalSearchTermConsistency(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def defaultPageControl(slack_token, dataSource):
-    text = "*Default Page Control*"
+    text = "Default Page Control"
     attachments = []
 
     email = dataSource['email']
@@ -1171,14 +1177,14 @@ def defaultPageControl(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def domainControl(slack_token, dataSource):
-    text = "*Domain Control*"
+    text = "Domain Control"
     attachments = []
 
     email = dataSource['email']
@@ -1255,14 +1261,14 @@ def domainControl(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def eventTracking(slack_token, dataSource):
-    text = "*Event Tracking*"
+    text = "Event Tracking"
     attachments = []
 
     email = dataSource['email']
@@ -1309,14 +1315,14 @@ def eventTracking(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def errorPage(slack_token, dataSource):
-    text = "*404 Error Page*"
+    text = "404 Error Page"
     attachments = []
     not_found = 0
 
@@ -1372,14 +1378,14 @@ def errorPage(slack_token, dataSource):
             }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def timezone(slack_token, dataSource):
-    text = "*Timezone*"
+    text = "Timezone"
     attachments = []
 
     metrics = [{
@@ -1473,14 +1479,14 @@ def timezone(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def currency(slack_token, dataSource):
-    text = "*Currency*"
+    text = "Currency"
     attachments = []
 
     metrics = [{
@@ -1547,14 +1553,14 @@ def currency(slack_token, dataSource):
             }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def rawDataView(slack_token, dataSource):
-    text = "*Raw Data View*"
+    text = "Raw Data View"
 
     attachments = []
 
@@ -1595,14 +1601,14 @@ def rawDataView(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def contentGrouping(slack_token, dataSource):
-    text = "*Content Grouping*"
+    text = "Content Grouping"
     attachments = []
 
     metrics = [
@@ -1670,14 +1676,14 @@ def contentGrouping(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def othersInChannelGrouping(slack_token, dataSource):
-    text = "*Others in Channel Grouping*"
+    text = "Others in Channel Grouping"
     attachments = []
 
     email = dataSource['email']
@@ -1734,14 +1740,14 @@ def othersInChannelGrouping(slack_token, dataSource):
             }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
 
 
 def userPermission(slack_token, dataSource):
-    text = "*User Permission*"
+    text = "User Permission"
     attachments = []
 
     email = dataSource['email']
@@ -1781,7 +1787,7 @@ def userPermission(slack_token, dataSource):
         }]
 
     if len(attachments) != 0:
-        attachments[0]['pretext'] = text
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
