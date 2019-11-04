@@ -63,6 +63,10 @@ app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
 
+@app.route('/test_sing_in')
+def test_sing_in():
+    return render_template('index.html')
+
 @app.route('/images/<pid>.png')
 def get_image(pid):
     return send_file('slackdb/images/%s.png' % pid, mimetype='image/gif')

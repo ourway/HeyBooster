@@ -3,9 +3,14 @@
 
 <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>heyBooster!</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href={{ url_for('static', filename="css/sign-in.css") }}>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+
+    <title>Sıgn In</title>
     <!-- base:css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
@@ -35,89 +40,61 @@
 </head>
 
 <body>
-<div class="container-scroller">
-    <!-- partial:../../partials/_horizontal-navbar.html -->
-    <div class="horizontal-menu">
-        <nav class="navbar top-navbar col-lg-12 col-12 p-0">
-            <div class="container">
-                <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
+<section class="sign-up">
 
-                    <a class="navbar-brand brand-logo" href="/"><img src="../static/images/heyBooster.png" height="34px"
-                                                                     alt="logo"/></a>
-                    <a class="navbar-brand brand-logo-mini" href="/"><img src="../static/images/heyBooster.png"
-                                                                          alt="heyBooster!"/></a>
-
-
-                </div>
-                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-
-                    <ul class="navbar-nav navbar-nav-right">
-                        <ul class="navbar-nav ml-lg-3">
-                            <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
-                                <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#"
-                                   data-toggle="dropdown" id="pagesDropdown">
-                                    <span class="nav-profile-name">{{ session['email'] }}</span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
-                                     aria-labelledby="pagesDropdown">
-                                    <a class="dropdown-item" href="/datasources">
-                                        <i class="mdi mdi-logout text-primary"></i>
-                                        Data Sources
-                                    </a>
-                                    <a class="dropdown-item" href="/datasourcesinfo">
-                                        <i class="mdi mdi-logout text-primary"></i>
-                                        Data Sources Info
-                                    </a>
-                                    <a class="dropdown-item" href="/logout">
-                                        <i class="mdi mdi-logout text-primary"></i>
-                                        Logout
-                                    </a>
-                                </div>
-                            </li>
-
-                        </ul>
-                    </ul>
-
-                </div>
+        <div class="left-div">
+            <div class="logo">
+                <img src="icon/heybooster-preview.png">
             </div>
-        </nav>
-
-    </div>
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
+            <div class="head-div">
+                <h1 class="welcome">Welcome, booster!</h1>
+            </div>
 
 
-        <div class="main-panel">
-            <div class="content-wrapper d-flex align-items-center auth px-0">
-                <div class="row w-100 mx-0">
-                    <div class="col-lg-4 mx-auto">
-                        <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-                            <div class="brand-logo">
-                                <img src="../static/images/ga.jpg" alt="Google Analytics">
-                                <img src="../static/images/slack.png" alt="Slack" style="float: right;">
-                            </div>
 
 
-                            <form class="pt-3">
-
-                                {% if session['logged_in'] or session['auth_token'] %}
-                                    <div class="mt-3">
-                                        <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                                           href="/google/connect">Make Data Connections</a>
-                                    </div>
-                                {% endif %}
+           <div class="google-btn">
+                <a href="">
+                    <img id="clipping" src="btn/btn-light-4.png">
+                </a>
+            </div>
 
 
-                            </form>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="head-div-2">
+                <h1 class="text-">New around here?</h1>
+                <h1 class="text-">Get your first insight to empower your marketing team.</h1>
+            </div>
+
+            <div class="btn-down-link">
+                <button><a href="/google/connect">Sign up&nbsp;</a><i class="fas fa-arrow-right"></i></button>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+        <div class="right-div">
+            <div class="mg-top">
+
+                <h1>Easy to Understand</h1>
+
+                <h1>Data - Driven</h1>
+
+                <h1>Marketing Insight</h1>
+
+                <h1>for</h1>
+
+                <h1>Ecommerce Businnes</h1>
+
             </div>
         </div>
-        <!-- main-panel ends -->
-    </div>
-    <!-- page-body-wrapper ends -->
-</div>
+
+    </section>
 <!-- container-scroller -->
 <!-- base:js -->
 <script type="text/javascript"
