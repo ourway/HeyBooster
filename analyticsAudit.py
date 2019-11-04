@@ -15,7 +15,14 @@ def dtimetostrf(x):
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
     actions = [
-		{
+        {
+			"name": "trackAnalyticsAudit",
+			"text": "Yes",
+			"type": "button",
+            "style": "primary",
+			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+		},
+        {
 			"name": "ignoreAnalyticsAudit",
 			"text": "No",
 			"type": "button",
@@ -27,14 +34,7 @@ def analyticsAudit(slack_token, task, dataSource):
 						"ok_text": "Yes",
 						"dismiss_text": "No"
 					}
-		},
-        {
-			"name": "trackAnalyticsAudit",
-			"text": "Yes",
-			"type": "button",
-            "style": "primary",
-			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
-		},
+		}
     ]
     logging.basicConfig(filename="analyticsAudit.log", filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -114,11 +114,14 @@ def analyticsAudit(slack_token, task, dataSource):
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
     if len(attachments):
-        attachments += [{"text": "If anything changes, let me know",
+        attachments = [{"text": "Hey! to trust your analytics data for further insights" + \
+                         "we strongly recommend you to solve the issues below." +  \
+                         "Your analytics health score is calculated *{{score}}* over 100.\n" +  \
+                         "Do you wanna get to know when anything change on the audit results?",
 #                         "color": "FFFFFF",
                          "callback_id": "notification_form",
                          "attachment_type": "default",
-                         "actions": actions}]
+                         "actions": actions}] + attachments
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
                                              attachments=attachments)

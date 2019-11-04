@@ -1309,10 +1309,16 @@ def message_actions():
             db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'analyticsAudit'},
                                    status='1')
+            slack_client.chat_postMessage(channel=channel,
+                                          text="We will audit your account weekly \
+                                          and get to know you about changes.")
         elif messagename == 'ignoreAnalyticsAudit': 
             db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                           'type': 'analyticsAudit'},
                                    status='0')
+            slack_client.chat_postMessage(channel=channel,
+                                          text="Got it! You can call analytics audit" + \
+                                          "whenever you want via app.heybooster.ai")
 #        elif message_action['actions'][-1]['name'] == "showgraph":
         elif "showgraph" in messagename:
             imageId = message_action['actions'][-1]['value'].split('_')[0]
@@ -1703,7 +1709,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
             'scheduleType': 'daily',
             'frequency': 0,
             'timeofDay': "%s.01" % (default_time),
-            'status': '0',
+            'status': '1',
             'lastRunDate': '',
             'datasourceID': dataSourceID,
             'lastStates': [{"bounceRateTracking":"",
