@@ -69,7 +69,7 @@ def test_sign_in():
 
 
 @app.route('/test_sign_up')
-def test_sign_in():
+def test_sign_up():
     return render_template('test_sign_up.html')
 
 
