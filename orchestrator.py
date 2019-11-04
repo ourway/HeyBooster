@@ -8,16 +8,7 @@ from modules import performancechangetracking, shoppingfunnelchangetracking, cos
 from analyticsAudit import analyticsAudit
 import logging
 
-number_of_processes = 4
-tasks_to_accomplish = Queue()
-processes = []
 
-for w in range(number_of_processes):
-        p = Process(target=do_job, args=(tasks_to_accomplish,))
-        processes.append(p)
-        p.start()
-
-        
 def dtimetostrf(x):
     return x.strftime('%H.%M')
 
@@ -77,7 +68,16 @@ def main():
     for task in tasks:
         tasks_to_accomplish.put(task)
 
+
 if __name__ == '__main__':
+    number_of_processes = 4
+    tasks_to_accomplish = Queue()
+    processes = []
+
+    for w in range(number_of_processes):
+            p = Process(target=do_job, args=(tasks_to_accomplish,))
+            processes.append(p)
+            p.start()
     logging.basicConfig(filename="orchestrator.log", filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     db.init()
