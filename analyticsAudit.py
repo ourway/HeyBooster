@@ -148,7 +148,8 @@ def analyticsAudit(slack_token, task, dataSource):
                          "we strongly recommend you to solve the issues below." +  \
                          f" Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
                          "Do you wanna get to know when anything change on the audit results?",
-#                         "color": "FFFFFF",
+                         "color": "#2eb8a6",
+                         "pretext": "*Analytics Audit*",
                          "callback_id": "notification_form",
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
@@ -192,7 +193,7 @@ def bounceRateTracking(slack_token, dataSource):
             "text": "Bounce rate is more than normal level (avg = %40-%65) , You may need to use adjusted bounce rate to see the real performance of your landing page.",
             "color": "danger",
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     elif bounceRate < 30:
@@ -200,7 +201,7 @@ def bounceRateTracking(slack_token, dataSource):
             "text": "Bounce rate is less than normal level (avg = %40-%65) , You may need to check your event which affected the healthy measurement of bounce rate.",
             "color": "danger",
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -208,7 +209,7 @@ def bounceRateTracking(slack_token, dataSource):
             "text": "Well done, nothing to worry!",
             "color": "good",
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -254,7 +255,7 @@ def notSetLandingPage(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -263,7 +264,7 @@ def notSetLandingPage(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -310,7 +311,7 @@ def adwordsAccountConnection(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -319,7 +320,7 @@ def adwordsAccountConnection(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -368,7 +369,7 @@ def sessionClickDiscrepancy(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -414,7 +415,7 @@ def goalSettingActivity(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -476,7 +477,7 @@ def selfReferral(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -485,7 +486,7 @@ def selfReferral(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -535,7 +536,7 @@ def paymentReferral(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -544,7 +545,7 @@ def paymentReferral(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -578,7 +579,7 @@ def botSpamExcluding(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -587,7 +588,7 @@ def botSpamExcluding(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -657,7 +658,7 @@ def customDimension(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -666,7 +667,7 @@ def customDimension(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -716,7 +717,7 @@ def siteSearchTracking(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -725,7 +726,7 @@ def siteSearchTracking(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -770,7 +771,7 @@ def gdprCompliant(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -779,7 +780,7 @@ def gdprCompliant(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -812,7 +813,7 @@ def dataRetentionPeriod(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -821,7 +822,7 @@ def dataRetentionPeriod(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -855,7 +856,7 @@ def remarketingLists(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -864,7 +865,7 @@ def remarketingLists(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -899,7 +900,7 @@ def enhancedECommerceActivity(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -908,7 +909,7 @@ def enhancedECommerceActivity(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -972,7 +973,7 @@ def customMetric(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -981,7 +982,7 @@ def customMetric(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1028,7 +1029,7 @@ def samplingCheck(slack_token, dataSource):
             "text": "Your analytics reports are sampling when you try to create monthly report because there is more than 500000 session without any filter.",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -1036,7 +1037,7 @@ def samplingCheck(slack_token, dataSource):
             "text": "No worries for now, however sampling occurs at 500000 session for the date range you are using",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1078,7 +1079,7 @@ def internalSearchTermConsistency(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -1087,7 +1088,7 @@ def internalSearchTermConsistency(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1124,7 +1125,7 @@ def defaultPageControl(slack_token, dataSource):
             "color": "red",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -1133,7 +1134,7 @@ def defaultPageControl(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1196,7 +1197,7 @@ def domainControl(slack_token, dataSource):
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
         else:
@@ -1205,7 +1206,7 @@ def domainControl(slack_token, dataSource):
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
     else:
@@ -1214,7 +1215,7 @@ def domainControl(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1257,7 +1258,7 @@ def eventTracking(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -1266,7 +1267,7 @@ def eventTracking(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1318,7 +1319,7 @@ def errorPage(slack_token, dataSource):
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
         else:
@@ -1327,7 +1328,7 @@ def errorPage(slack_token, dataSource):
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
 
@@ -1417,7 +1418,7 @@ def timezone(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -1426,7 +1427,7 @@ def timezone(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1489,7 +1490,7 @@ def currency(slack_token, dataSource):
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
         else:
@@ -1498,7 +1499,7 @@ def currency(slack_token, dataSource):
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
 
@@ -1535,7 +1536,7 @@ def rawDataView(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -1544,7 +1545,7 @@ def rawDataView(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1608,7 +1609,7 @@ def contentGrouping(slack_token, dataSource):
             "color": "good",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -1617,7 +1618,7 @@ def contentGrouping(slack_token, dataSource):
             "color": "danger",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
@@ -1670,7 +1671,7 @@ def othersInChannelGrouping(slack_token, dataSource):
                 "color": "danger",
                 "pretext": text,
                 "callback_id": "notification_form",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
         else:
@@ -1679,7 +1680,7 @@ def othersInChannelGrouping(slack_token, dataSource):
                 "color": "good",
                 "pretext": text,
                 "callback_id": "notification_form",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
 
@@ -1715,7 +1716,7 @@ def userPermission(slack_token, dataSource):
             "text": "You don’t have enough permission to view users had access to your analytics account.",
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
     else:
@@ -1724,7 +1725,7 @@ def userPermission(slack_token, dataSource):
                 i),
             "pretext": text,
             "callback_id": "notification_form",
-            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
 
