@@ -1299,8 +1299,8 @@ def message_actions():
                                                       'type': 'analyticsAudit'},
                                status='1')
             slack_client.chat_postMessage(channel=channel,
-                                          text="We will audit your account weekly \
-                                          and get to know you about changes.")
+                                          text="We will audit your account weekly " + \
+                                          "and get to know you about changes.")
         elif messagename == 'ignoreAnalyticsAudit':
             db.find_and_modify('notification', query={'datasourceID': datasourceID,
                                                       'type': 'analyticsAudit'},

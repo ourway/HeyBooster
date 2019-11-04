@@ -146,7 +146,7 @@ def analyticsAudit(slack_token, task, dataSource):
     if len(attachments):
         attachments = [{"text": "Hey! to trust your analytics data for further insights" + \
                          "we strongly recommend you to solve the issues below." +  \
-                         f"Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
+                         f" Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
                          "Do you wanna get to know when anything change on the audit results?",
 #                         "color": "FFFFFF",
                          "callback_id": "notification_form",
