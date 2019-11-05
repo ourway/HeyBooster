@@ -113,6 +113,11 @@ def home():
         return redirect('/login')
 
 
+@app.route('/test_analytics_audit', methods=['GET', 'POST'])
+def test_analytics_audit():
+    return render_template('audit_table.html')
+
+
 @app.route('/change', methods=['POST'])
 def change():
     message_action = request.form

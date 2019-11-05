@@ -1,0 +1,383 @@
+/*//////////////////////////////////////////////////////////////////
+[ FONT ]*/
+
+
+@font-face {
+    font-family: OpenSans-Regular;
+    src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
+}
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ RESTYLE TAG ]*/
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    height: 100%;
+    font-family: sans-serif;
+}
+
+/* ------------------------------------ */
+a {
+    margin: 0px;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+}
+
+a:focus {
+    outline: none !important;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* ------------------------------------ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0px;
+}
+
+p {
+    margin: 0px;
+}
+
+ul,
+li {
+    margin: 0px;
+    list-style-type: none;
+}
+
+
+/* ------------------------------------ */
+input {
+    display: block;
+    outline: none;
+    border: none !important;
+}
+
+textarea {
+    display: block;
+    outline: none;
+}
+
+textarea:focus,
+input:focus {
+    border-color: transparent !important;
+}
+
+/* ------------------------------------ */
+button {
+    outline: none !important;
+    border: none;
+    background: transparent;
+}
+
+button:hover {
+    cursor: text;
+}
+
+iframe {
+    border: none !important;
+}
+
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ Utiliti ]*/
+
+
+
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ Table ]*/
+
+.limiter {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.line-row {
+    border-bottom: 1px solid #eeeeee;
+    border-top: 1px solid #eeeeee;
+}
+
+.container-table100 {
+    width: 100%;
+    min-height: 100vh;
+    background-image: url(../asas.png);
+    background-size: cover;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 33px 30px;
+}
+
+.test-now{
+    padding: -10px;
+    background: #5ebeb8;
+    background: -webkit-linear-gradient(270deg, #ee4c4f, #aa4c4f);
+    background: -o-linear-gradient(270deg, #ee4c4f, #aa4c4f);
+    background: -moz-linear-gradient(270deg, #ee4c4f, #aa4c4f);
+    background: linear-gradient(270deg, #ee4c4f, #aa4c4f);
+    border:none;
+    border-radius: 3px;
+}
+
+.change-alert {
+    background: #303d72;
+    background: -webkit-linear-gradient(200deg, #67b26c, #4ca2ca);
+    background: -o-linear-gradient(200deg, #67b26c, #4ca2ca);
+    background: -moz-linear-gradient(200deg, #67b26c, #4ca2ca);
+    background: linear-gradient(200deg, #67b26c, #4ca2ca);
+    border: none;
+    border-radius: 3px;
+}
+
+.wrap-table100 {
+    width: 80%;
+}
+
+.text-deco {
+    text-decoration: underline;
+}
+
+table {
+    border-spacing: 1;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+table * {
+    position: relative;
+}
+
+table td,
+table th {
+    padding-left: 8px;
+}
+
+table thead tr {
+    height: 130px;
+    background: #36304a;
+}
+
+table tbody tr {
+    height: 100px;
+}
+
+table tbody tr:last-child {
+    border: 0;
+}
+
+table td,
+table th {
+    text-align: left;
+}
+
+table td.l,
+table th.l {
+    text-align: right;
+}
+
+table td.c,
+table th.c {
+    text-align: center;
+}
+
+table td.r,
+table th.r {
+    text-align: center;
+}
+
+
+.table100-head th {
+    font-family: OpenSans-Regular;
+    font-size: 20px;
+    color: #000;
+    line-height: 1;
+    font-weight: 400;
+    font-weight: unset;
+    background-color: white;
+    font-family: 'ZCOOL XiaoWei', serif;
+}
+
+.head-line {
+    border-bottom: 1px solid #eeeeee;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fbfbfb;
+}
+
+tbody tr {
+    font-family: OpenSans-Regular;
+    font-size: 15px;
+    color: #808080;
+    line-height: 1.2;
+    font-weight: unset;
+    transition: .5s color;
+}
+
+
+tbody tr:hover {
+    color: #000;
+    background-color: #f2f5f8;
+    cursor: text;
+}
+
+.column1 {
+    width: 210px;
+    padding-left: 40px;
+    text-align: center;
+    height: 80px;
+    background-color: #FBFBFB;
+}
+
+.column1 i {
+    font-size: 25px;
+    color: #0d8547;
+    opacity: 0.8;
+}
+
+.column2 {
+    width: 190px;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column3 {
+    width: 300px;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column4 {
+    width: 160px;
+    text-align: right;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column5 {
+    width: 160px;
+    text-align: right;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+
+@media screen and (max-width: 992px) {
+    table {
+        display: block;
+    }
+
+    table > *,
+    table tr,
+    table td,
+    table th {
+        display: block;
+    }
+
+    table thead {
+        display: none;
+    }
+
+    table tbody tr {
+        height: auto;
+        padding: 37px 0;
+    }
+
+    table tbody tr td {
+        padding-left: 40% !important;
+        margin-bottom: 24px;
+    }
+
+    table tbody tr td:last-child {
+        margin-bottom: 0;
+    }
+
+    table tbody tr td:before {
+        font-family: OpenSans-Regular;
+        font-size: 14px;
+        color: #999999;
+        line-height: 1.2;
+        font-weight: unset;
+        position: absolute;
+        width: 40%;
+        left: 30px;
+        top: 0;
+    }
+
+    table tbody tr td:nth-child(1):before {
+        content: "Status";
+    }
+
+    table tbody tr td:nth-child(2):before {
+        content: "Account Name";
+    }
+
+    table tbody tr td:nth-child(3):before {
+        content: "Audit";
+    }
+
+    table tbody tr td:nth-child(4):before {
+        content: "Change Alert";
+    }
+
+    table tbody tr td:nth-child(5):before {
+        content: "Test";
+    }
+
+    
+    .column4,
+    .column5,
+    .column6 {
+        text-align: center;
+    }
+
+    .column4,
+    .column5,
+    .column6,
+    .column1,
+    .column2,
+    .column3 {
+        width: 100%;
+    }
+
+    tbody tr {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-table100 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}

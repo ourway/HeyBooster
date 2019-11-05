@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Table V01</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animate/animate.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+                <table>
+                    <!--
+                     <thead>
+                         <tr class="table100-head">
+                             <th class="column1 text-deco"></th>
+                             <th class="column2"></th>
+                             <th class="column3"></th>
+                             <th class="column4"></th>
+                             <th class="column5"></th>
+                             <th class="column6"></th>
+                         </tr>
+                     </thead>
+                     -->
+                    <thead class="head head-line">
+                    <tr class="table100-head">
+                        <th class="column1">Status</th>
+                        <th class="column2">Account Name</th>
+                        <th class="column3">Audit</th>
+                        <th class="column4">Change Alert</th>
+                        <th class="column5">Test</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="line-row">
+                        <td class="column1"><i class="fa fa-check-circle"></i></td>
+                        <td class="column2">Uğur Yüce</td>
+                        <td class="column3">Bounce Rating</td>
+                        <td class="column4">
+                            <button class="btn btn-sm text-white change-alert"><i class="fa fa-check"></i> Activate
+                            </button>
+                        </td>
+                        <td class="column5">
+                            <button class="btn btn-sm text-white test-now">Test Now</button>
+                        </td>
+
+                    </tr>
+
+                    <tr class="line-row">
+                        <td class="column1"><i class="fa fa-times-circle" style="color: #dd4c4f;"></i></td>
+                        <td class="column2">Ali İlteriş Keskin</td>
+                        <td class="column3">Bounce Rating</td>
+                        <td class="column4">
+                            <button class="btn btn-sm text-white change-alert"><i class="fa fa-check"></i> Activate
+                            </button>
+                        </td>
+                        <td class="column5">
+                            <button class="btn btn-sm text-white test-now">Test Now</button>
+                        </td>
+
+                    </tr>
+                    <tr class="line-row">
+                        <td class="column1"><i class="fa fa-check-circle"></i></td>
+                        <td class="column2">Ali İlteriş Keskin</td>
+                        <td class="column3">Bounce Rating</td>
+                        <td class="column4">
+                            <button class="btn btn-sm text-white change-alert"><i class="fa fa-check"></i> Activate
+                            </button>
+                        </td>
+                        <td class="column5">
+                            <button class="btn btn-sm text-white test-now">Test Now</button>
+                        </td>
+
+                    </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/vendor/select2/select2.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/main.js') }}"></script>
+
+</body>
+</html>
