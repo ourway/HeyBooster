@@ -115,7 +115,27 @@ def home():
 
 @app.route('/test_analytics_audit', methods=['GET', 'POST'])
 def test_analytics_audit():
-    return render_template('audit_table.html')
+    data_sources = []
+    user_data_sources = db.find('datasource', query={'email': session['email']})
+    user = db.find_one('user', {'email': session['email']})
+
+    try:
+        if user['ga_accesstoken']:
+            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+            if 'error' in resp.keys():
+                data = [('client_id', CLIENT_ID.strip()),
+                        ('client_secret', CLIENT_SECRET.strip()),
+                        ('refresh_token', user['ga_refreshtoken']),
+                        ('grant_type', 'refresh_token')]
+                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+            current_analyticsemail = resp['email']
+    except:
+        current_analyticsemail = False
+
+    for dataSource in user_data_sources:
+        data_sources.append(dataSource)
+
+    return render_template('audit_table.html', current_analyticsemail=current_analyticsemail)
 
 
 @app.route('/active_audit_test')

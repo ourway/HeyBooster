@@ -12,8 +12,8 @@
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 * {
-    margin: 0px;
-    padding: 0px;
+    margin: 0px auto;
+    padding: 0px auto;
     box-sizing: border-box;
 }
 
@@ -22,6 +22,15 @@ html {
     height: 100%;
     font-family: sans-serif;
 }
+
+/* --navbar -- */
+
+
+.nav- {
+    background-color: #202540;
+}
+
+
 
 /* ------------------------------------ */
 a {
@@ -120,7 +129,7 @@ iframe {
 .container-table100 {
     width: 100%;
     min-height: 100vh;
-    background-image: url(../img/a1.png);
+    background-image: url(../a2.png);
     background-size: cover;
     display: -webkit-box;
     display: -webkit-flex;
@@ -135,27 +144,31 @@ iframe {
 
 .test-now{
     padding: -10px;
-    background: #5ebeb8;
-    background: -webkit-linear-gradient(270deg, #ee4c4f, #aa4c4f);
-    background: -o-linear-gradient(270deg, #ee4c4f, #aa4c4f);
-    background: -moz-linear-gradient(270deg, #ee4c4f, #aa4c4f);
-    background: linear-gradient(270deg, #ee4c4f, #aa4c4f);
-    border:none;
-    border-radius: 3px;
+    background: #448aff;
+    transition: .4s opacity;
+    border-radius: 2px;
 }
 
 .change-alert {
-    background: #303d72;
-    background: -webkit-linear-gradient(200deg, #67b26c, #4ca2ca);
-    background: -o-linear-gradient(200deg, #67b26c, #4ca2ca);
-    background: -moz-linear-gradient(200deg, #67b26c, #4ca2ca);
-    background: linear-gradient(200deg, #67b26c, #4ca2ca);
+    background: #0097a7;
     border: none;
     border-radius: 3px;
+    transition: .4s opacity;
+    
+}
+
+.change-alert:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.test-now:hover{
+    cursor: pointer;
+    opacity: 0.7;
 }
 
 .wrap-table100 {
-    width: 80%;
+    width: 60%;
 }
 
 .text-deco {
@@ -183,12 +196,12 @@ table th {
 }
 
 table thead tr {
-    height: 130px;
+    height: 80px;
     background: #36304a;
 }
 
 table tbody tr {
-    height: 100px;
+    height: 80px;
 }
 
 table tbody tr:last-child {
@@ -219,12 +232,11 @@ table th.r {
 .table100-head th {
     font-family: OpenSans-Regular;
     font-size: 20px;
-    color: #000;
+    color: #f9f9f9;
     line-height: 1;
-    font-weight: 400;
-    font-weight: unset;
-    background-color: white;
-    font-family: 'ZCOOL XiaoWei', serif;
+    font-weight: 300;
+    background-color: #202540;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .head-line {
@@ -255,7 +267,6 @@ tbody tr:hover {
     width: 210px;
     padding-left: 40px;
     text-align: center;
-    height: 80px;
     background-color: #FBFBFB;
 }
 
@@ -272,7 +283,7 @@ tbody tr:hover {
 }
 
 .column3 {
-    width: 300px;
+    width: 400px;
     text-align: center;
     background-color: #FBFBFB;
 }
@@ -295,6 +306,10 @@ tbody tr:hover {
 @media screen and (max-width: 992px) {
     table {
         display: block;
+    }
+    
+    .wrap-table100 {
+        width: 100%;
     }
 
     table > *,
