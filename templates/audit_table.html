@@ -90,57 +90,45 @@
                     <tr class="table100-head">
                         <th class="column3">
                             <div class="card-body">
-                                <div class="mt-4">
-                                    <div class="accordion" id="accordion" role="tablist">
-                                        <div class="card">
-                                            <div class="card-header" role="tab" id="heading-2">
-                                                <h6 class="mb-0">
-                                                    <a class="" data-toggle="collapse"
-                                                       href="#content" data-target="#content"
-                                                       aria-expanded="false" aria-controls="collapse-2">
-                                                        View More
-                                                    </a>
-                                                </h6>
+                                <a href="#content" class="btn btn-primary" data-toggle="collapse">
+                                    View More
+                                </a>
+                                <div id="content" class="collapse">
+                                    <div class="card-body">
+                                        <form class="pt-3" method="POST"
+                                              action="/datasourcesinfo">
+                                            {{ nForm.csrf_token }}
+
+                                            {{ nForm.account }}
+
+                                            <p style="margin-top:5px">
+                                                Property</p>
+
+                                            {{ nForm.property }}
+
+                                            <p style="margin-top:5px">
+                                                View</p>
+
+                                            {{ nForm.view }}
+
+                                            <h5><br><br><br>
+                                                Slack</h5>
+                                            <p>
+                                                Choose your channel</p>
+
+                                            {{ nForm.channel }}
+
+                                            <div style="margin-top:20px">
                                             </div>
-                                            <div id="content" class="collapse" style="">
-                                                <div class="">
-                                                    <form class="pt-3" method="POST"
-                                                          action="/datasourcesinfo">
-                                                        {{ nForm.csrf_token }}
+                                            <div style=" width: 200px;">
+                                                <button type="submit"
+                                                        class="btn btn-primary mb-2">Add
+                                                    Data
+                                                    Source
+                                                </button>
 
-                                                        {{ nForm.account }}
-
-                                                        <p style="margin-top:5px">
-                                                            Property</p>
-
-                                                        {{ nForm.property }}
-
-                                                        <p style="margin-top:5px">
-                                                            View</p>
-
-                                                        {{ nForm.view }}
-
-                                                        <h5><br><br><br>
-                                                            Slack</h5>
-                                                        <p>
-                                                            Choose your channel</p>
-
-                                                        {{ nForm.channel }}
-
-                                                        <div style="margin-top:20px">
-                                                        </div>
-                                                        <div style=" width: 200px;">
-                                                            <button type="submit"
-                                                                    class="btn btn-primary mb-2">Add
-                                                                Data
-                                                                Source
-                                                            </button>
-
-                                                        </div>
-                                                    </form>
-                                                </div>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
