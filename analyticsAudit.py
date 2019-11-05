@@ -23,72 +23,72 @@ def analyticsAudit(slack_token, task, dataSource):
         text = "Hey! there are some changes on your analytics account " + \
                 "since your first analytics audit have been made. " + \
                 "You got {} more point"
-#    actions = [
-#        {
-#			"name": "trackAnalyticsAudit",
-#			"text": "Yes",
-#			"type": "button",
-#            "style": "primary",
-#			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
-#		},
-#        {
-#			"name": "ignoreAnalyticsAudit",
-#			"text": "No",
-#			"type": "button",
-#			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
-#            "style": "danger",
-#			"confirm": {
-#						"title": "Warning",
-#						"text": "Are you sure you want to close your Analytics Audit Notifications?",
-#						"ok_text": "Yes",
-#						"dismiss_text": "No"
-#					}
-#		}
-#    ]
-    actions = {
-    			"type": "actions",
-                "block_id": "notification_form",
-    			"elements": [
-    				{
-    					"type": "button",
-                        "style": "primary",
-    					"text": {
-    						"type": "plain_text",
-    						"text": "Yes",
-    						"emoji": True
-    					},
-    					"value": f"trackAnalyticsAudit_{dataSource['_id']}"
-    				},
-                    {
-    					"type": "button",
-                        "style": "danger",
-    					"text": {
-    						"type": "plain_text",
-    						"text": "No",
-    						"emoji": True
-    					},
-                        "confirm": {
-                              "title": {
-                                  "type": "plain_text",
-                                  "text": "Warning"
-                              },
-                              "text": {
-                                  "type": "mrkdwn",
-                                  "text": "Are you sure you want to close your Analytics Audit Notifications?"
-                              },
-                              "confirm": {
-                                  "type": "plain_text",
-                                  "text": "Yes"
-                              },
-                              "deny": {
-                                  "type": "plain_text",
-                                  "text": "No"
-                              }
-                        },
-    					"value": f"ignoreAnalyticsAudit_{dataSource['_id']}"
-    				}
-    			]
-    		}
+    actions = [
+        {
+			"name": "trackAnalyticsAudit",
+			"text": "Yes",
+			"type": "button",
+            "style": "primary",
+			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+		},
+        {
+			"name": "ignoreAnalyticsAudit",
+			"text": "No",
+			"type": "button",
+			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
+            "style": "danger",
+			"confirm": {
+						"title": "Warning",
+						"text": "Are you sure you want to close your Analytics Audit Notifications?",
+						"ok_text": "Yes",
+						"dismiss_text": "No"
+					}
+		}
+    ]
+#    actions = {
+#    			"type": "actions",
+#                "block_id": "notification_form",
+#    			"elements": [
+#    				{
+#    					"type": "button",
+#                        "style": "primary",
+#    					"text": {
+#    						"type": "plain_text",
+#    						"text": "Yes",
+#    						"emoji": True
+#    					},
+#    					"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+#    				},
+#                    {
+#    					"type": "button",
+#                        "style": "danger",
+#    					"text": {
+#    						"type": "plain_text",
+#    						"text": "No",
+#    						"emoji": True
+#    					},
+#                        "confirm": {
+#                              "title": {
+#                                  "type": "plain_text",
+#                                  "text": "Warning"
+#                              },
+#                              "text": {
+#                                  "type": "mrkdwn",
+#                                  "text": "Are you sure you want to close your Analytics Audit Notifications?"
+#                              },
+#                              "confirm": {
+#                                  "type": "plain_text",
+#                                  "text": "Yes"
+#                              },
+#                              "deny": {
+#                                  "type": "plain_text",
+#                                  "text": "No"
+#                              }
+#                        },
+#    					"value": f"ignoreAnalyticsAudit_{dataSource['_id']}"
+#    				}
+#    			]
+#    		}
     logging.basicConfig(filename="analyticsAudit.log", filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     channel = dataSource['channelID']
