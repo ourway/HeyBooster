@@ -52,7 +52,7 @@ db2.init()
 app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
 app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
-app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
+app.config["SLACK_OAUTH_CLIENT_SECRETn"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"],
@@ -106,7 +106,7 @@ def home():
                 else:
                     analytics_confirm = False
                 # Fill the boxes for the value of slack_confirm and analytics_confirm
-                return render_template('test.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
         except:
             return redirect('/logout')
     else:
