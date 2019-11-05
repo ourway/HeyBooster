@@ -70,6 +70,7 @@ li {
 }
 
 
+
 /* ------------------------------------ */
 input {
     display: block;
@@ -126,10 +127,11 @@ iframe {
     border-top: 1px solid #eeeeee;
 }
 
+
 .container-table100 {
     width: 100%;
     min-height: 100vh;
-    background-image: url(../img/a2.png);
+    background-image: url(../a2.png);
     background-size: cover;
     display: -webkit-box;
     display: -webkit-flex;
@@ -396,3 +398,16 @@ tbody tr:hover {
         padding-right: 15px;
     }
 }
+
+
+.dropdown-div {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+
+
+
+
+
+
