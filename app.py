@@ -124,7 +124,7 @@ def active_audit_test():
 
 
 @app.route('/test_test')
-def test_test(slack_token, dataSource):
+def test_test():
     try:
         response = request.json
         print(response)
