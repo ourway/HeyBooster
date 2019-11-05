@@ -217,7 +217,7 @@ def analyticsAudit(slack_token, task, dataSource):
                          "actions": actions}] + attachments
         length = len(attachments)
         for i in range(length-1):
-            attachments.insert(2*i-1, [{"blocks": [{"type": "divider"}]}])
+            attachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
 #        attachments = [{"blocks": [
 #                		{
 #                			"type": "section",
