@@ -132,10 +132,8 @@ def test_test():
     for dataSource in user_data_sources:
         data_sources.append(dataSource)
 
-    print('1------------------', data_sources)
-    print(data_sources[0])
     slack_token = user['sl_accesstoken']
-    channel = 'DPL221ZBJ'
+    channel = datasources[0]['channelID']
 
     slack_client = WebClient(token=slack_token)
     slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
