@@ -168,15 +168,15 @@ def analyticsAudit(slack_token, task, dataSource):
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
                         if currentState == "danger":
-                            attachments += [{"blocks": [{"type": "divider"}]}]
+                            attachments = attachments
                             attachments = attachments[0:redcount] + attachment + attachments[redcount:]
                             redcount += 1
                         else:
-                            attachments += [{"blocks": [{"type": "divider"}]}]
                             attachments += attachment
                             
                 else:
                     if currentState == "danger":
+                        attachments = attachments
                         attachments = attachments[0:redcount] + attachment + attachments[redcount:]
                         redcount += 1
                     else:
@@ -215,6 +215,9 @@ def analyticsAudit(slack_token, task, dataSource):
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
                          "actions": actions}] + attachments
+        length = len(attachments)
+        for i in range(length-1):
+            attachments.insert(2*i-1, [{"blocks": [{"type": "divider"}]}])
 #        attachments = [{"blocks": [
 #                		{
 #                			"type": "section",
