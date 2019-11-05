@@ -21,8 +21,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 </head>
@@ -86,56 +85,58 @@
                     <thead class="head head-line">
                     <tr class="table100-head">
                         <th class="column3">
-                            <div class="">
-                                <div class="accordion" id="accordion" role="tablist">
-                                    <div class="card">
-                                        <div class="card-header" role="tab" id="heading-2">
-                                            <h6 class="mb-0">
-                                                <a class="collapsed" data-toggle="collapse"
-                                                   href="#collapse-2"
-                                                   aria-expanded="false" aria-controls="collapse-2">
-                                                    View More
-                                                </a>
-                                            </h6>
-                                        </div>
-                                        <div id="collapse-2" class="collapse" role="tabpanel"
-                                             aria-labelledby="heading-2"
-                                             data-parent="#accordion" style="">
-                                            <div class="card-body">
-                                                <form class="pt-3" method="POST"
-                                                      action="/datasourcesinfo">
-                                                    {{ nForm.csrf_token }}
+                            <div class="card-body">
+                                <div class="mt-4">
+                                    <div class="accordion" id="accordion" role="tablist">
+                                        <div class="card">
+                                            <div class="card-header" role="tab" id="heading-2">
+                                                <h6 class="mb-0">
+                                                    <a class="collapsed" data-toggle="collapse"
+                                                       href="#collapse-2"
+                                                       aria-expanded="false" aria-controls="collapse-2">
+                                                        View More
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                            <div id="collapse-2" class="collapse" role="tabpanel"
+                                                 aria-labelledby="heading-2"
+                                                 data-parent="#accordion" style="">
+                                                <div class="card-body">
+                                                    <form class="pt-3" method="POST"
+                                                          action="/datasourcesinfo">
+                                                        {{ nForm.csrf_token }}
 
-                                                    {{ nForm.account }}
+                                                        {{ nForm.account }}
 
-                                                    <p style="margin-top:5px">
-                                                        Property</p>
+                                                        <p style="margin-top:5px">
+                                                            Property</p>
 
-                                                    {{ nForm.property }}
+                                                        {{ nForm.property }}
 
-                                                    <p style="margin-top:5px">
-                                                        View</p>
+                                                        <p style="margin-top:5px">
+                                                            View</p>
 
-                                                    {{ nForm.view }}
+                                                        {{ nForm.view }}
 
-                                                    <h5><br><br><br>
-                                                        Slack</h5>
-                                                    <p>
-                                                        Choose your channel</p>
+                                                        <h5><br><br><br>
+                                                            Slack</h5>
+                                                        <p>
+                                                            Choose your channel</p>
 
-                                                    {{ nForm.channel }}
+                                                        {{ nForm.channel }}
 
-                                                    <div style="margin-top:20px">
-                                                    </div>
-                                                    <div style=" width: 200px;">
-                                                        <button type="submit"
-                                                                class="btn btn-primary mb-2">Add
-                                                            Data
-                                                            Source
-                                                        </button>
+                                                        <div style="margin-top:20px">
+                                                        </div>
+                                                        <div style=" width: 200px;">
+                                                            <button type="submit"
+                                                                    class="btn btn-primary mb-2">Add
+                                                                Data
+                                                                Source
+                                                            </button>
 
-                                                    </div>
-                                                </form>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -173,15 +174,9 @@
 <script type="text/javascript"
         src="{{ url_for('static', filename='/js/todolist.js') }}"></script>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <script>
     if (window.history.replaceState) {
