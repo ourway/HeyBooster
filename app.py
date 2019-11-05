@@ -125,16 +125,15 @@ def active_audit_test():
 
 @app.route('/test_test')
 def test_test():
-    try:
-        user = db.find_one('user', {'email': session['email']})
-        datasources = db.find('datasource', query={'email': session['email']})
-        slack_token = user['sl_accesstoken']
-        channel = datasources['channelID']
-        slack_client = WebClient(token=slack_token)
-        slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
-        return redirect('test_analytics_audit')
-    except:
-        return redirect('test_analytics_audit')
+    user = db.find_one('user', {'email': session['email']})
+    print('----------- 1', user)
+    datasources = db.find('datasource', query={'email': session['email']})
+    print('------------2', datasources)
+    slack_token = user['sl_accesstoken']
+    channel = datasources['channelID']
+    slack_client = WebClient(token=slack_token)
+    slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
+    return redirect('test_analytics_audit')
 
 
 @app.route('/change', methods=['POST'])
