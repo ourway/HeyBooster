@@ -124,14 +124,12 @@ def active_audit_test():
 
 
 @app.route('/test_test')
-def test_test():
+def test_test(dataSource):
     try:
-        response = request.json
-        channel = response['event']['channel']
-        user = db.find_one('user', {'sl_userid': response['event']['user']})
-        slack_token = user['sl_accesstoken']
-        slack_client = WebClient(token=slack_token)
-        slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
+        email = dataSource['email']
+        print(email)
+        #slack_client = WebClient(token=slack_token)
+        #slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
         return make_response('', 200)
     except:
         return make_response('', 404)
