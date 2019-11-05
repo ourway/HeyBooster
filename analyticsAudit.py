@@ -14,7 +14,7 @@ def dtimetostrf(x):
 
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
-    if (dataSource['bounceRateTracking'] == ""):
+    if (task['lastStates']['bounceRateTracking'] == ""):
         text = "Hey! to trust your analytics data for further insights " + \
                 "we strongly recommend you to solve the issues below. " +  \
                 "Your analytics health score is calculated *{}* over 100.\n" +  \
