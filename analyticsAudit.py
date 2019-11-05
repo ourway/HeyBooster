@@ -168,6 +168,7 @@ def analyticsAudit(slack_token, task, dataSource):
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
                         if currentState == "danger":
+                            attachments += [{"blocks": [{"type": "divider"}]}]
                             attachments = attachments[0:redcount] + attachment + attachments[redcount:]
                             redcount += 1
                         else:
