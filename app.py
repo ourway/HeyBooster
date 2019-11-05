@@ -133,9 +133,9 @@ def test_test():
         data_sources.append(dataSource)
 
     print('1------------------', data_sources)
-    print(data_sources[0], data_sources['channelID'])
+    print(data_sources[0])
     slack_token = user['sl_accesstoken']
-    #channel = data_sources[12]
+    channel = 'DPL221ZBJ'
 
     slack_client = WebClient(token=slack_token)
     slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
