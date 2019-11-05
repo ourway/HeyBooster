@@ -118,6 +118,29 @@ def test_analytics_audit():
     return render_template('audit_table.html')
 
 
+@app.route('/active_audit_test')
+def active_audit_test():
+    return redirect('test_analytics_audit')
+
+
+@app.route('/test_test')
+def test_test(slack_token, dataSource):
+    try:
+        response = request.json
+        print(response)
+        channel = response['event']['channel']
+        print(channel)
+        user = db.find_one('user', {'sl_userid': response['event']['user']})
+        print(user)
+        slack_token = user['sl_accesstoken']
+        print(slack_token)
+        #slack_client = WebClient(token=slack_token)
+        #slack_client.chat_postMessage(channel=channel, text="Hey buddy! For now, i am not able to speak with human being, so can you please ask your question to team behind me via https://drift.me/heybooster")
+        return make_response('', 200)
+    except:
+        return make_response('', 404)
+
+
 @app.route('/change', methods=['POST'])
 def change():
     message_action = request.form
@@ -159,11 +182,6 @@ def change():
         )
     #    return make_response("Time of Day: ", 200)
     return make_response("", 200)
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
 
 @app.route('/login/', methods=['GET', 'POST'])
