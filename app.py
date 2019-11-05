@@ -124,10 +124,12 @@ def active_audit_test():
 
 
 @app.route('/test_test')
-def test_test(dataSource):
+def test_test():
     try:
-        email = dataSource['email']
-        print(email)
+        user = session['email']
+        print(user)
+        slack_token = user['sl_accesstoken']
+        print(slack_token)
         #slack_client = WebClient(token=slack_token)
         #slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
         return make_response('', 200)
