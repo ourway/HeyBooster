@@ -14,15 +14,6 @@ def dtimetostrf(x):
 
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
-    if (task['lastStates']['bounceRateTracking'] == ""):
-        text = "Hey! to trust your analytics data for further insights " + \
-                "we strongly recommend you to solve the issues below. " +  \
-                "Your analytics health score is calculated *{}* over 100.\n" +  \
-                "Do you wanna get to know when anything change on the audit results?"
-    else:
-        text = "Hey! there are some changes on your analytics account " + \
-                "since your first analytics audit have been made. " + \
-                "You got {} more point"
     actions = [
         {
 			"name": "trackAnalyticsAudit",
@@ -146,7 +137,6 @@ def analyticsAudit(slack_token, task, dataSource):
               "customMetric":2,
               "internalSearchTermConsistency":2
               }
-    
     attachments = []
     currentStates = {}
     totalScore = 0
@@ -207,17 +197,39 @@ def analyticsAudit(slack_token, task, dataSource):
     #    attachments += enhancedECommerceActivity(slack_token, dataSource)
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
+    if (task['lastStates']['bounceRateTracking'] == ""):
+        text = "Hey! to trust your analytics data for further insights " + \
+                "we strongly recommend you to solve the issues below. " +  \
+                "Your analytics health score is calculated *{}* over 100.\n" +  \
+                "Do you wanna get to know when anything change on the audit results?"
+        maincolor = "#2eb8a6"
+    else:
+        lastScore = int(task['lastScore'])
+        text = f"Your analytics health score is change from {lastScore} to {totalScore}.\n" + \
+                "Here is the list of changes."
+        if totalScore > lastScore:
+            maincolor = "good"
+        elif totalScore < lastScore:
+            maincolor = "danger"
+        else:
+            maincolor = None
     if len(attachments):
-        attachments = [{"text": text,
-                         "color": "#2eb8a6",
+        attachments = [{"text": text.format(totalScore),
+                         "color": maincolor,
                          "pretext": "*Analytics Audit*",
                          "callback_id": "notification_form",
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
-                         "actions": actions}] + attachments
-        length = len(attachments)
-        for i in range(length-1):
-            attachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
+                         "actions": actions,
+                         "mrkdwn_in": [
+                                        "text",
+                                        "pretext"
+                                    ]}] + [{"blocks": [{"type": "divider"}]
+                         }] + attachments
+#        length = len(attachments)
+#        for i in range(length-1):
+#            attachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
+        
 #        attachments = [{"blocks": [
 #                		{
 #                			"type": "section",
