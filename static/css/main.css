@@ -131,14 +131,14 @@ iframe {
 .container-table100 {
     width: 100%;
     min-height: 100vh;
-    background-image: url(../img/a2.png);
+    background-image: url(../a2.png);
     background-size: cover;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
-    align-items: center;
+    align-items: middle;
     justify-content: center;
     flex-wrap: wrap;
     padding: 33px 30px;
@@ -181,7 +181,7 @@ table {
     border-spacing: 1;
     border-collapse: collapse;
     background: white;
-    border-radius: 10px;
+    border-radius: 0px;
     overflow: hidden;
     width: 100%;
     margin: 0 auto;
@@ -230,6 +230,34 @@ table th.r {
     text-align: center;
 }
 
+.view-more {
+    background-color: #202540;
+    color: #f9f9f9;
+    transition: .4s opacity;
+}
+
+.view-more:hover{
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+.add-data {
+    background-color: #202540;
+    color: #f9f9f9;
+    transition: .4s opacity;
+}
+
+.add-data:hover{
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+.form-div {
+    background-color: #f2f5f8;
+    width: 50%;
+    color: black;
+    border-radius: 10px;
+}
 
 .table100-head th {
     font-family: OpenSans-Regular;
@@ -303,6 +331,12 @@ tbody tr:hover {
     text-align: center;
     background-color: #FBFBFB;
 }
+
+#boots-div {
+    background-color: white;
+    border-top: 2px solid #eeeeee;
+}
+
 
 
 @media screen and (max-width: 992px) {
@@ -401,8 +435,8 @@ tbody tr:hover {
 
 
 .dropdown-div {
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 
