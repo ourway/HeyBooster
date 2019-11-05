@@ -25,10 +25,6 @@
 
 <body>
 
-</head>
-
-<body>
-
 <nav class=" nav- navbar navbar-dark navbar-expand-sm">
     <a href="#" class="navbar-brand">Logo</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -121,16 +117,36 @@
 
                             <div id="content" class="collapse dropdown-div">
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button"
-                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                        Dropdown button
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
+                                    <form class="pt-3" method="POST" action="/datasourcesinfo">
+                                        {{ nForm.csrf_token }}
+
+                                        {{ nForm.account }}
+
+                                        <p style="margin-top:5px">
+                                            Property</p>
+
+                                        {{ nForm.property }}
+
+                                        <p style="margin-top:5px">
+                                            View</p>
+
+                                        {{ nForm.view }}
+
+                                        <h5><br><br><br>
+                                            Slack</h5>
+                                        <p>
+                                            Choose your channel</p>
+
+                                        {{ nForm.channel }}
+
+                                        <div style="margin-top:20px">
+                                        </div>
+                                        <div style=" width: 200px;">
+                                            <button type="submit" class="btn btn-primary mb-2">Add Data Source
+                                            </button>
+
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </th>
