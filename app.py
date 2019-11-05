@@ -127,15 +127,11 @@ def active_audit_test():
 def test_test():
     try:
         response = request.json
-        print(response)
         channel = response['event']['channel']
-        print(channel)
         user = db.find_one('user', {'sl_userid': response['event']['user']})
-        print(user)
         slack_token = user['sl_accesstoken']
-        print(slack_token)
-        #slack_client = WebClient(token=slack_token)
-        #slack_client.chat_postMessage(channel=channel, text="Hey buddy! For now, i am not able to speak with human being, so can you please ask your question to team behind me via https://drift.me/heybooster")
+        slack_client = WebClient(token=slack_token)
+        slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
         return make_response('', 200)
     except:
         return make_response('', 404)
