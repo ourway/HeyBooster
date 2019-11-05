@@ -15,98 +15,142 @@ def dtimetostrf(x):
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
     if (dataSource['bounceRateTracking'] == ""):
-        text = "Hey! to trust your analytics data for further insights" + \
-                "we strongly recommend you to solve the issues below." +  \
-                " Your analytics health score is calculated *{}* over 100.\n" +  \
+        text = "Hey! to trust your analytics data for further insights " + \
+                "we strongly recommend you to solve the issues below. " +  \
+                "Your analytics health score is calculated *{}* over 100.\n" +  \
                 "Do you wanna get to know when anything change on the audit results?"
     else:
         text = "Hey! there are some changes on your analytics account " + \
                 "since your first analytics audit have been made. " + \
                 "You got {} more point"
-    actions = [
-        {
-			"name": "trackAnalyticsAudit",
-			"text": "Yes",
-			"type": "button",
-            "style": "primary",
-			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
-		},
-        {
-			"name": "ignoreAnalyticsAudit",
-			"text": "No",
-			"type": "button",
-			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
-            "style": "danger",
-			"confirm": {
-						"title": "Warning",
-						"text": "Are you sure you want to close your Analytics Audit Notifications?",
-						"ok_text": "Yes",
-						"dismiss_text": "No"
-					}
-		}
-    ]
+#    actions = [
+#        {
+#			"name": "trackAnalyticsAudit",
+#			"text": "Yes",
+#			"type": "button",
+#            "style": "primary",
+#			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+#		},
+#        {
+#			"name": "ignoreAnalyticsAudit",
+#			"text": "No",
+#			"type": "button",
+#			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
+#            "style": "danger",
+#			"confirm": {
+#						"title": "Warning",
+#						"text": "Are you sure you want to close your Analytics Audit Notifications?",
+#						"ok_text": "Yes",
+#						"dismiss_text": "No"
+#					}
+#		}
+#    ]
+    actions = {
+    			"type": "actions",
+                "block_id": "notification_form",
+    			"elements": [
+    				{
+    					"type": "button",
+                        "style": "primary",
+    					"text": {
+    						"type": "plain_text",
+    						"text": "Yes",
+    						"emoji": True
+    					},
+    					"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+    				},
+                    {
+    					"type": "button",
+                        "style": "danger",
+    					"text": {
+    						"type": "plain_text",
+    						"text": "No",
+    						"emoji": True
+    					},
+                        "confirm": {
+                              "title": {
+                                  "type": "plain_text",
+                                  "text": "Warning"
+                              },
+                              "text": {
+                                  "type": "mrkdwn",
+                                  "text": "Are you sure you want to close your Analytics Audit Notifications?"
+                              },
+                              "confirm": {
+                                  "type": "plain_text",
+                                  "text": "Yes"
+                              },
+                              "deny": {
+                                  "type": "plain_text",
+                                  "text": "No"
+                              }
+                        },
+    					"value": f"ignoreAnalyticsAudit_{dataSource['_id']}"
+    				}
+    			]
+    		}
     logging.basicConfig(filename="analyticsAudit.log", filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     channel = dataSource['channelID']
-    subfunctions = [bounceRateTracking,
-                    notSetLandingPage,
-                    adwordsAccountConnection,
-                    sessionClickDiscrepancy,
-                    selfReferral,
+    subfunctions = [adwordsAccountConnection,
                     paymentReferral,
-                    goalSettingActivity,
-                    botSpamExcluding,
-                    customDimension,
-                    siteSearchTracking,
                     gdprCompliant,
                     dataRetentionPeriod,
-                    remarketingLists,
                     enhancedECommerceActivity,
-                    customMetric,
-                    samplingCheck,
-                    internalSearchTermConsistency,
-                    defaultPageControl,
                     domainControl,
+                    rawDataView,
+                    userPermission,
+                    bounceRateTracking,
+                    selfReferral,
+                    botSpamExcluding,
                     eventTracking,
                     errorPage,
                     timezone,
                     currency,
-                    rawDataView,
+                    notSetLandingPage,
+                    sessionClickDiscrepancy,
+                    goalSettingActivity,
+                    customDimension,
+                    siteSearchTracking,
+                    remarketingLists,
+                    defaultPageControl,
                     contentGrouping,
-                    userPermission,
-                    othersInChannelGrouping
+                    othersInChannelGrouping,
+                    customMetric,
+                    internalSearchTermConsistency
                     ]
-    scores = {"bounceRateTracking":4,
-              "notSetLandingPage":3,
-              "adwordsAccountConnection":5,
-              "sessionClickDiscrepancy":3,
-              "selfReferral":4,
+    scores = {"adwordsAccountConnection":5,
               "paymentReferral":5,
-              "goalSettingActivity":3,
-              "botSpamExcluding":4,
-              "customDimension":3,
-              "siteSearchTracking":3,
               "gdprCompliant":5,
               "dataRetentionPeriod":5,
-              "remarketingLists":3,
               "enhancedECommerceActivity":5,
-              "customMetric":2,
-              "samplingCheck":1,
-              "internalSearchTermConsistency":2,
-              "defaultPageControl":3,
               "domainControl":5,
+              "rawDataView":5,
+              "userPermission":5,
+              "bounceRateTracking":4,
+              "selfReferral":4,
+              "botSpamExcluding":4,
               "eventTracking":4,
               "errorPage":4,
               "timezone":4,
               "currency":4,
-              "rawDataView":5,
+              "notSetLandingPage":3,
+              "sessionClickDiscrepancy":3,
+              "goalSettingActivity":3,
+              "customDimension":3,
+              "siteSearchTracking":3,
+              "remarketingLists":3,
+              "defaultPageControl":3,
               "contentGrouping":3,
-              "userPermission":5,
               "othersInChannelGrouping":3,
-             }
+              "customMetric":2,
+              "internalSearchTermConsistency":2
+              }
+    
     attachments = []
     currentStates = {}
     totalScore = 0
+    redcount = 0
     for function in subfunctions:
         currentStates[function.__name__] = None
         trycount = 0
@@ -123,9 +167,19 @@ def analyticsAudit(slack_token, task, dataSource):
                 if task:
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
-                        attachments += attachment
+                        if currentState == "danger":
+                            attachments = attachments[0:redcount] + attachment + attachments[redcount:]
+                            redcount += 1
+                        else:
+                            attachments += [{"blocks": [{"type": "divider"}]}]
+                            attachments += attachment
+                            
                 else:
-                    attachments += attachment
+                    if currentState == "danger":
+                        attachments = attachments[0:redcount] + attachment + attachments[redcount:]
+                        redcount += 1
+                    else:
+                        attachments += attachment
                 break
             except Exception as ex:
                 logging.error(f"TASK DID NOT RUN --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__} --- {str(ex)}")
@@ -160,6 +214,35 @@ def analyticsAudit(slack_token, task, dataSource):
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
                          "actions": actions}] + attachments
+#        attachments = [{"blocks": [
+#                		{
+#                			"type": "section",
+#                			"text": {
+#                				"type": "mrkdwn",
+#                				"text": "*Analytics Audit*"
+#                			}
+#                		},
+#                        {
+#                			"type": "section",
+#                			"text": {
+#                				"type": "mrkdwn",
+#                				"text": text
+#                			}
+#                		},
+#                        actions,
+#                        {
+#                			"type": "context",
+#                			"elements": [
+#                				{
+#                					"type": "mrkdwn",
+#                					"text": f"{dataSource['propertyName']} & {dataSource['viewName']}"
+#                				}
+#                			]
+#                		},
+#                        {
+#                			"type": "divider"
+#                		}],
+#                        "color": "#2eb8a6" }]  + attachments
         slack_client = WebClient(token=slack_token)
         resp = slack_client.chat_postMessage(channel=channel,
                                              attachments=attachments)
