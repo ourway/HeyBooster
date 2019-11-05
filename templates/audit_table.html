@@ -17,16 +17,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
-    <!-- endinject -->
-    <!-- plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
-    <!-- endinject -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 </head>
 
@@ -84,55 +76,45 @@
             </div>
 
 
-            <div class="table100">
-                <table>
-                    <thead class="head head-line">
-                    <tr class="table100-head">
-                        <th class="column3">
-                            <button data-toggle="collapse" data-target="#demo">Collapsible</button>
+            <button data-toggle="collapse" data-target="#demo">Collapsible</button>
 
-                            <div id="demo" class="collapse">
-                                <form class="pt-3" method="POST"
-                                      action="/datasourcesinfo">
-                                    {{ nForm.csrf_token }}
+            <div id="demo" class="collapse">
+                <form class="pt-3" method="POST"
+                      action="/datasourcesinfo">
+                    {{ nForm.csrf_token }}
 
-                                    {{ nForm.account }}
+                    {{ nForm.account }}
 
-                                    <p style="margin-top:5px">
-                                        Property</p>
+                    <p style="margin-top:5px">
+                        Property</p>
 
-                                    {{ nForm.property }}
+                    {{ nForm.property }}
 
-                                    <p style="margin-top:5px">
-                                        View</p>
+                    <p style="margin-top:5px">
+                        View</p>
 
-                                    {{ nForm.view }}
+                    {{ nForm.view }}
 
-                                    <h5><br><br><br>
-                                        Slack</h5>
-                                    <p>
-                                        Choose your channel</p>
+                    <h5><br><br><br>
+                        Slack</h5>
+                    <p>
+                        Choose your channel</p>
 
-                                    {{ nForm.channel }}
+                    {{ nForm.channel }}
 
-                                    <div style="margin-top:20px">
-                                    </div>
-                                    <div style=" width: 200px;">
-                                        <button type="submit"
-                                                class="btn btn-primary mb-2">Add
-                                            Data
-                                            Source
-                                        </button>
+                    <div style="margin-top:20px">
+                    </div>
+                    <div style=" width: 200px;">
+                        <button type="submit"
+                                class="btn btn-primary mb-2">Add
+                            Data
+                            Source
+                        </button>
 
-                                    </div>
-                                </form>
+                    </div>
+                </form>
 
 
-                            </div>
-                        </th>
-                    </tr>
-                    </thead>
-                </table>
             </div>
         </div>
     </div>
@@ -148,32 +130,15 @@
         src="{{ url_for('static', filename='/vendor/select2/select2.min.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='/js/main.js') }}"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/vendors/base/vendor.bundle.base.js') }}"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/off-canvas.js') }}"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/hoverable-collapse.js') }}"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/template.js') }}"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/settings.js') }}"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/todolist.js') }}"></script>
-<!-- endinject -->
-<!-- plugin js for this page -->
-<!-- End plugin js for this page -->
-<!-- Custom js for this page-->
-<!-- End custom js for this page-->
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
 <script>
