@@ -14,6 +14,15 @@ def dtimetostrf(x):
 
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
+    if (dataSource['bounceRateTracking'] == ""):
+        text = "Hey! to trust your analytics data for further insights" + \
+                "we strongly recommend you to solve the issues below." +  \
+                " Your analytics health score is calculated *{}* over 100.\n" +  \
+                "Do you wanna get to know when anything change on the audit results?"
+    else:
+        text = "Hey! there are some changes on your analytics account " + \
+                "since your first analytics audit have been made. " + \
+                "You got {} more point"
     actions = [
         {
 			"name": "trackAnalyticsAudit",
@@ -144,10 +153,7 @@ def analyticsAudit(slack_token, task, dataSource):
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
     if len(attachments):
-        attachments = [{"text": "Hey! to trust your analytics data for further insights" + \
-                         "we strongly recommend you to solve the issues below." +  \
-                         f" Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
-                         "Do you wanna get to know when anything change on the audit results?",
+        attachments = [{"text": ,
                          "color": "#2eb8a6",
                          "pretext": "*Analytics Audit*",
                          "callback_id": "notification_form",
@@ -1570,16 +1576,23 @@ def rawDataView(slack_token, dataSource):
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
 
-    filters = mservice.management().filters().list(accountId=accountId
-                                                   ).execute()
 
     views = mservice.management().profiles().list(accountId=accountId,
                                                   webPropertyId=propertyId
                                                   ).execute()
-
-    numberofFilters = len(filters.get('items', []))
-    numberofViews = len(views.get('items', []))
-    if numberofFilters < numberofViews:
+    
+    unfilteredView = False
+    for view in views.get('items', []):
+        viewId = view.get('id')
+        filterLinks = mservice.management().profileFilterLinks().list(
+                                                  accountId=accountId,
+                                                  webPropertyId=propertyId,
+                                                  profileId=viewId
+                                              ).execute()
+        if not filterLinks.get('items', []): # If there is a view which does not have any filter
+            unfilteredView = True # there is raw data
+            break
+    if unfilteredView:
         attachments += [{
             "text": "Raw data view is correctly set, it is your backup view against to any wrong filter changes.",
             "color": "good",
