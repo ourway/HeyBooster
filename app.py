@@ -131,10 +131,12 @@ def test_analytics_audit():
     propertyName = data_sources[0]['propertyName']
     viewName = data_sources[0]['viewName']
 
-    if analytics_alert_status == 0:
+    if analytics_alert_status == False:
         status = "passive"
-    else:
+    elif analytics_alert_status == True:
         status = "active"
+    else:
+        status = ""
 
     try:
         if user['ga_accesstoken']:
@@ -207,24 +209,23 @@ def test_analytics_audit():
 @app.route('/active_audit_test')
 def active_audit_test():
     analytics_alert_status = 0
-    #datasourceID = 0
     user_notifications = db.find('notification', query={'email': session['email']})
 
     for notification in user_notifications:
         if notification['type'] == 'analyticsAudit':
             analytics_alert_status = notification['status']
-            #datasourceID = notification['datasourceID']
 
-    #datasourceID = str(datasourceID)
-
-    if analytics_alert_status == 0:
+    if analytics_alert_status == False:
         db.find_and_modify('notification', query={'email': session['email'],
                                                   'type': 'analyticsAudit'},
                            status='1')
-    else:
+    elif analytics_alert_status == True:
         db.find_and_modify('notification', query={'email': session['email'],
                                                   'type': 'analyticsAudit'},
                            status='0')
+    else:
+        return redirect('test_analytics_audit')
+
     return redirect('test_analytics_audit')
 
 
