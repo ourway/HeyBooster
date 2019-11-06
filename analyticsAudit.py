@@ -204,7 +204,7 @@ def analyticsAudit(slack_token, task, dataSource):
                 "Do you wanna get to know when anything change on the audit results?"
         maincolor = "#2eb8a6"
     else:
-        lastScore = int(task['lastScore'])
+        lastScore = int(task['totalScore'])
         text = f"Your analytics health score is change from {lastScore} to {totalScore}.\n" + \
                 "Here is the list of changes."
         if totalScore > lastScore:
@@ -220,11 +220,7 @@ def analyticsAudit(slack_token, task, dataSource):
                          "callback_id": "notification_form",
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
-                         "actions": actions,
-                         "mrkdwn_in": [
-                                        "text",
-                                        "pretext"
-                                    ]}] + [{"blocks": [{"type": "divider"}]}] + attachments
+                         "actions": actions}] + [{"blocks": [{"type": "divider"}]}] + attachments
         
 #        length = len(attachments)
 #        for i in range(length-1):
