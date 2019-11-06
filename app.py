@@ -131,9 +131,9 @@ def test_analytics_audit():
     propertyName = data_sources[0]['propertyName']
     viewName = data_sources[0]['viewName']
 
-    if analytics_alert_status == False:
+    if int(analytics_alert_status) == 0:
         status = "passive"
-    elif analytics_alert_status == True:
+    elif int(analytics_alert_status) == 1:
         status = "active"
     else:
         status = ""
@@ -214,14 +214,12 @@ def active_audit_test():
     for notification in user_notifications:
         if notification['type'] == 'analyticsAudit':
             analytics_alert_status = notification['status']
-            print('status: ', analytics_alert_status)
-            print('status type', type(analytics_alert_status))
 
-    if analytics_alert_status == False:
+    if int(analytics_alert_status) == 0:
         db.find_and_modify('notification', query={'email': session['email'],
                                                   'type': 'analyticsAudit'},
                            status='1')
-    elif analytics_alert_status == True:
+    elif int(analytics_alert_status) == 1:
         db.find_and_modify('notification', query={'email': session['email'],
                                                   'type': 'analyticsAudit'},
                            status='0')
