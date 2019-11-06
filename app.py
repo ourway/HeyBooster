@@ -208,10 +208,9 @@ def active_audit_test():
     user_notifications = db.find('notification', query={'email': session['email']})
 
     for notification in user_notifications:
-        print(notification)
         if notification['type'] == 'analyticsAudit':
-            analytics_alert_status = user_notifications[notification]['status']
-            datasourceID = user_notifications[notification]['datasourceID']
+            analytics_alert_status = notification['status']
+            datasourceID = notification['datasourceID']
             print('Bulundu!!!!!!!!')
             print(datasourceID)
 
