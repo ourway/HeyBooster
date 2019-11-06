@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connect</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/connect_style.css') }}">
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+</head>
+
+<body>
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="left-div">
+                <div class="wrapper">
+                    <div class="arrow-steps clearfix">
+                        <div class="step"><span> Sign up</span></div>
+                        <div class="step current"><span>Connect Data Sources & Channels</span></div>
+                        <div class="step"><span>Get First Insight</span></div>
+                    </div>
+                </div>
+
+                <div class="down-connect">
+                    <div class="data">
+                        <div class="center-left">
+                            <img class="card-img-top" src="img/ab3.png">
+                            <h1>Data Sources</h1>
+                            <img class="logoo" src="img/google.png">
+                            <a href="/google/connect">
+                                <button id="connect-1" class="btn text-white btn-sm" style="background-color: #e48131">
+                                    Connect
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="channel">
+                        <div class="center-right">
+                            <img class="card-img-top" src="img/card-4.jpg">
+                            <h1>Communication Channel</h1>
+                            <img class="logoo" src="img/slack.png">
+                            <a href="/connect">
+                                <button id="connect-1" class="btn text-white btn-sm" style="background-color: #0097a7">
+                                    Connect
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

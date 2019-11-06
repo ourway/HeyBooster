@@ -113,6 +113,34 @@ def home():
         return redirect('/login')
 
 
+@app.route('/home_draft', methods=['GET', 'POST'])
+@login_required
+def home():
+    if 'auth_token' in session.keys():
+        try:
+            if session['ga_accesstoken'] and session['sl_accesstoken']:
+                return redirect('/datasourcesinfo')
+            else:
+                # Check if user has slack connection
+                if session['sl_accesstoken']:
+                    slack_confirm = True
+                    print(session['sl_accesstoken'])
+                else:
+                    slack_confirm = False
+
+                # Check if user has analytics connection
+                if session['ga_accesstoken']:
+                    analytics_confirm = True
+                else:
+                    analytics_confirm = False
+                # Fill the boxes for the value of slack_confirm and analytics_confirm
+                return render_template('home_draft.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+        except:
+            return redirect('/logout')
+    else:
+        return redirect('/login')
+
+
 @app.route('/test_analytics_audit', methods=['GET', 'POST'])
 def test_analytics_audit():
     data_sources = []
