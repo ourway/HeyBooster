@@ -114,28 +114,27 @@ def home():
 
 @app.route('/test_analytics_audit', methods=['GET', 'POST'])
 def test_analytics_audit():
+    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+        return redirect('/')
     data_sources = []
-    analytics_alert_status = 0
+    audit = []
     user_data_sources = db.find('datasource', query={'email': session['email']})
-    user_notifications = db.find('notification', query={'email': session['email']})
+    # user_notifications = db.find('notification', query={'email': session['email']})
+    user_analytics_audit = db.find('notification', query={"email": session['email'], "type": "analyticsAudit"})
     user = db.find_one('user', {'email': session['email']})
 
-    for notification in user_notifications:
-        if notification['type'] == 'analyticsAudit':
-            analytics_alert_status = notification['status']
+    # for notification in user_notifications:
+    #     if notification['type'] == 'analyticsAudit':
+    #         analytics_alert_status = notification['status']
+
+    for analytics_audit in user_analytics_audit:
+        audit.append(analytics_audit)
 
     for dataSource in user_data_sources:
         data_sources.append(dataSource)
 
-    propertyName = data_sources[0]['propertyName']
-    viewName = data_sources[0]['viewName']
-
-    if int(analytics_alert_status) == 0:
-        status = "passive"
-    elif int(analytics_alert_status) == 1:
-        status = "active"
-    else:
-        status = ""
+    # propertyName = data_sources[0]['propertyName']
+    # viewName = data_sources[0]['viewName']
 
     try:
         if user['ga_accesstoken']:
@@ -184,6 +183,7 @@ def test_analytics_audit():
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
+        flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
     if (useraccounts):
@@ -202,7 +202,7 @@ def test_analytics_audit():
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
 
     return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
-                           status=status, propertyName=propertyName, viewName=viewName)
+                           audit=audit)
 
 
 @app.route('/active_audit_test')
@@ -1515,51 +1515,51 @@ def message_actions():
                                      attachments=upd_attachments)
 
         elif "giveFeedback" in messagename:
-            slack_client.views_open(trigger_id = message_action["trigger_id"],
-                                    view = {
-                                        	"type": "modal",
-                                        	"title": {
-                                        		"type": "plain_text",
-                                        		"text": "Send us your feedback",
-                                        		"emoji": True
-                                        	},
-                                        	"submit": {
-                                        		"type": "plain_text",
-                                        		"text": "Submit",
-                                        		"emoji": True
-                                        	},
-                                        	"close": {
-                                        		"type": "plain_text",
-                                        		"text": "Cancel",
-                                        		"emoji": True
-                                        	},
-                                            "private_metadata": str(datasourceID),
-                                            "callback_id": "notification_form",
-                                        	"blocks": [
-                                        		{
-                                        			"type": "section",
-                                        			"text": {
-                                        				"type": "plain_text",
-                                        				"text": "Tell us about your experience.",
-                                        				"emoji": True
-                                        			}
-                                        		},
-                                        		{
-                                        			"type": "input",
-                                                    "block_id": "multi-line",
-                                        			"element": {
-                                        				"type": "plain_text_input",
-                                        				"multiline": True,
-                                                        "action_id": "ml-value"
-                                        			},
-                                        			"label": {
-                                        				"type": "plain_text",
-                                        				"text": " ",
-                                        				"emoji": True
-                                        			}
-                                        		}
-                                        	]
-                                        })
+            slack_client.views_open(trigger_id=message_action["trigger_id"],
+                                    view={
+                                        "type": "modal",
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Send us your feedback",
+                                            "emoji": True
+                                        },
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": True
+                                        },
+                                        "close": {
+                                            "type": "plain_text",
+                                            "text": "Cancel",
+                                            "emoji": True
+                                        },
+                                        "private_metadata": str(datasourceID),
+                                        "callback_id": "notification_form",
+                                        "blocks": [
+                                            {
+                                                "type": "section",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Tell us about your experience.",
+                                                    "emoji": True
+                                                }
+                                            },
+                                            {
+                                                "type": "input",
+                                                "block_id": "multi-line",
+                                                "element": {
+                                                    "type": "plain_text_input",
+                                                    "multiline": True,
+                                                    "action_id": "ml-value"
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": " ",
+                                                    "emoji": True
+                                                }
+                                            }
+                                        ]
+                                    })
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
@@ -1810,7 +1810,7 @@ def message_actions():
                 )
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
-    elif message_action["type"] == "view_submission": 
+    elif message_action["type"] == "view_submission":
         view = message_action['view']
         feedback = view['state']['values']['multi-line']['ml-value']['value']
         datasourceID = view['private_metadata'].split('_')[-1]
@@ -1820,7 +1820,7 @@ def message_actions():
             dataSource = dataSources[datasourceIDs.index(datasourceID)]
         else:
             return make_response("", 200)
-        db.insert_one("feedback", data = { "feedback": feedback, "datasourceID": datasourceID})
+        db.insert_one("feedback", data={"feedback": feedback, "datasourceID": datasourceID})
     return make_response("", 200)
 
 
@@ -1942,53 +1942,53 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     })
     # When the slack connection is completed send notification user to set time
     headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
-#    data = {
-#        "channel": channelID,
-#        "attachments": [{
-#            # "title": "Blog Yazıları",
-#            # "title_link": "https://blog.boostroas.com/tr/"
-#        },
-#            {
-#                "text": "Welcome to Heybooster, I am your digital buddy to support " +
-#                        "you to boost your website by analyzing your data with marketing perspective." +
-#                        "You will get first insights tomorrow at 7 am",
-#                "callback_id": "notification_form",
-#                "color": "#3AA3E3",
-#                "attachment_type": "default",
-#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-#                "actions": [
-#                    {
-#                        "name": "change",
-#                        "text": "Reschedule",
-#                        "type": "button",
-#                        "value": f"change_{dataSourceID}"
-#                    },
-#                    {
-#                        "name": "setmygoal",
-#                        "text": "Set My Goal",
-#                        "type": "button",
-#                        "value": f"setmygoal_{dataSourceID}"
-#                    },
-#                    {
-#                        "name": "setmybudget",
-#                        "text": "Set My Budget",
-#                        "type": "button",
-#                        "value": f"setmybudget_{dataSourceID}"
-#                    },
-#                    {
-#                        "name": "setmyalert",
-#                        "text": "Set My Alert",
-#                        "type": "button",
-#                        "value": f"setmyalert_{dataSourceID}"
-#                    },
-#                    {
-#                        "name": "analyticsAudit",
-#                        "text": "Analytics Audit",
-#                        "type": "button",
-#                        "value": f"analyticsAudit_{dataSourceID}"
-#                    },
-#                ]
-#            }]}
+    #    data = {
+    #        "channel": channelID,
+    #        "attachments": [{
+    #            # "title": "Blog Yazıları",
+    #            # "title_link": "https://blog.boostroas.com/tr/"
+    #        },
+    #            {
+    #                "text": "Welcome to Heybooster, I am your digital buddy to support " +
+    #                        "you to boost your website by analyzing your data with marketing perspective." +
+    #                        "You will get first insights tomorrow at 7 am",
+    #                "callback_id": "notification_form",
+    #                "color": "#3AA3E3",
+    #                "attachment_type": "default",
+    #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+    #                "actions": [
+    #                    {
+    #                        "name": "change",
+    #                        "text": "Reschedule",
+    #                        "type": "button",
+    #                        "value": f"change_{dataSourceID}"
+    #                    },
+    #                    {
+    #                        "name": "setmygoal",
+    #                        "text": "Set My Goal",
+    #                        "type": "button",
+    #                        "value": f"setmygoal_{dataSourceID}"
+    #                    },
+    #                    {
+    #                        "name": "setmybudget",
+    #                        "text": "Set My Budget",
+    #                        "type": "button",
+    #                        "value": f"setmybudget_{dataSourceID}"
+    #                    },
+    #                    {
+    #                        "name": "setmyalert",
+    #                        "text": "Set My Alert",
+    #                        "type": "button",
+    #                        "value": f"setmyalert_{dataSourceID}"
+    #                    },
+    #                    {
+    #                        "name": "analyticsAudit",
+    #                        "text": "Analytics Audit",
+    #                        "type": "button",
+    #                        "value": f"analyticsAudit_{dataSourceID}"
+    #                    },
+    #                ]
+    #            }]}
     data = {
         "channel": channelID,
         "attachments": [
