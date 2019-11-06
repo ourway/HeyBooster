@@ -585,6 +585,9 @@ def message_actions():
         if user:
             slack_token = user['sl_accesstoken']
             slack_client = WebClient(token=slack_token)
+            userdataSources = db.find("datasource", query={'sl_userid': sl_userid})
+            dataSources = [dataSource for dataSource in userdataSources]
+            datasourceIDs = [dataSource['_id'] for dataSource in dataSources]
         else:
             print("User is not registered to app")
             return make_response("", 200)
