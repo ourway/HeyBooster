@@ -224,8 +224,8 @@ def analyticsAudit(slack_token, task, dataSource):
                          "mrkdwn_in": [
                                         "text",
                                         "pretext"
-                                    ]}] + [{"blocks": [{"type": "divider"}]] + attachments
-    
+                                    ]}] + [{"blocks": [{"type": "divider"}]}] + attachments
+        
 #        length = len(attachments)
 #        for i in range(length-1):
 #            attachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
