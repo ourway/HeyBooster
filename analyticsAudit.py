@@ -198,9 +198,9 @@ def analyticsAudit(slack_token, task, dataSource):
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
     if (task['lastStates']['bounceRateTracking'] == ""):
-        text = "Hey! to trust your analytics data for further insights " + \
+        text = f"Hey! to trust your analytics data for further insights " + \
                 "we strongly recommend you to solve the issues below. " +  \
-                "Your analytics health score is calculated *{}* over 100.\n" +  \
+                "Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
                 "Do you wanna get to know when anything change on the audit results?"
         maincolor = "#2eb8a6"
     else:
@@ -214,7 +214,7 @@ def analyticsAudit(slack_token, task, dataSource):
         else:
             maincolor = None
     if len(attachments):
-        attachments = [{"text": text.format(totalScore),
+        attachments = [{"text": text,
                          "color": maincolor,
                          "pretext": "*Analytics Audit*",
                          "callback_id": "notification_form",
@@ -224,8 +224,7 @@ def analyticsAudit(slack_token, task, dataSource):
                          "mrkdwn_in": [
                                         "text",
                                         "pretext"
-                                    ]}] + [{"blocks": [{"type": "divider"}]
-                         }] + attachments
+                                    ]}]}] + [{"blocks": [{"type": "divider"}] + attachments
 #        length = len(attachments)
 #        for i in range(length-1):
 #            attachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
