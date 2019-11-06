@@ -209,10 +209,11 @@ def active_audit_test():
 
     for notification in user_notifications:
         print(notification)
-        if 'analyticsAudit' in notification:
+        if notification['type'] == 'analyticsAudit':
             analytics_alert_status = user_notifications[notification]['status']
             datasourceID = user_notifications[notification]['datasourceID']
             print('Bulundu!!!!!!!!')
+            print(datasourceID)
 
     if analytics_alert_status == 0:
         db.find_and_modify('notification', query={'datasourceID': datasourceID,
