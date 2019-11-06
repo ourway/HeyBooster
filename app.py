@@ -115,7 +115,7 @@ def home():
 
 @app.route('/home_draft', methods=['GET', 'POST'])
 @login_required
-def home():
+def home_draft():
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
