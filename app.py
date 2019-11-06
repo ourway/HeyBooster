@@ -211,15 +211,14 @@ def active_audit_test():
         if notification['type'] == 'analyticsAudit':
             analytics_alert_status = notification['status']
             datasourceID = notification['datasourceID']
+            print(ObjectId(datasourceID))
 
-    datasourceID = ObjectId(datasourceID)
-    print(datasourceID)
     if analytics_alert_status == 0:
-        db.find_and_modify('notification', query={'datasourceID': datasourceID,
+        db.find_and_modify('notification', query={'datasourceID': ObjectId(datasourceID),
                                                   'type': 'analyticsAudit'},
                            status='1')
     else:
-        db.find_and_modify('notification', query={'datasourceID': datasourceID,
+        db.find_and_modify('notification', query={'datasourceID': ObjectId(datasourceID),
                                                   'type': 'analyticsAudit'},
                            status='0')
     return redirect('test_analytics_audit')
