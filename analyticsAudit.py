@@ -198,9 +198,9 @@ def analyticsAudit(slack_token, task, dataSource):
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
     if not task:
-        text = f"Hey! to trust your analytics data for further insights " + \
+        text = "Hey! to trust your analytics data for further insights " + \
                 "we strongly recommend you to solve the issues below. " +  \
-                "Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
+                f"Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
                 "Do you wanna get to know when anything change on the audit results?"
         maincolor = "#2eb8a6"
     else:
