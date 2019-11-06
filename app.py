@@ -116,25 +116,23 @@ def home():
 def test_analytics_audit():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
-    data_sources = []
     audit = []
-    user_data_sources = db.find('datasource', query={'email': session['email']})
+    status = ''
+    # user_data_sources = db.find('datasource', query={'email': session['email']})
     # user_notifications = db.find('notification', query={'email': session['email']})
     user_analytics_audit = db.find('notification', query={"email": session['email'], "type": "analyticsAudit"})
     user = db.find_one('user', {'email': session['email']})
-
+    for analytics_audit in user_analytics_audit:
+        audit.append(analytics_audit)
+        print(audit)
+        print(type(audit))
+        if analytics_audit['status'] == '0':
+            status = 'passive'
+        else:
+            status = 'active'
     # for notification in user_notifications:
     #     if notification['type'] == 'analyticsAudit':
     #         analytics_alert_status = notification['status']
-
-    for analytics_audit in user_analytics_audit:
-        audit.append(analytics_audit)
-
-    for dataSource in user_data_sources:
-        data_sources.append(dataSource)
-
-    # propertyName = data_sources[0]['propertyName']
-    # viewName = data_sources[0]['viewName']
 
     try:
         if user['ga_accesstoken']:
@@ -148,9 +146,6 @@ def test_analytics_audit():
             current_analyticsemail = resp['email']
     except:
         current_analyticsemail = False
-
-    for dataSource in user_data_sources:
-        data_sources.append(dataSource)
 
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
@@ -202,7 +197,7 @@ def test_analytics_audit():
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
 
     return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
-                           audit=audit)
+                           status=status)
 
 
 @app.route('/active_audit_test')
