@@ -214,6 +214,8 @@ def active_audit_test():
     for notification in user_notifications:
         if notification['type'] == 'analyticsAudit':
             analytics_alert_status = notification['status']
+            print('status: ', analytics_alert_status)
+            print('status type', type(analytics_alert_status))
 
     if analytics_alert_status == False:
         db.find_and_modify('notification', query={'email': session['email'],
