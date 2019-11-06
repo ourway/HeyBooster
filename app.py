@@ -96,7 +96,6 @@ def home():
                 # Check if user has slack connection
                 if session['sl_accesstoken']:
                     slack_confirm = True
-                    print(session['sl_accesstoken'])
                 else:
                     slack_confirm = False
 
@@ -106,7 +105,7 @@ def home():
                 else:
                     analytics_confirm = False
                 # Fill the boxes for the value of slack_confirm and analytics_confirm
-                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+                return render_template('home_draft.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
         except:
             return redirect('/logout')
     else:
