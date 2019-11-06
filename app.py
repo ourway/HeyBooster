@@ -117,7 +117,20 @@ def home():
 def test_analytics_audit():
     data_sources = []
     user_data_sources = db.find('datasource', query={'email': session['email']})
+    user_notifications = db.find('notification', query={'email': session['email']})
     user = db.find_one('user', {'email': session['email']})
+
+    analytics_alert_status = user_notifications[0]['status']
+
+    for dataSource in user_data_sources:
+        data_sources.append(dataSource)
+    propertyName = data_sources[0]['propertyName']
+    viewName = data_sources[0]['viewName']
+
+    if analytics_alert_status == 0:
+        status = "passive"
+    else:
+        status = "active"
 
     try:
         if user['ga_accesstoken']:
@@ -183,28 +196,25 @@ def test_analytics_audit():
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
 
-    return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail)
+    return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
+                           status=status, propertyName=propertyName, viewName=viewName)
 
 
 @app.route('/active_audit_test')
 def active_audit_test():
-    data_sources = []
     user_notifications = db.find('notification', query={'email': session['email']})
-    user_data_sources = db.find('datasource', query={'email': session['email']})
-
     analytics_alert_status = user_notifications[0]['status']
-
-    for dataSource in user_data_sources:
-        data_sources.append(dataSource)
-    propertyName = data_sources[0]['propertyName']
-    viewName = data_sources[0]['viewName']
+    datasourceID = user_notifications[0]['datasourceID']
 
     if analytics_alert_status == 0:
-        status = "passive"
+        db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                  'type': 'analyticsAudit'},
+                           status='1')
     else:
-        status = "active"
-
-    return redirect('test_analytics_audit', status=status, propertyName=propertyName, viewName=viewName)
+        db.find_and_modify('notification', query={'datasourceID': datasourceID,
+                                                  'type': 'analyticsAudit'},
+                           status='0')
+    return redirect('test_analytics_audit')
 
 
 @app.route('/test_test')
