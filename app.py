@@ -203,6 +203,7 @@ def test_analytics_audit():
 
 @app.route('/active_audit_test')
 def active_audit_test():
+    analytics_alert_status = 0
     user_notifications = db.find('notification', query={'email': session['email']})
 
     for notification in user_notifications:
@@ -210,6 +211,7 @@ def active_audit_test():
         if 'analyticsAudit' in notification:
             analytics_alert_status = user_notifications[notification]['status']
             datasourceID = user_notifications[notification]['datasourceID']
+            print('Bulundu!!!!!!!!')
 
     if analytics_alert_status == 0:
         db.find_and_modify('notification', query={'datasourceID': datasourceID,
