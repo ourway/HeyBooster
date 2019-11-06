@@ -875,9 +875,17 @@ body {}
     display: block;
 }
 
+.center-left #connect-1:hover {
+    cursor: pointer;
+}
+
 .center-right #connect-1 {
     margin: auto;
     display: block;
+}
+
+.center-right #connect-1:hover {
+    cursor: pointer;
 }
 
 .center-right img.logoo {
