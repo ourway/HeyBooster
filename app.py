@@ -116,11 +116,14 @@ def home():
 @app.route('/test_analytics_audit', methods=['GET', 'POST'])
 def test_analytics_audit():
     data_sources = []
+    analytics_alert_status = 0
     user_data_sources = db.find('datasource', query={'email': session['email']})
     user_notifications = db.find('notification', query={'email': session['email']})
     user = db.find_one('user', {'email': session['email']})
 
-    analytics_alert_status = user_notifications[0]['status']
+    for notification in user_notifications:
+        if notification['type'] == 'analyticsAudit':
+            analytics_alert_status = notification['status']
 
     for dataSource in user_data_sources:
         data_sources.append(dataSource)
@@ -204,21 +207,22 @@ def test_analytics_audit():
 @app.route('/active_audit_test')
 def active_audit_test():
     analytics_alert_status = 0
-    datasourceID = 0
+    #datasourceID = 0
     user_notifications = db.find('notification', query={'email': session['email']})
 
     for notification in user_notifications:
         if notification['type'] == 'analyticsAudit':
             analytics_alert_status = notification['status']
-            datasourceID = notification['datasourceID']
+            #datasourceID = notification['datasourceID']
 
-    datasourceID = str(datasourceID)
+    #datasourceID = str(datasourceID)
+
     if analytics_alert_status == 0:
-        db.find_and_modify('notification', query={'datasourceID': ObjectId(datasourceID),
+        db.find_and_modify('notification', query={'email': session['email'],
                                                   'type': 'analyticsAudit'},
                            status='1')
     else:
-        db.find_and_modify('notification', query={'datasourceID': ObjectId(datasourceID),
+        db.find_and_modify('notification', query={'email': session['email'],
                                                   'type': 'analyticsAudit'},
                            status='0')
     return redirect('test_analytics_audit')

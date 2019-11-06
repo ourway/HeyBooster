@@ -64,7 +64,7 @@
                     <tbody>
                     <tr class="line-row">
                         {% if current_analyticsemail %}
-                            <td class="column3">{{ current_analyticsemail }} Audit is {{ status }} for {{ propertyName }} && {{ viewName }}</td>
+                            <td class="column3">{{ current_analyticsemail }} Audit is <strong>{{ status }}</strong> for {{ propertyName }} && {{ viewName }}</td>
                         {% else %}
                             <script> {{ message }}
                                 location.reload();
