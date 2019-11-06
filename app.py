@@ -105,17 +105,11 @@ def home():
                 else:
                     analytics_confirm = False
                 # Fill the boxes for the value of slack_confirm and analytics_confirm
-                return render_template('home_draft.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
         except:
             return redirect('/logout')
     else:
         return redirect('/login')
-
-
-@app.route('/home_draft', methods=['GET', 'POST'])
-@login_required
-def home_draft():
-    return render_template('home_draft.html')
 
 
 @app.route('/test_analytics_audit', methods=['GET', 'POST'])

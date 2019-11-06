@@ -527,14 +527,7 @@ body {}
 }
 
 /*-------------------------------  */
-.connect {
-    margin-top: 10px;
-    display: block;
-    margin: auto;
-    width: 70%;
-    float: center;
 
-}
 
 .col- {
     margin-top: 20px;
@@ -873,19 +866,23 @@ body {}
 .center-left #connect-1 {
     margin: auto;
     display: block;
+    transition: .4s opacity;
 }
 
 .center-left #connect-1:hover {
     cursor: pointer;
+    opacity: 0.8;
 }
 
-.center-right #connect-1 {
+.center-right #connect-2 {
     margin: auto;
     display: block;
 }
 
-.center-right #connect-1:hover {
+.center-right #connect-2:hover {
     cursor: pointer;
+    opacity: 0.8;
+    transition: .4s opacity;
 }
 
 .center-right img.logoo {
@@ -996,7 +993,7 @@ body {}
         margin-top: 5px;
     }
 
-    .center-right button#connect-1 {
+    .center-right button#connect-2 {
         margin-top: 5px;
         background-color: #0097a7;
     }

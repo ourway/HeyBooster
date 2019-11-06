@@ -1,236 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <title>Connect</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>heyBooster!</title>
-    <!-- base:css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
-    <!-- endinject -->
-    <!-- plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
-    <!-- endinject -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/connect_style.css') }}">
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
-
-    <!-- Google Tag Manager -->
-    <script>(function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start':
-                new Date().getTime(), event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');</script>
-    <!-- End Google Tag Manager -->
-
-
 </head>
 
 <body>
-<div class="container-scroller">
-    <!-- partial:../../partials/_horizontal-navbar.html -->
-    <div class="horizontal-menu">
-        <nav class="navbar top-navbar col-lg-12 col-12 p-0">
-            <div class="container">
-                <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-                    <a class="navbar-brand brand-logo" href="/"><img src="../static/images/heyBooster.png"
-                                                                     height="34px" alt="logo"/></a>
-                    <a class="navbar-brand brand-logo-mini" href="/"><img
-                            src="../static/images/heyBooster.png"
-                            alt="heyBooster!"/></a>
-
-
-                </div>
-                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-
-                    <ul class="navbar-nav navbar-nav-right">
-                        <ul class="navbar-nav ml-lg-3">
-                            <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
-                                <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#"
-                                   data-toggle="dropdown" id="pagesDropdown">
-                                    <span class="nav-profile-name">{{ session['email'] }}</span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
-                                     aria-labelledby="pagesDropdown">
-                                    <a class="dropdown-item" href="/logout">
-                                        <i class="mdi mdi-logout text-primary"></i>
-                                        Logout
-                                    </a>
-                                </div>
-                            </li>
-
-                        </ul>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-    </div>
-    <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div class="main-panel">
-            <div class="content-wrapper d-flex align-items-center auth px-0">
-                <div class="row w-100 mx-0">
-                    <div class="col-lg-4 mx-auto">
-                        <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-                            <div class="brand-logo">
-                                <img src="../../static/images/heyBooster.png" alt="logo">
-                            </div>
-                            <div class="mt-2 card-text" style="padding-top:10px">
-                                After completion of below steps, we will contact with you via Slack. Can’t wait!
-                            </div>
-
-
-                            <div class="card-body">
-
-                                <div class="list-wrapper">
-                                    <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-                                        <li>
-                                            <div class="form-check form-check-flat">
-                                                <label class="form-check-label">
-                                                    <input class="checkbox" type="checkbox"
-                                                           onclick="return false;"/>
-                                                    Add Data Source
-                                                    <i class="input-helper"></i></label>
-                                            </div>
-                                        </li>
-                                        {% if slack_confirm %}
-                                            <li class="completed">
-                                                <div class="form-check form-check-flat">
-                                                    <label class="form-check-label">
-                                                        <input class="checkbox" type="checkbox" checked="checked"
-                                                               onclick="return false;"/>
-                                                        Connect Your Slack
-                                                        <i class="input-helper"></i></label>
-                                                </div>
-                                            </li>
-                                        {% else %}
-                                            <li>
-                                                <div class="form-check form-check-flat">
-                                                    <label class="form-check-label">
-                                                        <input class="checkbox" type="checkbox"
-                                                               onclick="return false;"/>
-                                                        Connect Your Slack
-                                                        <i class="input-helper"></i></label>
-                                                </div>
-                                            </li>
-                                        {% endif %}
-
-                                        {% if analytics_confirm %}
-                                            <li class="completed">
-                                                <div class="form-check form-check-flat">
-                                                    <label class="form-check-label">
-                                                        <input class="checkbox" type="checkbox" checked="checked"
-                                                               onclick="return false;"/>
-                                                        Connect Your Analytics
-                                                        <i class="input-helper"></i></label>
-                                                </div>
-                                            </li>
-                                        {% else %}
-                                            <li>
-                                                <div class="form-check form-check-flat">
-                                                    <label class="form-check-label">
-                                                        <input class="checkbox" type="checkbox"
-                                                               onclick="return false;"/>
-                                                        Connect Your Analytics
-                                                        <i class="input-helper"></i></label>
-                                                </div>
-                                            </li>
-                                        {% endif %}
-
-                                        <li class="completed">
-                                            <div class="form-check form-check-flat">
-                                                <label class="form-check-label">
-                                                    <input class="checkbox" type="checkbox" checked="checked"
-                                                           onclick="return false;"/>
-                                                    Sign in with Google
-                                                    <i class="input-helper"></i></label>
-                                            </div>
-                                        </li>
-                                    </ul>
-
-                                    {% if session['logged_in'] or session['auth_token'] %}
-                                        {% if analytics_confirm and slack_confirm %}
-                                            <div class="mt-3">
-                                                <center><h4>Completed!!</h4></center>
-                                                <br>
-                                                <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                                                   href="/datasource">Add Data Source</a>
-                                            </div>
-                                        {% elif slack_confirm == False and analytics_confirm == False %}
-                                            <div class="mt-3">
-                                                <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                                                   href="/google/connect">Connect Your Analytics</a>
-                                            </div>
-                                        {% elif analytics_confirm and slack_confirm == False %}
-                                            <div class="mt-3">
-                                                <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                                                   href="/connect">Connect Your Slack</a>
-                                            </div>
-                                        {% elif slack_confirm and analytics_confirm == False %}
-                                            <div class="mt-3">
-                                                <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                                                   href="/google/connect">Connect Your Analytics</a>
-                                            </div>
-
-                                        {% endif %}
-
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                        </div>
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="left-div">
+                <div class="wrapper">
+                    <div class="arrow-steps clearfix">
+                        <div class="step"><span> Sign up</span></div>
+                        <div class="step current"><span>Connect Data Sources & Channels</span></div>
+                        <div class="step"><span>Get First Insight</span></div>
                     </div>
+                </div>
+
+                <div class="down-connect">
+                    {% if analytics_confirm %}
+                        <div class="data" style="opacity: 0.5">
+                            <div class="center-left">
+                                <img class="card-img-top" src="../static/img/ab3.png">
+                                <h1>Data Sources</h1>
+                                <img class="logoo" src="../static/img/google.png">
+                                <a href="/google/connect">
+                                    <button id="connect-1" class="btn text-white btn-sm"
+                                            style="background-color: #e48131">
+                                        Connect
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="data">
+                            <div class="center-left">
+                                <img class="card-img-top" src="../static/img/ab3.png">
+                                <h1>Data Sources</h1>
+                                <img class="logoo" src="../static/img/google.png">
+                                <a href="/google/connect">
+                                    <button id="connect-1" class="btn text-white btn-sm"
+                                            style="background-color: #e48131">
+                                        Connect
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if slack_confirm %}
+                        <div class="channel">
+                            <div class="center-right">
+                                <img class="card-img-top" src="../static/img/card-4.jpg">
+                                <h1>Communication Channel</h1>
+                                <img class="logoo" src="../static/img/slack.png">
+                                <a href="/connect">
+                                    <button id="connect-2" class="btn text-white btn-sm"
+                                            style="background-color: #0097a7">
+                                        Connect
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="channel" style="opacity: 0.5">
+                            <div class="center-right">
+                                <img class="card-img-top" src="../static/img/card-4.jpg">
+                                <h1>Communication Channel</h1>
+                                <img class="logoo" src="../static/img/slack.png">
+                                <a href="/connect">
+                                    <button id="connect-2" class="btn text-white btn-sm"
+                                            style="background-color: #0097a7">
+                                        Connect
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <!-- content-wrapper ends -->
     </div>
-    <!-- page-body-wrapper ends -->
 </div>
-<!-- container-scroller -->
-<!-- base:js -->
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/vendors/base/vendor.bundle.base.js') }}"></script>
 
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/off-canvas.js') }}"></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/hoverable-collapse.js') }}"></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/template.js') }}"></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/settings.js') }}"></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/todolist.js') }}"></script>
-<!-- endinject -->
-<!-- plugin js for this page -->
-<!-- End plugin js for this page -->
-<!-- Custom js for this page-->
-<!-- End custom js for this page-->
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
 </body>
-
 </html>
