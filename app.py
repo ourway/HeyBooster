@@ -188,6 +188,14 @@ def test_analytics_audit():
 
 @app.route('/active_audit_test')
 def active_audit_test():
+    #user = db.find_one('user', {'email': session['email']})
+
+    user_data_sources = db.find('notification', query={'email': session['email']})
+    print(user_data_sources)
+    print(type(user_data_sources))
+    print(user_data_sources[0])
+    print(user_data_sources[0]['status'])
+
     return redirect('test_analytics_audit')
 
 

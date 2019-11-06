@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Table V01</title>
+    <title>Analytics Audit</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
@@ -66,34 +66,24 @@
                     </thead>
                     <tbody>
                     <tr class="line-row">
-
-
-                        <td class="column3">Bounce Rating</td>
+                        {% if current_analyticsemail %}
+                            <td class="column3">{{ current_analyticsemail }} Audit is Active for FLO</td>
+                        {% else %}
+                            <script> {{ message }}
+                                location.reload();
+                            </script>
+                        {% endif %}
                         <td class="column4">
-                            <button class="btn btn-sm text-white change-alert"><i class="fa fa-check"></i> Activate
-                            </button>
+                            <a href="/active_audit_test">
+                                <button class="btn btn-sm text-white change-alert"><i class="fa fa-check"></i> Activate</button>
+                            </a>
                         </td>
-                        <td class="column5"><a>
-                            <button class="btn btn-sm text-white test-now">Test Now</button>
-                        </a></td>
-
-                    </tr>
-
-                    <tr class="line-row">
-
-
-                        <td class="column3">Bounce Rating</td>
-                        <td class="column4">
-                            <button class="btn btn-sm text-white change-alert"><i class="fa fa-check"></i> Activate
-                            </button>
+                        <td class="column5">
+                            <a href="/test_test">
+                                <button class="btn btn-sm text-white test-now">Test Now</button>
+                            </a>
                         </td>
-                        <td class="column5"><a>
-                            <button class="btn btn-sm text-white test-now">Test Now</button>
-                        </a></td>
-
                     </tr>
-
-
                     </tbody>
                 </table>
             </div>
@@ -141,7 +131,7 @@
                                         <div style="margin-top:20px">
                                         </div>
                                         <div style=" width: 200px;">
-                                            <button type="submit" class="btn add-data mb-2">Add Data Source
+                                            <button type="submit" class="btn add-data mb-2">Get Audit
                                             </button>
                                         </div>
                                 </form>
