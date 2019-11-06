@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/get_audit_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 
 <body>
@@ -32,37 +33,39 @@
                     <div class="data">
                         <div class="center-left">
                             <img class="card-img-top" src="../static/img/card-4.jpg">
-                            <form class="pt-3 form-div" method="POST" action="/datasourcesinfo">
+                            <div id="content" class="collapse dropdown-div">
+                                <form class="pt-3 form-div" method="POST" action="/datasourcesinfo">
 
-                                <div class="dropdown">
-                                    {{ nForm.csrf_token }}
+                                    <div class="dropdown">
+                                        {{ nForm.csrf_token }}
 
-                                    {{ nForm.account }}
+                                        {{ nForm.account }}
 
-                                    <p style="margin-top:5px">
-                                        Property</p>
+                                        <p style="margin-top:5px">
+                                            Property</p>
 
-                                    {{ nForm.property }}
+                                        {{ nForm.property }}
 
-                                    <p style="margin-top:5px">
-                                        View</p>
+                                        <p style="margin-top:5px">
+                                            View</p>
 
-                                    {{ nForm.view }}
+                                        {{ nForm.view }}
 
-                                    <h5><br><br><br>
-                                        Slack</h5>
-                                    <p>
-                                        Choose your channel</p>
+                                        <h5><br><br><br>
+                                            Slack</h5>
+                                        <p>
+                                            Choose your channel</p>
 
-                                    {{ nForm.channel }}
-                                    <div style="margin-top:20px">
+                                        {{ nForm.channel }}
+                                        <div style="margin-top:20px">
+                                        </div>
+                                        <div style=" width: 200px;">
+                                            <button type="submit" class="btn add-data mb-2">Get Audit
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div style=" width: 200px;">
-                                        <button type="submit" class="btn add-data mb-2">Get Audit
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
 
                     </div>
