@@ -581,20 +581,20 @@ def message_actions():
     # Open a slack client
     sl_userid = message_action['user']['id']
     channel = message_action['channel']['id']
-
-    user = db.find_one('user', {'sl_userid': sl_userid})
-    if user:
-        slack_token = user['sl_accesstoken']
-        email = user['email']
-        slack_client = WebClient(token=slack_token)
-        userdataSources = db.find("datasource", query={'sl_userid': sl_userid,
-                                                       'channelID': channel})
-        dataSources = [dataSource for dataSource in userdataSources]
-        datasourceIDs = [dataSource['_id'] for dataSource in dataSources]
-    else:
-        print("User is not registered to app")
-        dataSources = []
-        datasourceIDs = []
+    if message_action["type"] != "view_submission":
+        user = db.find_one('user', {'sl_userid': sl_userid})
+        if user:
+            slack_token = user['sl_accesstoken']
+            email = user['email']
+            slack_client = WebClient(token=slack_token)
+            userdataSources = db.find("datasource", query={'sl_userid': sl_userid,
+                                                           'channelID': channel})
+            dataSources = [dataSource for dataSource in userdataSources]
+            datasourceIDs = [dataSource['_id'] for dataSource in dataSources]
+        else:
+            print("User is not registered to app")
+            dataSources = []
+            datasourceIDs = []
     if message_action["type"] == "interactive_message":
         messagevalue = message_action['actions'][-1]['value']
         messagename = message_action['actions'][-1]['name']
@@ -1809,10 +1809,8 @@ def message_actions():
     elif message_action["type"] == "view_submission": 
         view = message_action['view']
         feedback = view['state']['values']['multi-line']['ml-value']['value']
-        try:
-            datasourceID = ObjectId(view['private_metadata'])
-        except:
-            datasourceID = datasourceIDs[0]
+        datasourceID = view['private_metadata'].split('_')[-1]
+        datasourceID = ObjectId(datasourceID)
         # Check if the datasource owner clicked the button
         if (datasourceID in datasourceIDs):
             dataSource = dataSources[datasourceIDs.index(datasourceID)]
