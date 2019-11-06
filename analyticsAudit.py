@@ -214,9 +214,16 @@ def analyticsAudit(slack_token, task, dataSource):
         else:
             maincolor = None
     if len(attachments):
+        blocks = [{
+        			"type": "section",
+        			"text": {
+        				"type": "mrkdwn",
+        				"text": "*Analytics Audit*"
+        			}
+        		}]
         attachments = [{"text": text,
                          "color": maincolor,
-                         "pretext": "*Analytics Audit*",
+#                         "pretext": "*Analytics Audit*",
                          "callback_id": "notification_form",
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
@@ -256,7 +263,8 @@ def analyticsAudit(slack_token, task, dataSource):
 #                		}],
 #                        "color": "#2eb8a6" }]  + attachments
         slack_client = WebClient(token=slack_token)
-        resp = slack_client.chat_postMessage(channel=channel,
+        resp = slack_client.chat_postMessage(blocks = blocks,
+                                             channel=channel,
                                              attachments=attachments)
         return resp['ts']
 
