@@ -1510,7 +1510,52 @@ def message_actions():
                                      text="",
                                      attachments=upd_attachments)
 
-
+        elif "giveFeedback" in messagename:
+            slack_client.views_open(trigger_id = message_action["trigger_id"],
+                                    view = {
+                                        	"type": "modal",
+                                        	"title": {
+                                        		"type": "plain_text",
+                                        		"text": "Send us your feedback",
+                                        		"emoji": True
+                                        	},
+                                        	"submit": {
+                                        		"type": "plain_text",
+                                        		"text": "Submit",
+                                        		"emoji": True
+                                        	},
+                                        	"close": {
+                                        		"type": "plain_text",
+                                        		"text": "Cancel",
+                                        		"emoji": True
+                                        	},
+                                            "private_metadata": str(datasourceID),
+                                            "callback_id": "notification_form",
+                                        	"blocks": [
+                                        		{
+                                        			"type": "section",
+                                        			"text": {
+                                        				"type": "plain_text",
+                                        				"text": "Tell us about your experience.",
+                                        				"emoji": True
+                                        			}
+                                        		},
+                                        		{
+                                        			"type": "input",
+                                                    "block_id": "multi-line",
+                                        			"element": {
+                                        				"type": "plain_text_input",
+                                        				"multiline": True,
+                                                        "action_id": "ml-value"
+                                        			},
+                                        			"label": {
+                                        				"type": "plain_text",
+                                        				"text": " ",
+                                        				"emoji": True
+                                        			}
+                                        		}
+                                        	]
+                                        })
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
@@ -1761,7 +1806,19 @@ def message_actions():
                 )
             db.find_and_modify("notification", query={'_id': module['_id']},
                                status='1')
-
+    elif message_action["type"] == "view_submission": 
+        view = message_action['view']
+        feedback = view['state']['values']['multi-line']['ml-value']['value']
+        try:
+            datasourceID = ObjectId(view['private_metadata'])
+        except:
+            datasourceID = datasourceIDs[0]
+        # Check if the datasource owner clicked the button
+        if (datasourceID in datasourceIDs):
+            dataSource = dataSources[datasourceIDs.index(datasourceID)]
+        else:
+            return make_response("", 200)
+        db.insert_one("feedback", data = { "feedback": feedback, "datasourceID": datasourceID})
     return make_response("", 200)
 
 
@@ -1883,50 +1940,70 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     })
     # When the slack connection is completed send notification user to set time
     headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
+#    data = {
+#        "channel": channelID,
+#        "attachments": [{
+#            # "title": "Blog Yazıları",
+#            # "title_link": "https://blog.boostroas.com/tr/"
+#        },
+#            {
+#                "text": "Welcome to Heybooster, I am your digital buddy to support " +
+#                        "you to boost your website by analyzing your data with marketing perspective." +
+#                        "You will get first insights tomorrow at 7 am",
+#                "callback_id": "notification_form",
+#                "color": "#3AA3E3",
+#                "attachment_type": "default",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "actions": [
+#                    {
+#                        "name": "change",
+#                        "text": "Reschedule",
+#                        "type": "button",
+#                        "value": f"change_{dataSourceID}"
+#                    },
+#                    {
+#                        "name": "setmygoal",
+#                        "text": "Set My Goal",
+#                        "type": "button",
+#                        "value": f"setmygoal_{dataSourceID}"
+#                    },
+#                    {
+#                        "name": "setmybudget",
+#                        "text": "Set My Budget",
+#                        "type": "button",
+#                        "value": f"setmybudget_{dataSourceID}"
+#                    },
+#                    {
+#                        "name": "setmyalert",
+#                        "text": "Set My Alert",
+#                        "type": "button",
+#                        "value": f"setmyalert_{dataSourceID}"
+#                    },
+#                    {
+#                        "name": "analyticsAudit",
+#                        "text": "Analytics Audit",
+#                        "type": "button",
+#                        "value": f"analyticsAudit_{dataSourceID}"
+#                    },
+#                ]
+#            }]}
     data = {
         "channel": channelID,
-        "attachments": [{
-            # "title": "Blog Yazıları",
-            # "title_link": "https://blog.boostroas.com/tr/"
-        },
+        "attachments": [
             {
                 "text": "Welcome to Heybooster, I am your digital buddy to support " +
                         "you to boost your website by analyzing your data with marketing perspective." +
                         "You will get first insights tomorrow at 7 am",
                 "callback_id": "notification_form",
-                "color": "#3AA3E3",
+                "color": "#2eb8a6",
                 "attachment_type": "default",
                 "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "actions": [
                     {
-                        "name": "change",
-                        "text": "Reschedule",
+                        "name": "giveFeedback",
+                        "text": "Give Feedback",
                         "type": "button",
-                        "value": f"change_{dataSourceID}"
-                    },
-                    {
-                        "name": "setmygoal",
-                        "text": "Set My Goal",
-                        "type": "button",
-                        "value": f"setmygoal_{dataSourceID}"
-                    },
-                    {
-                        "name": "setmybudget",
-                        "text": "Set My Budget",
-                        "type": "button",
-                        "value": f"setmybudget_{dataSourceID}"
-                    },
-                    {
-                        "name": "setmyalert",
-                        "text": "Set My Alert",
-                        "type": "button",
-                        "value": f"setmyalert_{dataSourceID}"
-                    },
-                    {
-                        "name": "analyticsAudit",
-                        "text": "Analytics Audit",
-                        "type": "button",
-                        "value": f"analyticsAudit_{dataSourceID}"
+                        "value": f"giveFeedback_{dataSourceID}"
                     },
                 ]
             }]}
