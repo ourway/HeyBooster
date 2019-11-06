@@ -188,15 +188,23 @@ def test_analytics_audit():
 
 @app.route('/active_audit_test')
 def active_audit_test():
-    #user = db.find_one('user', {'email': session['email']})
+    data_sources = []
+    user_notifications = db.find('notification', query={'email': session['email']})
+    user_data_sources = db.find('datasource', query={'email': session['email']})
 
-    user_data_sources = db.find('notification', query={'email': session['email']})
-    print(user_data_sources)
-    print(type(user_data_sources))
-    print(user_data_sources[0])
-    print(user_data_sources[0]['status'])
+    analytics_alert_status = user_notifications[0]['status']
 
-    return redirect('test_analytics_audit')
+    for dataSource in user_data_sources:
+        data_sources.append(dataSource)
+    propertyName = data_sources[0]['propertyName']
+    viewName = data_sources[0]['viewName']
+
+    if analytics_alert_status == 0:
+        status = "passive"
+    else:
+        status = "active"
+
+    return redirect('test_analytics_audit', status=status, propertyName=propertyName, viewName=viewName)
 
 
 @app.route('/test_test')
