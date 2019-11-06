@@ -578,10 +578,18 @@ def gatest(email):
 def message_actions():
     # Parse the request payload
     message_action = json.loads(request.form["payload"])
-    # Open a slack client
     sl_userid = message_action['user']['id']
-    channel = message_action['channel']['id']
-    if message_action["type"] != "view_submission":
+    # Open a slack client
+    if message_action["type"] == "view_submission":
+        user = db.find_one('user', {'sl_userid': sl_userid})
+        if user:
+            slack_token = user['sl_accesstoken']
+            slack_client = WebClient(token=slack_token)
+        else:
+            print("User is not registered to app")
+            return make_response("", 200)
+    else:
+        channel = message_action['channel']['id']
         user = db.find_one('user', {'sl_userid': sl_userid})
         if user:
             slack_token = user['sl_accesstoken']
