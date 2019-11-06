@@ -204,6 +204,7 @@ def test_analytics_audit():
 @app.route('/active_audit_test')
 def active_audit_test():
     analytics_alert_status = 0
+    datasourceID = 0
     user_notifications = db.find('notification', query={'email': session['email']})
 
     for notification in user_notifications:
