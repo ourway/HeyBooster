@@ -118,21 +118,15 @@ def test_analytics_audit():
         return redirect('/')
     audit = []
     status = ''
-    # user_data_sources = db.find('datasource', query={'email': session['email']})
-    # user_notifications = db.find('notification', query={'email': session['email']})
     user_analytics_audit = db.find('notification', query={"email": session['email'], "type": "analyticsAudit"})
     user = db.find_one('user', {'email': session['email']})
     for analytics_audit in user_analytics_audit:
         audit.append(analytics_audit)
-        print(audit)
-        print(type(audit))
+
         if analytics_audit['status'] == '0':
             status = 'passive'
         else:
             status = 'active'
-    # for notification in user_notifications:
-    #     if notification['type'] == 'analyticsAudit':
-    #         analytics_alert_status = notification['status']
 
     try:
         if user['ga_accesstoken']:
@@ -378,6 +372,77 @@ def get_channels():
     except:
         pass
     return channels
+
+
+@app.route("/get_audit", methods=['GET', 'POST'])
+@login_required
+def get_audit():
+    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+        return redirect('/')
+
+    user = db.find_one('user', {'email': session['email']})
+
+    try:
+        if user['ga_accesstoken']:
+            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+            if 'error' in resp.keys():
+                data = [('client_id', CLIENT_ID.strip()),
+                        ('client_secret', CLIENT_SECRET.strip()),
+                        ('refresh_token', user['ga_refreshtoken']),
+                        ('grant_type', 'refresh_token')]
+                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+            current_analyticsemail = resp['email']
+    except:
+        current_analyticsemail = ""
+
+    nForm = DataSourceForm(request.form)
+    datasources = db.find('datasource', query={'email': session['email']})
+    unsortedargs = []
+    for datasource in datasources:
+        unsortedargs.append(datasource)
+    if request.method == 'POST':
+        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
+        ts = time.time()
+
+        data = {
+            'email': session['email'],
+            'sl_userid': uID,
+            'sourceType': "Google Analytics",
+            'accountID': nForm.account.data.split('\u0007')[0],
+            'accountName': nForm.account.data.split('\u0007')[1],
+            'propertyID': nForm.property.data.split('\u0007')[0],
+            'propertyName': nForm.property.data.split('\u0007')[1],
+            'viewID': nForm.view.data.split('\u0007')[0],
+            'currency': nForm.view.data.split('\u0007')[1],
+            'viewName': nForm.view.data.split('\u0007')[2],
+            'channelType': "Slack",
+            'channelID': nForm.channel.data.split('\u0007')[0],
+            'channelName': nForm.channel.data.split('\u0007')[1],
+            'createdTS': ts
+        }
+        _id = db.insert_one("datasource", data=data).inserted_id
+        data['_id'] = _id
+        unsortedargs.append(data)
+        insertdefaultnotifications(session['email'], userID=uID,
+                                   dataSourceID=_id,
+                                   channelID=nForm.channel.data.split('\u0007')[0])
+    useraccounts = google_analytics.get_accounts(session['email'])['accounts']
+    if useraccounts:
+        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
+                                  useraccounts]
+    else:
+        nForm.account.choices = [('', 'User does not have Google Analytics Account')]
+        nForm.property.choices = [('', 'User does not have Google Analytics Account')]
+        nForm.view.choices = [('', 'User does not have Google Analytics Account')]
+    try:
+        channels = get_channels()
+        nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
+                                  in channels]
+    except:
+        nForm.channel.choices = [('', 'User does not have Slack Connection')]
+
+    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    return render_template('get_audit.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
 
 
 @app.route("/datasources", methods=['GET', 'POST'])
