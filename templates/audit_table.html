@@ -62,24 +62,29 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="line-row">
-                        {% if args %}
-                            {% for arg in args %}
+                    {% if args %}
+                        {% for arg in args %}
+                            <tr class="line-row">
                                 {% if current_analyticsemail %}
-                                    <td class="column3">{{ current_analyticsemail }} Audit is <strong>{{ audit.status }}</strong> for {{ arg.propertyName }} && {{ arg.viewName }}</td>
+                                    <td class="column3">{{ current_analyticsemail }} Audit is
+                                        <strong>{{ audit['status'] }}</strong> for {{ arg.propertyName }}
+                                        && {{ arg.viewName }}</td>
                                 {% else %}
                                     <script> {{ message }}
-                                        location.reload();
+                                    location.reload();
                                     </script>
                                 {% endif %}
                                 <td class="column4">
                                     {% if audit.status == '1' %}
                                         <a href="/active_audit_test">
-                                            <button class="btn btn-sm text-white change-alert"><i class="fa fa-check"></i> Activate</button>
+                                            <button class="btn btn-sm text-white change-alert"><i
+                                                    class="fa fa-check"></i> Activate
+                                            </button>
                                         </a>
                                     {% else %}
                                         <a href="/active_audit_test">
-                                            <button class="btn btn-sm text-white change-alert"><i class="fa"></i> Ignore</button>
+                                            <button class="btn btn-sm text-white change-alert"><i class="fa"></i> Ignore
+                                            </button>
                                         </a>
                                     {% endif %}
                                 </td>
@@ -88,9 +93,10 @@
                                         <button class="btn btn-sm text-white test-now">Test Now</button>
                                     </a>
                                 </td>
-                            {% endfor %}
-                        {% endif %}
-                    </tr>
+
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                     </tbody>
                 </table>
             </div>
