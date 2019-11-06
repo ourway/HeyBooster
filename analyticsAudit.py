@@ -197,7 +197,7 @@ def analyticsAudit(slack_token, task, dataSource):
     #    attachments += enhancedECommerceActivity(slack_token, dataSource)
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
-    if (task):
+    if not task:
         text = f"Hey! to trust your analytics data for further insights " + \
                 "we strongly recommend you to solve the issues below. " +  \
                 "Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
