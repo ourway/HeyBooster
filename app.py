@@ -124,6 +124,7 @@ def test_analytics_audit():
 
     for dataSource in user_data_sources:
         data_sources.append(dataSource)
+
     propertyName = data_sources[0]['propertyName']
     viewName = data_sources[0]['viewName']
 
@@ -203,8 +204,12 @@ def test_analytics_audit():
 @app.route('/active_audit_test')
 def active_audit_test():
     user_notifications = db.find('notification', query={'email': session['email']})
-    analytics_alert_status = user_notifications[0]['status']
-    datasourceID = user_notifications[0]['datasourceID']
+
+    for notification in user_notifications:
+        print(notification)
+        if 'analyticsAudit' in notification:
+            analytics_alert_status = user_notifications[notification]['status']
+            datasourceID = user_notifications[notification]['datasourceID']
 
     if analytics_alert_status == 0:
         db.find_and_modify('notification', query={'datasourceID': datasourceID,
