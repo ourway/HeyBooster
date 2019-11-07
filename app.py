@@ -615,7 +615,7 @@ def datasourcesinfo():
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
 
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('get_audit.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
+    return render_template('datasourcesinfo.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
 
 
 @app.route("/gatest/<email>")
