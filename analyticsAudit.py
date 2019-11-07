@@ -37,6 +37,8 @@ def analyticsAudit(slack_token, task, dataSource):
     					}
     		}
         ]
+    else:
+        actions = []
 #    actions = {
 #    			"type": "actions",
 #                "block_id": "notification_form",
