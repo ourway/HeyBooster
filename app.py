@@ -1987,7 +1987,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID,
-        'lastStates': [{"bounceRateTracking": "",
+        'lastStates': {"bounceRateTracking": "",
                         "notSetLandingPage": "",
                         "adwordsAccountConnection": "",
                         "sessionClickDiscrepancy": "",
@@ -2014,7 +2014,8 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
                         "contentGrouping": "",
                         "userPermission": "",
                         "othersInChannelGrouping": "",
-                        }]
+                        },
+        "totalScore": 0
     })
     # When the slack connection is completed send notification user to set time
     headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
