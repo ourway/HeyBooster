@@ -105,7 +105,7 @@ location.reload();
                                         <div class="dropdown">
                                             {{ nForm.csrf_token }}
 
-                                            {{ nForm.account(class='dropdown-class') }}
+                                            {{ nForm.account(**{'class': 'dropdown-class'}) }}
 
                                             <p style="margin-top:5px">
                                                 Property</p>
