@@ -549,9 +549,6 @@ def datasourcesinfo():
     user = db.find_one('user', {'email': session['email']})
     user_data_sources = db.find('datasource', query={'email': session['email']})
 
-    for dataSource in user_data_sources:
-        data_sources.append(dataSource)
-
     slack_token = user['sl_accesstoken']
 
     try:
@@ -565,20 +562,17 @@ def datasourcesinfo():
                 resp = requests.post(ACCESS_TOKEN_URI, data).json()
             current_analyticsemail = resp['email']
     except:
-        current_analyticsemail = False
+        current_analyticsemail = ""
 
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
-    #    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
-    #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        #        data = [('token', session['sl_accesstoken'])]
-        #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
         uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
+
         data = {
             'email': session['email'],
             'sl_userid': uID,
@@ -601,15 +595,12 @@ def datasourcesinfo():
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
+        for dataSource in user_data_sources:
+            data_sources.append(dataSource)
         analyticsAudit(slack_token, task=None, dataSource=dataSource)
-        flash("Check out your connected slack channel, heybooster even wrote you.")
 
-    #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
-    #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
-    #    else:
-    #        user_info = google_auth.get_user_info()
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-    if (useraccounts):
+    if useraccounts:
         nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
                                   useraccounts]
     else:
@@ -622,11 +613,9 @@ def datasourcesinfo():
                                   in channels]
     except:
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
-    # incoming_webhook = slack.token['incoming_webhook']
-    #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
+
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasourcesinfo.html', nForm=nForm, args=args,
-                           current_analyticsemail=current_analyticsemail)
+    return render_template('get_audit.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
 
 
 @app.route("/gatest/<email>")
