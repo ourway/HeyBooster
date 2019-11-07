@@ -67,6 +67,9 @@ li {
     list-style-type: none;
 }
 
+.dropdown-class {
+    background-color: darkred;
+}
 
 /* ------------------------------------ */
 input {

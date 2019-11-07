@@ -39,6 +39,10 @@
 
 <body>
 
+<script> {{ message }}
+location.reload();
+</script>
+
 {% if status %}
     <div class="limiter">
         <div class="container-table100">
@@ -55,7 +59,7 @@
                                             && {{ arg.viewName }}</td>
                                     {% else %}
                                         <script> {{ message }}
-                                            location.reload();
+                                        location.reload();
                                         </script>
                                     {% endif %}
                                     <td class="column4">
@@ -101,7 +105,7 @@
                                         <div class="dropdown">
                                             {{ nForm.csrf_token }}
 
-                                            {{ nForm.account }}
+                                            {{ nForm.account(extra_classes='dropdown-class') }}
 
                                             <p style="margin-top:5px">
                                                 Property</p>
@@ -138,7 +142,7 @@
     </div>
 {% else %}
     <script> {{ message }}
-        location.reload();
+    location.reload();
     </script>
 {% endif %}
 <script>
