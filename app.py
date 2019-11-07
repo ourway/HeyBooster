@@ -230,10 +230,6 @@ def test_test():
     channel = data_sources[0]['channelID']
 
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    print(analyticsAudit())
-
-    slack_client = WebClient(token=slack_token)
-    slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
     return redirect('test_analytics_audit')
 
 
