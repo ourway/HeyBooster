@@ -218,7 +218,7 @@ def active_audit_test():
 
 
 @app.route('/test_test')
-def test_test():
+def test_test()
     data_sources = []
     user = db.find_one('user', {'email': session['email']})
     user_data_sources = db.find('datasource', query={'email': session['email']})
@@ -228,6 +228,9 @@ def test_test():
 
     slack_token = user['sl_accesstoken']
     channel = data_sources[0]['channelID']
+
+    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+    print(analyticsAudit())
 
     slack_client = WebClient(token=slack_token)
     slack_client.chat_postMessage(channel=channel, text="Hey buddy! Test Message :)")
