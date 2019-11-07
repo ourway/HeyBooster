@@ -227,7 +227,6 @@ def test_test():
         data_sources.append(dataSource)
 
     slack_token = user['sl_accesstoken']
-    channel = data_sources[0]['channelID']
 
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
     return redirect('test_analytics_audit')
