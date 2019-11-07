@@ -154,9 +154,9 @@ def analyticsAudit(slack_token, task, dataSource):
                 currentStates[function.__name__] = currentState
                 if currentState != "danger":
                     totalScore += scores[function.__name__]
-                    attachment[0]['text'] = f":heavy_check_mark: *+{scores[function.__name__]}* |" + attachment[0]['text']
+                    attachment[0]['text'] = f":heavy_check_mark: *+{scores[function.__name__]}* | " + attachment[0]['text']
                 else:
-                    attachment[0]['text'] = f":x: *+{scores[function.__name__]}* |" + attachment[0]['text']
+                    attachment[0]['text'] = f":x: *-{scores[function.__name__]}* | " + attachment[0]['text']
                 if task:
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
