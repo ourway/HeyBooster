@@ -919,33 +919,30 @@ body {
 }
 
 
-@media (max-width: 842px) {
+@media (max-width: 600px) {
     .down-connect {
-        height: 470px;
+        height: 500px;
         margin-top: -30px;
     }
 
     .data {
         width: 100%;
-        height: 200px;
+        height: 220px;
         margin-left: 10px;
         margin-right: 10px;
-        margin-bottom: 5px;
-        margin-top: -30px;
-
-
+        margin-bottom: -85px;
+        margin-top: -40px;
     }
 
     .down-connect img.card-img-top {
-        height: 80px;
+        height: 70px;
         background-size: cover;
         object-fit: cover;
-
     }
 
     .center-left {
         margin-top: 20px;
-        height: 200px;
+        height: 210px;
         background-color: #fff;
         margin-bottom: 10px;
     }
@@ -973,14 +970,14 @@ body {
 
     .center-right {
         margin-top: 20px;
-        height: 200px;
+        height: 220px;
     }
 
     .center-left #connect-1 {
         margin-top: 5px;
     }
 
-    .center-right button#connect-2 {
+    .center-right #connect-2 {
         margin-top: 5px;
         background-color: #0097a7;
     }

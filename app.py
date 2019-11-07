@@ -212,9 +212,9 @@ def active_audit_test():
                                                   'type': 'analyticsAudit'},
                            status='0')
     else:
-        return redirect('datasources')
+        return redirect('datasourcesinfo')
 
-    return redirect('datasources')
+    return redirect('datasourcesinfo')
 
 
 @app.route('/test_test')
@@ -229,7 +229,7 @@ def test_test():
     slack_token = user['sl_accesstoken']
 
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    return redirect('datasources')
+    return redirect('datasourcesinfo')
 
 
 @app.route('/change', methods=['POST'])
