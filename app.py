@@ -449,7 +449,14 @@ def datasources():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
 
+    data_sources = []
     user = db.find_one('user', {'email': session['email']})
+    user_data_sources = db.find('datasource', query={'email': session['email']})
+
+    for dataSource in user_data_sources:
+        data_sources.append(dataSource)
+
+    slack_token = user['sl_accesstoken']
 
     try:
         if user['ga_accesstoken']:
@@ -499,6 +506,8 @@ def datasources():
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
+
+        analyticsAudit(slack_token, task=None, dataSource=dataSource)
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     #    else:
@@ -538,7 +547,14 @@ def datasourcesinfo():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
 
+    data_sources = []
     user = db.find_one('user', {'email': session['email']})
+    user_data_sources = db.find('datasource', query={'email': session['email']})
+
+    for dataSource in user_data_sources:
+        data_sources.append(dataSource)
+
+    slack_token = user['sl_accesstoken']
 
     try:
         if user['ga_accesstoken']:
@@ -587,6 +603,7 @@ def datasourcesinfo():
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
+        analyticsAudit(slack_token, task=None, dataSource=dataSource)
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)

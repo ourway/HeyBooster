@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>heyBooster!</title>
-    <!-- base:css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendors/base/vendor.bundle.base.css') }}">
-    <!-- endinject -->
-    <!-- plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/horizontal-layout-light/style.css') }}">
-    <!-- endinject -->
+    <title>Analytics Audit</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animate/animate.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
@@ -30,301 +35,145 @@
             'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
         f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');</script>
-    <!-- End Google Tag Manager -->
 </head>
 
 <body>
-<div class="container-scroller">
-    <!-- partial:../../partials/_horizontal-navbar.html -->
-    <div class="horizontal-menu">
-        <nav class="navbar top-navbar col-lg-12 col-12 p-0">
-            <div class="container">
-                <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-                    <a class="navbar-brand brand-logo" href="/"><img src="../static/images/heyBooster.png"
-                                                                     height="34px" alt="logo"/></a>
-                    <a class="navbar-brand brand-logo-mini" href="/"><img
-                            src="../static/images/heyBooster.png"
-                            alt="heyBooster!"/></a>
 
-
-                </div>
-                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-
-                    <ul class="navbar-nav navbar-nav-right">
-                        <ul class="navbar-nav ml-lg-3">
-                            <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
-                                <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#"
-                                   data-toggle="dropdown" id="pagesDropdown">
-                                    <span class="nav-profile-name">{{ session['email'] }}</span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
-                                     aria-labelledby="pagesDropdown">
-                                    <a class="dropdown-item" href="/logout">
-                                        <i class="mdi mdi-logout text-primary"></i>
-                                        Logout
-                                    </a>
-                                </div>
-                            </li>
-
-                        </ul>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-    </div>
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-
-
-        <div class="main-panel">
-
-
-            <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title" style="margin:auto; width:200px">Connected Data Sources</h4>
-                        <br>
-                        {% with messages = get_flashed_messages() %}
-                            {% if messages %}
-                                <ul class=flashes>
-                                    {% for message in messages %}
-                                        <li class="completed">
-                                            <div class="form-check form-check-flat">
-                                                <label class="form-check-label">
-                                                    <input class="checkbox" type="checkbox" checked="checked"
-                                                           onclick="return false;"/>
-                                                    {{ message }}
-                                                    <i class="input-helper"></i></label>
-                                            </div>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        {% endwith %}
-                        <br> {{ message }}
-                        <h5>Your Analytics Account:</h5>
-                        {% if current_analyticsemail %}
-                            {{ current_analyticsemail }} <span style="color: blue; cursor: pointer; font-size: 10px;" onclick="myFunction()">(Wrong Account?)</span>
-                        {% else %}
-                            <script> {{ message }}
-                                location.reload();
-                            </script>
-                        {% endif %}
-
-{#                        <button class="btn btn-primary mb-2" onclick="myFunction()">Wrong Account?</button>#}
-
-                        <script>
-                            function myFunction() {
-                                var r = confirm("If you change the analytics account, your recent data sources will be deleted. Are you sure to continue?");
-                                if (r == true) {
-                                    window.location.href = 'https://app.heybooster.ai/google/connect';
-                                } else {
-
-                                }
-                            }
-                        </script>
-                        <br>
-
-                        <div class="table-responsive" style="padding-top:20px">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Connection Name</th>
-                                    <th>Account</th>
-                                    <th>Status</th>
-                                    <th>Remove</th>
-                                </tr>
-                                </thead>
-                                {% if args %}
-                                    {% for arg in args %}
-                                        <tbody>
-                                        <tr>
-                                            <td>{{ arg.viewName }} && {{ arg.channelName }}</td>
-                                            <td>{{ arg.accountName }}</td> {{ message }}
-                                            <td><label class="badge badge-success">Connected</label></td>
-                                            <td><a type="submit" class="btn btn-outline-danger btn-fw"
-                                                   href="/removedatasources/{{ arg._id }}">x</a></td>
-                                        </tr>
-                                        </tbody>
-                                    {% endfor %}
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+                <table class="table-border">
+                    <tbody>
+                    {% if args %}
+                        {% for arg in args %}
+                            <tr class="line-row">
+                                {% if current_analyticsemail %}
+                                    <td class="column3">{{ current_analyticsemail }} Audit is
+                                        <strong>{{ status }}</strong> for {{ arg.propertyName }}
+                                        && {{ arg.viewName }}</td>
+                                {% else %}
+                                    <script> {{ message }}
+                                    location.reload();
+                                    </script>
                                 {% endif %}
-                            </table>
-                        </div>
+                                <td class="column4">
+                                    {% if status == 'passive' %}
+                                        <a href="/active_audit_test">
+                                            <button class="btn btn-sm text-white change-alert"><i
+                                                    class="fa fa-check"></i> Activate
+                                            </button>
+                                        </a>
+                                    {% else %}
+                                        <a href="/active_audit_test">
+                                            <button class="btn btn-sm text-white change-alert"><i class="fa"></i> Ignore
+                                            </button>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td class="column5">
+                                    <a href="/test_test">
+                                        <button class="btn btn-sm text-white test-now">Test Now</button>
+                                    </a>
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
 
 
-                        <div class="mt-4">
-                            <div class="accordion" id="accordion" role="tablist">
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="heading-2">
-                                        <h6 class="mb-0">
-                                            <a class="collapsed" data-toggle="collapse" href="#collapse-2"
-                                               aria-expanded="false" aria-controls="collapse-2">
-                                                Add Data Source
-                                            </a>
-                                        </h6>
-                                    </div>
-                                    <div id="collapse-2" class="collapse" role="tabpanel" aria-labelledby="heading-2"
-                                         data-parent="#accordion" style="">
-                                        <div class="card-body">
-                                            <form class="pt-3" method="POST" action="/datasourcesinfo">
-                                                {{ nForm.csrf_token }}
-
-                                                {{ nForm.account }}
-
-                                                <p style="margin-top:5px">
-                                                    Property</p>
-
-                                                {{ nForm.property }}
-
-                                                <p style="margin-top:5px">
-                                                    View</p>
-
-                                                {{ nForm.view }}
-
-                                                <h5><br><br><br>
-                                                    Slack</h5>
-                                                <p>
-                                                    Choose your channel</p>
-
-                                                {{ nForm.channel }}
-
-                                                <div style="margin-top:20px">
-                                                </div>
-                                                <div style=" width: 200px;">
-                                                    <button type="submit" class="btn btn-primary mb-2">Add Data Source
-                                                    </button>
-
-                                                </div>
-                                            </form>
-                                            {#                                            <h5><br>
-                                                Google Analytics</h5>
-                                            <p>
-                                                Choose your account</p>
-
-                                            <form class="pt-3">
-                                                <select class="js-example-basic-single w-100 select2-hidden-accessible"
-                                                        data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                                    <option value="AL" data-select2-id="3">-- Select an option --
-                                                    </option>
-                                                    <option value="WY">Zappos</option>
-                                                    <option value="WY">FLO</option>
-                                                    <option value="WY">Migros</option>
-                                                </select>
-                                            </form>
+            <div class="table100">
+                <table class="table-border2">
+                    <thead class="head head-line">
+                    <tr class="table100-head">
 
 
-                                            <p style="margin-top:5px">
-                                                Property</p>
+                        <th class="column3" id="boots-div">
+
+                            <button type="button" class="btn btn-md view-more mt-3 mb-3" data-toggle="collapse"
+                                    data-target="#content">
+                                Add More
+                            </button>
 
 
-                                            <form class="pt-3">
-                                                <select class="js-example-basic-single w-100 select2-hidden-accessible"
-                                                        data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                                    <option value="AL" data-select2-id="3">-- Select an option --
-                                                    </option>
-                                                    <option value="WY">Zappos</option>
-                                                    <option value="WY">FLO</option>
-                                                    <option value="WY">Migros</option>
-                                                </select>
-                                            </form>
+                            <div id="content" class="collapse dropdown-div">
 
+                                <form class="pt-3 form-div" method="POST" action="/datasourcesinfo">
 
-                                            <p style="margin-top:5px">
-                                                View</p>
+                                    <div class="dropdown">
+                                        {{ nForm.csrf_token }}
 
+                                        {{ nForm.account }}
 
-                                            <form class="pt-3">
-                                                <select class="js-example-basic-single w-100 select2-hidden-accessible"
-                                                        data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                                    <option value="AL" data-select2-id="3">-- Select an option --
-                                                    </option>
-                                                    <option value="WY">Zappos</option>
-                                                    <option value="WY">FLO</option>
-                                                    <option value="WY">Migros</option>
-                                                </select>
-                                            </form>
+                                        <p style="margin-top:5px">
+                                            Property</p>
 
+                                        {{ nForm.property }}
 
-                                            <h5><br><br><br>
-                                                Slack</h5>
-                                            <p>
-                                                Choose your channel</p>
+                                        <p style="margin-top:5px">
+                                            View</p>
 
+                                        {{ nForm.view }}
 
-                                            <form class="pt-3">
-                                                <select class="js-example-basic-single w-100 select2-hidden-accessible"
-                                                        data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                                    <option value="AL" data-select2-id="3">-- Select an option --
-                                                    </option>
-                                                    <option value="WY">Zappos</option>
-                                                    <option value="WY">FLO</option>
-                                                    <option value="WY">Migros</option>
-                                                </select>
-                                            </form>
+                                        <h5><br><br><br>
+                                            Slack</h5>
+                                        <p>
+                                            Choose your channel</p>
 
-
-                                            <div style="margin-top:20px">
-                                            </div>
-
-                                            <div style=" width: 200px;">
-                                                <form method="POST" action="/datasourcesinfo">
-                                                    <button type="submit" class="btn btn-primary mb-2">Add Data Source
-                                                    </button>
-                                                </form>
-                                            </div>#}
+                                        {{ nForm.channel }}
+                                        <div style="margin-top:20px">
+                                        </div>
+                                        <div style=" width: 200px;">
+                                            <button type="submit" class="btn add-data mb-2">Get Audit
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </form>
 
-                        </div>
-                    </div>
-                </div>
+                            </div>
+                        </th>
+
+
+                    </tr>
+                    </thead>
+
+
+                </table>
             </div>
+
+
         </div>
 
     </div>
+
 </div>
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
-</div>
-<!-- container-scroller -->
-<!-- base:js -->
+<script>
+    function gizleGoster(ID) {
+        var secilenID = document.getElementById(ID);
+        if (secilenID.style.display == "none") {
+            secilenID.style.display = "";
+        } else {
+            secilenID.style.display = "none";
+        }
+    }
+</script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/vendor/select2/select2.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/main.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='/vendors/base/vendor.bundle.base.js') }}"></script>
 
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/off-canvas.js') }}"></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/hoverable-collapse.js') }}"></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/template.js') }}"></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/settings.js') }}"></script>
-
-<script type="text/javascript"
-        src="{{ url_for('static', filename='/js/todolist.js') }}"></script>
-<!-- endinject -->
-<!-- plugin js for this page -->
-<!-- End plugin js for this page -->
-<!-- Custom js for this page-->
-<!-- End custom js for this page-->
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
 
 <script>
     if (window.history.replaceState) {
@@ -365,7 +214,26 @@
         });
     }
 </script>
-
 </body>
-
 </html>
+
+
+{#<h5>Your Analytics Account:</h5>#}
+{#    {% if current_analyticsemail %}#}
+{#        {{ current_analyticsemail }} <span style="color: blue; cursor: pointer; font-size: 10px;" onclick="myFunction()">(Wrong Account?)</span>#}
+{#    {% else %}#}
+{#        <script> {{ message }}#}
+{#            location.reload();#}
+{#        </script>#}
+{#    {% endif %}#}
+
+{#    <script>#}
+{#        function myFunction() {#}
+{#            var r = confirm("If you change the analytics account, your recent data sources will be deleted. Are you sure to continue?");#}
+{#            if (r == true) {#}
+{#                window.location.href = 'https://app.heybooster.ai/google/connect';#}
+{#            } else {#}
+{##}
+{#            }#}
+{#        }#}
+{#    </script>#}
