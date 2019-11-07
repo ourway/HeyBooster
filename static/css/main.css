@@ -68,7 +68,8 @@ li {
 }
 
 .dropdown-class {
-    background-color: darkred;
+    background-color: blue;
+    font-size: 12px;
 }
 
 /* ------------------------------------ */
