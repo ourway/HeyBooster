@@ -8,7 +8,6 @@
 }
 
 
-
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 * {
@@ -29,7 +28,6 @@ html {
 .nav- {
     background-color: #202540;
 }
-
 
 
 /* ------------------------------------ */
@@ -70,7 +68,6 @@ li {
 }
 
 
-
 /* ------------------------------------ */
 input {
     display: block;
@@ -104,14 +101,8 @@ iframe {
 }
 
 
-
-
 /*//////////////////////////////////////////////////////////////////
 [ Utiliti ]*/
-
-
-
-
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -122,11 +113,15 @@ iframe {
     margin: 0 auto;
 }
 
-.line-row {
-    border-bottom: 1px solid #eeeeee;
-    border-top: 1px solid #eeeeee;
+.table-border {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
+.table-border2 {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
 
 .container-table100 {
     width: 100%;
@@ -138,13 +133,13 @@ iframe {
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
-    align-items: middle;
+    align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     padding: 33px 30px;
 }
 
-.test-now{
+.test-now {
     padding: -10px;
     background: #448aff;
     transition: .4s opacity;
@@ -156,7 +151,7 @@ iframe {
     border: none;
     border-radius: 3px;
     transition: .4s opacity;
-    
+
 }
 
 .change-alert:hover {
@@ -164,7 +159,7 @@ iframe {
     opacity: 0.7;
 }
 
-.test-now:hover{
+.test-now:hover {
     cursor: pointer;
     opacity: 0.7;
 }
@@ -236,7 +231,7 @@ table th.r {
     transition: .4s opacity;
 }
 
-.view-more:hover{
+.view-more:hover {
     opacity: 0.9;
     cursor: pointer;
 }
@@ -247,7 +242,7 @@ table th.r {
     transition: .4s opacity;
 }
 
-.add-data:hover{
+.add-data:hover {
     opacity: 0.9;
     cursor: pointer;
 }
@@ -267,10 +262,6 @@ table th.r {
     font-weight: 300;
     background-color: #202540;
     font-family: 'Montserrat', sans-serif;
-}
-
-.head-line {
-    border-bottom: 1px solid #eeeeee;
 }
 
 tbody tr:nth-child(even) {
@@ -313,20 +304,20 @@ tbody tr:hover {
 }
 
 .column3 {
-    width: 400px;
+    width: 500px;
     text-align: center;
     background-color: #FBFBFB;
 }
 
 .column4 {
-    width: 160px;
+    width: 10px;
     text-align: right;
     text-align: center;
     background-color: #FBFBFB;
 }
 
 .column5 {
-    width: 160px;
+    width: 120px;
     text-align: right;
     text-align: center;
     background-color: #FBFBFB;
@@ -338,12 +329,11 @@ tbody tr:hover {
 }
 
 
-
 @media screen and (max-width: 992px) {
     table {
         display: block;
     }
-    
+
     .wrap-table100 {
         width: 100%;
     }
@@ -405,7 +395,7 @@ tbody tr:hover {
         content: "Test";
     }
 
-    
+
     .column4,
     .column5,
     .column6 {
