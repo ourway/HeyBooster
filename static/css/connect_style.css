@@ -7,6 +7,7 @@
 }
 
 
+
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 * {
@@ -27,6 +28,7 @@ html {
 .nav- {
     background-color: #202540;
 }
+
 
 
 /* ------------------------------------ */
@@ -67,6 +69,7 @@ li {
 }
 
 
+
 /* ------------------------------------ */
 input {
     display: block;
@@ -100,8 +103,14 @@ iframe {
 }
 
 
+
+
 /*//////////////////////////////////////////////////////////////////
 [ Utiliti ]*/
+
+
+
+
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -177,6 +186,7 @@ iframe {
 }
 
 
+
 @media screen and (max-width: 992px) {
 
     .wrap-table100 {
@@ -189,8 +199,11 @@ iframe {
 
 /* --------------- sign-up.css başlangıç ------------*/
 
-body {
-}
+body {}
+
+
+
+
 
 
 .left-div {
@@ -214,7 +227,7 @@ body {
 
 }
 
-@media (max-width: 992px) {
+@media (max-width:992px) {
     .left-div {
         width: 75%;
         margin-left: 12.5%;
@@ -222,7 +235,7 @@ body {
     }
 }
 
-@media (max-width: 642px) {
+@media (max-width:642px) {
     .left-div {
         height: 75vh;
     }
@@ -233,21 +246,22 @@ body {
 }
 
 
-@media (max-width: 692px) {
+
+@media (max-width:692px) {
     .left-div {
         width: 80%;
         margin-left: 10%;
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width:576px) {
     .left-div {
         width: 90%;
         margin-left: 5%;
     }
 }
 
-@media (max-width: 442px) {
+@media (max-width:442px) {
     .left-div {
         width: 98%;
         margin-left: 1%;
@@ -261,13 +275,13 @@ body {
     margin-top: 100px;
 }
 
-@media (max-width: 778px) {
+@media (max-width:778px) {
     .left-div .logo {
         width: 50%;
     }
 }
 
-@media (max-width: 556px) {
+@media (max-width:556px) {
     .left-div .logo {
         width: 60%;
         margin-top: 50px;
@@ -275,7 +289,7 @@ body {
     }
 }
 
-@media (max-width: 442px) {
+@media (max-width:442px) {
     .left-div .logo {
         width: 70%;
     }
@@ -296,6 +310,7 @@ body {
     vertical-align: middle;
     background-color: #f2f5f8;
 }
+
 
 
 .pull-right {
@@ -380,7 +395,7 @@ body {
 
 }
 
-@media (max-width: 842px) {
+@media (max-width:842px) {
     .wrapper {
         display: none;
     }
@@ -393,6 +408,7 @@ body {
     }
 
 }
+
 
 
 .arrow-steps .step span:before {
@@ -428,55 +444,55 @@ body {
     margin-top: 50px;
 }
 
-@media (max-width: 1176px) {
+@media (max-width:1176px) {
     .google-btn {
         width: 30%;
     }
 }
 
-@media (max-width: 1098px) {
+@media (max-width:1098px) {
     .google-btn {
         width: 35%;
     }
 }
 
-@media (max-width: 992px) {
+@media (max-width:992px) {
     .google-btn {
         width: 30%;
     }
 }
 
-@media (max-width: 862px) {
+@media (max-width:862px) {
     .google-btn {
         width: 30%;
     }
 }
 
-@media (max-width: 778px) {
+@media (max-width:778px) {
     .google-btn {
         margin-top: 10px;
     }
 }
 
-@media (max-width: 712px) {
+@media (max-width:712px) {
     .google-btn {
         width: 35%;
     }
 }
 
-@media (max-width: 542px) {
+@media (max-width:542px) {
     .google-btn {
         width: 45%;
     }
 }
 
-@media (max-width: 462px) {
+@media (max-width:462px) {
     .google-btn {
         width: 50%;
     }
 }
 
-@media (max-width: 412px) {
+@media (max-width:412px) {
     .google-btn {
         width: 55%;
     }
@@ -510,7 +526,14 @@ body {
 }
 
 /*-------------------------------  */
+.connect {
+    margin-top: 10px;
+    display: block;
+    margin: auto;
+    width: 70%;
+    float: center;
 
+}
 
 .col- {
     margin-top: 20px;
@@ -622,16 +645,19 @@ body {
 }
 
 
+
+
+
 /* -------------------------------  */
 
 
-@media (max-width: 992px) {
+@media (max-width:992px) {
     .btn-down-link a {
         font-size: 14px;
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width:576px) {
     .btn-down-link a {
         font-size: 12px;
     }
@@ -657,6 +683,7 @@ body {
     font-weight: 100;
 
 }
+
 
 
 .mg-top {
@@ -695,6 +722,8 @@ body {
 }
 
 
+
+
 @media (max-width: 812px) {
 
     .welcome {
@@ -706,7 +735,7 @@ body {
     }
 }
 
-@media (max-width: 556px) {
+@media (max-width:556px) {
     .head-div {
         margin-top: -20px;
     }
@@ -722,6 +751,7 @@ body {
 
 
 /* --------------- */
+
 
 
 .head-div-3 .text- {
@@ -743,6 +773,7 @@ body {
 }
 
 
+
 @media (max-width: 812px) {
 
     .head-div-3 {
@@ -755,7 +786,7 @@ body {
     }
 }
 
-@media (max-width: 556px) {
+@media (max-width:556px) {
 
     .head-div-3 {
         padding-left: 10px;
@@ -839,22 +870,24 @@ body {
     width: 100%;
     text-align: center;
     display: block;
+
 }
 
 .center-left #connect-1 {
+
     margin: auto;
     display: block;
     transition: .4s box-shadow;
     box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
-.center-left #connect-r1 {
+.center-left #connect-r1{
     display: none;
 }
 
 .center-left #connect-1:hover {
     cursor: pointer;
-    box-shadow: 7px 7px 5px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
 }
 
 .center-right #connect-2 {
@@ -869,6 +902,7 @@ body {
 }
 
 .center-right #connect-2:hover {
+
     cursor: pointer;
     box-shadow: 7px 7px 5px 0px rgba(0, 0, 0, 0.3);
 }
@@ -919,7 +953,7 @@ body {
 }
 
 
-@media (max-width: 600px) {
+@media (max-width:600px) {
     .down-connect {
         height: 500px;
         margin-top: -30px;
@@ -927,17 +961,20 @@ body {
 
     .data {
         width: 100%;
-        height: 220px;
+        height: 220;
         margin-left: 10px;
         margin-right: 10px;
         margin-bottom: -85px;
         margin-top: -40px;
+
+
     }
 
     .down-connect img.card-img-top {
         height: 70px;
         background-size: cover;
         object-fit: cover;
+
     }
 
     .center-left {
@@ -946,6 +983,7 @@ body {
         background-color: #fff;
         margin-bottom: 10px;
     }
+
 
 
     .center-left img.logoo {
@@ -975,6 +1013,7 @@ body {
 
     .center-left #connect-1 {
         margin-top: 5px;
+
     }
 
     .center-right #connect-2 {
@@ -991,20 +1030,22 @@ body {
     }
 
     .center-left #connect-r1 {
-        display: block;
+        margin-top: 5px;
         margin: auto;
+        display: block;
         transition: .4s box-shadow;
         box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.2);
         margin-top: 5px;
     }
 
     .center-right #connect-r2 {
-        display: block;
         margin: auto;
+        display: block;
         transition: .4s box-shadow;
         box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.2);
         margin-top: 5px;
     }
+
 
     .channel {
         width: 100%;
