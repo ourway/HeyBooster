@@ -7,17 +7,20 @@ from wtforms.fields.html5 import DateField
 class DataSourceForm(Form):
     account = SelectField("account", choices=[('', '-- Select an Option --')],
                           validators=[validators.DataRequired(message="This field is required.")],
-                          render_kw={"class": "dropdown-class"})
+                          render_kw={"class": "select-css"})
     property = SelectField("property", choices=[('', '-- Select an Option --')],
-                           validators=[validators.DataRequired(message="This field is required.")])
+                           validators=[validators.DataRequired(message="This field is required.")],
+                           render_kw={"class": "select-css"})
     view = SelectField("view", choices=[('', '-- Select an Option --')],
-                       validators=[validators.DataRequired(message="This field is required.")])
+                       validators=[validators.DataRequired(message="This field is required.")],
+                       render_kw={"class": "select-css"})
     #    metric = SelectField('metric', choices=[('ga:users', 'users')])
     #    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
     #    start_date = DateField('start_date', format="%Y-%m-%d")
     #    end_date = DateField('end_date', format="%Y-%m-%d")
     channel = SelectField('channel', choices=[('', '-- Select a Channel --')],
-                          validators=[validators.DataRequired(message="This field is required.")])
+                          validators=[validators.DataRequired(message="This field is required.")],
+                          render_kw={"class": "select-css"})
 
 
 # Kullanıcı giriş formu
