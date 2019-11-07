@@ -14,28 +14,29 @@ def dtimetostrf(x):
 
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
-    actions = [
-        {
-			"name": "trackAnalyticsAudit",
-			"text": "Yes",
-			"type": "button",
-            "style": "primary",
-			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
-		},
-        {
-			"name": "ignoreAnalyticsAudit",
-			"text": "No",
-			"type": "button",
-			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
-            "style": "danger",
-			"confirm": {
-						"title": "Warning",
-						"text": "Are you sure you want to close your Analytics Audit Notifications?",
-						"ok_text": "Yes",
-						"dismiss_text": "No"
-					}
-		}
-    ]
+    if not task:
+        actions = [
+            {
+    			"name": "trackAnalyticsAudit",
+    			"text": "Yes",
+    			"type": "button",
+                "style": "primary",
+    			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+    		},
+            {
+    			"name": "ignoreAnalyticsAudit",
+    			"text": "No",
+    			"type": "button",
+    			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
+                "style": "danger",
+    			"confirm": {
+    						"title": "Warning",
+    						"text": "Are you sure you want to close your Analytics Audit Notifications?",
+    						"ok_text": "Yes",
+    						"dismiss_text": "No"
+    					}
+    		}
+        ]
 #    actions = {
 #    			"type": "actions",
 #                "block_id": "notification_form",
@@ -154,7 +155,7 @@ def analyticsAudit(slack_token, task, dataSource):
                 currentStates[function.__name__] = currentState
                 if currentState != "danger":
                     totalScore += scores[function.__name__]
-                    attachment[0]['text'] = f":heavy_check_mark: *+{scores[function.__name__]}* | " + attachment[0]['text']
+                    attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
                 else:
                     attachment[0]['text'] = f":x: *-{scores[function.__name__]}* | " + attachment[0]['text']
                 if task:
