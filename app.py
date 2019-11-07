@@ -218,7 +218,7 @@ def active_audit_test():
 
 
 @app.route('/test_test')
-def test_test()
+def test_test():
     data_sources = []
     user = db.find_one('user', {'email': session['email']})
     user_data_sources = db.find('datasource', query={'email': session['email']})
