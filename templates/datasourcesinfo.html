@@ -39,6 +39,15 @@
 
 <body>
 
+<h5>Your Analytics Account:</h5>
+    {% if current_analyticsemail %}
+
+    {% else %}
+        <script> {{ message }}
+            location.reload();
+        </script>
+    {% endif %}
+
 <div class="limiter">
     <div class="container-table100">
         <div class="wrap-table100">
