@@ -470,8 +470,89 @@ tbody tr:hover {
     }
 }
 
+#resp {
+    background-color: #4660c6;
+}
 
 .dropdown-div {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+@media (min-width: 1446px) {
+    #resp #resp-img {
+        width: 10%;
+    }
+}
+
+@media (max-width: 1446px) {
+    #resp #resp-img {
+        width: 11%;
+    }
+}
+
+@media (max-width: 1246px) {
+    #resp #resp-img {
+        width: 13%;
+    }
+}
+
+@media (max-width: 968px) {
+    #resp #resp-img {
+        width: 16%;
+    }
+}
+
+@media (max-width: 772px) {
+    #resp #resp-img {
+        width: 18%;
+    }
+}
+
+@media (max-width: 656px) {
+    #resp #resp-img {
+        width: 23%;
+    }
+}
+
+@media (max-width: 556px) {
+    #resp #resp-img {
+        width: 25%;
+    }
+}
+
+@media (max-width: 512px) {
+    #resp #resp-img {
+        width: 28%;
+    }
+}
+
+@media (max-width: 476px) {
+    #resp #resp-img {
+        width: 32%;
+    }
+}
+
+@media (max-width: 442px) {
+    #resp #resp-img {
+        width: 38%;
+    }
+}
+
+@media (max-width: 394px) {
+    #resp #resp-img {
+        width: 42%;
+    }
+}
+
+@media (max-width: 368px) {
+    #resp #resp-img {
+        width: 47%;
+    }
+}
+
+@media (max-width: 318px) {
+    #resp #resp-img {
+        width: 54%;
+    }
 }
