@@ -232,6 +232,11 @@ def test_test():
     return redirect('getaudit')
 
 
+@app.route('/wrongaccount')
+def wrongaccount():
+    return render_template('wrongaccount.html')
+
+
 @app.route('/change', methods=['POST'])
 def change():
     message_action = request.form
