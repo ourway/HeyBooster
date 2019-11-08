@@ -117,7 +117,8 @@ def analyticsAudit(slack_token, task, dataSource):
                     contentGrouping,
                     othersInChannelGrouping,
                     customMetric,
-                    internalSearchTermConsistency
+                    internalSearchTermConsistency,
+                    samplingCheck
                     ]
     scores = {"adwordsAccountConnection":5,
               "paymentReferral":5,
@@ -144,7 +145,8 @@ def analyticsAudit(slack_token, task, dataSource):
               "contentGrouping":3,
               "othersInChannelGrouping":3,
               "customMetric":2,
-              "internalSearchTermConsistency":2
+              "internalSearchTermConsistency":2,
+              "samplingCheck":1
               }
     attachments = []
     currentStates = {}
