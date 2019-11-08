@@ -11,7 +11,13 @@ from database import db
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
-
+def scoretoText(score):
+    if score == 5:
+        return "URGENT"
+    elif score in [3, 4]:
+        return "IMPORTANT"
+    else:
+        return "MODERATE"
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
     if not task:
@@ -140,6 +146,7 @@ def analyticsAudit(slack_token, task, dataSource):
               "customMetric":2,
               "internalSearchTermConsistency":2
               }
+    scoreToText = 
     attachments = []
     currentStates = {}
     totalScore = 0
@@ -159,7 +166,7 @@ def analyticsAudit(slack_token, task, dataSource):
                     totalScore += scores[function.__name__]
                     attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
                 else:
-                    attachment[0]['text'] = f":x: *-{scores[function.__name__]}* | " + attachment[0]['text']
+                    attachment[0]['text'] = f":x: *-{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
                 if task:
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
