@@ -146,7 +146,6 @@ def analyticsAudit(slack_token, task, dataSource):
               "customMetric":2,
               "internalSearchTermConsistency":2
               }
-    scoreToText = 
     attachments = []
     currentStates = {}
     totalScore = 0
