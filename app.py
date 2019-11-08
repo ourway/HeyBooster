@@ -621,13 +621,13 @@ def getaudit():
     
     # Sort Order is important, that's why analytics audits are queried
     # after sorting to use their status correctly
-    statuses = []
+    statuses = {}
     for arg in args:
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
         if analytics_audit['status'] == '0':
-            statuses += ['passive']
+            statuses[str(arg['_id'])] = ['passive']
         else:
-            statuses += ['active']
+            statuses[str(arg['_id'])] = ['active']
     return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
                            statuses=statuses)
 
