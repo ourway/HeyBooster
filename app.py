@@ -199,8 +199,7 @@ def active_audit_test(datasourceID):
     analyticsAudit = db.find_one("notification", query={"datasourceID": ObjectId(datasourceID),
                                                         "type": "analyticsAudit"})
     val = int(analyticsAudit['status'])
-    db.find_and_modify('notification', query={'email': session['email'],
-                                              'type': 'analyticsAudit'},
+    db.find_and_modify('notification', query={'_id': analyticsAudit['_id']},
                                         status=str(1-val))
     
     return redirect('../getaudit')
