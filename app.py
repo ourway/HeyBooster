@@ -56,7 +56,7 @@ app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"],
-    redirect_url='/connect')
+    redirect_url='/connectaccount')
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -443,9 +443,9 @@ def get_channels():
 #     return render_template('get_audit.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
 
 
-@app.route("/connect", methods=['GET', 'POST'])
+@app.route("/connectaccount", methods=['GET', 'POST'])
 @login_required
-def connect():
+def connectaccount():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
 
