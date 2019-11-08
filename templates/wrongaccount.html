@@ -26,17 +26,8 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
 
-    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ilto.css') }}">
@@ -95,35 +86,11 @@
                     <tr class="line-row">
 
                         <td class="column2">E-Mail</td>
-                        <td class="column3">uguryuce19@gmail.com</td>
+                        <td class="column3">{{ current_analyticsemail }}</td>
                         <td class="column4">
-                            <button class="btn btn-sm text-white change-alert"> Change Account</button>
+                            <button class="btn btn-sm text-white change-alert" onclick="myFunction()"> Change Account</button>
                         </td>
-
-
                     </tr>
-
-                    <tr class="line-row">
-
-                        <td class="column2">Slack</td>
-                        <td class="column3">ilteriskeskin@gmail.com</td>
-                        <td class="column4">
-                            <button class="btn btn-sm text-white change-alert"> Change Account</button>
-                        </td>
-
-
-                    </tr>
-                    <tr class="line-row">
-
-                        <td class="column2">Slack</td>
-                        <td class="column3">heybooster@gmail.com</td>
-                        <td class="column4"><a>
-                            <button class="btn btn-sm text-white change-alert"> Change Account</button>
-                        </a></td>
-
-
-                    </tr>
-
 
                     </tbody>
                 </table>
@@ -131,6 +98,17 @@
         </div>
     </div>
 </div>
+
+    <script>
+        function myFunction() {
+            var r = confirm("If you change the analytics account, your recent data sources will be deleted. Are you sure to continue?");
+            if (r == true) {
+                window.location.href = 'https://app.heybooster.ai/google/connect';
+            } else {
+
+            }
+        }
+    </script>
 
 </body>
 </html>

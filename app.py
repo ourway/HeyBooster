@@ -234,7 +234,27 @@ def test_test():
 
 @app.route('/wrongaccount')
 def wrongaccount():
-    return render_template('wrongaccount.html')
+    audit = []
+    #user_analytics_audit = db.find('datasources', query={"email": session['email'], "type": "analyticsAudit"})
+    user = db.find_one('user', {'email': session['email']})
+
+    #for analytics_audit in user_analytics_audit:
+    #    audit.append(analytics_audit)
+
+    try:
+        if user['ga_accesstoken']:
+            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+            if 'error' in resp.keys():
+                data = [('client_id', CLIENT_ID.strip()),
+                        ('client_secret', CLIENT_SECRET.strip()),
+                        ('refresh_token', user['ga_refreshtoken']),
+                        ('grant_type', 'refresh_token')]
+                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+            current_analyticsemail = resp['email']
+    except:
+        current_analyticsemail = False
+
+    return render_template('wrongaccount.html', current_analyticsemail=current_analyticsemail)
 
 
 @app.route('/change', methods=['POST'])
