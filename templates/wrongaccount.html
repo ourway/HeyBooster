@@ -57,7 +57,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-                    <a class="dropdown-item" href="#">Wrong Account?</a>
+                    <a class="dropdown-item" href="/getaudit">Get Audit</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/logout">Logout</a>
                 </div>
@@ -101,7 +101,7 @@
 
     <script>
         function myFunction() {
-            var r = confirm("If you change the analytics account, your recent data sources will be deleted. Are you sure to continue?");
+            var r = confirm("If you change the analytics account, your recent analytics audit will be deleted. Are you sure to continue?");
             if (r == true) {
                 window.location.href = 'https://app.heybooster.ai/google/connect';
             } else {

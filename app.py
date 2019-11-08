@@ -234,7 +234,7 @@ def test_test():
 
 @app.route('/wrongaccount')
 def wrongaccount():
-    audit = []
+    #audit = []
     #user_analytics_audit = db.find('datasources', query={"email": session['email'], "type": "analyticsAudit"})
     user = db.find_one('user', {'email': session['email']})
 
