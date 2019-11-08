@@ -471,7 +471,8 @@ tbody tr:hover {
 }
 
 #resp {
-
+    background-color: transparent;
+    border-bottom: 1px  solid white;
 }
 
 .dropdown-div {
