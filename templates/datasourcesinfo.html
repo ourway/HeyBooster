@@ -93,13 +93,13 @@
                                 {% endif %}
                                 <td class="column4">
                                     {% if status == 'passive' %}
-                                        <a href="/active_audit_test/{{ arg._id }}">
+                                        <a href="/active_audit_test">
                                             <button class="btn btn-sm text-white change-alert"><i
                                                     class="fa fa-check"></i> Activate
                                             </button>
                                         </a>
                                     {% else %}
-                                        <a href="/active_audit_test/{{ arg._id }}">
+                                        <a href="/active_audit_test">
                                             <button class="btn btn-sm text-white change-alert"><i class="fa"></i>
                                                 Ignore
                                             </button>
@@ -107,7 +107,7 @@
                                     {% endif %}
                                 </td>
                                 <td class="column5">
-                                    <a href="/test_test/{{ arg._id }}">
+                                    <a href="/test_test">
                                         <button class="btn btn-sm text-white test-now">Test Now</button>
                                     </a>
                                 </td>
