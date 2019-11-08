@@ -56,7 +56,7 @@ app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"],
-    redirect_url='/datasources')
+    redirect_url='/connect')
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -91,7 +91,7 @@ def home():
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
-                return redirect('/datasourcesinfo')
+                return redirect('/getaudit')
             else:
                 # Check if user has slack connection
                 if session['sl_accesstoken']:
@@ -212,9 +212,9 @@ def active_audit_test():
                                                   'type': 'analyticsAudit'},
                            status='0')
     else:
-        return redirect('datasourcesinfo')
+        return redirect('getaudit')
 
-    return redirect('datasourcesinfo')
+    return redirect('getaudit')
 
 
 @app.route('/test_test')
@@ -229,7 +229,7 @@ def test_test():
     slack_token = user['sl_accesstoken']
 
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    return redirect('datasourcesinfo')
+    return redirect('getaudit')
 
 
 @app.route('/change', methods=['POST'])
@@ -278,7 +278,7 @@ def change():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
-        return redirect('/datasourcesinfo')
+        return redirect('/getaudit')
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
         user = db.find_one('user', {'email': form.email.data})
@@ -300,7 +300,7 @@ def login():
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
     if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
-        return redirect('/datasourcesinfo')
+        return redirect('/getaudit')
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
         user = db.find_one('user', {'email': form.email.data})
@@ -443,9 +443,9 @@ def get_channels():
 #     return render_template('get_audit.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
 
 
-@app.route("/datasources", methods=['GET', 'POST'])
+@app.route("/connect", methods=['GET', 'POST'])
 @login_required
-def datasources():
+def connect():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
 
@@ -536,12 +536,12 @@ def removedatasources(datasourceID):
     db.DATABASE['datasource'].remove({"_id": ObjectId(datasourceID)})
     db.DATABASE['notification'].remove({'datasourceID': ObjectId(datasourceID)})
 
-    return redirect('/datasourcesinfo')
+    return redirect('/getaudit')
 
 
-@app.route("/datasourcesinfo", methods=['GET', 'POST'])
+@app.route("/getaudit", methods=['GET', 'POST'])
 @login_required
-def datasourcesinfo():
+def getaudit():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
     audit = []

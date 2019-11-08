@@ -423,15 +423,15 @@ tbody tr:hover {
     }
 
     table tbody tr td:nth-child(1):before {
-        content: "Status";
+        content: "Audit";
     }
 
     table tbody tr td:nth-child(2):before {
-        content: "Account Name";
+        content: "Change Alert";
     }
 
     table tbody tr td:nth-child(3):before {
-        content: "Audit";
+        content: "Test";
     }
 
     table tbody tr td:nth-child(4):before {
