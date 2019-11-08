@@ -76,7 +76,7 @@
     </div>
 </nav>
 
-{% if status %}
+{% if statuses %}
     <div class="limiter">
         <div class="container-table100">
             <div class="wrap-table100">
@@ -88,7 +88,7 @@
                                 <tr class="line-row">
                                     {% if current_analyticsemail %}
                                         <td class="column3">{{ current_analyticsemail }} Audit is
-                                            <strong>{{ status }}</strong> for {{ arg.propertyName }}
+                                            <strong>{{ statuses[loop.index] }}</strong> for {{ arg.propertyName }}
                                             && {{ arg.viewName }}</td>
                                     {% else %}
                                         <script> {{ message }}
@@ -96,7 +96,7 @@
                                         </script>
                                     {% endif %}
                                     <td class="column4">
-                                        {% if status == 'passive' %}
+                                        {% if statuses[loop.index] == 'passive' %}
                                             <a href="/active_audit_test/{{ arg._id }}">
                                                 <button class="btn btn-sm text-white change-alert"><i
                                                         class="fa fa-check"></i> Activate

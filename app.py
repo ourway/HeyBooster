@@ -196,10 +196,10 @@ def home():
 
 @app.route('/active_audit_test/<datasourceID>')
 def active_audit_test(datasourceID):
-    analyticsAudit = db.find_one("notification", query={"datasourceID": ObjectId(datasourceID),
+    analytics_audit = db.find_one("notification", query={"datasourceID": ObjectId(datasourceID),
                                                         "type": "analyticsAudit"})
-    val = int(analyticsAudit['status'])
-    db.find_and_modify('notification', query={'_id': analyticsAudit['_id']},
+    val = int(analytics_audit['status'])
+    db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
                                         status=str(1-val))
     
     return redirect('../getaudit')
@@ -552,22 +552,9 @@ def removedatasources(datasourceID):
 def getaudit():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
-    audit = []
-    status = ''
-    data_sources = []
-    user_analytics_audit = db.find('notification', query={"email": session['email'], "type": "analyticsAudit"})
-    user = db.find_one('user', {'email': session['email']})
-    user_data_sources = db.find('datasource', query={'email': session['email']})
-
+    
+    user = db.find_one('user', {'email': session['email']}) 
     slack_token = user['sl_accesstoken']
-
-    for analytics_audit in user_analytics_audit:
-        audit.append(analytics_audit)
-
-        if analytics_audit['status'] == '0':
-            status = 'passive'
-        else:
-            status = 'active'
 
     try:
         if user['ga_accesstoken']:
@@ -613,9 +600,7 @@ def getaudit():
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
-        for dataSource in user_data_sources:
-            data_sources.append(dataSource)
-        analyticsAudit(slack_token, task=None, dataSource=dataSource)
+        analyticsAudit(slack_token, task=None, dataSource=data)
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
@@ -633,9 +618,18 @@ def getaudit():
     except:
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-
+    
+    # Sort Order is important, that's why analytics audits are queried
+    # after sorting to use their status correctly
+    statuses = []
+    for arg in args:
+        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
+        if analytics_audit['status'] == '0':
+            statuses += ['passive']
+        else:
+            statuses += ['active']
     return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
-                           status=status)
+                           statuses=statuses)
 
 
 @app.route("/gatest/<email>")
