@@ -165,7 +165,7 @@ def analyticsAudit(slack_token, task, dataSource):
                     totalScore += scores[function.__name__]
                     attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
                 else:
-                    attachment[0]['text'] = f":x: *-{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
+                    attachment[0]['text'] = f":x: *{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
                 if task:
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
