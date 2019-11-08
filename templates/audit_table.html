@@ -222,7 +222,7 @@
         account = account_select.value.split(bellchar)[0];
         fetch('/analytics/properties/' + account).then(function (response) {
             response.json().then(function (data) {
-                var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
+                var optionHTML = '<option value="' + '' + '">' + ' Select an Option ' + '</option>';
                 for (var property of data.properties) {
                     optionHTML += '<option value="' + property.id + bellchar + property.name + '">' + property.name + '</option>';
                 }
@@ -235,7 +235,7 @@
         property = property_select.value.split(bellchar)[0];
         fetch('/analytics/views/' + account_select.value.split(bellchar)[0] + '/' + property).then(function (response) {
             response.json().then(function (data) {
-                var optionHTML = '<option value="' + '' + '">' + '-- Select an Option --' + '</option>';
+                var optionHTML = '<option value="' + '' + '">' + ' Select an Option ' + '</option>';
                 for (var view of data.views) {
                     optionHTML += '<option value="' + view.id + bellchar + view.name + '">' + view.name + '</option>';
                 }

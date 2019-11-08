@@ -294,6 +294,7 @@ table th.r {
 }
 
 .form-div {
+    border: none;
     width: 50%;
     color: black;
     border-radius: 10px;
