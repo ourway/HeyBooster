@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Table V01</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+
+    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+
+    <link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ilto.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg px-5 navbar-light" id="resp" style="list-style-type: none;">
+    <a href="/" style="color: #f9f9f9">
+        heybooster!
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false" style="color: #f9f9f9;">
+                    {{ session['email'] }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                    <a class="dropdown-item" href="#">Wrong Account?</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                </div>
+            </li>
+
+        </form>
+    </div>
+</nav>
+
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+                <table>
+                    <thead class="head head-line">
+                    <tr class="table100-head">
+
+                        <th class="column2">Type</th>
+                        <th class="column3">Account</th>
+                        <th class="column4">Change</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="line-row">
+
+                        <td class="column2">E-Mail</td>
+                        <td class="column3">uguryuce19@gmail.com</td>
+                        <td class="column4">
+                            <button class="btn btn-sm text-white change-alert"> Change Account</button>
+                        </td>
+
+
+                    </tr>
+
+                    <tr class="line-row">
+
+                        <td class="column2">Slack</td>
+                        <td class="column3">ilteriskeskin@gmail.com</td>
+                        <td class="column4">
+                            <button class="btn btn-sm text-white change-alert"> Change Account</button>
+                        </td>
+
+
+                    </tr>
+                    <tr class="line-row">
+
+                        <td class="column2">Slack</td>
+                        <td class="column3">heybooster@gmail.com</td>
+                        <td class="column4"><a>
+                            <button class="btn btn-sm text-white change-alert"> Change Account</button>
+                        </a></td>
+
+
+                    </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,403 @@
+/*//////////////////////////////////////////////////////////////////
+[ FONT ]*/
+
+
+@font-face {
+    font-family: OpenSans-Regular;
+    src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
+}
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ RESTYLE TAG ]*/
+* {
+    margin: 0px auto;
+    padding: 0px auto;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    height: 100%;
+    font-family: sans-serif;
+}
+
+/* --navbar -- */
+
+
+.nav- {
+    background-color: #202540;
+}
+
+
+
+/* ------------------------------------ */
+a {
+    margin: 0px;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+}
+
+a:focus {
+    outline: none !important;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* ------------------------------------ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0px;
+}
+
+p {
+    margin: 0px;
+}
+
+ul,
+li {
+    margin: 0px;
+    list-style-type: none;
+}
+
+
+/* ------------------------------------ */
+input {
+    display: block;
+    outline: none;
+    border: none !important;
+}
+
+textarea {
+    display: block;
+    outline: none;
+}
+
+textarea:focus,
+input:focus {
+    border-color: transparent !important;
+}
+
+/* ------------------------------------ */
+button {
+    outline: none !important;
+    border: none;
+    background: transparent;
+}
+
+button:hover {
+    cursor: text;
+}
+
+iframe {
+    border: none !important;
+}
+
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ Utiliti ]*/
+
+
+
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ Table ]*/
+
+.limiter {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.line-row {
+    border-bottom: 1px solid #eeeeee;
+    border-top: 1px solid #eeeeee;
+}
+
+.container-table100 {
+    width: 100%;
+    min-height: 100vh;
+    background-image: url(../img/a2.png);
+    background-size: cover;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 33px 30px;
+}
+
+.test-now {
+    padding: -10px;
+    background: #448aff;
+    transition: .4s opacity;
+    border-radius: 2px;
+}
+
+.change-alert {
+    background: #448aff;
+    border: none;
+    border-radius: 3px;
+    transition: .4s opacity;
+
+}
+
+.change-alert:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.test-now:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+
+.wrap-table100 {
+    width: 55%;
+}
+
+.text-deco {
+    text-decoration: underline;
+}
+
+table {
+    border-spacing: 1;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+table * {
+    position: relative;
+}
+
+table td,
+table th {
+    padding-left: 8px;
+}
+
+table thead tr {
+    height: 80px;
+    background: #36304a;
+}
+
+table tbody tr {
+    height: 80px;
+}
+
+table tbody tr:last-child {
+    border: 0;
+}
+
+table td,
+table th {
+    text-align: left;
+}
+
+table td.l,
+table th.l {
+    text-align: right;
+}
+
+table td.c,
+table th.c {
+    text-align: center;
+}
+
+table td.r,
+table th.r {
+    text-align: center;
+}
+
+
+.table100-head th {
+    font-family: OpenSans-Regular;
+    font-size: 20px;
+    color: #f9f9f9;
+    line-height: 1;
+    font-weight: 300;
+    background-color: #202540;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.head-line {
+    border-bottom: 1px solid #eeeeee;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fbfbfb;
+}
+
+tbody tr {
+    font-family: OpenSans-Regular;
+    font-size: 15px;
+    color: #808080;
+    line-height: 1.2;
+    font-weight: unset;
+    transition: .5s color;
+}
+
+
+tbody tr:hover {
+    color: #000;
+    background-color: #f2f5f8;
+    cursor: text;
+}
+
+.column1 {
+    width: 210px;
+    padding-left: 40px;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column1 i {
+    font-size: 25px;
+    color: #0d8547;
+    opacity: 0.8;
+}
+
+.column2 {
+    width: 130px;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column3 {
+    width: 200px;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column4 {
+    width: 100px;
+    text-align: right;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column5 {
+    width: 160px;
+    text-align: right;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+
+@media screen and (max-width: 992px) {
+    table {
+        display: block;
+    }
+
+    .wrap-table100 {
+        width: 85%;
+    }
+
+    table > *,
+    table tr,
+    table td,
+    table th {
+        display: block;
+    }
+
+    table thead {
+        display: none;
+    }
+
+    table tbody tr {
+        height: auto;
+        padding: 37px 0;
+    }
+
+    table tbody tr td {
+        padding-left: 40% !important;
+        margin-bottom: 24px;
+    }
+
+    table tbody tr td:last-child {
+        margin-bottom: 0;
+    }
+
+    table tbody tr td:before {
+        font-family: OpenSans-Regular;
+        font-size: 14px;
+        color: #999999;
+        line-height: 1.2;
+        font-weight: unset;
+        position: absolute;
+        width: 40%;
+        left: 30px;
+        top: 0;
+    }
+
+    table tbody tr td:nth-child(1):before {
+        content: "Status";
+    }
+
+    table tbody tr td:nth-child(2):before {
+        content: "Account";
+    }
+
+    table tbody tr td:nth-child(3):before {
+        content: "Audit";
+    }
+
+    table tbody tr td:nth-child(4):before {
+        content: "Change";
+    }
+
+    table tbody tr td:nth-child(5):before {
+        content: "Test";
+    }
+
+
+    .column4,
+    .column5,
+    .column6 {
+        text-align: center;
+    }
+
+    .column4,
+    .column5,
+    .column6,
+    .column1,
+    .column2,
+    .column3 {
+        width: 100%;
+    }
+
+    tbody tr {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-table100 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .wrap-table100 {
+        width: 100%;
+    }
+}
