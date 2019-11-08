@@ -140,19 +140,19 @@
 
                                 <div id="content" class="collapse dropdown-div">
 
-                                    <form class="pt-3 form-div" method="POST" action="/datasourcesinfo">
+                                    <form class="pt-3 form-div" method="POST" action="/getaudit">
 
                                         <div class="dropdown">
                                             {{ nForm.csrf_token }}
 
                                             {{ nForm.account }}
 
-                                            <p style="margin-top:5px">
+                                            <p style="margin-top:10px; margin-bottom: 10px;">
                                                 Property</p>
 
                                             {{ nForm.property }}
 
-                                            <p style="margin-top:5px">
+                                            <p style="margin-top:10px; margin-bottom: 10px;">
                                                 View</p>
 
                                             {{ nForm.view }}
