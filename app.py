@@ -626,7 +626,7 @@ def getaudit():
         if analytics_audit['status'] == '0':
             arg['strstat'] = 'passive'
         else:
-            arg['strstat'] = ['active']
+            arg['strstat'] = 'active'
     return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail)
 
 
