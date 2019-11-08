@@ -194,40 +194,24 @@ def home():
 #                            status=status)
 
 
-@app.route('/active_audit_test')
-def active_audit_test():
-    analytics_alert_status = 0
-    user_notifications = db.find('notification', query={'email': session['email']})
-
-    for notification in user_notifications:
-        if notification['type'] == 'analyticsAudit':
-            analytics_alert_status = notification['status']
-
-    if int(analytics_alert_status) == 0:
-        db.find_and_modify('notification', query={'email': session['email'],
-                                                  'type': 'analyticsAudit'},
-                           status='1')
-    elif int(analytics_alert_status) == 1:
-        db.find_and_modify('notification', query={'email': session['email'],
-                                                  'type': 'analyticsAudit'},
-                           status='0')
-    else:
-        return redirect('getaudit')
-
+@app.route('/active_audit_test/<datasourceID>')
+def active_audit_test(datasourceID):
+    analyticsAudit = db.find_one("notification", query={"datasourceID": ObjectId(datasourceID),
+                                                        "type": "analyticsAudit"})
+    val = int(analyticsAudit['status'])
+    db.find_and_modify('notification', query={'email': session['email'],
+                                              'type': 'analyticsAudit'},
+                                        status=str(1-val))
+    
     return redirect('getaudit')
 
 
-@app.route('/test_test')
-def test_test():
-    data_sources = []
-    user = db.find_one('user', {'email': session['email']})
-    user_data_sources = db.find('datasource', query={'email': session['email']})
-
-    for dataSource in user_data_sources:
-        data_sources.append(dataSource)
-
+@app.route('/test_test/<datasourceID>')
+def test_test(datasourceID):
+    dataSource = db.find_one("datasource", query = {"_id":ObjectId(datasourceID)})
+    user = db.find_one("user", query={"email":dataSource["email"]})
+    
     slack_token = user['sl_accesstoken']
-
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
     return redirect('getaudit')
 
