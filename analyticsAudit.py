@@ -331,7 +331,7 @@ def bounceRateTracking(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Well done, nothing to worry!",
+            "text": "Bounce rate is average however it may be affected by any changes on your website, keep track of it",
             "color": "good",
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
@@ -388,7 +388,7 @@ def notSetLandingPage(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Well done, nothing to worry!",
+            "text": "Good for you! There is no session landed to unknown page",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -446,7 +446,7 @@ def adwordsAccountConnection(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Well done, nothing to worry!",
+            "text": "Google Analytics account is linked with Google Ads, you can analyze Ads performance.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -496,7 +496,7 @@ def sessionClickDiscrepancy(slack_token, dataSource):
 
     if adclicks_result > 0 and (adclicks_result > sessions_result * 1.05 or adclicks_result < sessions_result * 1.05):
         attachments += [{
-            "text": "There is session click discrepancy, you don’t measure your adwords performans properly.",
+            "text": "There is session click discrepancy, you don’t measure your adwords performance properly.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -507,6 +507,15 @@ def sessionClickDiscrepancy(slack_token, dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
+        attachments += [{
+            "text": "Nothing to worry! Number of Google Ads sessions and clicks is almost same.",
+            "color": "good",
+#            "pretext": text,
+            "title": text,
+            "callback_id": "notification_form",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+            "attachment_type": "default",
+        }]
         return attachments
     else:
         return []
@@ -554,6 +563,16 @@ def goalSettingActivity(slack_token, dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
+        attachments += [{
+            "text": "There are goals set up on your account, but be sure to track all micro and macro conversion.",
+            "color": "good",
+#            "pretext": text,
+            "title": text,
+            "callback_id": "notification_form",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+            "attachment_type": "default",
+        }]
+
         return attachments
     else:
         return []
@@ -616,7 +635,7 @@ def selfReferral(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Well done, nothing to worry!",
+            "text": "Well done Nothing to worry!\nSelf referral issue is not seen in your account recently,  no worries.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -854,7 +873,7 @@ def siteSearchTracking(slack_token, dataSource):
 
     if result > 0:
         attachments += [{
-            "text": "Nothing to worry! You had a great job.",
+            "text": "You can analyze which keywords your user searched on your website and which of them is most convertible .",
             "color": "good",
 #            "pretext": text,
             "title": text,
