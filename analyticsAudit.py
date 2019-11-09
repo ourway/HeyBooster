@@ -504,9 +504,7 @@ def sessionClickDiscrepancy(slack_token, dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
-    if len(attachments) != 0:
-#        attachments[0]['pretext'] = text
+    else:
         attachments += [{
             "text": "Nothing to worry! Number of Google Ads sessions and clicks is almost same.",
             "color": "good",
@@ -516,6 +514,10 @@ def sessionClickDiscrepancy(slack_token, dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        
+    if len(attachments) != 0:
+#        attachments[0]['pretext'] = text
+        
         return attachments
     else:
         return []
@@ -560,9 +562,7 @@ def goalSettingActivity(slack_token, dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
-    if len(attachments) != 0:
-#        attachments[0]['pretext'] = text
+    else:
         attachments += [{
             "text": "There are goals set up on your account, but be sure to track all micro and macro conversion.",
             "color": "good",
@@ -572,7 +572,8 @@ def goalSettingActivity(slack_token, dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+    if len(attachments) != 0:
+#        attachments[0]['pretext'] = text
         return attachments
     else:
         return []
