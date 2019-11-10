@@ -202,7 +202,7 @@ def active_audit_test(datasourceID):
     db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
                                         status=str(1-val))
     
-    return redirect('../getaudit')
+    return redirect('/getaudit')
 
 
 @app.route('/test_test/<datasourceID>')
@@ -212,7 +212,7 @@ def test_test(datasourceID):
     
     slack_token = user['sl_accesstoken']
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    return redirect('../getaudit')
+    return redirect('/getaudit')
 
 
 @app.route('/wrongaccount')
