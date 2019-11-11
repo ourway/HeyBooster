@@ -86,7 +86,7 @@
                         {% if args %}
                             {% for arg in args %}
                                 <tr class="line-row">
-                                    <td class="column2">{{ arg.dataSourceName }} && {{ analytics_audit }}</td>
+                                    <td class="column2">{{ arg.dataSourceName }} && {{ analytics_audit['totalScore'] }}</td>
                                     {% if current_analyticsemail %}
                                         <td class="column3">{{ current_analyticsemail }} Audit is
                                             <strong>{{ arg.strstat }}</strong> for {{ arg.propertyName }}
