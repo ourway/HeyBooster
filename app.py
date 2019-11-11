@@ -478,7 +478,8 @@ def connectaccount():
     user_data_sources = db.find('datasource', query={'email': session['email']})
 
     slack_token = user['sl_accesstoken']
-    response = slack_token.auth_test()
+    client = slack.WebClient(token=slack_token)
+    response = client.auth_test()
     workspace = response['team']
 
     try:
