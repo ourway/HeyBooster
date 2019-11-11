@@ -81,12 +81,15 @@
 
                 <div class="down-connect">
                     {% if analytics_confirm %}
+                        <script>
+                            location.reload();
+                        </script>
                         <div class="data" style="opacity: 0.5">
                             <div class="center-left">
                                 <img class="card-img-top" src="../static/img/ab3.png">
                                 <h1>Data Sources</h1>
                                 <img class="logoo" src="../static/img/google.png">
-                                <a href="/google/connect">
+                                {#<a href="/google/connect">
                                     <button id="connect-1" class="btn text-white"
                                             style="background-color: #e48131">
                                         Connect
@@ -97,7 +100,10 @@
                                             style="background-color: #e48131">
                                         Connect
                                     </button>
-                                </a>
+                                </a>#}
+                                <span>
+                                    {{ current_analyticsemail }} <a onclick="myFunction()">Wrong Account?</a>
+                                </span>
                             </div>
                         </div>
                     {% else %}
@@ -148,7 +154,7 @@
                                 <img class="card-img-top" src="../static/img/card-4.jpg">
                                 <h1>Communication Channel</h1>
                                 <img class="logoo" src="../static/img/slack.png">
-                                <a href="/connect">
+{#                                <a href="/connect">
                                     <button id="connect-2" class="btn text-white"
                                             style="background-color: #0097a7">
                                         Connect
@@ -159,7 +165,7 @@
                                             style="background-color: #0097a7">
                                         Connect
                                     </button>
-                                </a>
+                                </a>#}
                             </div>
                         </div>
                     {% endif %}
@@ -169,6 +175,16 @@
     </div>
 </div>
 
+<script>
+    function myFunction() {
+        var r = confirm("If you change the analytics account, your recent analytics audit will be deleted. Are you sure to continue?");
+        if (r == true) {
+            window.location.href = 'https://app.heybooster.ai/google/connect';
+        } else {
+
+        }
+    }
+</script>
 
 </body>
 </html>

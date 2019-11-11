@@ -88,6 +88,21 @@ def send_message():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
+    user = db.find_one('user', {'email': session['email']})
+
+    try:
+        if user['ga_accesstoken']:
+            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+            if 'error' in resp.keys():
+                data = [('client_id', CLIENT_ID.strip()),
+                        ('client_secret', CLIENT_SECRET.strip()),
+                        ('refresh_token', user['ga_refreshtoken']),
+                        ('grant_type', 'refresh_token')]
+                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+            current_analyticsemail = resp['email']
+    except:
+        current_analyticsemail = False
+
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
@@ -105,7 +120,8 @@ def home():
                 else:
                     analytics_confirm = False
                 # Fill the boxes for the value of slack_confirm and analytics_confirm
-                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm,
+                                       current_analyticsemail=current_analyticsemail)
         except:
             return redirect('/logout')
     else:
@@ -197,19 +213,19 @@ def home():
 @app.route('/active_audit_test/<datasourceID>')
 def active_audit_test(datasourceID):
     analytics_audit = db.find_one("notification", query={"datasourceID": ObjectId(datasourceID),
-                                                        "type": "analyticsAudit"})
+                                                         "type": "analyticsAudit"})
     val = int(analytics_audit['status'])
     db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
-                                        status=str(1-val))
-    
+                       status=str(1 - val))
+
     return redirect('/getaudit')
 
 
 @app.route('/test_test/<datasourceID>')
 def test_test(datasourceID):
-    dataSource = db.find_one("datasource", query = {"_id":ObjectId(datasourceID)})
-    user = db.find_one("user", query={"email":dataSource["email"]})
-    
+    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
+    user = db.find_one("user", query={"email": dataSource["email"]})
+
     slack_token = user['sl_accesstoken']
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
     return redirect('/getaudit')
@@ -217,11 +233,11 @@ def test_test(datasourceID):
 
 @app.route('/wrongaccount')
 def wrongaccount():
-    #audit = []
-    #user_analytics_audit = db.find('datasources', query={"email": session['email'], "type": "analyticsAudit"})
+    # audit = []
+    # user_analytics_audit = db.find('datasources', query={"email": session['email'], "type": "analyticsAudit"})
     user = db.find_one('user', {'email': session['email']})
 
-    #for analytics_audit in user_analytics_audit:
+    # for analytics_audit in user_analytics_audit:
     #    audit.append(analytics_audit)
 
     try:
@@ -552,8 +568,8 @@ def removedatasources(datasourceID):
 def getaudit():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/')
-    
-    user = db.find_one('user', {'email': session['email']}) 
+
+    user = db.find_one('user', {'email': session['email']})
     slack_token = user['sl_accesstoken']
 
     try:
@@ -618,7 +634,7 @@ def getaudit():
     except:
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    
+
     # Sort Order is important, that's why analytics audits are queried
     # after sorting to use their status correctly
     for arg in args:
@@ -1988,33 +2004,33 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
         'lastRunDate': '',
         'datasourceID': dataSourceID,
         'lastStates': {"bounceRateTracking": "",
-                        "notSetLandingPage": "",
-                        "adwordsAccountConnection": "",
-                        "sessionClickDiscrepancy": "",
-                        "selfReferral": "",
-                        "paymentReferral": "",
-                        "goalSettingActivity": "",
-                        "botSpamExcluding": "",
-                        "customDimension": "",
-                        "siteSearchTracking": "",
-                        "gdprCompliant": "",
-                        "dataRetentionPeriod": "",
-                        "remarketingLists": "",
-                        "enhancedECommerceActivity": "",
-                        "customMetric": "",
-                        "samplingCheck": "",
-                        "internalSearchTermConsistency": "",
-                        "defaultPageControl": "",
-                        "domainControl": "",
-                        "eventTracking": "",
-                        "errorPage": "",
-                        "timezone": "",
-                        "currency": "",
-                        "rawDataView": "",
-                        "contentGrouping": "",
-                        "userPermission": "",
-                        "othersInChannelGrouping": "",
-                        },
+                       "notSetLandingPage": "",
+                       "adwordsAccountConnection": "",
+                       "sessionClickDiscrepancy": "",
+                       "selfReferral": "",
+                       "paymentReferral": "",
+                       "goalSettingActivity": "",
+                       "botSpamExcluding": "",
+                       "customDimension": "",
+                       "siteSearchTracking": "",
+                       "gdprCompliant": "",
+                       "dataRetentionPeriod": "",
+                       "remarketingLists": "",
+                       "enhancedECommerceActivity": "",
+                       "customMetric": "",
+                       "samplingCheck": "",
+                       "internalSearchTermConsistency": "",
+                       "defaultPageControl": "",
+                       "domainControl": "",
+                       "eventTracking": "",
+                       "errorPage": "",
+                       "timezone": "",
+                       "currency": "",
+                       "rawDataView": "",
+                       "contentGrouping": "",
+                       "userPermission": "",
+                       "othersInChannelGrouping": "",
+                       },
         "totalScore": 0
     })
     # When the slack connection is completed send notification user to set time
