@@ -88,8 +88,6 @@ def send_message():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    user = db.find_one('user', {'email': session['email']})
-
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
@@ -104,6 +102,7 @@ def home():
                 # Check if user has analytics connection    
                 if session['ga_accesstoken']:
                     analytics_confirm = True
+                    user = db.find_one('user', {'email': session['email']})
                     try:
                         if user['ga_accesstoken']:
                             resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
