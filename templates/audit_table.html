@@ -140,8 +140,6 @@
 
                                 <div id="content" class="collapse dropdown-div">
                                     <form class="pt-3 form-div" method="POST" action="/getaudit">
-
-                                        <br><br>
                                     <div class="dropdown">
                                         {{ nForm.csrf_token }}
 
@@ -150,18 +148,18 @@
                                         </p>
                                         {{ nForm.data_source_name }}
 
-                                        <p style="margin-top:10px; font-weight: bold; font-size: 15px;">
+                                        <p style="margin-top:15px; font-weight: bold; font-size: 15px;">
                                             Google Analytics</p>
-                                        <span>
+                                        <span style="font-size: 13px">
                                         {{ current_analyticsemail }}
                                         <a onclick="myFunction()"
-                                           style="cursor: pointer; color: darkblue; font-weight: bold; font-size: 15px;">
+                                           style="cursor: pointer; color: darkblue; font-weight: bold; font-size: 12px;">
                                                 Wrong Account?
                                         </a>
                                     </span>
                                         <br>
 
-                                        <p style="margin-top: 10px; font-weight: bold; font-size: 15px;">
+                                        <p style="margin-top: 15px; font-weight: bold; font-size: 15px;">
                                             Select Your Profile Detail
                                         </p>
                                         <br>
@@ -173,7 +171,7 @@
 
                                         <p style="font-weight: bold; font-size: 15px;"><br>
                                             Slack</p>
-                                        <span>
+                                        <span style="font-size: 13px;">
                                         {{ workspace }}
                                             <a onclick=""
                                                style="cursor: pointer; color: darkblue; font-weight: bold; font-size: 12px;">
