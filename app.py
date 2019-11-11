@@ -114,7 +114,6 @@ def home():
                             resp = requests.post(ACCESS_TOKEN_URI, data).json()
                             print(resp)
                         current_analyticsemail = resp['email']
-                        print(current_analyticsemail)
                     except:
                         current_analyticsemail = ""
 
