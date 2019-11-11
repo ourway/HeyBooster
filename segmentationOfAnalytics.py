@@ -95,7 +95,7 @@ def segmentationOfAnalytics(email):
                     sleeptime = 11 - (stop_time - start_time) 
                     if sleeptime > 0:
                         print("Waiting for %s seconds"%sleeptime)
-                    time.sleep(sleeptime) #10 requests per 10 seconds
+                        time.sleep(sleeptime) #10 requests per 10 seconds
                     counter = 0
                     start_time = time.time()
                 NoU_array += [numberOfUsers]
