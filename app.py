@@ -645,6 +645,8 @@ def getaudit():
     # after sorting to use their status correctly
     for arg in args:
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
+        #data_source_name = db.find_one('datasource', query={"_id": arg['_id'], "type": "dataSourceName"})
+
         if analytics_audit['status'] == '0':
             arg['strstat'] = 'passive'
         else:
