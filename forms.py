@@ -5,6 +5,8 @@ from wtforms.fields.html5 import DateField
 # Notification Formu
 
 class DataSourceForm(Form):
+    data_source_name = StringField("Data Source Name",
+                                   validators=[validators.DataRequired(message="This field is required")])
     account = SelectField("account", choices=[('', 'Select your account')],
                           validators=[validators.DataRequired(message="This field is required.")],
                           render_kw={"class": "select-css"})
