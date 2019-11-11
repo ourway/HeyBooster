@@ -90,7 +90,7 @@
                         <div class="center-left">
                             <img class="card-img-top" src="../static/img/card-4.jpg">
                             <form class="pt-3 form-div" method="POST" action="/getaudit">
-                                <p style="margin-top:5px">
+                                <p style="margin-top:5px; font-weight: bold">
                                     Google Analytics</p>
                                 <span>
                                     {{ current_analyticsemail }}
@@ -103,7 +103,7 @@
                                 <div class="dropdown">
                                     {{ nForm.csrf_token }}
 
-                                    <p style="margin-top: 5px">
+                                    <p style="margin-top: 5px; font-weight: bold">
                                         Select Your Profile Detail
                                     </p>
                                     <br>
@@ -113,13 +113,13 @@
                                     <br>
                                     {{ nForm.view }}
 
-                                    <h5><br>
-                                        Slack</h5>
+                                    <p style="font-weight: bold"><br>
+                                        Slack</p>
                                     <span>
                                         {{ workspace }}
                                             <a onclick=""
                                                style="cursor: pointer; color: darkblue; font-weight: bold">
-                                                    Wrong Account?
+                                                    Wrong Workspace?
                                             </a>
                                     </span>
 
