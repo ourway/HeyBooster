@@ -68,8 +68,8 @@ li {
 }
 
 .data-input-css {
-    border: 1px solid darkblue;
-    background-color: bisque;
+    border-radius: 10px;
+    background-color: #f2f5f8;
 }
 
 .select-css {
