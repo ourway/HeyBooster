@@ -98,9 +98,15 @@
                                         Connect
                                     </button>
                                 </a>#}
-                                <span>
-                                    {{ current_analyticsemail }} <a onclick="myFunction()">Wrong Account?</a>
-                                </span>
+                                <center>
+                                    {{ current_analyticsemail }}
+                                </center>
+                                <a onclick="myFunction()">
+                                    <button id="connect-r1" class="btn text-white btn-sm"
+                                            style="background-color: #e48131">
+                                        Wrong Account?
+                                    </button>
+                                </a>
                             </div>
                         </div>
                     {% else %}
@@ -151,7 +157,7 @@
                                 <img class="card-img-top" src="../static/img/card-4.jpg">
                                 <h1>Communication Channel</h1>
                                 <img class="logoo" src="../static/img/slack.png">
-{#                                <a href="/connect">
+                                {#                                <a href="/connect">
                                     <button id="connect-2" class="btn text-white"
                                             style="background-color: #0097a7">
                                         Connect
