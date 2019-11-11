@@ -99,20 +99,21 @@
                                                 Wrong Account?
                                         </a>
                                 </span>
-                                <br>
+                                <br><br>
                                 <div class="dropdown">
                                     {{ nForm.csrf_token }}
 
                                     <p style="margin-top: 5px">
                                         Select Your Profile Detail
                                     </p>
+                                    <br>
                                     {{ nForm.account }}
-
+                                    <br>
                                     {{ nForm.property }}
-
+                                    <br>
                                     {{ nForm.view }}
 
-                                    <h5><br><br><br>
+                                    <h5><br>
                                         Slack</h5>
                                     <span>
                                         {{ workspace }}
@@ -167,7 +168,7 @@
         account = account_select.value.split(bellchar)[0];
         fetch('/analytics/properties/' + account).then(function (response) {
             response.json().then(function (data) {
-                var optionHTML = '<option value="' + '' + '">' + ' Select an Option ' + '</option>';
+                var optionHTML = '<option value="' + '' + '">' + ' Select your property ' + '</option>';
                 for (var property of data.properties) {
                     optionHTML += '<option value="' + property.id + bellchar + property.name + '">' + property.name + '</option>';
                 }
@@ -180,7 +181,7 @@
         property = property_select.value.split(bellchar)[0];
         fetch('/analytics/views/' + account_select.value.split(bellchar)[0] + '/' + property).then(function (response) {
             response.json().then(function (data) {
-                var optionHTML = '<option value="' + '' + '">' + ' Select an Option ' + '</option>';
+                var optionHTML = '<option value="' + '' + '">' + ' Select your view ' + '</option>';
                 for (var view of data.views) {
                     optionHTML += '<option value="' + view.id + bellchar + view.name + '">' + view.name + '</option>';
                 }
