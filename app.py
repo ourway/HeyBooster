@@ -105,6 +105,7 @@ def get_analytics_account():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
+    current_analyticsemail = ""
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
@@ -119,11 +120,13 @@ def home():
                 # Check if user has analytics connection    
                 if session['ga_accesstoken']:
                     analytics_confirm = True
-                    current_analyticsemail = get_analytics_account()
+                    user = db.find_one('user', {'email': session['email']})
+                    print(user)
+                    print(get_analytics_account())
                 else:
                     analytics_confirm = False
                 # Fill the boxes for the value of slack_confirm and analytics_confirm
-                current_analyticsemail = get_analytics_account()
+                print(get_analytics_account())
                 return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm,
                                        current_analyticsemail=current_analyticsemail)
         except:
