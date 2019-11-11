@@ -102,16 +102,21 @@ def home():
 
                 # Check if user has analytics connection    
                 if session['ga_accesstoken']:
-                    resp = requests.get(TOKEN_INFO_URI.format(session['ga_accesstoken'])).json()
-                    if 'error' in resp.keys():
-                        data = [('client_id', CLIENT_ID.strip()),
-                                ('client_secret', CLIENT_SECRET.strip()),
-                                ('refresh_token', session['ga_refreshtoken']),
-                                ('grant_type', 'refresh_token')]
-                        resp = requests.post(ACCESS_TOKEN_URI, data).json()
-                        print(resp)
-                    current_analyticsemail = resp['email']
-                    print(current_analyticsemail)
+                    user = db.find_one('user', {'email': session['email']})
+
+                    try:
+                        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+                        if 'error' in resp.keys():
+                            data = [('client_id', CLIENT_ID.strip()),
+                                    ('client_secret', CLIENT_SECRET.strip()),
+                                    ('refresh_token', user['ga_refreshtoken']),
+                                    ('grant_type', 'refresh_token')]
+                            resp = requests.post(ACCESS_TOKEN_URI, data).json()
+                            print(resp)
+                        current_analyticsemail = resp['email']
+                        print(current_analyticsemail)
+                    except:
+                        current_analyticsemail = ""
 
                     analytics_confirm = True
                 else:
