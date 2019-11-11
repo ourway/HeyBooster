@@ -89,28 +89,28 @@
                     <div class="data">
                         <div class="center-left">
                             <img class="card-img-top" src="../static/img/card-4.jpg">
-                                <form class="pt-3 form-div" method="POST" action="/getaudit">
-                                    <br><br>
-                                    <div class="dropdown">
+                                <div id="content" class="collapse dropdown-div">
+                                    <form class="pt-3 form-div" method="POST" action="/getaudit">
+                                    <div class="dropdown" style="text-align: left">
                                         {{ nForm.csrf_token }}
 
-                                        <p style="margin-top: 5px; font-weight: bold">
+                                        <p style="margin-top: 5px; font-weight: bold; font-size: 15px;">
                                             Data Source Name
                                         </p>
                                         {{ nForm.data_source_name }}
 
-                                        <p style="margin-top:10px; font-weight: bold">
+                                        <p style="margin-top:15px; font-weight: bold; font-size: 15px;">
                                             Google Analytics</p>
-                                        <span>
+                                        <span style="font-size: 13px">
                                         {{ current_analyticsemail }}
                                         <a onclick="myFunction()"
-                                           style="cursor: pointer; color: darkblue; font-weight: bold">
+                                           style="cursor: pointer; color: darkblue; font-weight: bold; font-size: 12px;">
                                                 Wrong Account?
                                         </a>
                                     </span>
                                         <br>
 
-                                        <p style="margin-top: 10px; font-weight: bold">
+                                        <p style="margin-top: 15px; font-weight: bold; font-size: 15px;">
                                             Select Your Profile Detail
                                         </p>
                                         <br>
@@ -120,12 +120,12 @@
                                         <br>
                                         {{ nForm.view }}
 
-                                        <p style="font-weight: bold"><br>
+                                        <p style="font-weight: bold; font-size: 15px;"><br>
                                             Slack</p>
-                                        <span>
+                                        <span style="font-size: 13px;">
                                         {{ workspace }}
                                             <a onclick=""
-                                               style="cursor: pointer; color: darkblue; font-weight: bold">
+                                               style="cursor: pointer; color: darkblue; font-weight: bold; font-size: 12px;">
                                                     Wrong Workspace?
                                             </a>
                                     </span>
@@ -138,7 +138,8 @@
                                             </button>
                                         </div>
                                     </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
