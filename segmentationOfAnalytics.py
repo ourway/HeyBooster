@@ -93,7 +93,8 @@ def segmentationOfAnalytics(email):
                     print("Approached to Limit")
                     stop_time = time.time()
                     sleeptime = 11 - (stop_time - start_time) 
-                    print("Waiting for %s seconds"%sleeptime)
+                    if sleeptime > 0:
+                        print("Waiting for %s seconds"%sleeptime)
                     time.sleep(sleeptime) #10 requests per 10 seconds
                     counter = 0
                     start_time = time.time()
