@@ -478,6 +478,8 @@ def connectaccount():
     user_data_sources = db.find('datasource', query={'email': session['email']})
 
     slack_token = user['sl_accesstoken']
+    response = slack_token.auth_test()
+    workspace = response['team']
 
     try:
         if user['ga_accesstoken']:
@@ -551,7 +553,8 @@ def connectaccount():
     # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
+    return render_template('datasources.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail,
+                           workspace=workspace)
 
 
 @app.route("/removedatasources/<datasourceID>", methods=['GET', 'POST'])

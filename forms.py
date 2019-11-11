@@ -5,20 +5,20 @@ from wtforms.fields.html5 import DateField
 # Notification Formu
 
 class DataSourceForm(Form):
-    account = SelectField("account", choices=[('', 'Select an Option')],
+    account = SelectField("account", choices=[('', 'Select your account')],
                           validators=[validators.DataRequired(message="This field is required.")],
                           render_kw={"class": "select-css"})
-    property = SelectField("property", choices=[('', '-- Select an Option --')],
+    property = SelectField("property", choices=[('', 'Select your property')],
                            validators=[validators.DataRequired(message="This field is required.")],
                            render_kw={"class": "select-css"})
-    view = SelectField("view", choices=[('', '-- Select an Option --')],
+    view = SelectField("view", choices=[('', 'Select your view')],
                        validators=[validators.DataRequired(message="This field is required.")],
                        render_kw={"class": "select-css"})
     #    metric = SelectField('metric', choices=[('ga:users', 'users')])
     #    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
     #    start_date = DateField('start_date', format="%Y-%m-%d")
     #    end_date = DateField('end_date', format="%Y-%m-%d")
-    channel = SelectField('channel', choices=[('', 'Select a Channel')],
+    channel = SelectField('channel', choices=[('', 'Select your channel')],
                           validators=[validators.DataRequired(message="This field is required.")],
                           render_kw={"class": "select-css"})
 
