@@ -68,8 +68,7 @@ li {
 }
 
 .input-css {
-    border: none;
-    border-bottom: 2px solid darkblue;
+    border: 1px solid darkblue;
 }
 
 .select-css {
