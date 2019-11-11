@@ -17,7 +17,6 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/get_audit_style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
@@ -90,9 +89,7 @@
                     <div class="data">
                         <div class="center-left">
                             <img class="card-img-top" src="../static/img/card-4.jpg">
-
                                 <form class="pt-3 form-div" method="POST" action="/getaudit">
-
                                     <br><br>
                                     <div class="dropdown">
                                         {{ nForm.csrf_token }}
