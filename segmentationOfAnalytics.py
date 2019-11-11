@@ -7,7 +7,7 @@ Created on Mon Nov 11 12:34:12 2019
 import google_analytics
 from database import db
 from datetime import datetime, timedelta
-
+import time
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
@@ -60,19 +60,24 @@ def segmentationOfAnalytics(email):
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
     NoU_array = []
     dS_array = []
+    counter = 0
+    start_time = time.time()
     accounts = mservice.management().accounts().list().execute()
     for acc in accounts.get('items'):
+        time.sleep(1)
         accountId = acc.get('id')
         accountName = acc.get('name')
         webproperties = mservice.management().webproperties().list(accountId=accountId
                                                                 ).execute()
         for webproperty in webproperties.get('items'):
+            time.sleep(1)
             propertyId = webproperty.get('id')
             propertyName = webproperty.get('name')
             views = mservice.management().profiles().list(accountId=accountId,
                                                           webPropertyId=propertyId
                                                           ).execute()
             for view in views.get('items'):
+                time.sleep(1)
                 viewId = view.get('id')
                 viewName = view.get('name')
                 try:
@@ -82,6 +87,16 @@ def segmentationOfAnalytics(email):
                         continue
                     else:
                         raise ex
+                counter += 1
+                print("Requests Number: %s"%counter)
+                if counter == 9: #Limit is 10 requests
+                    print("Approached to Limit")
+                    stop_time = time.time()
+                    sleeptime = 11 - (stop_time - start_time) 
+                    print("Waiting for %s seconds"%sleeptime)
+                    time.sleep(sleeptime) #10 requests per 10 seconds
+                    counter = 0
+                    start_time = time.time()
                 NoU_array += [numberOfUsers]
                 dS_array += [{"accountID": accountId,
                             "accountName": accountName,
