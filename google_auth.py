@@ -214,7 +214,7 @@ def google_gaconnectauth_redirect():
     #    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
     
     #User Segmentation
-    segmentationOfAnalytics.segmentationOfAnalytics(flask.session['email'])
+#    segmentationOfAnalytics.segmentationOfAnalytics(flask.session['email'])
     return flask.redirect(BASE_URI, code=302)
 
 
