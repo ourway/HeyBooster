@@ -9,7 +9,7 @@ import googleapiclient.discovery
 import google_analytics
 from database import db
 import requests
-from segmentationOfAnalytics import segmentationOfAnalytics
+import segmentationOfAnalytics
 
 
 TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'
@@ -214,7 +214,7 @@ def google_gaconnectauth_redirect():
     #    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)
     
     #User Segmentation
-    segmentationOfAnalytics(flask.session['email'])
+    segmentationOfAnalytics.segmentationOfAnalytics(flask.session['email'])
     return flask.redirect(BASE_URI, code=302)
 
 
