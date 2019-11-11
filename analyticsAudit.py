@@ -11,6 +11,7 @@ from database import db
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
 
+
 def scoretoText(score):
     if score == 5:
         return "URGENT"
@@ -493,28 +494,30 @@ def sessionClickDiscrepancy(slack_token, dataSource):
 
     sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
     adclicks_result = int(results['reports'][0]['data']['totals'][0]['values'][1])
-
-    if adclicks_result > 0 and (adclicks_result > sessions_result * 1.05 or adclicks_result < sessions_result * 1.05):
-        attachments += [{
-            "text": "There is session click discrepancy, you don’t measure your adwords performance properly.",
-            "color": "danger",
-#            "pretext": text,
-            "title": text,
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-            "attachment_type": "default",
-        }]
+    
+    if adclicks_result > 0:
+        if adclicks_result > sessions_result * 1.05 or adclicks_result < sessions_result * 1.05:
+            attachments += [{
+                "text": "There is session click discrepancy, you don’t measure your adwords performance properly.",
+                "color": "danger",
+    #            "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
+        else:
+            attachments += [{
+                "text": "Nothing to worry! Number of Google Ads sessions and clicks is almost same.",
+                "color": "good",
+    #            "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
     else:
-        attachments += [{
-            "text": "Nothing to worry! Number of Google Ads sessions and clicks is almost same.",
-            "color": "good",
-#            "pretext": text,
-            "title": text,
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-            "attachment_type": "default",
-        }]
-        
+        pass
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
         
@@ -1260,7 +1263,7 @@ def internalSearchTermConsistency(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Internal search term performans may not be measure properly because of case sensitivity of terms, use lowercase filter to get rid of duplicated terms",
+            "text": "Internal search term performance may not be measure properly because of case sensitivity of terms, use lowercase filter to get rid of duplicated terms",
             "color": "danger",
 #            "pretext": text,
             "title": text,
