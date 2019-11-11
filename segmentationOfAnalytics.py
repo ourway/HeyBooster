@@ -75,7 +75,13 @@ def segmentationOfAnalytics(email):
             for view in views.get('items'):
                 viewId = view.get('id')
                 viewName = view.get('name')
-                numberOfUsers = getNumberofUsers(rservice, viewId)
+                try:
+                    numberOfUsers = getNumberofUsers(rservice, viewId)
+                except Exception as ex:
+                    if "sufficient permissions" in str(ex):
+                        continue
+                    else:
+                        raise ex
                 NoU_array += [numberOfUsers]
                 dS_array += [{"accountID": accountId,
                             "accountName": accountName,
