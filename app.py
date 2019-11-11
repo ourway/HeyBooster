@@ -597,13 +597,12 @@ def getaudit():
     if request.method == 'POST':
         uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
-        print("----------------------------------------------")
-        print(nForm.data_source_name)
 
         data = {
             'email': session['email'],
             'sl_userid': uID,
             'sourceType': "Google Analytics",
+            'dataSourceName': nForm.data_source_name.data,
             'accountID': nForm.account.data.split('\u0007')[0],
             'accountName': nForm.account.data.split('\u0007')[1],
             'propertyID': nForm.property.data.split('\u0007')[0],
