@@ -112,7 +112,6 @@ def home():
                                     ('refresh_token', user['ga_refreshtoken']),
                                     ('grant_type', 'refresh_token')]
                             resp = requests.post(ACCESS_TOKEN_URI, data).json()
-                            print(resp)
                         current_analyticsemail = resp['email']
                     except:
                         current_analyticsemail = ""
