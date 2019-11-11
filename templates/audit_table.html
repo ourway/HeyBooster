@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -139,54 +140,55 @@
 
                                 <div id="content" class="collapse dropdown-div">
                                     <form class="pt-3 form-div" method="POST" action="/getaudit">
+
                                         <br><br>
-                                        <div class="dropdown">
-                                            {{ nForm.csrf_token }}
+                                    <div class="dropdown">
+                                        {{ nForm.csrf_token }}
 
-                                            <p style="margin-top: 5px; font-weight: bold">
-                                                Data Source Name
-                                            </p>
-                                            {{ nForm.data_source_name }}
+                                        <p style="margin-top: 5px; font-weight: bold; font-size: 15px;">
+                                            Data Source Name
+                                        </p>
+                                        {{ nForm.data_source_name }}
 
-                                            <p style="margin-top:10px; font-weight: bold">
-                                                Google Analytics</p>
-                                            <span>
+                                        <p style="margin-top:10px; font-weight: bold; font-size: 15px;">
+                                            Google Analytics</p>
+                                        <span>
                                         {{ current_analyticsemail }}
                                         <a onclick="myFunction()"
-                                           style="cursor: pointer; color: darkblue; font-weight: bold">
+                                           style="cursor: pointer; color: darkblue; font-weight: bold; font-size: 15px;">
                                                 Wrong Account?
                                         </a>
                                     </span>
-                                            <br>
+                                        <br>
 
-                                            <p style="margin-top: 10px; font-weight: bold">
-                                                Select Your Profile Detail
-                                            </p>
-                                            <br>
-                                            {{ nForm.account }}
-                                            <br>
-                                            {{ nForm.property }}
-                                            <br>
-                                            {{ nForm.view }}
+                                        <p style="margin-top: 10px; font-weight: bold; font-size: 15px;">
+                                            Select Your Profile Detail
+                                        </p>
+                                        <br>
+                                        {{ nForm.account }}
+                                        <br>
+                                        {{ nForm.property }}
+                                        <br>
+                                        {{ nForm.view }}
 
-                                            <p style="font-weight: bold"><br>
-                                                Slack</p>
-                                            <span>
+                                        <p style="font-weight: bold; font-size: 15px;"><br>
+                                            Slack</p>
+                                        <span>
                                         {{ workspace }}
                                             <a onclick=""
-                                               style="cursor: pointer; color: darkblue; font-weight: bold">
+                                               style="cursor: pointer; color: darkblue; font-weight: bold; font-size: 12px;">
                                                     Wrong Workspace?
                                             </a>
                                     </span>
 
-                                            {{ nForm.channel }}
-                                            <div style="margin-top:20px">
-                                            </div>
-                                            <div style=" width: 200px;">
-                                                <button type="submit" class="btn add-data mb-2">Get Analytics Audit
-                                                </button>
-                                            </div>
+                                        {{ nForm.channel }}
+                                        <div style="margin-top:20px">
                                         </div>
+                                        <div style=" width: 200px;">
+                                            <button type="submit" class="btn add-data mb-2">Get First Audit
+                                            </button>
+                                        </div>
+                                    </div>
                                     </form>
 
                                 </div>
