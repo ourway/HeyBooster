@@ -2,9 +2,13 @@
 <html lang="en">
 
 <head>
+    <title>Get First Insight</title>
     <meta charset="UTF-8">
-    <title>Get Audit</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -16,10 +20,17 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/get_audit_style.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animate/animate.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/get_audit_style.css') }}">
+
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
         w[l] = w[l] || [];
@@ -89,8 +100,8 @@
                     <div class="data">
                         <div class="center-left">
                             <img class="card-img-top" src="../static/img/card-4.jpg">
-                                <div id="content" class="dropdown-div">
-                                    <form class="pt-3 form-div" method="POST" action="/getaudit">
+                            <div id="content" class="dropdown-div">
+                                <form class="pt-3 form-div" method="POST" action="/getaudit">
                                     <div class="dropdown" style="text-align: left">
                                         {{ nForm.csrf_token }}
 
@@ -138,8 +149,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    </form>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -147,6 +157,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
