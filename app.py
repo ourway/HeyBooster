@@ -576,7 +576,7 @@ def getaudit():
 
     user = db.find_one('user', {'email': session['email']})
     slack_token = user['sl_accesstoken']
-
+    total_score = []
     try:
         if user['ga_accesstoken']:
             resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
@@ -645,13 +645,13 @@ def getaudit():
     # after sorting to use their status correctly
     for arg in args:
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        #data_source_name = db.find_one('datasource', query={"_id": arg['_id'], "type": "dataSourceName"})
+        total_score += db.find_one('notification', query={"datasourceID": arg['_id'], "type": "totalScore"})
 
         if analytics_audit['status'] == '0':
             arg['strstat'] = 'passive'
         else:
             arg['strstat'] = 'active'
-    return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail)
+    return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail, total_score=total_score)
 
 
 @app.route("/gatest/<email>")
