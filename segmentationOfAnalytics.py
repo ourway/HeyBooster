@@ -7,7 +7,7 @@ Created on Mon Nov 11 12:34:12 2019
 import google_analytics
 from database import db
 from datetime import datetime, timedelta
-
+import time
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
@@ -60,6 +60,8 @@ def segmentationOfAnalytics(email):
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
     NoU_array = []
     dS_array = []
+    counter = 0
+    start_time = time.time()
     accounts = mservice.management().accounts().list().execute()
     for acc in accounts.get('items'):
         accountId = acc.get('id')
@@ -82,6 +84,16 @@ def segmentationOfAnalytics(email):
                         continue
                     else:
                         raise ex
+                counter += 1
+                print("Requests Number: %s"%counter)
+                if counter == 99: #Limit is 100 requests
+                    print("Approached to Limit")
+                    stop_time = time.time()
+                    sleeptime = 105 - (stop_time - start_time) 
+                    print("Waiting for %s seconds"%sleeptime)
+                    time.sleep(sleeptime) #100 requests per 100 seconds
+                    counter = 0
+                    start_time = time.time()
                 NoU_array += [numberOfUsers]
                 dS_array += [{"accountID": accountId,
                             "accountName": accountName,
