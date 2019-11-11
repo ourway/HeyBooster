@@ -105,7 +105,21 @@ def home():
                 else:
                     analytics_confirm = False
                 # Fill the boxes for the value of slack_confirm and analytics_confirm
-                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm)
+                user = db.find_one('user', {'email': session['email']})
+                try:
+                    if user['ga_accesstoken']:
+                        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+                        if 'error' in resp.keys():
+                            data = [('client_id', CLIENT_ID.strip()),
+                                    ('client_secret', CLIENT_SECRET.strip()),
+                                    ('refresh_token', user['ga_refreshtoken']),
+                                    ('grant_type', 'refresh_token')]
+                            resp = requests.post(ACCESS_TOKEN_URI, data).json()
+                        current_analyticsemail = resp['email']
+                except:
+                    current_analyticsemail = False
+                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm,
+                                       current_analyticsemail=current_analyticsemail)
         except:
             return redirect('/logout')
     else:
