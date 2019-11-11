@@ -67,8 +67,9 @@ li {
     list-style-type: none;
 }
 
-.input-css {
+.data-input-css {
     border: 1px solid darkblue;
+    background-color: darkred;
 }
 
 .select-css {

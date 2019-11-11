@@ -17,6 +17,7 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/get_audit_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
@@ -95,10 +96,10 @@
                                 <div class="dropdown">
                                     {{ nForm.csrf_token }}
 
-{#                                    <p style="margin-top: 5px; font-weight: bold">
+                                    <p style="margin-top: 5px; font-weight: bold">
                                         Data Source Name
                                     </p>
-                                    {{ nForm.data_source_name }}#}
+                                    {{ nForm.data_source_name }}
 
                                     <p style="margin-top:5px; font-weight: bold">
                                         Google Analytics</p>
