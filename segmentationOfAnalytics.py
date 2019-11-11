@@ -57,7 +57,7 @@ def segmentOf(numberOfUsers):
 def segmentationOfAnalytics(email):
     db.init()
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    rservice = google_analytics.build_management_api_v3_woutSession(email)
+    rservice = google_analytics.build_reporting_api_v4_woutSession(email)
     NoU_array = []
     dS_array = []
     accounts = mservice.management().accounts().list().execute()
