@@ -40,7 +40,7 @@ def do_job(tasks_to_accomplish):
                 performancechangealert(slack_token, task, dataSource)
             elif task['type'] == 'analyticsAudit':
                 analyticsAudit(slack_token, task, dataSource)
-            db.find_and_modify('notification', query={'email': task['email'], 'type': task['type']},
+            db.find_and_modify('notification', query={'_id': task['_id']},
                                lastRunDate=time.time())
         except queue.Empty:
             time.sleep(WAITTIME)
