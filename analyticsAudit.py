@@ -19,6 +19,8 @@ def scoretoText(score):
         return "IMPORTANT"
     else:
         return "MODERATE"
+    
+    
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
     if not task:
@@ -1128,7 +1130,7 @@ def customMetric(slack_token, dataSource):
                         {
                             'viewId': viewId,
                             'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                            'metrics': metrics[i:i + 10],
+                            'metrics': metrics[i*10:i*10 + 10],
                             'includeEmptyRows': False
                         }]}).execute()
 
