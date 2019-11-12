@@ -67,9 +67,11 @@ def authorized(self):
             client_secret=self.client_secret,
             **self.token_url_params
         )
-        db.find_and_modify(collection='user', query={'email': flask.session['email']},
+        user = db.find_one(collection='user', query={'email': flask.session['email']})
+        db.find_and_modify(collection='user', query={'_id': user['_id']},
                            sl_accesstoken=token['access_token'], sl_userid=token['user_id'])
         flask.session['sl_accesstoken'] = token['access_token']
+        print(token)
     except MissingCodeError as e:
         e.args = (
             e.args[0],
@@ -120,10 +122,11 @@ def authorized(self):
 #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
 #    modules = db.find("notification", query={'email': google_auth.get_user_info()['email']})
 #    lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
-#    #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-#    data = [('token', token['access_token']),
-#            ('user', token['user_id'])]
-#    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
+    data = [('token', token['access_token']),
+            ('user', token['user_id'])]
+    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
+    db.find_and_modify(collection='user', query={'_id': user['_id']},
+                           tz_offset=usr_tz_offset)
 #    if (7 >= (usr_tz_offset - lc_tz_offset)):
 #        default_time = str(7 - (usr_tz_offset - lc_tz_offset)).zfill(2)
 #    else:
