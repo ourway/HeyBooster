@@ -233,12 +233,15 @@ def test_test(datasourceID):
 
 @app.route('/wrongaccount')
 def wrongaccount():
-    # audit = []
-    # user_analytics_audit = db.find('datasources', query={"email": session['email'], "type": "analyticsAudit"})
+    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+        return redirect('/')
+
     user = db.find_one('user', {'email': session['email']})
 
-    # for analytics_audit in user_analytics_audit:
-    #    audit.append(analytics_audit)
+    slack_token = user['sl_accesstoken']
+    client = WebClient(token=slack_token)
+    response = client.auth_test()
+    workspace = response['team']
 
     try:
         if user['ga_accesstoken']:
@@ -251,9 +254,16 @@ def wrongaccount():
                 resp = requests.post(ACCESS_TOKEN_URI, data).json()
             current_analyticsemail = resp['email']
     except:
-        current_analyticsemail = False
+        current_analyticsemail = ""
 
-    return render_template('wrongaccount.html', current_analyticsemail=current_analyticsemail)
+    datasources = db.find('datasource', query={'email': session['email']})
+    unsortedargs = []
+    for datasource in datasources:
+        unsortedargs.append(datasource)
+
+    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    return render_template('wrongaccount.html', args=args, current_analyticsemail=current_analyticsemail,
+                           workspace=workspace)
 
 
 @app.route('/change', methods=['POST'])
