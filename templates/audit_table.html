@@ -25,6 +25,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 
+
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
@@ -44,10 +45,11 @@
 
 <body>
 
-<nav>
+{#<nav>
     <div id="logo">Your Logo here</div>
 
     <label for="drop" class="toggle">Menu</label>
+    <input type="checkbox" id="drop"/>
     <ul class="menu">
         <li>
             <!-- First Tier Drop Down -->
@@ -60,7 +62,7 @@
             </ul>
         </li>
     </ul>
-</nav>
+</nav>#}
 
 {% if args %}
     <div class="limiter">
