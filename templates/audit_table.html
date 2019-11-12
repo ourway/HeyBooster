@@ -85,9 +85,9 @@
                                         Data Source Now
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
+                                        {% for arg in args %}
+                                            <a class="dropdown-item" href="#">{{ arg.dataSourceName }}</a>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </th>
