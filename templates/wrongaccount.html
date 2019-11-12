@@ -7,30 +7,30 @@
 
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
 
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
 
-    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animate/animate.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
+
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ilto.css') }}">
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 
 </head>
 
@@ -67,53 +67,42 @@
     </div>
 </nav>
 
-<div class="limiter">
-    <div class="container-table100">
-        <div class="wrap-table100">
-            <div class="table100">
-                <table>
-                    <thead class="head head-line">
-                    <tr class="table100-head">
+    <div class="limiter">
+        <div class="container-table100">
+            <div class="wrap-table100">
+                <div class="table100">
+                    <table>
+                        <thead class="head head-line">
+                            <tr class="table100-head">
 
-                        <th class="column2">Type</th>
-                        <th class="column3">Account</th>
-                        <th class="column4">Change</th>
+                                <th class="column2">Type </th>
+                                <th class="column3">Account</th>
+                                <th class="column4">Change</th>
 
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% if args %}
-                    {% for arg in args %}
-                        <tr class="line-row">
-                            <td class="column2">Google Analytics</td>
-                            <td class="column3">{{ current_analyticsemail }}</td>
-                            <td class="column4">
-                                <button class="btn btn-sm text-white change-alert" onclick="myFunction()"> Change
-                                    Account
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    {% for arg in args %}
-                        <tr class="line-row">
-                            <td class="column2">Slack</td>
-                            <td class="column3">{{ workspace }}</td>
-                            <td class="column4">
-                                <button class="btn btn-sm text-white change-alert" onclick="myFunction()"> Change
-                                    Account
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    {% endif %}
-
-                    </tbody>
-                </table>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if args %}
+                                {% for arg in args %}
+                                    <tr class="line-row">
+                                        <td class="column2">Google Analytics</td>
+                                        <td class="column3">{{ current_analyticsemail }}</td>
+                                        <td class="column4"><button onclick="myFunction()" class="btn btn-sm text-white change-alert"> Change Account</button></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            <tr class="line-row">
+                                <td class="column2">Slack</td>
+                                <td class="column3">{{ workspace }}</td>
+                                <td class="column4"><a onclick="slackRemove()"><button class="btn btn-sm text-white change-alert"> Change Workspace</button></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <script>
     function myFunction() {
@@ -124,7 +113,28 @@
 
         }
     }
+
+    function slackRemove() {
+        var r = confirm("If you change the slack account, your recent analytics audit will be deleted. Are you sure to continue?");
+        if (r == true) {
+            window.location.href = 'https://app.heybooster.ai/removeslackaccount';
+        } else {
+
+        }
+    }
 </script>
+
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/vendor/select2/select2.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='/js/main.js') }}"></script>
 
 </body>
 </html>

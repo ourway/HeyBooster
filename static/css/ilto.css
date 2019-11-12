@@ -7,9 +7,6 @@
     src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
 }
 
-#resp {
-    background-color: #202540;
-}
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -131,18 +128,24 @@ iframe {
 
 .container-table100 {
     width: 100%;
-    min-height: 100vh;
-    background-image: url(../img/a2.png);
+    min-height: 93vh;
+    background-image: url(../../static/img/a2.png);
     background-size: cover;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 33px 30px;
+    padding: 150px 30px;
+}
+
+@media screen and (max-width: 992px) {
+    .container-table100 {
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 33px 30px;
+    }
 }
 
 .test-now {
@@ -215,6 +218,8 @@ table tbody tr:last-child {
 table td,
 table th {
     text-align: left;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
 }
 
 table td.l,
@@ -399,8 +404,19 @@ tbody tr:hover {
         padding-left: 15px;
         padding-right: 15px;
     }
-    
+
     .wrap-table100 {
         width: 100%;
     }
+}
+
+.line-row .icon-img {
+    width: 15%;
+    margin: 20px;
+}
+
+
+#icon-text {
+    text-align: left;
+    padding-left: 20px;
 }
