@@ -50,12 +50,6 @@
     text-align: center;
 }
 
-
-
-body {
-    padding: 3rem;
-}
-
 @font-face {
     font-family: OpenSans-Regular;
     src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
