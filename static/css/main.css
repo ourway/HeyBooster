@@ -8,7 +8,6 @@
 }
 
 
-
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 * {
@@ -29,7 +28,6 @@ html {
 .nav- {
     background-color: #202540;
 }
-
 
 
 /* ------------------------------------ */
@@ -70,7 +68,6 @@ li {
 }
 
 
-
 /* ------------------------------------ */
 input {
     display: block;
@@ -104,14 +101,8 @@ iframe {
 }
 
 
-
-
 /*//////////////////////////////////////////////////////////////////
 [ Utiliti ]*/
-
-
-
-
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -127,7 +118,7 @@ iframe {
 }
 
 .line-row tr {
-    
+
 }
 
 .table-border {
@@ -140,7 +131,7 @@ iframe {
     border-bottom-right-radius: 10px;
 }
 
-.audit-history{
+.audit-history {
     display: block;
     width: 100%;
     text-align: center;
@@ -168,7 +159,7 @@ iframe {
     padding: 120px 30px;
 }
 
-.test-now{
+.test-now {
     padding: -10px;
     background: #448aff;
     transition: .4s opacity;
@@ -180,7 +171,7 @@ iframe {
     border: none;
     border-radius: 3px;
     transition: .4s opacity;
-    
+
 }
 
 .change-alert:hover {
@@ -188,7 +179,7 @@ iframe {
     opacity: 0.7;
 }
 
-.test-now:hover{
+.test-now:hover {
     cursor: pointer;
     opacity: 0.7;
 }
@@ -219,7 +210,7 @@ table * {
 table td,
 table th {
     padding-left: 8px;
-    
+
 }
 
 table thead tr {
@@ -271,7 +262,7 @@ table th.r {
     cursor: pointer;
 }
 
-.view-more:hover{
+.view-more:hover {
     cursor: pointer;
     color: #202540;
     background-color: transparent;
@@ -284,28 +275,25 @@ table th.r {
     transition: .4s opacity;
 }
 
-.add-data:hover{
+.add-data:hover {
     opacity: 0.9;
     cursor: pointer;
 }
 
 #point {
-    border-bottom: 3px solid rgba(78,50,204,0.5);
-    
-    
-    
-    
+    border-bottom: 3px solid rgba(78, 50, 204, 0.5);
+
 
 }
 
 #point h5 {
     font-weight: 600;
-    color:rgba(78,50,204);
+    color: rgba(78, 50, 204);
 }
 
 .form-div {
     border: 1px solid #eeeeee;
-    
+
     width: 50%;
     color: black;
     border-radius: 10px;
@@ -322,7 +310,7 @@ table th.r {
 }
 
 .head-line {
-    
+
 }
 
 tbody tr:nth-child(even) {
@@ -388,7 +376,7 @@ tbody tr:hover {
 #boots-div {
     background-color: white;
     border-top: 2px solid #eeeeee;
-    
+
 }
 
 #drop-left {
@@ -396,12 +384,11 @@ tbody tr:hover {
 }
 
 
-
 @media screen and (max-width: 992px) {
     table {
         display: block;
     }
-    
+
     .wrap-table100 {
         width: 100%;
     }
@@ -421,7 +408,7 @@ tbody tr:hover {
         height: auto;
         padding: 37px 0;
     }
-    
+
     .audit-history {
         display: none;
     }
@@ -434,10 +421,10 @@ tbody tr:hover {
     table tbody tr td:last-child {
         margin-bottom: 0;
     }
-    
+
     .line-row {
-    height: auto;
-}
+        height: auto;
+    }
 
     table tbody tr td:before {
         font-family: OpenSans-Regular;
@@ -471,7 +458,7 @@ tbody tr:hover {
         content: "Test";
     }
 
-    
+
     .column4,
     .column5,
     .column6 {
@@ -493,17 +480,14 @@ tbody tr:hover {
 }
 
 
-
-.line-row td h5{
+.line-row td h5 {
     color: #dd4c4f;
 }
 
 
-
-
 .btnx {
     background-color: transparent;
-    border: 1px solid rgba(255,255,255,0.7);
+    border: 1px solid rgba(255, 255, 255, 0.7);
     color: white;
     margin-left: 20px;
     cursor: pointer;
@@ -511,11 +495,11 @@ tbody tr:hover {
     font-weight: 300;
 }
 
-.btnx-1{
+.btnx-1 {
     background-color: #202540;
-    
+
     color: white;
- 
+
     cursor: pointer;
     font-family: 'Josefin Sans', sans-serif;
     font-weight: 300;
@@ -525,7 +509,7 @@ tbody tr:hover {
 .btnx:hover {
     background-color: #202540;
     opacity: 0.8;
-    
+
 }
 
 .btnx a:hover {
@@ -547,7 +531,7 @@ tbody tr:hover {
 }
 
 .dropdown-menu {
-    
+
 }
 
 .dropdown-item-x {
@@ -556,3 +540,8 @@ tbody tr:hover {
     font-weight: 400;
     padding-left: 5px;
 }
+
+
+
+
+
