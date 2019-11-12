@@ -38,23 +38,55 @@
 
 <body>
 
-<div class="topnav" id="myTopnav">
-    <a href="#home" class="active">Home</a>
-    <a href="#news">News</a>
-    <a href="#contact">Contact</a>
-    <div class="dropdown">
-        <button class="dropbtn">Dropdown
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
-        </div>
-    </div>
-    <a href="#about">About</a>
-    <a href="javascript:void(0);" class="icon" onclick="navbar()">&#9776;</a>
-</div>
+<nav>
+    <div id="logo">Your Logo here</div>
+
+    <label for="drop" class="toggle">Menu</label>
+    <input type="checkbox" id="drop"/>
+    <ul class="menu">
+        <li><a href="#">Home</a></li>
+        <li>
+            <!-- First Tier Drop Down -->
+            <label for="drop-1" class="toggle">WordPress +</label>
+            <a href="#">WordPress</a>
+            <input type="checkbox" id="drop-1"/>
+            <ul>
+                <li><a href="#">Themes and stuff</a></li>
+                <li><a href="#">Plugins</a></li>
+                <li><a href="#">Tutorials</a></li>
+            </ul>
+
+        </li>
+        <li>
+
+            <!-- First Tier Drop Down -->
+            <label for="drop-2" class="toggle">Web Design +</label>
+            <a href="#">Web Design</a>
+            <input type="checkbox" id="drop-2"/>
+            <ul>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Links</a></li>
+                <li>
+
+                    <!-- Second Tier Drop Down -->
+                    <label for="drop-3" class="toggle">Tutorials +</label>
+                    <a href="#">Tutorials</a>
+                    <input type="checkbox" id="drop-3"/>
+
+                    <ul>
+                        <li><a href="#">HTML/CSS</a></li>
+                        <li><a href="#">jQuery</a></li>
+                        <li><a href="#">Other</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><a href="#">Graphic Design</a></li>
+        <li><a href="#">Inspiration</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+</nav>
 
 <div class="limiter">
     <div class="container-table100">
@@ -119,15 +151,6 @@
             window.location.href = 'https://app.heybooster.ai/removeslackaccount';
         } else {
 
-        }
-    }
-
-    function navbar() {
-        var x = document.getElementById("myTopnav");
-        if (x.className === "topnav") {
-            x.className += " responsive";
-        } else {
-            x.className = "topnav";
         }
     }
 </script>
