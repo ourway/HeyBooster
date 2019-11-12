@@ -30,42 +30,31 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ilto.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-lg px-5 navbar-light" id="resp" style="list-style-type: none;">
-    <a href="/" style="color: #f9f9f9">
-        heybooster!
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false" style="color: #f9f9f9;">
-                    {{ session['email'] }}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-
-                    <a class="dropdown-item" href="/getaudit">Get Audit</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/logout">Logout</a>
-                </div>
-            </li>
-
-        </form>
+<div class="topnav" id="myTopnav">
+    <a href="#home" class="active">Home</a>
+    <a href="#news">News</a>
+    <a href="#contact">Contact</a>
+    <div class="dropdown">
+        <button class="dropbtn">Dropdown
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+        </div>
     </div>
-</nav>
+    <a href="#about">About</a>
+    <a href="javascript:void(0);" class="icon" onclick="navbar()">&#9776;</a>
+</div>
 
 <div class="limiter">
     <div class="container-table100">
@@ -130,6 +119,15 @@
             window.location.href = 'https://app.heybooster.ai/removeslackaccount';
         } else {
 
+        }
+    }
+
+    function navbar() {
+        var x = document.getElementById("myTopnav");
+        if (x.className === "topnav") {
+            x.className += " responsive";
+        } else {
+            x.className = "topnav";
         }
     }
 </script>
