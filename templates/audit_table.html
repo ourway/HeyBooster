@@ -90,7 +90,7 @@
                                     {% if current_analyticsemail %}
                                         <td class="column3">{{ current_analyticsemail }} Audit is
                                             <strong>{{ arg.strstat }}</strong> for {{ arg.propertyName }}
-                                            && {{ arg.viewName }}</td>
+                                            && {{ arg.viewName }} && {{ arg.localTime }}</td>
                                     {% else %}
                                         <script> {{ message }}
                                         location.reload();
@@ -172,15 +172,6 @@
 
                                             <p style="font-weight: bold; font-size: 15px;"><br>
                                                 Slack</p>
-                                            <span style="font-size: 13px;">
-                                                {% for arg in args %}
-                                                    {{ workspace }}
-                                                    <a href="/removeslackaccount/{{ arg._id }}"
-                                                       style="cursor: pointer; color: darkblue; font-weight: bold; font-size: 12px;">
-                                                            Wrong Workspace?
-                                                    </a>
-                                                {% endfor %}
-                                            </span>
 
                                             {{ nForm.channel }}
                                             <div style="margin-top:20px">

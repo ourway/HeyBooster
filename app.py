@@ -507,6 +507,7 @@ def connectaccount():
         #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
         uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
+        local_ts = time.asctime(time.localtime(ts))
 
         data = {
             'email': session['email'],
@@ -523,7 +524,8 @@ def connectaccount():
             'channelType': "Slack",
             'channelID': nForm.channel.data.split('\u0007')[0],
             'channelName': nForm.channel.data.split('\u0007')[1],
-            'createdTS': ts
+            'createdTS': ts,
+            'localTime': local_ts
         }
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
@@ -580,7 +582,7 @@ def removeslackaccount():
         }}
     )
 
-    return redirect('/')
+    return redirect('/logout')
 
 
 @app.route("/getaudit", methods=['GET', 'POST'])
@@ -616,6 +618,7 @@ def getaudit():
     if request.method == 'POST':
         uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
+        local_ts = time.asctime(time.localtime(ts))
 
         data = {
             'email': session['email'],
@@ -632,7 +635,8 @@ def getaudit():
             'channelType': "Slack",
             'channelID': nForm.channel.data.split('\u0007')[0],
             'channelName': nForm.channel.data.split('\u0007')[1],
-            'createdTS': ts
+            'createdTS': ts,
+            'localTime': local_ts
         }
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
