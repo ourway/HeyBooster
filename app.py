@@ -568,6 +568,21 @@ def removedatasources(datasourceID):
     return redirect('/getaudit')
 
 
+@app.route("/removeslackaccount/<datasourceID>", methods=['GET', 'POST'])
+def removeslackaccount(datasourceID):
+    user = db.find_one('user', {'email': session['email']})
+
+    slack_token = user['sl_accesstoken']
+    sl_userid = user['sl_userid']
+
+    db.DATABASE['datasource'].remove({"_id": ObjectId(datasourceID)})
+    db.DATABASE['notification'].remove({'datasourceID': ObjectId(datasourceID)})
+    db.DATABASE['user'].remove({'sl_accesstoken': slack_token})
+    db.DATABASE['user'].remove({'sl_userid': sl_userid})
+
+    return redirect('/home')
+
+
 @app.route("/getaudit", methods=['GET', 'POST'])
 @login_required
 def getaudit():
@@ -576,6 +591,10 @@ def getaudit():
 
     user = db.find_one('user', {'email': session['email']})
     slack_token = user['sl_accesstoken']
+    client = WebClient(token=slack_token)
+    response = client.auth_test()
+    workspace = response['team']
+
     try:
         if user['ga_accesstoken']:
             resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
@@ -650,7 +669,7 @@ def getaudit():
         else:
             arg['strstat'] = 'active'
     return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
-                           analytics_audit=analytics_audit)
+                           analytics_audit=analytics_audit, workspace=workspace)
 
 
 @app.route("/gatest/<email>")
