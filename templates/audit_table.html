@@ -50,19 +50,18 @@
 <nav>
     <div id="logo">Your Logo here</div>
 
-    <label for="drop" class="toggle">{{ current_analyticsemail }}</label>
+    <label for="drop" class="toggle">Menu</label>
     <input type="checkbox" id="drop"/>
     <ul class="menu">
         <li>
             <!-- First Tier Drop Down -->
-            <label for="drop-1" class="toggle">{{ current_analyticsemail }}</label>
+            <label for="drop-1" class="toggle">{{  current_analyticsemail  }}</label>
             <a href="#">{{ current_analyticsemail }}</a>
             <input type="checkbox" id="drop-1"/>
             <ul>
-                <li><a href="/wrongaccount">Connected Accounts</a></li>
+                <li><a href="/wrongaccount">Connected Account</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
-
         </li>
     </ul>
 </nav>
