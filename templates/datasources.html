@@ -30,6 +30,8 @@
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/get_audit_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ilto.css') }}">
+
 
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
@@ -57,7 +59,7 @@
     <ul class="menu">
         <li>
             <!-- First Tier Drop Down -->
-            <label for="drop-1" class="toggle">{{  current_analyticsemail  }}</label>
+            <label for="drop-1" class="toggle">{{ current_analyticsemail }}</label>
             <a href="#">{{ current_analyticsemail }}</a>
             <input type="checkbox" id="drop-1"/>
             <ul>
