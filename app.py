@@ -568,19 +568,17 @@ def removedatasources(datasourceID):
     return redirect('/getaudit')
 
 
-@app.route("/removeslackaccount/<datasourceID>", methods=['GET', 'POST'])
-def removeslackaccount(datasourceID):
+@app.route("/removeslackaccount", methods=['GET', 'POST'])
+def removeslackaccount():
     user = db.find_one('user', {'email': session['email']})
 
     slack_token = user['sl_accesstoken']
     sl_userid = user['sl_userid']
 
-    db.DATABASE['datasource'].remove({"_id": ObjectId(datasourceID)})
-    db.DATABASE['notification'].remove({'datasourceID': ObjectId(datasourceID)})
-    db.DATABASE['user'].remove({'sl_accesstoken': slack_token})
-    db.DATABASE['user'].remove({'sl_userid': sl_userid})
+    db.delete_one({'sl_accesstoken': slack_token})
+    db.delete_one({'sl_userid': sl_userid})
 
-    return redirect('/home')
+    return redirect('/')
 
 
 @app.route("/getaudit", methods=['GET', 'POST'])
