@@ -572,11 +572,13 @@ def removedatasources(datasourceID):
 def removeslackaccount():
     user = db.find_one('user', {'email': session['email']})
 
-    slack_token = user['sl_accesstoken']
-    sl_userid = user['sl_userid']
-
-    db.delete_one({'sl_accesstoken': slack_token})
-    db.delete_one({'sl_userid': sl_userid})
+    db.DATABASE['user'].update_one(
+        {'_id': user['_id']},
+        {'$set': {
+            "sl_accesstoken": "",
+            "sl_userid": ""
+        }}
+    )
 
     return redirect('/')
 
