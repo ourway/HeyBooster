@@ -479,7 +479,9 @@ p {
 nav {
 	margin:0;
 	padding: 0;
-	background-color: #254441;
+	background-color: #202540;
+    color: #f9f9f9;
+    height: 7vh;
 }
 
 #logo {
