@@ -8,12 +8,12 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,600,700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
@@ -85,20 +85,26 @@
                     {% if args %}
                         {% for arg in args %}
                             <tr class="line-row">
-                                <td id="icon-text" class="column2"><img src="../static/img/google-icon.png" class="icon-img">Google Analytics
+                                <td id="icon-text" class="column2"><img src="../static/img/google-icon.png"
+                                                                        class="icon-img">Google Analytics
                                 </td>
                                 <td class="column3">{{ current_analyticsemail }}</td>
                                 <td class="column4">
-                                    <button onclick="myFunction()" class="btn btn-sm text-white change-alert"> Change Account</button>
+                                    <button onclick="myFunction()" class="btn btn-sm text-white change-alert"> Change
+                                        Account
+                                    </button>
                                 </td>
                             </tr>
                         {% endfor %}
                     {% endif %}
                     <tr class="line-row">
-                        <td id="icon-text" class="column2"><img class="icon-img" src="../static/img/slack-icon.png">Slack</td>
+                        <td id="icon-text" class="column2"><img class="icon-img" src="../static/img/slack-icon.png">Slack
+                        </td>
                         <td class="column3">{{ workspace }}</td>
                         <td class="column4"><a>
-                            <button onclick="slackRemove()" class="btn btn-sm text-white change-alert"> Change Workspace</button>
+                            <button onclick="slackRemove()" class="btn btn-sm text-white change-alert"> Change
+                                Workspace
+                            </button>
                         </a></td>
                     </tr>
                     </tbody>
