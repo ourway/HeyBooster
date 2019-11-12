@@ -7,7 +7,7 @@ from wtforms.fields.html5 import DateField
 class DataSourceForm(Form):
     data_source_name = StringField("Data Source Name",
                                    validators=[validators.DataRequired(message="This field is required")],
-                                   render_kw={"class": "data-input-css", "placeholder": "test"})
+                                   render_kw={"class": "data-input-css", "placeholder": "Data source name"})
     account = SelectField("account", choices=[('', 'Select your account')],
                           validators=[validators.DataRequired(message="This field is required.")],
                           render_kw={"class": "select-css"})
