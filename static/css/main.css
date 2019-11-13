@@ -54,6 +54,15 @@
     font-family: OpenSans-Regular;
     src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
 }
+/*//////////////////////////////////////////////////////////////////
+[ FONT ]*/
+
+
+@font-face {
+    font-family: OpenSans-Regular;
+    src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
+}
+
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -76,6 +85,7 @@ html {
 .nav- {
     background-color: #202540;
 }
+
 
 
 /* ------------------------------------ */
@@ -116,6 +126,7 @@ li {
 }
 
 
+
 /* ------------------------------------ */
 input {
     display: block;
@@ -149,8 +160,14 @@ iframe {
 }
 
 
+
+
 /*//////////////////////////////////////////////////////////////////
 [ Utiliti ]*/
+
+
+
+
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -162,12 +179,16 @@ iframe {
 }
 
 .line-row {
-    height: 120px;
-}
-
-.line-row tr {
+    height: 95px;
 
 }
+
+#border-table {
+
+
+}
+
+.line-row tr {}
 
 .table-border {
     border-top-left-radius: 10px;
@@ -183,19 +204,22 @@ iframe {
     display: block;
     width: 100%;
     text-align: center;
-    color: white;
+    color:#303f9f;
     margin-bottom: 10px;
     margin-top: 10px;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Quicksand', sans-serif;
     font-weight: 600;
-    font-size: 40px;
-    height: auto;
+    font-size: 18px;
+}
+
+#hd-border {
+
 }
 
 
 .container-table100 {
     width: 100%;
-    min-height: 100vh;
+    min-height: 93vh;
     background-image: url(../img/a2.png);
     background-size: cover;
     display: -webkit-block;
@@ -233,7 +257,7 @@ iframe {
 }
 
 .wrap-table100 {
-    width: 80%;
+    width: 90%;
 }
 
 .text-deco {
@@ -268,6 +292,7 @@ table thead tr {
 
 table tbody tr {
     height: 80px;
+
 }
 
 table tbody tr:last-child {
@@ -329,14 +354,17 @@ table th.r {
 }
 
 #point {
-    border-bottom: 3px solid rgba(78, 50, 204, 0.5);
+    border-bottom: 2px solid rgba(63,81,181,0.4);
+
+
+
 
 
 }
 
 #point h5 {
     font-weight: 600;
-    color: rgba(78, 50, 204);
+    color: rgba(63,81,181,1);
 }
 
 .form-div {
@@ -345,10 +373,6 @@ table th.r {
     width: 50%;
     color: black;
     border-radius: 10px;
-}
-
-#spiky {
-    width: 60%;
 }
 
 .table100-head th {
@@ -361,9 +385,9 @@ table th.r {
     font-family: 'Montserrat', sans-serif;
 }
 
-.head-line {
 
-}
+
+.head-line {}
 
 tbody tr:nth-child(even) {
     background-color: #fbfbfb;
@@ -406,33 +430,96 @@ tbody tr:hover {
 
 
 .column3 {
-    width: 800px;
+    width: 900px;
     text-align: center;
     background-color: #FBFBFB;
 }
 
 .column4 {
-    width: 10px;
+    width: 200px;
     text-align: right;
     text-align: center;
     background-color: #FBFBFB;
 }
 
 .column5 {
-    width: 180px;
+    padding-right:10px;
+    width: 0px;
     text-align: right;
     text-align: center;
     background-color: #FBFBFB;
 }
 
 #boots-div {
-    background-color: white;
-    border-top: 2px solid #eeeeee;
-
+    background-color: #fbfbfb;
 }
 
 #drop-left {
     text-align: left;
+}
+
+#hd-bc {
+    background-color: #e4e6f1;
+}
+
+
+.dropbtn {
+    background-color: transparent;
+    color: black;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 2px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #eeeeee;
+    color: #000;
+    width: 80px;
+    cursor: pointer;
+    border-radius: 5px;
+
+
+
+}
+
+.dropdown button {
+    cursor: pointer;
+}
+
+
+.dropdown-content a {
+    color: black;
+    padding: 6px 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 400;
+    font-family: sans-serif;
+
+}
+
+.dropdown-content a:hover {
+    color: #777777;
+    cursor: pointer;
+}
+
+.dropdown:hover .dropdown-content {
+    display: flex;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: transparent;
 }
 
 
@@ -459,6 +546,7 @@ tbody tr:hover {
     table tbody tr {
         height: auto;
         padding: 37px 0;
+
     }
 
     .audit-history {
@@ -532,19 +620,26 @@ tbody tr:hover {
 }
 
 
+
 .line-row td h5 {
     color: #dd4c4f;
 }
 
+tr#head-audit {
+    background-color: #f9f9f9;
+}
+
+
 
 .btnx {
     background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     color: white;
     margin-left: 20px;
     cursor: pointer;
     font-family: 'Josefin Sans', sans-serif;
     font-weight: 300;
+    border-radius: 0px;
 }
 
 .btnx-1 {
@@ -582,17 +677,15 @@ tbody tr:hover {
     margin-bottom: 20px;
 }
 
-.dropdown-menu {
 
-}
 
 .dropdown-item-x {
     background-color: transparent;
     color: black;
     font-weight: 400;
     padding-left: 5px;
+    right: 0;
 }
-
 
 
 
