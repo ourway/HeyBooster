@@ -221,7 +221,7 @@ def active_audit_test(datasourceID):
     val = int(analytics_audit['status'])
     db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
                        status=str(1 - val))
-
+    
     return redirect('/getaudit')
 
 
@@ -233,6 +233,8 @@ def test_test(datasourceID):
     slack_token = user['sl_accesstoken']
     #    analyticsAudit(slack_token, task=None, dataSource=dataSource)
     run_analyticsAudit.delay(slack_token, datasourceID)
+    db.find_and_modify('notification', query={"datasourceID": ObjectId(datasourceID),
+                                        "type": "analyticsAudit"}, lastRunDate=time.time())
     return redirect('/getaudit')
 
 
