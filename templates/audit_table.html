@@ -80,8 +80,13 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {% for arg in args %}
+                                            {% if arg.dataSourceName %}
+                                                {% set dataSourceName = arg.dataSourceName %}
+                                            {% else %}
+                                                {% set dataSourceName = arg._id %}
+                                            {% endif%}
                                             <a class="dropdown-item"
-                                               href="/audithistory/{{ arg._id }}">{{ arg.dataSourceName }}</a>
+                                               href="/audithistory/{{ arg._id }}">{{ dataSourceName }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
