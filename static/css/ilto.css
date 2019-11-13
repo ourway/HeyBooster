@@ -167,7 +167,7 @@ iframe {
 
 
 .wrap-table100 {
-    width: 80%;
+    width: 75%;
 }
 
 .text-deco {
@@ -284,7 +284,7 @@ tbody tr:hover {
 }
 
 .column3 {
-    width: 200px;
+    width: 230px;
     text-align: center;
     background-color: #FBFBFB;
 }
@@ -292,7 +292,7 @@ tbody tr:hover {
 .column4 {
     width: 100px;
     text-align: right;
-    text-align: center;
+    padding-right: 25px;
     background-color: #FBFBFB;
 }
 
@@ -412,6 +412,9 @@ tbody tr:hover {
 #icon-text {
     text-align: left;
     padding-left: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Quicksand', sans-serif;
 }
 
 
