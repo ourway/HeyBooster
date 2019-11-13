@@ -47,7 +47,7 @@ def login_required(f):
 
 app = Flask(__name__)
 
-#Celery for task queue
+# Celery for task queue
 celery = Celery(broker='redis://localhost:6379/0')
 
 db.init()
@@ -66,10 +66,6 @@ app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
-
-@app.route('/test1', methods=['GET'])
-def test1():
-    return render_template('test.html')
 
 @app.route('/images/<pid>.png')
 def get_image(pid):
@@ -235,9 +231,10 @@ def test_test(datasourceID):
     user = db.find_one("user", query={"email": dataSource["email"]})
 
     slack_token = user['sl_accesstoken']
-#    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+    #    analyticsAudit(slack_token, task=None, dataSource=dataSource)
     run_analyticsAudit.delay(slack_token, datasourceID)
     return redirect('/getaudit')
+
 
 @celery.task(name='analyticsAudit.run')
 def run_analyticsAudit(slack_token, datasourceID):
@@ -246,6 +243,7 @@ def run_analyticsAudit(slack_token, datasourceID):
     db.find_and_modify("notification", {"datasourceID": ObjectId(datasourceID),
                                         "type": "analyticsAudit"}, lastRunDate=time.time())
     return True
+
 
 @app.route('/audithistory/<datasourceID>')
 def audithistory(datasourceID):
@@ -257,18 +255,18 @@ def audithistory(datasourceID):
     response = client.auth_test()
     workspace = response['team']
 
-#    try:
-#        if user['ga_accesstoken']:
-#            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-#            if 'error' in resp.keys():
-#                data = [('client_id', CLIENT_ID.strip()),
-#                        ('client_secret', CLIENT_SECRET.strip()),
-#                        ('refresh_token', user['ga_refreshtoken']),
-#                        ('grant_type', 'refresh_token')]
-#                resp = requests.post(ACCESS_TOKEN_URI, data).json()
-#            current_analyticsemail = resp['email']
-#    except:
-#        current_analyticsemail = False
+    #    try:
+    #        if user['ga_accesstoken']:
+    #            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+    #            if 'error' in resp.keys():
+    #                data = [('client_id', CLIENT_ID.strip()),
+    #                        ('client_secret', CLIENT_SECRET.strip()),
+    #                        ('refresh_token', user['ga_refreshtoken']),
+    #                        ('grant_type', 'refresh_token')]
+    #                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+    #            current_analyticsemail = resp['email']
+    #    except:
+    #        current_analyticsemail = False
 
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
@@ -321,7 +319,7 @@ def audithistory(datasourceID):
                                   in channels]
     except:
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
-        
+
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     # Sort Order is important, that's why analytics audits are queried
     # after sorting to use their status correctly
@@ -334,7 +332,8 @@ def audithistory(datasourceID):
             arg['strstat'] = 'passive'
         else:
             arg['strstat'] = 'active'
-    return render_template('audit_table.html', args=args, selectedargs = selectedargs, nForm=nForm, current_analyticsemail=current_analyticsemail,
+    return render_template('audit_table.html', args=args, selectedargs=selectedargs, nForm=nForm,
+                           current_analyticsemail=current_analyticsemail,
                            analytics_audit=analytics_audit, workspace=workspace)
 
 
@@ -802,7 +801,8 @@ def getaudit():
             arg['strstat'] = 'passive'
         else:
             arg['strstat'] = 'active'
-    return render_template('audit_table.html', args=args, selectedargs=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
+    return render_template('audit_table.html', args=args, selectedargs=args, nForm=nForm,
+                           current_analyticsemail=current_analyticsemail,
                            analytics_audit=analytics_audit, workspace=workspace)
 
 

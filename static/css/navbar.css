@@ -5,7 +5,7 @@ body {
 
 /* Add a black background color to the top navigation */
 .topnav {
-  background-color: #c5cae9;
+  background-color: #202540;
   overflow: hidden;
   margin: 0px auto;
   padding: 0px auto;
@@ -40,7 +40,7 @@ body {
 }
 
 /* Style the dropdown button to fit inside the topnav */
-.dropdown-nav .dropbtn {
+.dropdown-nav .dropbtn-3 {
   font-size: 17px;
   border: none;
   outline: none;
@@ -72,8 +72,8 @@ body {
 }
 
 /* Add a dark background on topnav links and the dropdown button on hover */
-.topnav a:hover, .dropdown-nav:hover .dropbtn {
-  background-color: #555;
+.topnav a:hover, .dropdown-nav:hover .dropbtn-3 {
+  background-color: transparent;
   color: white;
 }
 
@@ -90,7 +90,7 @@ body {
 
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
 @media screen and (max-width: 600px) {
-  .topnav a:not(:first-child), .dropdown-nav .dropbtn {
+  .topnav a:not(:first-child), .dropdown-nav .dropbtn-3 {
     display: none;
   }
   .topnav a.icon {
@@ -114,7 +114,7 @@ body {
   }
   .topnav.responsive .dropdown-nav {float: none;}
   .topnav.responsive .dropdown-content {position: relative;}
-  .topnav.responsive .dropdown-nav .dropbtn {
+  .topnav.responsive .dropdown-nav .dropbtn-3 {
     display: block;
     width: 100%;
     text-align: left;
