@@ -8,7 +8,6 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
@@ -27,6 +26,8 @@
 
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ilto.css') }}">
@@ -50,6 +51,22 @@
 </head>
 
 <body>
+
+<div class="topnav " id="myTopnav">
+    <img src="../static/images/heyBooster_small.png" style="width: 10.1%">
+    <div class="ilto">
+        <div class="dropdown-nav">
+            <button class="dropbtn">{{ current_analyticsemail }}
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="/wrongaccount">Connected Accounts</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+    <a href="javascript:void(0);" class="icon" onclick="navFunction()">&#9776;</a>
+</div>
 
 <div class="limiter">
     <div class="container-table100">
@@ -97,7 +114,17 @@
         </div>
     </div>
 </div>
+<script>
+    function navFunction() {
+        var x = document.getElementById("myTopnav");
+        if (x.className === "topnav") {
+            x.className += " responsive";
+        } else {
+            x.className = "topnav";
+        }
+    }
 
+</script>
 <script>
     function myFunction() {
         var r = confirm("If you change the analytics account, your recent analytics audit will be deleted. Are you sure to continue?");

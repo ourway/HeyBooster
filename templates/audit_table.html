@@ -85,7 +85,7 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {% for arg in args %}
-                                            <a class="dropdown-item" href="#">{{ arg.dataSourceName }}</a>
+                                            <a class="dropdown-item" href="/audithistory{{ arg.dataSourceName }}">{{ arg.dataSourceName }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
