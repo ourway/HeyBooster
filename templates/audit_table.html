@@ -84,7 +84,7 @@
                                                 {% set dataSourceName = arg.dataSourceName %}
                                             {% else %}
                                                 {% set dataSourceName = arg._id %}
-                                            {% endif%}
+                                            {% endif %}
                                             <a class="dropdown-item"
                                                href="/audithistory/{{ arg._id }}">{{ dataSourceName }}</a>
                                         {% endfor %}
@@ -139,8 +139,11 @@
                                     <td class="column5">
                                         <div class="dropdown" style="float:right;">
                                             <button class="dropbtn"><i class="fa fa-caret-down"></i></button>
-                                            <div class="dropdown-content" onclick="location.href='https://app.heybooster.ai/test_test/{{ arg._id }}'">
-                                                Test Now
+                                            <div class="dropdown-content"
+                                                 onclick="location.href='https://app.heybooster.ai/test_test/{{ arg._id }}'">
+                                                <span style="padding-top: 5px; padding-bottom: 5px; padding-left: 10px; padding-right: 10px; font-size: 14px;">
+                                                    Test Now
+                                                </span>
                                             </div>
                                         </div>
                                     </td>
