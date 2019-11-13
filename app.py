@@ -264,11 +264,10 @@ def audithistory(datasourceID):
 #        current_analyticsemail = False
 
     nForm = DataSourceForm(request.form)
-#    datasources = db.find('datasource', query={'email': session['email']})
-#    unsortedargs = []
-#    for datasource in datasources:
-#        unsortedargs.append(datasource)
-    args = [db.find_one("datasource", query={"_id": ObjectId(datasourceID)})]
+    datasources = db.find('datasource', query={'email': session['email']})
+    unsortedargs = []
+    for datasource in datasources:
+        unsortedargs.append(datasource)
     if request.method == 'POST':
         #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         #        local_ts = time.asctime(time.localtime(ts))
@@ -294,7 +293,7 @@ def audithistory(datasourceID):
         }
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
-#        unsortedargs.append(data)
+        unsortedargs.append(data)
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
@@ -316,10 +315,11 @@ def audithistory(datasourceID):
     except:
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
         
-#    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     # Sort Order is important, that's why analytics audits are queried
     # after sorting to use their status correctly
-    for arg in args:
+    selectedargs = [db.find_one("datasource", query={"_id": ObjectId(datasourceID)})]
+    for arg in selectedargs:
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
         localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
         arg['localTime'] = localTime
@@ -327,7 +327,7 @@ def audithistory(datasourceID):
             arg['strstat'] = 'passive'
         else:
             arg['strstat'] = 'active'
-    return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
+    return render_template('audit_table.html', args=args, selectedargs = selectedargs, nForm=nForm, current_analyticsemail=current_analyticsemail,
                            analytics_audit=analytics_audit, workspace=workspace)
 
 
