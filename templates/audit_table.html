@@ -22,6 +22,8 @@
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 
@@ -45,24 +47,21 @@
 
 <body>
 
-{#<nav>
-    <div id="logo">Your Logo here</div>
-
-    <label for="drop" class="toggle">Menu</label>
-    <input type="checkbox" id="drop"/>
-    <ul class="menu">
-        <li>
-            <!-- First Tier Drop Down -->
-            <label for="drop-1" class="toggle">{{ current_analyticsemail }}</label>
-            <a href="#">{{ current_analyticsemail }}</a>
-            <input type="checkbox" id="drop-1"/>
-            <ul>
-                <li><a href="/wrongaccount">Connected Account</a></li>
-                <li><a href="/logout">Logout</a></li>
-            </ul>
-        </li>
-    </ul>
-</nav>#}
+<div class="topnav " id="myTopnav">
+    <img src="../static/images/heyBooster_small.png" style="width: 10.1%">
+    <div class="ilto">
+        <div class="dropdown">
+            <button class="dropbtn">{{ current_analyticsemail }}
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="/wrongaccount">Connected Accounts</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+    <a href="javascript:void(0);" class="icon" onclick="navFunction()">&#9776;</a>
+</div>
 
 {% if args %}
     <div class="limiter">
@@ -235,6 +234,18 @@
             secilenID.style.display = "none";
         }
     }
+</script>
+
+<script>
+    function navFunction() {
+        var x = document.getElementById("myTopnav");
+        if (x.className === "topnav") {
+            x.className += " responsive";
+        } else {
+            x.className = "topnav";
+        }
+    }
+
 </script>
 
 
