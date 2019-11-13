@@ -9,6 +9,7 @@ body {
   overflow: hidden;
   margin: 0px auto;
   padding: 0px auto;
+  height: 7vh;
 }
 
 /* Style the links inside the navigation bar */
