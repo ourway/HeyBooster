@@ -108,15 +108,19 @@ def home():
                 if session['ga_accesstoken']:
                     user = db.find_one('user', {'email': session['email']})
 
+#                    try:
+#                        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+#                        if 'error' in resp.keys():
+#                            data = [('client_id', CLIENT_ID.strip()),
+#                                    ('client_secret', CLIENT_SECRET.strip()),
+#                                    ('refresh_token', user['ga_refreshtoken']),
+#                                    ('grant_type', 'refresh_token')]
+#                            resp = requests.post(ACCESS_TOKEN_URI, data).json()
+#                        current_analyticsemail = resp['email']
+#                    except:
+#                        current_analyticsemail = ""
                     try:
-                        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-                        if 'error' in resp.keys():
-                            data = [('client_id', CLIENT_ID.strip()),
-                                    ('client_secret', CLIENT_SECRET.strip()),
-                                    ('refresh_token', user['ga_refreshtoken']),
-                                    ('grant_type', 'refresh_token')]
-                            resp = requests.post(ACCESS_TOKEN_URI, data).json()
-                        current_analyticsemail = resp['email']
+                        current_analyticsemail = user['ga_email']
                     except:
                         current_analyticsemail = ""
 
@@ -304,7 +308,8 @@ def audithistory(datasourceID):
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
-        analyticsAudit(slack_token, task=None, dataSource=data)
+#        analyticsAudit(slack_token, task=None, dataSource=data)
+        run_analyticsAudit.delay(slack_token, data['_id'])
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
@@ -774,7 +779,8 @@ def getaudit():
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
-        analyticsAudit(slack_token, task=None, dataSource=data)
+#        analyticsAudit(slack_token, task=None, dataSource=data)
+        run_analyticsAudit.delay(slack_token, data['_id'])
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
