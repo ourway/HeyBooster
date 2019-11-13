@@ -231,7 +231,7 @@ def test_test(datasourceID):
     return redirect('/getaudit')
 
 
-@app.route('/audithistory/<datasourceID>', methods=['GET', 'POST'])
+@app.route('/audithistory/<datasourceID>', methods=['GET'])
 def audithistory(datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     print('*****************************')
