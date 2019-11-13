@@ -232,11 +232,12 @@ def test_test(datasourceID):
 
     slack_token = user['sl_accesstoken']
 #    analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    run_analyticsAudit.delay(slack_token, dataSource)
+    run_analyticsAudit.delay(slack_token, datasourceID)
     return redirect('/getaudit')
 
 @celery.task(name='analyticsAudit.run')
-def run_analyticsAudit(slack_token, dataSource):
+def run_analyticsAudit(slack_token, datasourceID):
+    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
     return True
 
