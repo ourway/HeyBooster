@@ -34,13 +34,13 @@ body {
 }
 
 /* Dropdown container - needed to position the dropdown content */
-.dropdown {
+.dropdown-nav {
   float: left;
   overflow: hidden;
 }
 
 /* Style the dropdown button to fit inside the topnav */
-.dropdown .dropbtn {
+.dropdown-nav .dropbtn {
   font-size: 17px;
   border: none;
   outline: none;
@@ -72,7 +72,7 @@ body {
 }
 
 /* Add a dark background on topnav links and the dropdown button on hover */
-.topnav a:hover, .dropdown:hover .dropbtn {
+.topnav a:hover, .dropdown-nav:hover .dropbtn {
   background-color: #555;
   color: white;
 }
@@ -84,13 +84,13 @@ body {
 }
 
 /* Show the dropdown menu when the user moves the mouse over the dropdown button */
-.dropdown:hover .dropdown-content {
+.dropdown-nav:hover .dropdown-content {
   display: block;
 }
 
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
 @media screen and (max-width: 600px) {
-  .topnav a:not(:first-child), .dropdown .dropbtn {
+  .topnav a:not(:first-child), .dropdown-nav .dropbtn {
     display: none;
   }
   .topnav a.icon {
@@ -112,9 +112,9 @@ body {
     display: block;
     text-align: left;
   }
-  .topnav.responsive .dropdown {float: none;}
+  .topnav.responsive .dropdown-nav {float: none;}
   .topnav.responsive .dropdown-content {position: relative;}
-  .topnav.responsive .dropdown .dropbtn {
+  .topnav.responsive .dropdown-nav .dropbtn {
     display: block;
     width: 100%;
     text-align: left;

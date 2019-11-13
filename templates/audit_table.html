@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
@@ -49,7 +50,7 @@
 <div class="topnav " id="myTopnav">
     <img src="../static/images/heyBooster_small.png" style="width: 10.1%">
     <div class="ilto">
-        <div class="dropdown">
+        <div class="dropdown-nav">
             <button class="dropbtn">{{ current_analyticsemail }}
                 <i class="fa fa-caret-down"></i>
             </button>
