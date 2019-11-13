@@ -63,7 +63,7 @@
     <a href="javascript:void(0);" class="icon" onclick="navFunction()">&#9776;</a>
 </div>
 
-{% if args %}
+{% if current_analyticsemail %}
     <div class="limiter">
         <div class="container-table100">
             <div class="wrap-table100">
@@ -211,8 +211,11 @@
     </div>
 
 {% else %}
-
+    <script>
+        location.reload();
+    </script>
 {% endif %}
+
 <script>
     function gizleGoster(ID) {
         var secilenID = document.getElementById(ID);
