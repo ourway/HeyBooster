@@ -167,7 +167,7 @@ iframe {
 
 
 .wrap-table100 {
-    width: 55%;
+    width: 80%;
 }
 
 .text-deco {
@@ -278,7 +278,7 @@ tbody tr:hover {
 }
 
 .column2 {
-    width: 130px;
+    width: 140px;
     text-align: center;
     background-color: #FBFBFB;
 }
@@ -403,8 +403,9 @@ tbody tr:hover {
 }
 
 .line-row .icon-img {
-    width: 15%;
-    margin: 20px;
+    width: 12%;
+    margin: 10px;
+    margin-right: 20px;
 }
 
 
