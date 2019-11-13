@@ -20,7 +20,7 @@ from modules import performancegoaltracking, costprediction, performancechangeal
 from bson.objectid import ObjectId
 import babel.numbers
 from analyticsAudit import analyticsAudit
-#from celery import Celery
+from celery import Celery
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
@@ -47,8 +47,8 @@ def login_required(f):
 
 app = Flask(__name__)
 
-##Celery for task queue
-#celery = Celery(broker='redis://localhost:6379/0')
+#Celery for task queue
+celery = Celery(broker='redis://localhost:6379/0')
 
 db.init()
 db2.init()
@@ -231,14 +231,14 @@ def test_test(datasourceID):
     user = db.find_one("user", query={"email": dataSource["email"]})
 
     slack_token = user['sl_accesstoken']
-    analyticsAudit(slack_token, task=None, dataSource=dataSource)
-#    run_analyticsAudit.delay(slack_token, dataSource)
+#    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+    run_analyticsAudit.delay(slack_token, dataSource)
     return redirect('/getaudit')
 
-#@celery.task(name='analyticsAudit.run')
-#def run_analyticsAudit(slack_token, dataSource):
-#    analyticsAudit(slack_token, task=None, dataSource=dataSource)
-#    return True
+@celery.task(name='analyticsAudit.run')
+def run_analyticsAudit(slack_token, dataSource):
+    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+    return True
 
 @app.route('/audithistory/<datasourceID>')
 def audithistory(datasourceID):

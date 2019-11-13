@@ -44,4 +44,5 @@ matplotlib==3.1.1
 babel==2.5.3
 timezonefinder==4.1.0
 ccy==1.1.0
-
+redis==3.3.11
+celery==4.3.0
