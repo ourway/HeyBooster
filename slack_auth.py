@@ -69,9 +69,8 @@ def authorized(self):
         )
         user = db.find_one(collection='user', query={'email': flask.session['email']})
         db.find_and_modify(collection='user', query={'_id': user['_id']},
-                           sl_accesstoken=token['access_token'], sl_userid=token['user_id'])
+                           sl_accesstoken=token['access_token'], sl_userid=token['user_id'], sl_teamid = token['team_id'])
         flask.session['sl_accesstoken'] = token['access_token']
-        print(token)
     except MissingCodeError as e:
         e.args = (
             e.args[0],

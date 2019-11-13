@@ -595,6 +595,14 @@ def removeslackaccount():
     return redirect('/logout')
 
 
+def Timestamp2Date(ts, tz_offset):
+    if tz_offset > 0:    
+        date = datetime.utcfromtimestamp(int(ts)) + timedelta(hours = tz_offset)
+    else:
+        date = datetime.utcfromtimestamp(int(ts)) - timedelta(hours = tz_offset)
+    return date.strftime("%B %d, %Y at %I:%M %p").lstrip("0").replace(" 0", " ")
+
+
 @app.route("/getaudit", methods=['GET', 'POST'])
 @login_required
 def getaudit():
@@ -602,6 +610,7 @@ def getaudit():
         return redirect('/')
 
     user = db.find_one('user', {'email': session['email']})
+    tz_offset = user['tz_offset']
     slack_token = user['sl_accesstoken']
     client = WebClient(token=slack_token)
     response = client.auth_test()
@@ -626,9 +635,10 @@ def getaudit():
     for datasource in datasources:
         unsortedargs.append(datasource)
     if request.method == 'POST':
-        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
+#        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
+#        local_ts = time.asctime(time.localtime(ts))
         ts = time.time()
-        local_ts = time.asctime(time.localtime(ts))
+        uID = user['sl_userid']
 
         data = {
             'email': session['email'],
@@ -645,8 +655,7 @@ def getaudit():
             'channelType': "Slack",
             'channelID': nForm.channel.data.split('\u0007')[0],
             'channelName': nForm.channel.data.split('\u0007')[1],
-            'createdTS': ts,
-            'localTime': local_ts
+            'createdTS': ts
         }
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
@@ -677,7 +686,8 @@ def getaudit():
     # after sorting to use their status correctly
     for arg in args:
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-
+        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+        arg['localTime'] = localTime
         if analytics_audit['status'] == '0':
             arg['strstat'] = 'passive'
         else:
