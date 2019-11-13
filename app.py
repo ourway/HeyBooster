@@ -239,6 +239,8 @@ def test_test(datasourceID):
 def run_analyticsAudit(slack_token, datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
+    db.find_and_modify("notification", {"datasourceID": ObjectId(datasourceID),
+                                        "type": "analyticsAudit"}, lastRunDate=time.time())
     return True
 
 @app.route('/audithistory/<datasourceID>')
@@ -796,7 +798,7 @@ def getaudit():
             arg['strstat'] = 'passive'
         else:
             arg['strstat'] = 'active'
-    return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
+    return render_template('audit_table.html', args=args, selectedargs=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
                            analytics_audit=analytics_audit, workspace=workspace)
 
 
