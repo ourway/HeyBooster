@@ -185,14 +185,16 @@ def google_gaconnectauth_redirect():
     # Obtain current analytics account email
     user = db.find_one('user', {'email': flask.session['email']})
     if (user['ga_accesstoken']):
-        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-        if ('error' in resp.keys()):
-            data = [('client_id', CLIENT_ID.strip()),
-                    ('client_secret', CLIENT_SECRET.strip()),
-                    ('refresh_token', user['ga_refreshtoken']),
-                    ('grant_type', 'refresh_token')]
-            resp = requests.post(ACCESS_TOKEN_URI, data).json()
-        current_analyticsemail = resp['email']
+#        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+#        if ('error' in resp.keys()):
+#            data = [('client_id', CLIENT_ID.strip()),
+#                    ('client_secret', CLIENT_SECRET.strip()),
+#                    ('refresh_token', user['ga_refreshtoken']),
+#                    ('grant_type', 'refresh_token')]
+#            resp = requests.post(ACCESS_TOKEN_URI, data).json()
+#            resp = requests.get(TOKEN_INFO_URI.format(resp['access_token'])).json()
+#        current_analyticsemail = resp['email']
+        current_analyticsemail = user['ga_email']
 
 #        # Obtain new analytics account email and
 #        user_info = get_user_info()
@@ -208,7 +210,8 @@ def google_gaconnectauth_redirect():
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     db.find_and_modify(collection='user', query={'_id': user['_id']},
                        ga_accesstoken=oauth2_tokens['access_token'],
-                       ga_refreshtoken=oauth2_tokens['refresh_token'])
+                       ga_refreshtoken=oauth2_tokens['refresh_token'],
+                       ga_email = new_analyticsemail)
     flask.session['ga_accesstoken'] = oauth2_tokens['access_token']
     #    viewId = google_analytics.get_first_profile_id()
     #    db.find_and_modify(collection='user', query={'email': flask.session['email']}, viewId=viewId)

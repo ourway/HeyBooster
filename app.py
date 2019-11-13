@@ -20,6 +20,7 @@ from modules import performancegoaltracking, costprediction, performancechangeal
 from bson.objectid import ObjectId
 import babel.numbers
 from analyticsAudit import analyticsAudit
+#from celery import Celery
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
@@ -33,7 +34,6 @@ CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
 
 
 # Kullanıcı Giriş Decorator'ı
-
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -46,6 +46,10 @@ def login_required(f):
 
 
 app = Flask(__name__)
+
+##Celery for task queue
+#celery = Celery(broker='redis://localhost:6379/0')
+
 db.init()
 db2.init()
 
@@ -228,38 +232,43 @@ def test_test(datasourceID):
 
     slack_token = user['sl_accesstoken']
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
+#    run_analyticsAudit.delay(slack_token, dataSource)
     return redirect('/getaudit')
 
+@celery.task(name='analyticsAudit.run')
+def run_analyticsAudit(slack_token, dataSource):
+    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+    return True
 
 @app.route('/audithistory/<datasourceID>')
 def audithistory(datasourceID):
-    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
-
     user = db.find_one('user', {'email': session['email']})
     tz_offset = user['tz_offset']
     slack_token = user['sl_accesstoken']
+    current_analyticsemail = user['ga_email']
     client = WebClient(token=slack_token)
     response = client.auth_test()
     workspace = response['team']
 
-    try:
-        if user['ga_accesstoken']:
-            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-            if 'error' in resp.keys():
-                data = [('client_id', CLIENT_ID.strip()),
-                        ('client_secret', CLIENT_SECRET.strip()),
-                        ('refresh_token', user['ga_refreshtoken']),
-                        ('grant_type', 'refresh_token')]
-                resp = requests.post(ACCESS_TOKEN_URI, data).json()
-            current_analyticsemail = resp['email']
-    except:
-        current_analyticsemail = False
+#    try:
+#        if user['ga_accesstoken']:
+#            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+#            if 'error' in resp.keys():
+#                data = [('client_id', CLIENT_ID.strip()),
+#                        ('client_secret', CLIENT_SECRET.strip()),
+#                        ('refresh_token', user['ga_refreshtoken']),
+#                        ('grant_type', 'refresh_token')]
+#                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+#            current_analyticsemail = resp['email']
+#    except:
+#        current_analyticsemail = False
 
     nForm = DataSourceForm(request.form)
-    datasources = db.find('datasource', query={'email': session['email']})
-    unsortedargs = []
-    for datasource in datasources:
-        unsortedargs.append(datasource)
+#    datasources = db.find('datasource', query={'email': session['email']})
+#    unsortedargs = []
+#    for datasource in datasources:
+#        unsortedargs.append(datasource)
+    args = [db.find_one("datasource", query={"_id": ObjectId(datasourceID)})]
     if request.method == 'POST':
         #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         #        local_ts = time.asctime(time.localtime(ts))
@@ -285,7 +294,7 @@ def audithistory(datasourceID):
         }
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
-        unsortedargs.append(data)
+#        unsortedargs.append(data)
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
@@ -306,8 +315,8 @@ def audithistory(datasourceID):
                                   in channels]
     except:
         nForm.channel.choices = [('', 'User does not have Slack Connection')]
-    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-
+        
+#    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     # Sort Order is important, that's why analytics audits are queried
     # after sorting to use their status correctly
     for arg in args:
@@ -319,7 +328,7 @@ def audithistory(datasourceID):
         else:
             arg['strstat'] = 'active'
     return render_template('audit_table.html', args=args, nForm=nForm, current_analyticsemail=current_analyticsemail,
-                           analytics_audit=analytics_audit, workspace=workspace, dataSource=dataSource)
+                           analytics_audit=analytics_audit, workspace=workspace)
 
 
 @app.route('/wrongaccount')
