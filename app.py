@@ -596,11 +596,14 @@ def removeslackaccount():
 
 
 def Timestamp2Date(ts, tz_offset):
-    if tz_offset > 0:    
-        date = datetime.utcfromtimestamp(int(ts)) + timedelta(hours = tz_offset)
+    if ts:
+        if tz_offset > 0:    
+            date = datetime.utcfromtimestamp(ts) + timedelta(hours = tz_offset)
+        else:
+            date = datetime.utcfromtimestamp(ts) - timedelta(hours = tz_offset)
+        return date.strftime("%B %d, %Y at %I:%M %p").lstrip("0").replace(" 0", " ")
     else:
-        date = datetime.utcfromtimestamp(int(ts)) - timedelta(hours = tz_offset)
-    return date.strftime("%B %d, %Y at %I:%M %p").lstrip("0").replace(" 0", " ")
+        return ""
 
 
 @app.route("/getaudit", methods=['GET', 'POST'])
