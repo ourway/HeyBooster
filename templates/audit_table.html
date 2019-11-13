@@ -81,7 +81,7 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {% for arg in args %}
                                             <a class="dropdown-item"
-                                               href="/audithistory{{ arg.dataSourceName }}">{{ arg.dataSourceName }}</a>
+                                               href="/audithistory{{ arg.datasourceID }}">{{ arg.dataSourceName }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -108,7 +108,6 @@
 
                         <tbody>
                         {% if args %}
-                            {% for arg in args %}
                                 <tr class="line-row" id="border-table">
                                     <td id="point" class="column2">
                                         <h5>{{ analytics_audit['totalScore'] }}</h5>
@@ -118,14 +117,14 @@
                                     </td>
                                     {% if arg.strstat == 'passive' %}
                                         <td class="column4">
-                                            <a href="/active_audit_test/{{ arg._id }}">
+                                            <a href="/active_audit_test/{{ dataSource._id }}">
                                                 <button class="btn btn-sm text-white change-alert">Activate Change Alert
                                                 </button>
                                             </a>
                                         </td>
                                     {% else %}
                                         <td class="column4">
-                                            <a href="/active_audit_test/{{ arg._id }}">
+                                            <a href="/active_audit_test/{{ dataSource._id }}">
                                                 <button class="btn btn-sm text-white change-alert">Ignore Change Alert
                                                 </button>
                                             </a>
@@ -135,12 +134,11 @@
                                         <div class="dropdown" style="float:right;">
                                             <button class="dropbtn"><i class="fa fa-caret-down"></i></button>
                                             <div class="dropdown-content">
-                                                <a href="/test_test/{{ arg._id }}">Test Now</a>
+                                                <a href="/test_test/{{ dataSource._id }}">Test Now</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                            {% endfor %}
                         {% endif %}
                         </tbody>
                     </table>
