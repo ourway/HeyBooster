@@ -230,9 +230,12 @@ def test_test(datasourceID):
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
     return redirect('/getaudit')
 
+
 @app.route('/audithistory/<datasourceID>', methods=['GET', 'POST'])
 def audithistory(datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
+    print('*****************************')
+    print(dataSource)
     return render_template('audit_table.html', dataSource=dataSource)
 
 
