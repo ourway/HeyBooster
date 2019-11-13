@@ -309,7 +309,7 @@ def audithistory(datasourceID):
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
 #        analyticsAudit(slack_token, task=None, dataSource=data)
-        run_analyticsAudit.delay(slack_token, data['_id'])
+        run_analyticsAudit.delay(slack_token, str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
@@ -780,7 +780,7 @@ def getaudit():
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
 #        analyticsAudit(slack_token, task=None, dataSource=data)
-        run_analyticsAudit.delay(slack_token, data['_id'])
+        run_analyticsAudit.delay(slack_token, str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
