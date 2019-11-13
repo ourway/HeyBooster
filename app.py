@@ -235,10 +235,10 @@ def test_test(datasourceID):
 #    run_analyticsAudit.delay(slack_token, dataSource)
     return redirect('/getaudit')
 
-@celery.task(name='analyticsAudit.run')
-def run_analyticsAudit(slack_token, dataSource):
-    analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    return True
+#@celery.task(name='analyticsAudit.run')
+#def run_analyticsAudit(slack_token, dataSource):
+#    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+#    return True
 
 @app.route('/audithistory/<datasourceID>')
 def audithistory(datasourceID):
