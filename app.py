@@ -20,7 +20,7 @@ from modules import performancegoaltracking, costprediction, performancechangeal
 from bson.objectid import ObjectId
 import babel.numbers
 from analyticsAudit import analyticsAudit
-from celery import Celery
+from celery import Celery, current_task
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
@@ -246,11 +246,45 @@ def run_analyticsAudit(slack_token, datasourceID):
     return True
 
 
+import random
+
+
+@celery.task
+def slow_proc():
+    NTOTAL = 10
+    for i in range(NTOTAL):
+        time.sleep(random.random())
+        current_task.update_state(state='PROGRESS',
+                                  meta={'current': i, 'total': NTOTAL})
+    return 999
+
+
+@app.route('/progress')
+def progress():
+    jobid = request.values.get('jobid')
+    if jobid:
+        # GOTCHA: if you don't pass app=celery here,
+        # you get "NotImplementedError: No result backend configured"
+        job = Celery.AsyncResult(jobid, app=celery)
+        print(job.state)
+        print(job.result)
+        if job.state == 'PROGRESS':
+            return json.dumps(dict(
+                state=job.state,
+                progress=job.result['current'] * 1.0 / job.result['total'],
+            ))
+        elif job.state == 'SUCCESS':
+            return json.dumps(dict(
+                state=job.state,
+                progress=1.0,
+            ))
+    return '{}'
+
+
 @app.route('/test12')
 def test12():
-    task_id = False
-    time.sleep(12)
-    return render_template('test12.html', task_id=task_id)
+    job = slow_proc.delay()
+    return render_template('test12.html', job=job)
 
 
 @app.route('/audithistory/<datasourceID>')
