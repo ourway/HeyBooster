@@ -206,7 +206,9 @@ def google_gaconnectauth_redirect():
             # If emails are not same, remove old datasources
             db.DATABASE['datasource'].remove({'email': user['email']})
             db.DATABASE['notification'].remove({'email': user['email']})
-
+    else:
+        resp = requests.get(TOKEN_INFO_URI.format(oauth2_tokens['access_token'])).json()
+        new_analyticsemail = resp['email']
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     db.find_and_modify(collection='user', query={'_id': user['_id']},
                        ga_accesstoken=oauth2_tokens['access_token'],
