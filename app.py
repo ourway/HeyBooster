@@ -50,7 +50,7 @@ app = Flask(__name__)
 
 # Celery for task queue
 #celery = Celery(broker=f'redis://:{REDIS_PASSWORD}@localhost:6379/0')
-celery = Celery(broker=f'redis://localhost:6379/0')
+celery = Celery(broker=f'redis://:deneme@localhost:6379/0')
 db.init()
 db2.init()
 
