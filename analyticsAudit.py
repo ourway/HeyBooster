@@ -244,7 +244,7 @@ def analyticsAudit(slack_token, task, dataSource):
                          "callback_id": "notification_form",
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
-                         "actions": actions}] + [{"blocks": [{"type": "divider"}]}] + attachments
+                         "actions": actions}] + attachments
         
         length = len(attachments)
         for i in range(length-1):
@@ -280,9 +280,19 @@ def analyticsAudit(slack_token, task, dataSource):
 #                		}],
 #                        "color": "#2eb8a6" }]  + attachments
         slack_client = WebClient(token=slack_token)
-        resp = slack_client.chat_postMessage(blocks = blocks,
-                                             channel=channel,
-                                             attachments=attachments)
+        
+        for i in range(len(attachments)//10 + 1):
+            start_time = time.time()
+            if i==0:   
+                resp = slack_client.chat_postMessage(blocks = blocks,
+                                                     channel=channel,
+                                                     attachments=attachments[i*10:i*10 + 9])
+            else:
+                resp = slack_client.chat_postMessage(channel=channel,
+                                                     attachments=attachments[i*10:i*10 + 10])
+            stop_time = time.time()
+            if(stop_time - start_time < 1):
+                time.sleep(1- (stop_time - start_time))
         return resp['ts']
 
 
