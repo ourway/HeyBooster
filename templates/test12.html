@@ -22,12 +22,11 @@
 
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 
-    <script src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
     <script type="text/javascript">
         var formData = task_id; // task id of my celery task
 
         $.ajax({
-            url: "templates/test12.html", //from what I know, this URL is where the AJAX will go after processing
+            url: "templates/test11.html", //from what I know, this URL is where the AJAX will go after processing
             type: "POST",
             data: formData,
             success: function (data, textStatus, jqXHR) {
@@ -44,7 +43,6 @@
 <body>
 
 <center>
-{% load static %}
 <img src="{% static 'images/heybooster_small.png' %}" alt="Hi!" height="150" width="150"/>
 </center>
 
