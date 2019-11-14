@@ -247,6 +247,13 @@ def run_analyticsAudit(slack_token, datasourceID):
     return True
 
 
+@app.route('/test12')
+def test12():
+    task_id = False
+    time.sleep(12)
+    return render_template('test12.html', task_id=task_id)
+
+
 @app.route('/audithistory/<datasourceID>')
 def audithistory(datasourceID):
     user = db.find_one('user', {'email': session['email']})
@@ -775,7 +782,7 @@ def getaudit():
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
         analyticsAudit(slack_token, task=None, dataSource=data)
-        flash("Check out your connected slack channel, heybooster even wrote you.")
+        #flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
     if (useraccounts):
