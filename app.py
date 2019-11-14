@@ -32,8 +32,8 @@ TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
-REDIS_PASSWORD = os.environ.get('REDIS_SERVER_SECRET').strip()
-print("REDIS_PASSWORD:",REDIS_PASSWORD)
+#REDIS_PASSWORD = os.environ.get('REDIS_SERVER_SECRET').strip()
+
 # Kullanıcı Giriş Decorator'ı
 def login_required(f):
     @wraps(f)
@@ -49,8 +49,8 @@ def login_required(f):
 app = Flask(__name__)
 
 # Celery for task queue
-celery = Celery(broker=f'redis://:{REDIS_PASSWORD}@localhost:6379/0')
-
+#celery = Celery(broker=f'redis://:{REDIS_PASSWORD}@localhost:6379/0')
+celery = Celery(broker=f'redis://localhost:6379/0')
 db.init()
 db2.init()
 
