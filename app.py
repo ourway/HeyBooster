@@ -33,7 +33,7 @@ ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
 REDIS_PASSWORD = os.environ.get('REDIS_SERVER_SECRET').strip()
-
+print("REDIS_PASSWORD:",REDIS_PASSWORD)
 # Kullanıcı Giriş Decorator'ı
 def login_required(f):
     @wraps(f)
