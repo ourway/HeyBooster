@@ -285,47 +285,53 @@ def progress():
 @app.route('/enqueue')
 def enqueue():
     job = slow_proc.delay()
-    return render_template_string('''\
-    <style>
-    #prog {
-    width: 400px;
-    border: 1px solid red;
-    height: 20px;
-    }
-    #bar {
-    width: 0px;
-    background-color: blue;
-    height: 20px;
-    }
-    </style>
-    <h3></h3>
-    <div id="prog"><div id="bar"></div></div>
-    <div id="pct"></div>
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script>
-    function poll() {
-        $.ajax("{{url_for('.progress', jobid=JOBID)}}", {
-            dataType: "json"
-            , success: function(resp) {
-                console.log(resp);
-                $("#pct").html(resp.progress);
-                $("#bar").css({width: $("#prog").width() * resp.progress});
-                if(resp.progress >= 0.9) {
-                    $("#bar").css({backgroundColor: "green"});
-                    return;
-                } else {
-                    setTimeout(poll, 1000.0);
-                }
-            }
-        });
-    }
-    $(function() {
-        var JOBID = "{{ JOBID }}";
-        $("h3").html("JOB: " + JOBID);
-        poll();
-    });
-    </script>
-    ''', JOBID=job.id)
+    return render_template_string('test12.html', JOBID=job.id)
+
+
+# @app.route('/enqueue')
+# def enqueue():
+#     job = slow_proc.delay()
+#     return render_template_string('''\
+#     <style>
+#     #prog {
+#     width: 400px;
+#     border: 1px solid red;
+#     height: 20px;
+#     }
+#     #bar {
+#     width: 0px;
+#     background-color: blue;
+#     height: 20px;
+#     }
+#     </style>
+#     <h3></h3>
+#     <div id="prog"><div id="bar"></div></div>
+#     <div id="pct"></div>
+#     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+#     <script>
+#     function poll() {
+#         $.ajax("{{url_for('.progress', jobid=JOBID)}}", {
+#             dataType: "json"
+#             , success: function(resp) {
+#                 console.log(resp);
+#                 $("#pct").html(resp.progress);
+#                 $("#bar").css({width: $("#prog").width() * resp.progress});
+#                 if(resp.progress >= 0.9) {
+#                     $("#bar").css({backgroundColor: "green"});
+#                     return;
+#                 } else {
+#                     setTimeout(poll, 1000.0);
+#                 }
+#             }
+#         });
+#     }
+#     $(function() {
+#         var JOBID = "{{ JOBID }}";
+#         $("h3").html("JOB: " + JOBID);
+#         poll();
+#     });
+#     </script>
+#     ''', JOBID=job.id)
 
 
 @app.route('/audithistory/<datasourceID>')
@@ -879,7 +885,7 @@ def getaudit():
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
 
-#        analyticsAudit(slack_token, task=None, dataSource=data)
+        #        analyticsAudit(slack_token, task=None, dataSource=data)
         # flash("Check out your connected slack channel, heybooster even wrote you.")
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
@@ -2362,12 +2368,12 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     #                    },
     #                ]
     #            }]}
-#    text = "Welcome to Heybooster, I am your digital buddy to support " + \
-#            "you to boost your website by analyzing your data with marketing perspective." + \
-#            "You will get first insights tomorrow at 7 am"
+    #    text = "Welcome to Heybooster, I am your digital buddy to support " + \
+    #            "you to boost your website by analyzing your data with marketing perspective." + \
+    #            "You will get first insights tomorrow at 7 am"
     text = "Welcome to heybooster :tada:\n" + \
-            "Your Analytics Audit Insights is preparing :coffee: " + \
-            "Don’t forget to share your experience with us :facepunch:"
+           "Your Analytics Audit Insights is preparing :coffee: " + \
+           "Don’t forget to share your experience with us :facepunch:"
     data = {
         "channel": channelID,
         "attachments": [
