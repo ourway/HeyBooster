@@ -281,10 +281,10 @@ def progress():
     return '{}'
 
 
-@app.route('/test12')
-def test12():
+@app.route('/enqueue')
+def enqueue():
     job = slow_proc.delay()
-    return render_template('test12.html', job=job)
+    return render_template('test12.html', JOBID=job.id)
 
 
 @app.route('/audithistory/<datasourceID>')
