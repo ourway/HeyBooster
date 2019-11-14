@@ -339,9 +339,9 @@ def audithistory(datasourceID):
             arg['strstat'] = 'passive'
         else:
             arg['strstat'] = 'active'
+        arg['totalScore'] = analytics_audit['totalScore']
     return render_template('audit_table.html', args=args, selectedargs=selectedargs, nForm=nForm,
-                           current_analyticsemail=current_analyticsemail,
-                           analytics_audit=analytics_audit, workspace=workspace)
+                           current_analyticsemail=current_analyticsemail, workspace=workspace)
 
 
 @app.route('/wrongaccount')
