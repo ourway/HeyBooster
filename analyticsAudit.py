@@ -244,7 +244,7 @@ def analyticsAudit(slack_token, task, dataSource):
                          "callback_id": "notification_form",
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
-                         "actions": actions}] + [{"blocks": [{"type": "divider"}]}] + attachments
+                         "actions": actions}] + attachments
         
         length = len(attachments)
         for i in range(length-1):
