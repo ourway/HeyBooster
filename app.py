@@ -879,7 +879,7 @@ def getaudit():
                                    dataSourceID=_id,
                                    channelID=nForm.channel.data.split('\u0007')[0])
 
-        analyticsAudit(slack_token, task=None, dataSource=data)
+#        analyticsAudit(slack_token, task=None, dataSource=data)
         # flash("Check out your connected slack channel, heybooster even wrote you.")
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
