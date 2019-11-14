@@ -2362,13 +2362,17 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     #                    },
     #                ]
     #            }]}
+#    text = "Welcome to Heybooster, I am your digital buddy to support " + \
+#            "you to boost your website by analyzing your data with marketing perspective." + \
+#            "You will get first insights tomorrow at 7 am"
+    text = "Welcome to heybooster :tada:\n" + \
+            "Your Analytics Audit Insights is preparing :coffee: " + \
+            "Don’t forget to share your experience with us :facepunch:"
     data = {
         "channel": channelID,
         "attachments": [
             {
-                "text": "Welcome to Heybooster, I am your digital buddy to support " +
-                        "you to boost your website by analyzing your data with marketing perspective." +
-                        "You will get first insights tomorrow at 7 am",
+                "text": text,
                 "callback_id": "notification_form",
                 "color": "#2eb8a6",
                 "attachment_type": "default",
