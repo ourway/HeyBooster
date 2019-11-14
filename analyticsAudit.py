@@ -168,9 +168,11 @@ def analyticsAudit(slack_token, task, dataSource):
                 currentStates[function.__name__] = currentState
                 if currentState != "danger":
                     totalScore += scores[function.__name__]
-                    attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
+#                    attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
+                    attachment[0]['text'] = attachment[0]['text']
                 else:
-                    attachment[0]['text'] = f":x: *{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
+#                    attachment[0]['text'] = f":x: *{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
+                    attachment[0]['text'] = f"*{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
                 if task:
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
@@ -192,10 +194,10 @@ def analyticsAudit(slack_token, task, dataSource):
                 trycount += 1
                 time.sleep(0.2)
     if task:
-        db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, totalScore = totalScore)
+        db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
     else:
         db.find_and_modify('notification', query={'datasourceID': dataSource['_id'],
-                                              'type': 'analyticsAudit'},  lastStates = currentStates, totalScore = totalScore)
+                                              'type': 'analyticsAudit'},  lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
     #    attachments += bounceRateTracking(slack_token, dataSource)
     #    attachments += notSetLandingPage(slack_token, dataSource)
     #    attachments += adwordsAccountConnection(slack_token, dataSource)
@@ -244,9 +246,9 @@ def analyticsAudit(slack_token, task, dataSource):
                          "attachment_type": "default",
                          "actions": actions}] + [{"blocks": [{"type": "divider"}]}] + attachments
         
-#        length = len(attachments)
-#        for i in range(length-1):
-#            attachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
+        length = len(attachments)
+        for i in range(length-1):
+            attachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
         
 #        attachments = [{"blocks": [
 #                		{

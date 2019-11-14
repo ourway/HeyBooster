@@ -114,23 +114,24 @@
                         <tbody>
                         {% if args %}
                             {% for arg in selectedargs %}
+                                {% set AA = analytics_audits[loop.index0]%}
                                 <tr class="line-row" id="border-table">
                                     <td id="point" class="column2">
-                                        <h5>{{ arg.totalScore }}</h5>
+                                        <h5>{{ AA.totalScore }}</h5>
                                     </td>
                                     <td class="column3">
-                                        Last Updated Time: {{ arg.localTime }}
+                                        Last Updated Time: {{ AA.localTime }}
                                     </td>
-                                    {% if arg.strstat == 'passive' %}
+                                    {% if AA.strstat == 'passive' %}
                                         <td class="column4">
-                                            <a href="/active_audit_test/{{ arg._id }}">
+                                            <a href="/active_audit_test/{{ AA._id }}">
                                                 <button class="btn btn-sm text-white change-alert">Activate Change Alert
                                                 </button>
                                             </a>
                                         </td>
                                     {% else %}
                                         <td class="column4">
-                                            <a href="/active_audit_test/{{ arg._id }}">
+                                            <a href="/active_audit_test/{{ AA._id }}">
                                                 <button class="btn btn-sm text-white change-alert">Ignore Change Alert
                                                 </button>
                                             </a>

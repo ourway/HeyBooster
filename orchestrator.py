@@ -30,18 +30,27 @@ def do_job(tasks_to_accomplish):
             logging.info(f"User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']}")
             if (task['type'] == 'performancechangetracking'):
                 performancechangetracking(slack_token, task, dataSource)
+                db.find_and_modify('notification', query={'_id': task['_id']},
+                               lastRunDate=time.time())
             elif (task['type'] == 'shoppingfunnelchangetracking'):
                 shoppingfunnelchangetracking(slack_token, task, dataSource)
+                db.find_and_modify('notification', query={'_id': task['_id']},
+                               lastRunDate=time.time())
             elif (task['type'] == 'costprediction'):
                 costprediction(slack_token, task, dataSource)
+                db.find_and_modify('notification', query={'_id': task['_id']},
+                               lastRunDate=time.time())
             elif (task['type'] == 'performancegoaltracking'):
                 performancegoaltracking(slack_token, task, dataSource)
+                db.find_and_modify('notification', query={'_id': task['_id']},
+                               lastRunDate=time.time())
             elif (task['type'] == 'performancechangealert'):
                 performancechangealert(slack_token, task, dataSource)
+                db.find_and_modify('notification', query={'_id': task['_id']},
+                               lastRunDate=time.time())
             elif task['type'] == 'analyticsAudit':
                 analyticsAudit(slack_token, task, dataSource)
-            db.find_and_modify('notification', query={'_id': task['_id']},
-                               lastRunDate=time.time())
+            
         except queue.Empty:
             time.sleep(WAITTIME)
         except Exception as ex:

@@ -218,10 +218,9 @@ def home():
 #                            status=status)
 
 
-@app.route('/active_audit_test/<datasourceID>')
-def active_audit_test(datasourceID):
-    analytics_audit = db.find_one("notification", query={"datasourceID": ObjectId(datasourceID),
-                                                         "type": "analyticsAudit"})
+@app.route('/active_audit_test/<UUID>')
+def active_audit_test(UUID):
+    analytics_audit = db.find_one("notification", query={"_id": ObjectId(UUID)})
     val = int(analytics_audit['status'])
     db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
                        status=str(1 - val))
@@ -237,8 +236,6 @@ def test_test(datasourceID):
     slack_token = user['sl_accesstoken']
     #    analyticsAudit(slack_token, task=None, dataSource=dataSource)
     run_analyticsAudit.delay(slack_token, datasourceID)
-    db.find_and_modify('notification', query={"datasourceID": ObjectId(datasourceID),
-                                        "type": "analyticsAudit"}, lastRunDate=time.time())
     return redirect('/getaudit')
 
 
@@ -246,8 +243,6 @@ def test_test(datasourceID):
 def run_analyticsAudit(slack_token, datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    db.find_and_modify("notification", {"datasourceID": ObjectId(datasourceID),
-                                        "type": "analyticsAudit"}, lastRunDate=time.time())
     return True
 
 
@@ -331,17 +326,26 @@ def audithistory(datasourceID):
     # Sort Order is important, that's why analytics audits are queried
     # after sorting to use their status correctly
     selectedargs = [db.find_one("datasource", query={"_id": ObjectId(datasourceID)})]
+    analytics_audits = []
     for arg in selectedargs:
+#        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
+#        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+#        arg['localTime'] = localTime
+#        if analytics_audit['status'] == '0':
+#            arg['strstat'] = 'passive'
+#        else:
+#            arg['strstat'] = 'active'
+#        arg['totalScore'] = analytics_audit['totalScore']
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-        arg['localTime'] = localTime
+        analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
         if analytics_audit['status'] == '0':
-            arg['strstat'] = 'passive'
+            analytics_audit['strstat'] = 'passive'
         else:
-            arg['strstat'] = 'active'
-        arg['totalScore'] = analytics_audit['totalScore']
+            analytics_audit['strstat'] = 'active'
+        analytics_audits += [analytics_audit]
     return render_template('audit_table.html', args=args, selectedargs=selectedargs, nForm=nForm,
-                           current_analyticsemail=current_analyticsemail, workspace=workspace)
+                           current_analyticsemail=current_analyticsemail, workspace=workspace,
+                           analytics_audits=analytics_audits)
 
 
 @app.route('/wrongaccount')
@@ -356,16 +360,20 @@ def wrongaccount():
     response = client.auth_test()
     workspace = response['team']
 
+#    try:
+#        if user['ga_accesstoken']:
+#            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+#            if 'error' in resp.keys():
+#                data = [('client_id', CLIENT_ID.strip()),
+#                        ('client_secret', CLIENT_SECRET.strip()),
+#                        ('refresh_token', user['ga_refreshtoken']),
+#                        ('grant_type', 'refresh_token')]
+#                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+#            current_analyticsemail = resp['email']
+#    except:
+#        current_analyticsemail = ""
     try:
-        if user['ga_accesstoken']:
-            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-            if 'error' in resp.keys():
-                data = [('client_id', CLIENT_ID.strip()),
-                        ('client_secret', CLIENT_SECRET.strip()),
-                        ('refresh_token', user['ga_refreshtoken']),
-                        ('grant_type', 'refresh_token')]
-                resp = requests.post(ACCESS_TOKEN_URI, data).json()
-            current_analyticsemail = resp['email']
+        current_analyticsemail = user['ga_email']
     except:
         current_analyticsemail = ""
 
@@ -605,16 +613,20 @@ def connectaccount():
     response = client.auth_test()
     workspace = response['team']
 
+#    try:
+#        if user['ga_accesstoken']:
+#            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+#            if 'error' in resp.keys():
+#                data = [('client_id', CLIENT_ID.strip()),
+#                        ('client_secret', CLIENT_SECRET.strip()),
+#                        ('refresh_token', user['ga_refreshtoken']),
+#                        ('grant_type', 'refresh_token')]
+#                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+#            current_analyticsemail = resp['email']
+#    except:
+#        current_analyticsemail = ""
     try:
-        if user['ga_accesstoken']:
-            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-            if 'error' in resp.keys():
-                data = [('client_id', CLIENT_ID.strip()),
-                        ('client_secret', CLIENT_SECRET.strip()),
-                        ('refresh_token', user['ga_refreshtoken']),
-                        ('grant_type', 'refresh_token')]
-                resp = requests.post(ACCESS_TOKEN_URI, data).json()
-            current_analyticsemail = resp['email']
+        current_analyticsemail = user['ga_email']
     except:
         current_analyticsemail = ""
 
@@ -658,7 +670,8 @@ def connectaccount():
                                    channelID=nForm.channel.data.split('\u0007')[0])
         for dataSource in user_data_sources:
             data_sources.append(dataSource)
-        analyticsAudit(slack_token, task=None, dataSource=dataSource)
+#        analyticsAudit(slack_token, task=None, dataSource=dataSource)
+        run_analyticsAudit.delay(slack_token, str(data['_id']))
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     #    else:
@@ -732,18 +745,22 @@ def getaudit():
     response = client.auth_test()
     workspace = response['team']
 
+#    try:
+#        if user['ga_accesstoken']:
+#            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+#            if 'error' in resp.keys():
+#                data = [('client_id', CLIENT_ID.strip()),
+#                        ('client_secret', CLIENT_SECRET.strip()),
+#                        ('refresh_token', user['ga_refreshtoken']),
+#                        ('grant_type', 'refresh_token')]
+#                resp = requests.post(ACCESS_TOKEN_URI, data).json()
+#            current_analyticsemail = resp['email']
+#    except:
+#        current_analyticsemail = False
     try:
-        if user['ga_accesstoken']:
-            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-            if 'error' in resp.keys():
-                data = [('client_id', CLIENT_ID.strip()),
-                        ('client_secret', CLIENT_SECRET.strip()),
-                        ('refresh_token', user['ga_refreshtoken']),
-                        ('grant_type', 'refresh_token')]
-                resp = requests.post(ACCESS_TOKEN_URI, data).json()
-            current_analyticsemail = resp['email']
+        current_analyticsemail = user['ga_email']
     except:
-        current_analyticsemail = False
+        current_analyticsemail = ""
 
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
@@ -801,17 +818,26 @@ def getaudit():
 
     # Sort Order is important, that's why analytics audits are queried
     # after sorting to use their status correctly
+    analytics_audits = []
     for arg in args:
+#        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
+#        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+#        arg['localTime'] = localTime
+#        if analytics_audit['status'] == '0':
+#            arg['strstat'] = 'passive'
+#        else:
+#            arg['strstat'] = 'active'
+#        arg['totalScore'] = analytics_audit['totalScore']
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-        arg['localTime'] = localTime
+        analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
         if analytics_audit['status'] == '0':
-            arg['strstat'] = 'passive'
+            analytics_audit['strstat'] = 'passive'
         else:
-            arg['strstat'] = 'active'
-        arg['totalScore'] = analytics_audit['totalScore']
+            analytics_audit['strstat'] = 'active'
+        analytics_audits += [analytics_audit]
     return render_template('audit_table.html', args=args, selectedargs=args, nForm=nForm,
-                           current_analyticsemail=current_analyticsemail, workspace=workspace)
+                           current_analyticsemail=current_analyticsemail, workspace=workspace,
+                           analytics_audits = analytics_audits)
 
 
 @app.route("/gatest/<email>")
@@ -2098,70 +2124,70 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     else:
         default_time = str(24 + (7 - (usr_tz_offset - lc_tz_offset))).zfill(2)
     dataSource = db.find_one("datasource", query={"_id": dataSourceID})
-    db.insert('notification', data={
-        'type': 'performancechangetracking',
-        'email': email,
-        'period': 1,
-        'threshold': 10,
-        'scheduleType': 'daily',
-        'frequency': 0,
-        'timeofDay': "%s.00" % (default_time),
-        'status': '1',
-        'lastRunDate': '',
-        'datasourceID': dataSourceID
-    })
-    db.insert('notification', data={
-        'type': 'shoppingfunnelchangetracking',
-        'email': email,
-        'period': 1,
-        'threshold': 10,
-        'scheduleType': 'daily',
-        'frequency': 0,
-        'timeofDay': "%s.00" % (default_time),
-        'status': '1',
-        'lastRunDate': '',
-        'datasourceID': dataSourceID
-    })
-    db.insert('notification', data={
-        'type': 'costprediction',
-        'email': email,
-        'period': 30,
-        'target': 100,
-        'scheduleType': 'daily',
-        'frequency': 0,
-        'timeofDay': "%s.00" % (default_time),
-        'status': '0',
-        'lastRunDate': '',
-        'datasourceID': dataSourceID
-    })
-    db.insert('notification', data={
-        'type': 'performancegoaltracking',
-        'email': email,
-        'period': [],
-        'metric': [],
-        'target': [],
-        'filterExpression': [],
-        'scheduleType': 'daily',
-        'frequency': 0,
-        'timeofDay': "%s.00" % (default_time),
-        'status': '0',
-        'lastRunDate': '',
-        'datasourceID': dataSourceID
-    })
-    db.insert('notification', data={
-        'type': 'performancechangealert',
-        'email': email,
-        'metric': [],
-        'threshold': [],
-        'filterExpression': [],
-        'period': [],
-        'scheduleType': 'daily',
-        'frequency': 0,
-        'timeofDay': "%s.00" % (default_time),
-        'status': '0',
-        'lastRunDate': '',
-        'datasourceID': dataSourceID
-    })
+#    db.insert('notification', data={
+#        'type': 'performancechangetracking',
+#        'email': email,
+#        'period': 1,
+#        'threshold': 10,
+#        'scheduleType': 'daily',
+#        'frequency': 0,
+#        'timeofDay': "%s.00" % (default_time),
+#        'status': '1',
+#        'lastRunDate': '',
+#        'datasourceID': dataSourceID
+#    })
+#    db.insert('notification', data={
+#        'type': 'shoppingfunnelchangetracking',
+#        'email': email,
+#        'period': 1,
+#        'threshold': 10,
+#        'scheduleType': 'daily',
+#        'frequency': 0,
+#        'timeofDay': "%s.00" % (default_time),
+#        'status': '1',
+#        'lastRunDate': '',
+#        'datasourceID': dataSourceID
+#    })
+#    db.insert('notification', data={
+#        'type': 'costprediction',
+#        'email': email,
+#        'period': 30,
+#        'target': 100,
+#        'scheduleType': 'daily',
+#        'frequency': 0,
+#        'timeofDay': "%s.00" % (default_time),
+#        'status': '0',
+#        'lastRunDate': '',
+#        'datasourceID': dataSourceID
+#    })
+#    db.insert('notification', data={
+#        'type': 'performancegoaltracking',
+#        'email': email,
+#        'period': [],
+#        'metric': [],
+#        'target': [],
+#        'filterExpression': [],
+#        'scheduleType': 'daily',
+#        'frequency': 0,
+#        'timeofDay': "%s.00" % (default_time),
+#        'status': '0',
+#        'lastRunDate': '',
+#        'datasourceID': dataSourceID
+#    })
+#    db.insert('notification', data={
+#        'type': 'performancechangealert',
+#        'email': email,
+#        'metric': [],
+#        'threshold': [],
+#        'filterExpression': [],
+#        'period': [],
+#        'scheduleType': 'daily',
+#        'frequency': 0,
+#        'timeofDay': "%s.00" % (default_time),
+#        'status': '0',
+#        'lastRunDate': '',
+#        'datasourceID': dataSourceID
+#    })
     db.insert('notification', data={
         'type': 'analyticsAudit',
         'email': email,
