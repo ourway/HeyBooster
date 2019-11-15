@@ -6,6 +6,9 @@ __pycache__/
 #Ignore images obtained from Google Analytics
 slackdb/images/*.jpg
 
+#Ignore celeryconfig file
+celeryconfig.py
+
 # C extensions
 *.so
 
