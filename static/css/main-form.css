@@ -1,6 +1,10 @@
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
 
+#son-care {
+    font-size: 1.2em;
+}
+
 @font-face {
     font-family: Poppins-Regular;
     src: url('../fonts/poppins/Poppins-Regular.ttf');
