@@ -72,9 +72,11 @@
                         id="user-name-1">{{ current_analyticsemail }}</span><b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="/getaudit" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a></li>
-                    <li><a href="/wrongaccount" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a></li>
+                    <li><a href="/wrongaccount" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a>
+                    </li>
                     <li class="divider dropdown-divider"></li>
-                    <li><a href="/logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> &nbsp; Logout</a></li>
+                    <li><a href="/logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> &nbsp; Logout</a>
+                    </li>
                 </ul>
             </li>
         </ul>
@@ -133,41 +135,51 @@
                         <tbody>
                         {% if args %}
                             {% for arg in selectedargs %}
-                                {% set AA = analytics_audits[loop.index0] %}
-                                <tr class="line-row" id="border-table">
+                                {% if analytics_audits %}
+                                    {% set AA = analytics_audits[loop.index0] %}
+                                    <tr class="line-row" id="border-table">
+                                        <td id="point" class="column2">
+                                            <h5>{{ AA.totalScore }}</h5>
+                                        </td>
+                                        <td class="column3">
+                                            Last Updated Time: {{ AA.localTime }}
+                                        </td>
+                                        {% else %}
+                                    <tr class="line-row" id="border-table">
                                     <td id="point" class="column2">
-                                        <h5>{{ AA.totalScore }}</h5>
+                                        <h5>O</h5>
                                     </td>
                                     <td class="column3">
-                                        Last Updated Time: {{ AA.localTime }}
+                                        Last Updated Time: Preparing...
                                     </td>
-                                    {% if AA.strstat == 'passive' %}
-                                        <td class="column4">
-                                            <a href="/active_audit_test/{{ AA._id }}">
-                                                <button class="btn btn-sm text-white change-alert">Activate Change Alert
-                                                </button>
-                                            </a>
-                                        </td>
-                                    {% else %}
-                                        <td class="column4">
-                                            <a href="/active_audit_test/{{ AA._id }}">
-                                                <button class="btn btn-sm text-white change-alert">Ignore Change Alert
-                                                </button>
-                                            </a>
-                                        </td>
-                                    {% endif %}
-                                    <td class="column5">
-                                        <div class="dropdown" style="float:right;">
-                                            <button class="dropbtn"><i class="fa fa-caret-down"></i></button>
-                                            <div class="dropdown-content"
-                                                 onclick="location.href='https://app.heybooster.ai/test_test/{{ arg._id }}'">
+                                {% endif %}
+                            {% if AA.strstat == 'passive' %}
+                                <td class="column4">
+                                    <a href="/active_audit_test/{{ AA._id }}">
+                                        <button class="btn btn-sm text-white change-alert">Activate Change Alert
+                                        </button>
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td class="column4">
+                                    <a href="/active_audit_test/{{ AA._id }}">
+                                        <button class="btn btn-sm text-white change-alert">Ignore Change Alert
+                                        </button>
+                                    </a>
+                                </td>
+                            {% endif %}
+                            <td class="column5">
+                                <div class="dropdown" style="float:right;">
+                                    <button class="dropbtn"><i class="fa fa-caret-down"></i></button>
+                                    <div class="dropdown-content"
+                                         onclick="location.href='https://app.heybooster.ai/test_test/{{ arg._id }}'">
                                                 <span style="padding-top: 5px; padding-bottom: 5px; padding-left: 2px; padding-right: 2px; font-size: 16px; font-weight: 400;">
                                                     Test Now
                                                 </span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    </div>
+                                </div>
+                            </td>
+                            </tr>
                             {% endfor %}
                         {% endif %}
                         </tbody>
