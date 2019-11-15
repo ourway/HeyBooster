@@ -347,8 +347,8 @@ def audithistory(datasourceID):
         data['_id'] = _id
         unsortedargs.append(data)
         insertdefaultnotifications(session['email'], userID=uID,
-                                   dataSourceID=_id,
-                                   channelID=nForm.channel.data.split('\u0007')[0])
+                                       dataSourceID=_id,
+                                       channelID=nForm.channel.data.split('\u0007')[0])
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         run_analyticsAudit.delay(slack_token, str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -711,9 +711,14 @@ def connectaccount():
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
         unsortedargs.append(data)
-        insertdefaultnotifications(session['email'], userID=uID,
-                                   dataSourceID=_id,
-                                   channelID=nForm.channel.data.split('\u0007')[0])
+        if len(unsortedargs) == 1:
+            insertdefaultnotifications(session['email'], userID=uID,
+                                       dataSourceID=_id,
+                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
+        else:
+            insertdefaultnotifications(session['email'], userID=uID,
+                                       dataSourceID=_id,
+                                       channelID=nForm.channel.data.split('\u0007')[0])
         for dataSource in user_data_sources:
             data_sources.append(dataSource)
         #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
@@ -2160,7 +2165,7 @@ def message_actions():
     return make_response("", 200)
 
 
-def insertdefaultnotifications(email, userID, dataSourceID, channelID):
+def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelcome = False):
     # Default Notifications will be inserted here
     #    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
     #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
@@ -2329,25 +2334,26 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID):
     #    text = "Welcome to Heybooster, I am your digital buddy to support " + \
     #            "you to boost your website by analyzing your data with marketing perspective." + \
     #            "You will get first insights tomorrow at 7 am"
-    text = "Welcome to heybooster :tada:\n" + \
-           "Your Analytics Audit Insights is preparing :coffee: " + \
-           "Don’t forget to share your experience with us :facepunch:"
-    data = {
-        "channel": channelID,
-        "attachments": [
-            {
-                "text": text,
-                "callback_id": "notification_form",
-                "color": "#2eb8a6",
-                "attachment_type": "default",
-                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                "actions": [
-                    {
-                        "name": "giveFeedback",
-                        "text": "Give Feedback",
-                        "type": "button",
-                        "value": f"giveFeedback_{dataSourceID}"
-                    },
-                ]
-            }]}
-    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
+    if sendWelcome:
+        text = "Welcome to heybooster :tada:\n" + \
+               "Your Analytics Audit Insights is preparing :coffee: " + \
+               "Don’t forget to share your experience with us :facepunch:"
+        data = {
+            "channel": channelID,
+            "attachments": [
+                {
+                    "text": text,
+                    "callback_id": "notification_form",
+                    "color": "#2eb8a6",
+                    "attachment_type": "default",
+                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    "actions": [
+                        {
+                            "name": "giveFeedback",
+                            "text": "Give Feedback",
+                            "type": "button",
+                            "value": f"giveFeedback_{dataSourceID}"
+                        },
+                    ]
+                }]}
+        requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)

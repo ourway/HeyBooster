@@ -20,7 +20,20 @@ def scoretoText(score):
     else:
         return "MODERATE"
     
-    
+def totalScorewithEmoji(totalScore):
+    if totalScore > 85:
+        return f":first_place_medal: *{totalScore}*"
+    elif totalScore > 75:
+        return f":medal: *{totalScore}*"
+    elif totalScore > 65:
+        return f":nerd_face: *{totalScore}*"
+    elif totalScore > 50:
+        return f":eyes: *{totalScore}*"
+    elif totalScore > 30:
+        return f":zipper_mouth_face: *{totalScore}*"
+    else:
+        return f":scream: *{totalScore}*"
+
 def analyticsAudit(slack_token, task, dataSource):
     db.init()
     if not task:
@@ -214,15 +227,17 @@ def analyticsAudit(slack_token, task, dataSource):
     #    attachments += enhancedECommerceActivity(slack_token, dataSource)
     #    attachments += customMetric(slack_token, dataSource)
     #    attachments += samplingCheck(slack_token, dataSource)
+    text_totalScore = totalScorewithEmoji(totalScore)
     if not task:
         text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights " + \
                 "we strongly recommend you to solve the issues below. " +  \
-                f"Your analytics health score is calculated *{totalScore}* over 100.\n" +  \
+                f"Your analytics health score is calculated *{text_totalScore}* over 100.\n" +  \
                 "Do you wanna get to know when anything change on the audit results?"
         maincolor = "#2eb8a6"
     else:
         lastScore = int(task['totalScore'])
-        text = f"Your analytics health score is change from {lastScore} to {totalScore}.\n" + \
+        text_lastScore = totalScorewithEmoji(lastScore)
+        text = f"Your analytics health score is change from {text_lastScore} to {text_totalScore}.\n" + \
                 "Here is the list of changes."
         if totalScore > lastScore:
             maincolor = "good"
