@@ -231,7 +231,7 @@ def analyticsAudit(slack_token, task, dataSource):
     if not task:
         text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights " + \
                 "we strongly recommend you to solve the issues below. " +  \
-                f"Your analytics health score is calculated *{text_totalScore}* over 100.\n" +  \
+                f"Your analytics health score is calculated {text_totalScore} over 100.\n" +  \
                 "Do you wanna get to know when anything change on the audit results?"
         maincolor = "#2eb8a6"
     else:
