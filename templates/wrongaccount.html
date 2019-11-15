@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,600,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,600,700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
@@ -52,21 +52,37 @@
 
 <body>
 
-<div class="topnav" id="myTopnav" style="padding-left: 5%; padding-right: 5%;">
-    <img src="../static/images/logo-hb.png" style="width: 10.1%">
-    <div class="ilto">
-        <div class="dropdown-nav">
-            <button class="dropbtn-3">{{ current_analyticsemail }}
-                <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-                <a href="/getaudit">Audit History</a>
-                <a href="/logout">Logout</a>
-            </div>
-        </div>
+<nav class="navbar navbar-default navbar-expand-xl navbar-light">
+    <div class="navbar-header d-flex col">
+        <a class="navbar-brand" href="#"><img src="../static/img/heyBooster_small.png"></a>
+        <button type="button" data-target="#navbarCollapse" data-toggle="collapse"
+                class="navbar-toggle navbar-toggler ml-auto">
+            <span class="navbar-toggler-icon"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
     </div>
-    <a href="javascript:void(0);" class="icon" onclick="navFunction()">&#9776;</a>
-</div>
+    <!-- Collection of nav links, forms, and other content for toggling -->
+    <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+
+        <ul class="nav navbar-nav navbar-right ml-auto">
+
+
+            <li class="nav-item dropdown">
+                <a id="drop-icon" href="/" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img
+                        src="../static/img/art.jpeg" class="avatar" alt="Avatar"><span
+                        id="user-name-1">{{ current_analyticsemail }}</span><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/getaudit" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a></li>
+                    <li><a href="/wrongaccount" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a></li>
+                    <li class="divider dropdown-divider"></li>
+                    <li><a href="/logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> &nbsp; Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
 
 <div class="limiter">
     <div class="container-table100">
@@ -112,17 +128,7 @@
         </div>
     </div>
 </div>
-<script>
-    function navFunction() {
-        var x = document.getElementById("myTopnav");
-        if (x.className === "topnav") {
-            x.className += " responsive";
-        } else {
-            x.className = "topnav";
-        }
-    }
 
-</script>
 <script>
     function myFunction() {
         var r = confirm("If you change the analytics account, your recent analytics audit will be deleted. Are you sure to continue?");
