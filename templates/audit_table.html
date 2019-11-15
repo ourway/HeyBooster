@@ -214,8 +214,9 @@
                                             </span>
                                         <div class="wrap-input100 validate-input" data-validate="Name is required">
                                             <span class="label-input100">Data Souce Name</span>
-                                            <input class="input100" type="text" name="name"
-                                                   placeholder="Data Source Name" style="text-align: center;">
+                                            {#<input class="input100" type="text" name="name"
+                                                   placeholder="Data Source Name" style="text-align: center;">#}
+                                            {{ nForm.data_source_name }}
                                             <span class="focus-input100"></span>
                                         </div>
 
@@ -224,19 +225,14 @@
                                             <span class="label-input100">Google Analytics Account</span>
                                             <text class="input100" type="text" name="email"
                                                   placeholder="Enter your email addess">uguryuce19@gmail.com<br><a
-                                                    href=""><span id="wrong-account">Wrong Account?</span></a></text>
+                                                    onclick="myFunction()"><span id="wrong-account">Wrong Account?</span></a></text>
                                             <span class="focus-input100"></span>
                                         </div>
 
                                         <div class="wrap-input100 input100-select">
                                             <span class="label-input100">Select Your Profile Detail</span>
                                             <div>
-                                                <select class="selection-2" name="service">
-                                                    <option>Select Your Account</option>
-                                                    <option>Online Store</option>
-                                                    <option>eCommerce Bussiness</option>
-
-                                                </select>
+                                                {{ nForm.account }}
                                             </div>
                                             <span class="focus-input100"></span>
                                         </div>
@@ -245,12 +241,7 @@
                                             <!--
                                              <span class="label-input100"></span> -->
                                             <div>
-                                                <select class="selection-2" name="service">
-                                                    <option>Select Your Property</option>
-                                                    <option>Online Store</option>
-                                                    <option>eCommerce Bussiness</option>
-
-                                                </select>
+                                                {{ nForm.property }}
                                             </div>
                                             <span class="focus-input100"></span>
                                         </div>
@@ -259,12 +250,7 @@
                                             <!--
                                              <span class="label-input100"></span> -->
                                             <div>
-                                                <select class="selection-2" name="service">
-                                                    <option>Select Your View</option>
-                                                    <option>Online Store</option>
-                                                    <option>eCommerce Bussiness</option>
-
-                                                </select>
+                                                {{ nForm.view }}
                                             </div>
                                             <span class="focus-input100"></span>
                                         </div>
@@ -272,12 +258,7 @@
                                         <div class="wrap-input100 input100-select">
                                             <span class="label-input100">Slack</span>
                                             <div>
-                                                <select class="selection-2" name="budget">
-                                                    <option>Select Your Channel</option>
-                                                    <option>1500 $</option>
-                                                    <option>2000 $</option>
-                                                    <option>2500 $</option>
-                                                </select>
+                                                {{ nForm.channel }}
                                             </div>
                                             <span class="focus-input100"></span>
                                         </div>

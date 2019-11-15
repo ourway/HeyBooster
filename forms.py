@@ -7,23 +7,23 @@ from wtforms.fields.html5 import DateField
 class DataSourceForm(Form):
     data_source_name = StringField("Data Source Name",
                                    validators=[validators.DataRequired(message="This field is required")],
-                                   render_kw={"class": "data-input-css", "placeholder": "Data source name"})
+                                   render_kw={"class": "input100", "placeholder": "Data source name"})
     account = SelectField("account", choices=[('', 'Select your account')],
                           validators=[validators.DataRequired(message="This field is required.")],
-                          render_kw={"class": "select-css"})
+                          render_kw={"class": "selection-2"})
     property = SelectField("property", choices=[('', 'Select your property')],
                            validators=[validators.DataRequired(message="This field is required.")],
-                           render_kw={"class": "select-css"})
+                           render_kw={"class": "selection-2"})
     view = SelectField("view", choices=[('', 'Select your view')],
                        validators=[validators.DataRequired(message="This field is required.")],
-                       render_kw={"class": "select-css"})
+                       render_kw={"class": "selection-2"})
     #    metric = SelectField('metric', choices=[('ga:users', 'users')])
     #    dimension = SelectField('dimension', choices=[('ga:userType', 'user type')])
     #    start_date = DateField('start_date', format="%Y-%m-%d")
     #    end_date = DateField('end_date', format="%Y-%m-%d")
     channel = SelectField('channel', choices=[('', 'Select your channel')],
                           validators=[validators.DataRequired(message="This field is required.")],
-                          render_kw={"class": "select-css"})
+                          render_kw={"class": "selection-2"})
 
 
 # Kullanıcı giriş formu
