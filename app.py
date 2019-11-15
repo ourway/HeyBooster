@@ -288,52 +288,6 @@ def enqueue():
     return render_template('test12.html', JOBID=job.id)
 
 
-# @app.route('/enqueue')
-# def enqueue():
-#     job = slow_proc.delay()
-#     return render_template_string('''\
-#     <style>
-#     #prog {
-#     width: 400px;
-#     border: 1px solid red;
-#     height: 20px;
-#     }
-#     #bar {
-#     width: 0px;
-#     background-color: blue;
-#     height: 20px;
-#     }
-#     </style>
-#     <h3></h3>
-#     <div id="prog"><div id="bar"></div></div>
-#     <div id="pct"></div>
-#     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-#     <script>
-#     function poll() {
-#         $.ajax("{{url_for('.progress', jobid=JOBID)}}", {
-#             dataType: "json"
-#             , success: function(resp) {
-#                 console.log(resp);
-#                 $("#pct").html(resp.progress);
-#                 $("#bar").css({width: $("#prog").width() * resp.progress});
-#                 if(resp.progress >= 0.9) {
-#                     $("#bar").css({backgroundColor: "green"});
-#                     return;
-#                 } else {
-#                     setTimeout(poll, 1000.0);
-#                 }
-#             }
-#         });
-#     }
-#     $(function() {
-#         var JOBID = "{{ JOBID }}";
-#         $("h3").html("JOB: " + JOBID);
-#         poll();
-#     });
-#     </script>
-#     ''', JOBID=job.id)
-
-
 @app.route('/audithistory/<datasourceID>')
 def audithistory(datasourceID):
     user = db.find_one('user', {'email': session['email']})
