@@ -1,0 +1,697 @@
+/*//////////////////////////////////////////////////////////////////
+[ FONT ]*/
+
+
+
+.select-css {
+    display: block;
+    font-size: 16px;
+    font-family: sans-serif;
+    font-weight: 400;
+    color: #444;
+    line-height: 1.3;
+    padding: .6em .8em .6em .8em;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border: none;
+    border-radius: .5em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #f2f5f8;
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+    outline: none;
+    direction:ltr;
+}
+
+
+.select-css::-ms-expand {
+    display: none;
+}
+
+.select-css:hover {
+    border-color: #888;
+}
+
+.select-css:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+    box-shadow: 0 0 0 3px -moz-mac-focusring;
+    color: #222;
+    outline: none;
+}
+
+.select-css option {
+    font-weight: normal;
+    text-align: center;
+}
+
+
+/*//////////////////////////////////////////////////////////////////
+[ FONT ]*/
+
+
+@font-face {
+    font-family: OpenSans-Regular;
+    src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
+}
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ RESTYLE TAG ]*/
+* {
+    margin: 0px auto;
+    padding: 0px auto;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    height: 100%;
+    font-family: sans-serif;
+}
+
+/* --navbar -- */
+
+
+.nav- {
+    background-color: #202540;
+}
+
+
+
+/* ------------------------------------ */
+a {
+    margin: 0px;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+}
+
+a:focus {
+    outline: none !important;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* ------------------------------------ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0px;
+}
+
+p {
+    margin: 0px;
+}
+
+ul,
+li {
+    margin: 0px;
+    list-style-type: none;
+}
+
+
+
+/* ------------------------------------ */
+input {
+    display: block;
+    outline: none;
+    border: none !important;
+}
+
+textarea {
+    display: block;
+    outline: none;
+}
+
+textarea:focus,
+input:focus {
+    border-color: transparent !important;
+}
+
+/* ------------------------------------ */
+button {
+    outline: none !important;
+    border: none;
+    background: transparent;
+}
+
+button:hover {
+    cursor: text;
+}
+
+iframe {
+    border: none !important;
+}
+
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ Utiliti ]*/
+
+
+
+
+
+
+/*//////////////////////////////////////////////////////////////////
+[ Table ]*/
+
+.limiter {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.line-row {
+    height: 95px;
+
+}
+
+#border-table {
+
+
+}
+
+.line-row tr {}
+
+.table-border {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.table-border-2 {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.audit-history {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color:#303f9f;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+#hd-border {
+
+}
+
+
+.container-table100 {
+    width: 100%;
+    min-height: 92vh;
+    background-image: url(../a1.png);
+    background-size: cover;
+    display: -webkit-block;
+    display: -webkit-block;
+    display: -moz-block;
+    display: -ms-block;
+    display: block;
+    margin: auto;
+    padding: 120px 30px;
+}
+
+.test-now {
+    padding: -10px;
+    background: #448aff;
+    transition: .4s opacity;
+    border-radius: 2px;
+}
+
+.change-alert {
+    background: #0097a7;
+    border: none;
+    border-radius: 3px;
+    transition: .4s opacity;
+
+}
+
+.change-alert:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.test-now:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.wrap-table100 {
+    width: 90%;
+}
+
+.text-deco {
+    text-decoration: underline;
+}
+
+table {
+    border-spacing: 1;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 0px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+table * {
+    position: relative;
+}
+
+table td,
+table th {
+    padding-left: 8px;
+
+}
+
+table thead tr {
+    height: 80px;
+    background: transparent;
+}
+
+table tbody tr {
+    height: 80px;
+
+}
+
+table tbody tr:last-child {
+    border: 0;
+}
+
+table td,
+table th {
+    text-align: left;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+}
+
+table td a button {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+}
+
+table td.l,
+table th.l {
+    text-align: right;
+}
+
+table td.c,
+table th.c {
+    text-align: center;
+}
+
+table td.r,
+table th.r {
+    text-align: center;
+}
+
+.view-more {
+    background-color: #202540;
+    color: #f9f9f9;
+    transition: .6s background;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+.view-more:hover {
+    cursor: pointer;
+    color: #202540;
+    background-color: transparent;
+    border: 1px solid #202540;
+}
+
+.add-data {
+    background-color: #202540;
+    color: #f9f9f9;
+    transition: .4s opacity;
+}
+
+.add-data:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+#point {
+    border-bottom: 2px solid rgba(63,81,181,0.4);
+
+
+
+
+
+}
+
+#point h5 {
+    font-weight: 600;
+    color: rgba(63,81,181,1);
+}
+
+.form-div {
+    border: 1px solid #eeeeee;
+
+    width: 50%;
+    color: black;
+    border-radius: 10px;
+}
+
+.table100-head th {
+    font-family: OpenSans-Regular;
+    font-size: 20px;
+    color: #f9f9f9;
+    line-height: 1;
+    font-weight: 300;
+    background-color: #202540;
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+
+.head-line {}
+
+tbody tr:nth-child(even) {
+    background-color: #fbfbfb;
+}
+
+tbody tr {
+    font-family: OpenSans-Regular;
+    font-size: 15px;
+    color: #808080;
+    line-height: 1.2;
+    font-weight: unset;
+    transition: .5s color;
+}
+
+
+tbody tr:hover {
+    color: #000;
+    background-color: #f2f5f8;
+    cursor: text;
+}
+
+.column1 {
+    width: 210px;
+    padding-left: 40px;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column2 i {
+    font-size: 25px;
+    color: #0d8547;
+    opacity: 0.8;
+}
+
+.column2 {
+    width: 100px;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+
+.column3 {
+    width: 900px;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column4 {
+    width: 200px;
+    text-align: right;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+.column5 {
+    padding-right:50px;
+    width: 0px;
+    text-align: right;
+    text-align: center;
+    background-color: #FBFBFB;
+}
+
+#boots-div {
+    background-color: #fbfbfb;
+}
+
+#drop-left {
+    text-align: left;
+}
+
+#hd-bc {
+    background-color: #e4e6f1;
+}
+
+
+.dropbtn {
+    background-color: transparent;
+    color: black;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 2px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    color: #000;
+    width: 80px;
+    cursor: pointer;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+
+
+
+
+}
+
+.dropdown button {
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.dropdown-item {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+    padding: 10px;
+}
+
+
+.dropdown-content a {
+    color: black;
+    padding: 6px 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: sans-serif;
+
+
+}
+
+.dropdown-content a:hover {
+    color: #777777;
+    cursor: pointer;
+
+}
+
+.dropdown:hover .dropdown-content {
+    display: flex;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: transparent;
+}
+
+
+@media screen and (max-width: 992px) {
+    table {
+        display: block;
+    }
+
+    .wrap-table100 {
+        width: 100%;
+    }
+
+    table > *,
+    table tr,
+    table td,
+    table th {
+        display: block;
+    }
+
+    table thead {
+        display: block;
+    }
+
+    table tbody tr {
+        height: auto;
+        padding: 37px 0;
+
+    }
+
+    .audit-history {
+        display: none;
+    }
+
+    table tbody tr td {
+        padding-left: 40% !important;
+        margin-bottom: 24px;
+    }
+
+    table tbody tr td:last-child {
+        margin-bottom: 0;
+    }
+
+    .line-row {
+        height: auto;
+    }
+
+    table tbody tr td:before {
+        font-family: OpenSans-Regular;
+        font-size: 14px;
+        color: #999999;
+        line-height: 1.2;
+        font-weight: unset;
+        position: absolute;
+        width: 40%;
+        left: 30px;
+        top: 0;
+    }
+
+    table tbody tr td:nth-child(1):before {
+        content: "Audit";
+    }
+
+    table tbody tr td:nth-child(2):before {
+        content: "Change Alert";
+    }
+
+    table tbody tr td:nth-child(3):before {
+        content: "Test";
+    }
+
+    table tbody tr td:nth-child(4):before {
+        content: "Change Alert";
+    }
+
+    table tbody tr td:nth-child(5):before {
+        content: "Test";
+    }
+
+
+    .column4,
+    .column5,
+    .column6 {
+        text-align: center;
+    }
+
+    .column4,
+    .column5,
+    .column6,
+    .column1,
+    .column2,
+    .column3 {
+        width: 100%;
+    }
+
+    tbody tr {
+        font-size: 14px;
+    }
+}
+
+
+
+.line-row td h5 {
+    color: #dd4c4f;
+}
+
+tr#head-audit {
+    background-color: #f9f9f9;
+}
+
+
+
+.btnx {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    margin-left: 20px;
+    cursor: pointer;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    border-radius: 0px;
+}
+
+.btnx-1 {
+    background-color: #202540;
+
+    color: white;
+
+    cursor: pointer;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+}
+
+
+.btnx:hover {
+    background-color: #202540;
+    opacity: 0.8;
+
+}
+
+.btnx a:hover {
+    background-color: #202540;
+    opacity: 0.8;
+}
+
+@media (max-width: 576px) {
+    .container-table100 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+
+.dropdown-div {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+
+.dropdown-item-x {
+    background-color: transparent;
+    color: black;
+    font-weight: 400;
+    padding-left: 5px;
+    right: 0;
+}

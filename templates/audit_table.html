@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
@@ -25,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main_audit.css') }}">
 
 
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
@@ -47,34 +49,37 @@
 
 <body>
 
-    <nav class="navbar navbar-default navbar-expand-xl navbar-light">
-        <div class="navbar-header d-flex col">
-            <a class="navbar-brand" href="#"><img src="../static/img/heyBooster_small.png"></a>
-            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle navbar-toggler ml-auto">
-                <span class="navbar-toggler-icon"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <!-- Collection of nav links, forms, and other content for toggling -->
-        <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+<nav class="navbar navbar-default navbar-expand-xl navbar-light">
+    <div class="navbar-header d-flex col">
+        <a class="navbar-brand" href="#"><img src="../static/img/heyBooster_small.png"></a>
+        <button type="button" data-target="#navbarCollapse" data-toggle="collapse"
+                class="navbar-toggle navbar-toggler ml-auto">
+            <span class="navbar-toggler-icon"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <!-- Collection of nav links, forms, and other content for toggling -->
+    <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
 
-            <ul class="nav navbar-nav navbar-right ml-auto">
+        <ul class="nav navbar-nav navbar-right ml-auto">
 
 
-                <li class="nav-item dropdown">
-                    <a id="drop-icon" href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img src="img/art.jpeg" class="avatar" alt="Avatar"><span id="user-name-1">uguryuce19@gmail.com</span><b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a></li>
-                        <li><a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a></li>
-                        <li class="divider dropdown-divider"></li>
-                        <li><a href="#" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> &nbsp; Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
+            <li class="nav-item dropdown">
+                <a id="drop-icon" href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img
+                        src="img/art.jpeg" class="avatar" alt="Avatar"><span
+                        id="user-name-1">uguryuce19@gmail.com</span><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a></li>
+                    <li><a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a></li>
+                    <li class="divider dropdown-divider"></li>
+                    <li><a href="#" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> &nbsp; Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
 
 
 {% if current_analyticsemail %}
@@ -128,7 +133,7 @@
                         <tbody>
                         {% if args %}
                             {% for arg in selectedargs %}
-                                {% set AA = analytics_audits[loop.index0]%}
+                                {% set AA = analytics_audits[loop.index0] %}
                                 <tr class="line-row" id="border-table">
                                     <td id="point" class="column2">
                                         <h5>{{ AA.totalScore }}</h5>
