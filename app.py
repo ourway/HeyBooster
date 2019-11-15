@@ -88,7 +88,7 @@ def send_message():
         return make_response('', 404)
 
 
-@app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
     current_analyticsemail = ""
@@ -391,7 +391,7 @@ def audithistory(datasourceID):
 @app.route('/account/connections')
 def wrongaccount():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
-        return redirect('/getstarted/connect-accounts')
+        return redirect('/')
 
     user = db.find_one('user', {'email': session['email']})
 
@@ -642,7 +642,7 @@ def get_channels():
 @login_required
 def connectaccount():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
-        return redirect('/getstarted/connect-accounts')
+        return redirect('/')
 
     data_sources = []
     user = db.find_one('user', {'email': session['email']})
@@ -776,7 +776,7 @@ def Timestamp2Date(ts, tz_offset):
 @login_required
 def getaudit():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
-        return redirect('/getstarted/connect-accounts')
+        return redirect('/')
 
     user = db.find_one('user', {'email': session['email']})
     tz_offset = user['tz_offset']
