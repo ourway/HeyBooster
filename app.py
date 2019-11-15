@@ -59,7 +59,7 @@ app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
 
 slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"],
-    redirect_url='/connectaccount')
+    redirect_url='/getstarted/get-first-insight')
 slack_bp.authorized = authorized
 app.register_blueprint(slack_bp, url_prefix="/login")
 app.register_blueprint(google_auth.app)
@@ -88,14 +88,14 @@ def send_message():
         return make_response('', 404)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
 @login_required
 def home():
     current_analyticsemail = ""
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
-                return redirect('/getaudit')
+                return redirect('/account/audit-history')
             else:
                 # Check if user has slack connection
                 if session['sl_accesstoken']:
@@ -224,7 +224,7 @@ def active_audit_test(UUID):
     db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
                        status=str(1 - val))
 
-    return redirect('/getaudit')
+    return redirect('/account/audit-history')
 
 
 @app.route('/test_test/<datasourceID>')
@@ -235,7 +235,7 @@ def test_test(datasourceID):
     slack_token = user['sl_accesstoken']
     #    analyticsAudit(slack_token, task=None, dataSource=dataSource)
     run_analyticsAudit.delay(slack_token, datasourceID)
-    return redirect('/getaudit')
+    return redirect('/account/audit-history')
 
 
 #@celery.task(name='analyticsAudit.run')
@@ -388,10 +388,10 @@ def audithistory(datasourceID):
                            analytics_audits=analytics_audits)
 
 
-@app.route('/wrongaccount')
+@app.route('/account/connections')
 def wrongaccount():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
-        return redirect('/')
+        return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
 
@@ -473,7 +473,7 @@ def change():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
-        return redirect('/getaudit')
+        return redirect('/account/audit-history')
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
         user = db.find_one('user', {'email': form.email.data})
@@ -492,10 +492,10 @@ def login():
     return render_template('auths/login.html', form=form)
 
 
-@app.route('/register/', methods=['GET', 'POST'])
+@app.route('/getstarted/register/', methods=['GET', 'POST'])
 def register():
     if 'auth_token' in session.keys() and 'sl_accesstoken' in session.keys():
-        return redirect('/getaudit')
+        return redirect('/account/audit-history')
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate:
         user = db.find_one('user', {'email': form.email.data})
@@ -638,11 +638,11 @@ def get_channels():
 #     return render_template('get_audit.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
 
 
-@app.route("/connectaccount", methods=['GET', 'POST'])
+@app.route("/getstarted/get-first-insight", methods=['GET', 'POST'])
 @login_required
 def connectaccount():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
-        return redirect('/')
+        return redirect('/getstarted/connect-accounts')
 
     data_sources = []
     user = db.find_one('user', {'email': session['email']})
@@ -743,7 +743,7 @@ def removedatasources(datasourceID):
     db.DATABASE['datasource'].remove({"_id": ObjectId(datasourceID)})
     db.DATABASE['notification'].remove({'datasourceID': ObjectId(datasourceID)})
 
-    return redirect('/getaudit')
+    return redirect('/account/audit-history')
 
 
 @app.route("/removeslackaccount", methods=['GET', 'POST'])
@@ -772,11 +772,11 @@ def Timestamp2Date(ts, tz_offset):
         return ""
 
 
-@app.route("/getaudit", methods=['GET', 'POST'])
+@app.route("/account/audit-history", methods=['GET', 'POST'])
 @login_required
 def getaudit():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
-        return redirect('/')
+        return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
     tz_offset = user['tz_offset']

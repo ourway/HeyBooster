@@ -78,12 +78,12 @@
 
 
             <li class="nav-item dropdown">
-                <a id="drop-icon" href="/" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img
+                <a id="drop-icon" href="/getstarted/connect-accounts" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img
                         src="../static/img/art.jpeg" class="avatar" alt="Avatar"><span
                         id="user-name-1">{{ current_analyticsemail }}</span><b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="/getaudit" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a></li>
-                    <li><a href="/wrongaccount" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a>
+                    <li><a href="/account/audit-history" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a></li>
+                    <li><a href="/account/connections" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a>
                     </li>
                     <li class="divider dropdown-divider"></li>
                     <li><a href="/logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> &nbsp; Logout</a>
@@ -208,7 +208,7 @@
                                     New Audit Request
                                 </button>
                                 <div id="content" class="collapse dropdown-div">
-                                    <form class="contact100-form validate-form">
+                                    <form class="contact100-form validate-form" method="POST" action="/account/audit-history">
                                             <span class="contact100-form-title">
                                                 heybooster
                                             </span>
@@ -267,7 +267,7 @@
                                         <div class="container-contact100-form-btn">
                                             <div class="wrap-contact100-form-btn">
                                                 <div class="contact100-form-bgbtn"></div>
-                                                <button class="contact100-form-btn">
+                                                <button type="submit" class="contact100-form-btn">
                                                         <span>
                                                             Submit
                                                             <i class="fa fa-long-arrow-right m-l-7"
