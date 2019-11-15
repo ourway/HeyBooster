@@ -2,10 +2,10 @@
 
 
 @font-face {
-    font-family: OpenSans-Regular;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
     src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
 }
-
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -19,7 +19,8 @@
 body,
 html {
     height: 100%;
-    font-family: sans-serif;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
 }
 
 /* --navbar -- */
@@ -28,7 +29,6 @@ html {
 .nav- {
     background-color: #202540;
 }
-
 
 
 /* ------------------------------------ */
@@ -69,7 +69,6 @@ li {
 }
 
 
-
 /* ------------------------------------ */
 input {
     display: block;
@@ -103,14 +102,8 @@ iframe {
 }
 
 
-
-
 /*//////////////////////////////////////////////////////////////////
 [ Utiliti ]*/
-
-
-
-
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -186,7 +179,6 @@ iframe {
 }
 
 
-
 @media screen and (max-width: 992px) {
 
     .wrap-table100 {
@@ -199,11 +191,8 @@ iframe {
 
 /* --------------- sign-up.css başlangıç ------------*/
 
-body {}
-
-
-
-
+body {
+}
 
 
 .left-div {
@@ -227,7 +216,7 @@ body {}
 
 }
 
-@media (max-width:992px) {
+@media (max-width: 992px) {
     .left-div {
         width: 75%;
         margin-left: 12.5%;
@@ -235,7 +224,7 @@ body {}
     }
 }
 
-@media (max-width:642px) {
+@media (max-width: 642px) {
     .left-div {
         height: 75vh;
     }
@@ -246,22 +235,21 @@ body {}
 }
 
 
-
-@media (max-width:692px) {
+@media (max-width: 692px) {
     .left-div {
         width: 80%;
         margin-left: 10%;
     }
 }
 
-@media (max-width:576px) {
+@media (max-width: 576px) {
     .left-div {
         width: 90%;
         margin-left: 5%;
     }
 }
 
-@media (max-width:442px) {
+@media (max-width: 442px) {
     .left-div {
         width: 98%;
         margin-left: 1%;
@@ -275,13 +263,13 @@ body {}
     margin-top: 100px;
 }
 
-@media (max-width:778px) {
+@media (max-width: 778px) {
     .left-div .logo {
         width: 50%;
     }
 }
 
-@media (max-width:556px) {
+@media (max-width: 556px) {
     .left-div .logo {
         width: 60%;
         margin-top: 50px;
@@ -289,7 +277,7 @@ body {}
     }
 }
 
-@media (max-width:442px) {
+@media (max-width: 442px) {
     .left-div .logo {
         width: 70%;
     }
@@ -310,7 +298,6 @@ body {}
     vertical-align: middle;
     background-color: #f2f5f8;
 }
-
 
 
 .pull-right {
@@ -371,7 +358,8 @@ body {}
 .arrow-steps .step span {
     position: relative;
     padding: 30px;
-    font-family: sans-serif;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
     font-weight: 400;
     font-size: 16px;
 }
@@ -395,7 +383,7 @@ body {}
 
 }
 
-@media (max-width:842px) {
+@media (max-width: 842px) {
     .wrapper {
         display: none;
     }
@@ -408,7 +396,6 @@ body {}
     }
 
 }
-
 
 
 .arrow-steps .step span:before {
@@ -444,55 +431,55 @@ body {}
     margin-top: 50px;
 }
 
-@media (max-width:1176px) {
+@media (max-width: 1176px) {
     .google-btn {
         width: 30%;
     }
 }
 
-@media (max-width:1098px) {
+@media (max-width: 1098px) {
     .google-btn {
         width: 35%;
     }
 }
 
-@media (max-width:992px) {
+@media (max-width: 992px) {
     .google-btn {
         width: 30%;
     }
 }
 
-@media (max-width:862px) {
+@media (max-width: 862px) {
     .google-btn {
         width: 30%;
     }
 }
 
-@media (max-width:778px) {
+@media (max-width: 778px) {
     .google-btn {
         margin-top: 10px;
     }
 }
 
-@media (max-width:712px) {
+@media (max-width: 712px) {
     .google-btn {
         width: 35%;
     }
 }
 
-@media (max-width:542px) {
+@media (max-width: 542px) {
     .google-btn {
         width: 45%;
     }
 }
 
-@media (max-width:462px) {
+@media (max-width: 462px) {
     .google-btn {
         width: 50%;
     }
 }
 
-@media (max-width:412px) {
+@media (max-width: 412px) {
     .google-btn {
         width: 55%;
     }
@@ -611,7 +598,8 @@ body {}
     color: #3b3f57;
 
     font-weight: 600;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
     position: relative;
     top: 9%;
 }
@@ -625,7 +613,8 @@ body {}
     text-align: center;
     color: #23468c;
     font-weight: 600;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
     position: relative;
     top: 3%;
 }
@@ -645,19 +634,16 @@ body {}
 }
 
 
-
-
-
 /* -------------------------------  */
 
 
-@media (max-width:992px) {
+@media (max-width: 992px) {
     .btn-down-link a {
         font-size: 14px;
     }
 }
 
-@media (max-width:576px) {
+@media (max-width: 576px) {
     .btn-down-link a {
         font-size: 12px;
     }
@@ -683,7 +669,6 @@ body {}
     font-weight: 100;
 
 }
-
 
 
 .mg-top {
@@ -716,12 +701,11 @@ body {}
 .head-div-2 .text- {
     text-align: center;
     font-weight: 300;
-    font-family: sans-serif;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
     color: #202540;
     opacity: 0.8;
 }
-
-
 
 
 @media (max-width: 812px) {
@@ -735,7 +719,7 @@ body {}
     }
 }
 
-@media (max-width:556px) {
+@media (max-width: 556px) {
     .head-div {
         margin-top: -20px;
     }
@@ -753,12 +737,12 @@ body {}
 /* --------------- */
 
 
-
 .head-div-3 .text- {
     font-size: 18px;
     text-align: center;
     font-weight: 500;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
     color: #23468c;
     opacity: 1;
 
@@ -773,7 +757,6 @@ body {}
 }
 
 
-
 @media (max-width: 812px) {
 
     .head-div-3 {
@@ -786,7 +769,7 @@ body {}
     }
 }
 
-@media (max-width:556px) {
+@media (max-width: 556px) {
 
     .head-div-3 {
         padding-left: 10px;
@@ -858,8 +841,8 @@ body {}
     font-size: 20px;
     padding-top: 20px;
     opacity: 0.6;
-    font-family: sans-serif;
-
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
 }
 
 .center-left img.logoo {
@@ -881,7 +864,7 @@ body {}
     box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
-.center-left #connect-r1{
+.center-left #connect-r1 {
     display: none;
 }
 
@@ -923,8 +906,8 @@ body {}
     font-size: 20px;
     padding-top: 20px;
     opacity: 0.6;
-    font-family: sans-serif;
-}
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;}
 
 
 .channel {
@@ -953,7 +936,7 @@ body {}
 }
 
 
-@media (max-width:600px) {
+@media (max-width: 600px) {
     .down-connect {
         height: 500px;
         margin-top: -30px;
@@ -983,7 +966,6 @@ body {}
         background-color: #fff;
         margin-bottom: 10px;
     }
-
 
 
     .center-left img.logoo {
