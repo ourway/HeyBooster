@@ -21,7 +21,7 @@ from modules import performancegoaltracking, costprediction, performancechangeal
 from bson.objectid import ObjectId
 import babel.numbers
 from analyticsAudit import analyticsAudit
-from celery import Celery, current_task
+from tasks import run_analyticsAudit
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
@@ -32,8 +32,7 @@ TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
-REDIS_PASSWORD = os.environ.get('REDIS_SERVER_SECRET').strip()
-REDIS_BROKER_URI = "redis://:{}@localhost:6379/0".format(REDIS_PASSWORD)
+
 # Kullanıcı Giriş Decorator'ı
 def login_required(f):
     @wraps(f)
@@ -49,7 +48,6 @@ def login_required(f):
 app = Flask(__name__)
 
 # Celery for task queue
-celery = Celery(broker=REDIS_BROKER_URI)
 #celery = Celery(broker=f'redis://localhost:6379/0')
 db.init()
 db2.init()
@@ -240,52 +238,52 @@ def test_test(datasourceID):
     return redirect('/getaudit')
 
 
-@celery.task(name='analyticsAudit.run')
-def run_analyticsAudit(slack_token, datasourceID):
-    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
-    analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    return True
-
-
-import random
-
-
-@celery.task
-def slow_proc():
-    NTOTAL = 10
-    for i in range(NTOTAL):
-        time.sleep(random.random())
-        current_task.update_state(state='PROGRESS',
-                                  meta={'current': i, 'total': NTOTAL})
-    return 999
-
-
-@app.route('/progress')
-def progress():
-    jobid = request.values.get('jobid')
-    if jobid:
-        # GOTCHA: if you don't pass app=celery here,
-        # you get "NotImplementedError: No result backend configured"
-        job = Celery.AsyncResult(jobid, app=celery)
-        print(job.state)
-        print(job.result)
-        if job.state == 'PROGRESS':
-            return json.dumps(dict(
-                state=job.state,
-                progress=job.result['current'] * 1.0 / job.result['total'],
-            ))
-        elif job.state == 'SUCCESS':
-            return json.dumps(dict(
-                state=job.state,
-                progress=1.0,
-            ))
-    return '{}'
-
-
-@app.route('/enqueue')
-def enqueue():
-    job = slow_proc.delay()
-    return render_template('test12.html', JOBID=job.id)
+#@celery.task(name='analyticsAudit.run')
+#def run_analyticsAudit(slack_token, datasourceID):
+#    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
+#    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+#    return True
+#
+#
+#import random
+#
+#
+#@celery.task
+#def slow_proc():
+#    NTOTAL = 10
+#    for i in range(NTOTAL):
+#        time.sleep(random.random())
+#        current_task.update_state(state='PROGRESS',
+#                                  meta={'current': i, 'total': NTOTAL})
+#    return 999
+#
+#
+#@app.route('/progress')
+#def progress():
+#    jobid = request.values.get('jobid')
+#    if jobid:
+#        # GOTCHA: if you don't pass app=celery here,
+#        # you get "NotImplementedError: No result backend configured"
+#        job = Celery.AsyncResult(jobid, app=celery)
+#        print(job.state)
+#        print(job.result)
+#        if job.state == 'PROGRESS':
+#            return json.dumps(dict(
+#                state=job.state,
+#                progress=job.result['current'] * 1.0 / job.result['total'],
+#            ))
+#        elif job.state == 'SUCCESS':
+#            return json.dumps(dict(
+#                state=job.state,
+#                progress=1.0,
+#            ))
+#    return '{}'
+#
+#
+#@app.route('/enqueue')
+#def enqueue():
+#    job = slow_proc.delay()
+#    return render_template('test12.html', JOBID=job.id)
 
 
 @app.route('/audithistory/<datasourceID>')
