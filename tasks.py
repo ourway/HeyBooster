@@ -21,6 +21,7 @@ celery_app.config_from_object('celeryconfig')
 
 @celery_app.task
 def run_analyticsAudit(slack_token, datasourceID):
+    db.init()
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     analyticsAudit(slack_token, task=None, dataSource=dataSource)
     return True
