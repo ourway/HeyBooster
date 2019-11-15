@@ -285,7 +285,7 @@ def progress():
 @app.route('/enqueue')
 def enqueue():
     job = slow_proc.delay()
-    return render_template('test12.html', JOBID=jsonify(job.id))
+    return render_template('test12.html', JOBID=job.id)
 
 
 # @app.route('/enqueue')
