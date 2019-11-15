@@ -422,14 +422,14 @@ def wrongaccount():
         current_analyticsemail = user['ga_email']
     except:
         current_analyticsemail = ""
-
-    datasources = db.find('datasource', query={'email': session['email']})
-    unsortedargs = []
-    for datasource in datasources:
-        unsortedargs.append(datasource)
-
-    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('wrongaccount.html', args=args, current_analyticsemail=current_analyticsemail,
+#
+#    datasources = db.find('datasource', query={'email': session['email']})
+#    unsortedargs = []
+#    for datasource in datasources:
+#        unsortedargs.append(datasource)
+#
+#    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    return render_template('wrongaccount.html', current_analyticsemail=current_analyticsemail,
                            workspace=workspace)
 
 
