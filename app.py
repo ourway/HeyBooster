@@ -650,9 +650,7 @@ def connectaccount():
     if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
-    data_sources = []
     user = db.find_one('user', {'email': session['email']})
-    user_data_sources = db.find('datasource', query={'email': session['email']})
 
     slack_token = user['sl_accesstoken']
     client = WebClient(token=slack_token)
@@ -688,7 +686,6 @@ def connectaccount():
         #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
         uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
         ts = time.time()
-        local_ts = time.asctime(time.localtime(ts))
 
         data = {
             'email': session['email'],
@@ -705,8 +702,7 @@ def connectaccount():
             'channelType': "Slack",
             'channelID': nForm.channel.data.split('\u0007')[0],
             'channelName': nForm.channel.data.split('\u0007')[1],
-            'createdTS': ts,
-            'localTime': local_ts
+            'createdTS': ts
         }
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
@@ -719,8 +715,6 @@ def connectaccount():
             insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
                                        channelID=nForm.channel.data.split('\u0007')[0])
-        for dataSource in user_data_sources:
-            data_sources.append(dataSource)
         #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
         run_analyticsAudit.delay(slack_token, str(data['_id']))
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)

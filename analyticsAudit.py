@@ -520,9 +520,14 @@ def sessionClickDiscrepancy(slack_token, dataSource):
                     'filtersExpression': 'ga:sourceMedium=@google / cpc',
                     'includeEmptyRows': True
                 }]}).execute()
-
-    sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
-    adclicks_result = int(results['reports'][0]['data']['totals'][0]['values'][1])
+    try:
+        sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
+    except:
+        sessions_result = 0
+    try:
+        adclicks_result = int(results['reports'][0]['data']['totals'][0]['values'][1])
+    except:
+        adclicks_result = 0
     
     if adclicks_result > 0:
         if adclicks_result > sessions_result * 1.05 or adclicks_result < sessions_result * 1.05:
