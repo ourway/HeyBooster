@@ -135,22 +135,22 @@
                         <tbody>
                         {% if args %}
                             {% for arg in selectedargs %}
-                                {% if analytics_audits %}
-                                    {% set AA = analytics_audits[loop.index0] %}
+                                {% set AA = analytics_audits[loop.index0] %}
+                                {% if AA.totalScore == 0 %}
                                     <tr class="line-row" id="border-table">
                                         <td id="point" class="column2">
-                                            <h5>{{ AA.totalScore }}</h5>
+                                            <h5>O</h5>
                                         </td>
                                         <td class="column3">
-                                            Last Updated Time: {{ AA.localTime }}
+                                            Last Updated Time: preparing...
                                         </td>
                                         {% else %}
                                     <tr class="line-row" id="border-table">
                                     <td id="point" class="column2">
-                                        <h5>O</h5>
+                                        <h5>{{ AA.totalScore }}</h5>
                                     </td>
                                     <td class="column3">
-                                        Last Updated Time: Preparing...
+                                        Last Updated Time: {{ AA.localTime }}
                                     </td>
                                 {% endif %}
                             {% if AA.strstat == 'passive' %}
