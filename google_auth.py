@@ -25,7 +25,7 @@ LOGINAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/loginauth"
 GA_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/connectauth"
 GSC_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/gscconnectauth"
 ADW_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/adwconnectauth"
-BASE_URI = "https://app.heybooster.ai"
+BASE_URI = "https://app.heybooster.ai/getstarted/connect-accounts"
 
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
