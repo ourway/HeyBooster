@@ -826,7 +826,7 @@ def customDimension(slack_token, dataSource):
     text = "Custom Dimension"
     attachments = []
 
-    metrics = [{'expression': 'ga:pageviews'}
+    metrics = [{'expression': 'ga:hits'}
                ]
 
     email = dataSource['email']
