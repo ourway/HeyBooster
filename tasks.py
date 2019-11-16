@@ -20,10 +20,10 @@ celery_app = Celery('tasks',
              broker=BROKER_URI)
 
 @celery_app.task
-def run_analyticsAudit(slack_token, datasourceID):
+def run_analyticsAudit(slack_token, datasourceID, sendFeedback = False):
     db.init()
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
-    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+    analyticsAudit(slack_token, task=None, dataSource=dataSource, sendFeedback)
     return True
 
 

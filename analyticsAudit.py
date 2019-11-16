@@ -34,7 +34,7 @@ def totalScorewithEmoji(totalScore):
     else:
         return f":scream: *{totalScore}*"
 
-def analyticsAudit(slack_token, task, dataSource):
+def analyticsAudit(slack_token, task, dataSource, sendFeedback):
     db.init()
     if not task:
         actions = [
@@ -296,6 +296,7 @@ def analyticsAudit(slack_token, task, dataSource):
 #                        "color": "#2eb8a6" }]  + attachments
         slack_client = WebClient(token=slack_token)
         
+        #Send Analytics Audit without showing "Show More" label
         for i in range(len(attachments)//10 + 1):
             start_time = time.time()
             if i==0:   
@@ -308,6 +309,31 @@ def analyticsAudit(slack_token, task, dataSource):
             stop_time = time.time()
             if(stop_time - start_time < 1):
                 time.sleep(1- (stop_time - start_time))
+        
+        #IF ANALYTICS AUDIT CANNOT BE SENT WITHIN 5 MINUTES (NOT FOR NOW!)
+        #After sending analytics Audit, schedule a "give feedback" message 5 minutes later
+        if sendFeedback:
+            post_at = str(int(time.time() + 300)) # 5 minutes later
+            sch_text = "Your feedbacks make us stronger :muscle: " + \
+                    "Can you share your experience and thoughts with us?"
+            sch_attachments = [
+                    {
+                        "text": sch_text,
+                        "callback_id": "notification_form",
+                        "color": "#2eb8a6",
+                        "attachment_type": "default",
+                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                        "actions": [
+                            {
+                                "name": "giveFeedback",
+                                "text": "Give Feedback",
+                                "type": "button",
+                                "value": f"giveFeedback_{dataSource['_id']}"
+                            },
+                        ]
+                    }]
+            slack_client.chat_scheduleMessage(channel = channel, attachments = sch_attachments,
+                                              post_at = post_at)
         return resp['ts']
 
 

@@ -348,7 +348,7 @@ def audithistory(datasourceID):
         unsortedargs.append(data)
         insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
+                                       channelID=nForm.channel.data.split('\u0007')[0])
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         run_analyticsAudit.delay(slack_token, str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -711,12 +711,14 @@ def connectaccount():
             insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
                                        channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
+            run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback = True)
         else:
             insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
+                                       channelID=nForm.channel.data.split('\u0007')[0])
+            run_analyticsAudit.delay(slack_token, str(data['_id']))
         #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
-        run_analyticsAudit.delay(slack_token, str(data['_id']))
+        
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     #    else:
@@ -838,15 +840,22 @@ def getaudit():
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
         unsortedargs.append(data)
-        insertdefaultnotifications(session['email'], userID=uID,
-                                   dataSourceID=_id,
-                                   channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
+        if len(unsortedargs) == 1:
+            insertdefaultnotifications(session['email'], userID=uID,
+                                       dataSourceID=_id,
+                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
+            run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback = True)
+        else:
+            insertdefaultnotifications(session['email'], userID=uID,
+                                       dataSourceID=_id,
+                                       channelID=nForm.channel.data.split('\u0007')[0])
+            run_analyticsAudit.delay(slack_token, str(data['_id']))
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         # flash("Check out your connected slack channel, heybooster even wrote you.")
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
-        run_analyticsAudit.delay(slack_token, str(data['_id']))
+        
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
@@ -2329,25 +2338,40 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
     #            "you to boost your website by analyzing your data with marketing perspective." + \
     #            "You will get first insights tomorrow at 7 am"
     if sendWelcome:
-        text = "Welcome to heybooster :tada:\n" + \
-               "Your Analytics Audit Insights is preparing :coffee: " + \
-               "Don’t forget to share your experience with us :facepunch:"
-        data = {
+        text1 = "Welcome to heybooster :tada:\n" + \
+               "Your Analytics Audit Insights is preparing :coffee: "
+        data1 = {
             "channel": channelID,
             "attachments": [
                 {
-                    "text": text,
-                    "callback_id": "notification_form",
+                    "text": text1,
                     "color": "#2eb8a6",
                     "attachment_type": "default",
-                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                    "actions": [
-                        {
-                            "name": "giveFeedback",
-                            "text": "Give Feedback",
-                            "type": "button",
-                            "value": f"giveFeedback_{dataSourceID}"
-                        },
-                    ]
+                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n"
                 }]}
-        requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
+        requests.post(URL.format('chat.postMessage'), data=json.dumps(data1), headers=headers)
+        
+#        #THERE MAY BE A PROBLEM, IF ANALYTICS AUDIT LASTS LONGER THAN EXPECTED
+#        post_at = str(int(time.time() + 300)) # 5 minutes later
+#        text2 = "Your feedbacks make us stronger :muscle: " + \
+#                "Can you share your experience and thoughts with us?"
+#        data2 = {
+#            "channel": channelID,
+#            "attachments": [
+#                {
+#                    "text": text2,
+#                    "callback_id": "notification_form",
+#                    "color": "#2eb8a6",
+#                    "attachment_type": "default",
+#                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                    "actions": [
+#                        {
+#                            "name": "giveFeedback",
+#                            "text": "Give Feedback",
+#                            "type": "button",
+#                            "value": f"giveFeedback_{dataSourceID}"
+#                        },
+#                    ]
+#                }],
+#            "post_at": post_at}
+#        requests.post(URL.format('chat.scheduleMessage'), data=json.dumps(data2), headers=headers)
