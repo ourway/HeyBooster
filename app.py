@@ -765,7 +765,7 @@ def removeslackaccount():
         }}
     )
 
-    return redirect('/logout')
+    return redirect('/connect')
 
 
 def Timestamp2Date(ts, tz_offset):
