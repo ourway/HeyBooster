@@ -348,7 +348,7 @@ def audithistory(datasourceID):
         unsortedargs.append(data)
         insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0])
+                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         run_analyticsAudit.delay(slack_token, str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -714,7 +714,7 @@ def connectaccount():
         else:
             insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0])
+                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
         #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
         run_analyticsAudit.delay(slack_token, str(data['_id']))
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
@@ -840,7 +840,7 @@ def getaudit():
         unsortedargs.append(data)
         insertdefaultnotifications(session['email'], userID=uID,
                                    dataSourceID=_id,
-                                   channelID=nForm.channel.data.split('\u0007')[0])
+                                   channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         # flash("Check out your connected slack channel, heybooster even wrote you.")
