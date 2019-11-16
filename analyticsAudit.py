@@ -332,7 +332,8 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback):
                             },
                         ]
                     }]
-            slack_client.chat_scheduleMessage(channel = channel, attachments = sch_attachments,
+            slack_client.chat_scheduleMessage(text="", channel = channel, 
+                                              attachments = sch_attachments,
                                               post_at = post_at)
         return resp['ts']
 
