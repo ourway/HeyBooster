@@ -145,7 +145,7 @@
 
                         <tbody>
                         {% if args %}
-                            {% for arg in selectedargs %}
+                            {% for arg, ar in selectedargs.items %}
                                 {% set AA = analytics_audits[loop.index0] %}
                                 {% if AA.totalScore == 0 %}
                                     <tr class="line-row" id="border-table">
@@ -161,7 +161,7 @@
                                         <h5>{{ AA.totalScore }}</h5>
                                     </td>
                                     <td class="column3">
-                                        Last Updated Time: {{ AA.localTime }}
+                                        {{ ar.dataSourceName }} Last Updated Time: {{ AA.localTime }}
                                     </td>
                                 {% endif %}
                             {% if AA.strstat == 'passive' %}
