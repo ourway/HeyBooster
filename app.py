@@ -25,7 +25,6 @@ from tasks import run_analyticsAudit
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
 OAuth2ConsumerBlueprint.authorized = authorized
@@ -51,16 +50,15 @@ def login_required(f):
 
 app = Flask(__name__)
 
-#Rate Limiting for Incoming Requests
+# Rate Limiting for Incoming Requests
 limiter = Limiter(
     app,
     key_func=get_remote_address,
     default_limits=["100 per minute"],
 )
 
-
 # Celery for task queue
-#celery = Celery(broker=f'redis://localhost:6379/0')
+# celery = Celery(broker=f'redis://localhost:6379/0')
 db.init()
 db2.init()
 
@@ -78,15 +76,14 @@ app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
 
-
-#Force App to expire session after 20minutes of true inactivity. 
+# Force App to expire session after 20minutes of true inactivity.
 @app.before_request
 def before_request():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=30)
     session.modified = True
-    
-    
+
+
 @app.route('/images/<pid>.png')
 def get_image(pid):
     return send_file('slackdb/images/%s.png' % pid, mimetype='image/gif')
@@ -269,18 +266,18 @@ def test_test(datasourceID):
     return redirect('/account/audit-history')
 
 
-#@celery.task(name='analyticsAudit.run')
-#def run_analyticsAudit(slack_token, datasourceID):
+# @celery.task(name='analyticsAudit.run')
+# def run_analyticsAudit(slack_token, datasourceID):
 #    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
 #    analyticsAudit(slack_token, task=None, dataSource=dataSource)
 #    return True
 #
 #
-#import random
+# import random
 #
 #
-#@celery.task
-#def slow_proc():
+# @celery.task
+# def slow_proc():
 #    NTOTAL = 10
 #    for i in range(NTOTAL):
 #        time.sleep(random.random())
@@ -289,8 +286,8 @@ def test_test(datasourceID):
 #    return 999
 #
 #
-#@app.route('/progress')
-#def progress():
+# @app.route('/progress')
+# def progress():
 #    jobid = request.values.get('jobid')
 #    if jobid:
 #        # GOTCHA: if you don't pass app=celery here,
@@ -311,8 +308,8 @@ def test_test(datasourceID):
 #    return '{}'
 #
 #
-#@app.route('/enqueue')
-#def enqueue():
+# @app.route('/enqueue')
+# def enqueue():
 #    job = slow_proc.delay()
 #    return render_template('test12.html', JOBID=job.id)
 
@@ -372,8 +369,8 @@ def audithistory(datasourceID):
         data['_id'] = _id
         unsortedargs.append(data)
         insertdefaultnotifications(session['email'], userID=uID,
-                                       dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0])
+                                   dataSourceID=_id,
+                                   channelID=nForm.channel.data.split('\u0007')[0])
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         run_analyticsAudit.delay(slack_token, str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -447,13 +444,13 @@ def wrongaccount():
         current_analyticsemail = user['ga_email']
     except:
         current_analyticsemail = ""
-#
-#    datasources = db.find('datasource', query={'email': session['email']})
-#    unsortedargs = []
-#    for datasource in datasources:
-#        unsortedargs.append(datasource)
-#
-#    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    #
+    #    datasources = db.find('datasource', query={'email': session['email']})
+    #    unsortedargs = []
+    #    for datasource in datasources:
+    #        unsortedargs.append(datasource)
+    #
+    #    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     return render_template('wrongaccount.html', current_analyticsemail=current_analyticsemail,
                            workspace=workspace)
 
@@ -735,15 +732,15 @@ def connectaccount():
         if len(unsortedargs) == 1:
             insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
-            run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback = True)
+                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+            run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
         else:
             insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
                                        channelID=nForm.channel.data.split('\u0007')[0])
             run_analyticsAudit.delay(slack_token, str(data['_id']))
         #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
-        
+
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     #    else:
@@ -781,12 +778,20 @@ def removedatasources(datasourceID):
 @app.route("/removeslackaccount", methods=['GET', 'POST'])
 def removeslackaccount():
     user = db.find_one('user', {'email': session['email']})
+    datasource = db.find_one('datasource', {'email': session['email']})
 
     db.DATABASE['user'].update_one(
         {'_id': user['_id']},
         {'$set': {
             "sl_accesstoken": "",
             "sl_userid": ""
+        }}
+    )
+
+    db.DATABASE['datasource'].update_one(
+        {'_id': datasource['_id']},
+        {'$set': {
+            "channelName": ""
         }}
     )
 
@@ -868,8 +873,8 @@ def getaudit():
         if len(unsortedargs) == 1:
             insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome = True)
-            run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback = True)
+                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+            run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
         else:
             insertdefaultnotifications(session['email'], userID=uID,
                                        dataSourceID=_id,
@@ -880,7 +885,7 @@ def getaudit():
         # flash("Check out your connected slack channel, heybooster even wrote you.")
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
-        
+
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
@@ -2193,7 +2198,7 @@ def message_actions():
     return make_response("", 200)
 
 
-def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelcome = False):
+def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelcome=False):
     # Default Notifications will be inserted here
     #    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
     #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
@@ -2364,7 +2369,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
     #            "You will get first insights tomorrow at 7 am"
     if sendWelcome:
         text1 = "Welcome to heybooster :tada:\n" + \
-               "Your Analytics Audit Insights is preparing :coffee: "
+                "Your Analytics Audit Insights is preparing :coffee: "
         data1 = {
             "channel": channelID,
             "attachments": [
@@ -2375,7 +2380,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
                     "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n"
                 }]}
         requests.post(URL.format('chat.postMessage'), data=json.dumps(data1), headers=headers)
-        
+
 #        #THERE MAY BE A PROBLEM, IF ANALYTICS AUDIT LASTS LONGER THAN EXPECTED
 #        post_at = str(int(time.time() + 300)) # 5 minutes later
 #        text2 = "Your feedbacks make us stronger :muscle: " + \

@@ -159,14 +159,27 @@
                                             Last Updated Time: preparing...
                                         </td>
                                         {% else %}
-                                    <tr class="line-row" id="border-table">
-                                    <td id="point" class="column2">
-                                        <h5>{{ AA.totalScore }}</h5>
-                                    </td>
-                                    <td class="column3">
-                                        <b style="color: #202540">{{ arg.dataSourceName }}</b> Last Updated Time: <b
-                                            style="color: #202540">{{ AA.localTime }}</b>
-                                    </td>
+                                        {% if arg.channelName == '' %}
+                                            <tr class="line-row" id="border-table">
+                                                <td id="point" class="column2">
+                                                    <del><h5>{{ AA.totalScore }}</h5></del>
+                                                </td>
+                                                <td class="column3">
+                                                    <del><b style="color: #202540">{{ arg.dataSourceName }}</b> Last Updated
+                                                    Time: <b
+                                                        style="color: #202540">{{ AA.localTime }}</b></del>
+                                                </td>
+                                                {% else %}
+                                            <tr class="line-row" id="border-table">
+                                            <td id="point" class="column2">
+                                                <h5>{{ AA.totalScore }}</h5>
+                                            </td>
+                                            <td class="column3">
+                                                <b style="color: #202540">{{ arg.dataSourceName }}</b> Last Updated
+                                                Time: <b
+                                                    style="color: #202540">{{ AA.localTime }}</b>
+                                            </td>
+                                        {% endif %}
                                 {% endif %}
                             {% if AA.strstat == 'passive' %}
                                 <td class="column4">
