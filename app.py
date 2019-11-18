@@ -779,7 +779,7 @@ def removedatasources(datasourceID):
     return redirect('/account/audit-history')
 
 
-@app.route("/removeslackaccount", methods=['POST'])
+@app.route("/removeslackaccount", methods=['GET', 'POST'])
 def removeslackaccount():
     user = db.find_one('user', {'email': session['email']})
 
