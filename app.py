@@ -245,12 +245,14 @@ def home():
 @login_required
 def active_audit_test(UUID):
     analytics_audit = db.find_one("notification", query={"_id": ObjectId(UUID)})
-    val = int(analytics_audit['status'])
-    db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
-                       status=str(1 - val))
-
-    return redirect('/account/audit-history')
-
+    if analytics_audit['email'] == session['email']:
+        val = int(analytics_audit['status'])
+        db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
+                           status=str(1 - val))
+    
+        return redirect('/account/audit-history')
+    else:
+        return make_response("", 401)
 
 @app.route('/test_test/<datasourceID>')
 @login_required
@@ -258,12 +260,14 @@ def active_audit_test(UUID):
 @limiter.limit("5/minute")
 def test_test(datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
-    user = db.find_one("user", query={"email": dataSource["email"]})
-
-    slack_token = user['sl_accesstoken']
-    #    analyticsAudit(slack_token, task=None, dataSource=dataSource)
-    run_analyticsAudit.delay(slack_token, datasourceID)
-    return redirect('/account/audit-history')
+    if dataSource['email'] == session['email']:
+        user = db.find_one("user", query={"email": dataSource["email"]})
+        slack_token = user['sl_accesstoken']
+        #    analyticsAudit(slack_token, task=None, dataSource=dataSource)
+        run_analyticsAudit.delay(slack_token, datasourceID)
+        return redirect('/account/audit-history')
+    else:
+        return make_response("", 401)
 
 
 # @celery.task(name='analyticsAudit.run')
