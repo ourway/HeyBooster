@@ -78,12 +78,15 @@
 
 
             <li class="nav-item dropdown">
-                <a id="drop-icon" href="/getstarted/connect-accounts" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img
+                <a id="drop-icon" href="/getstarted/connect-accounts" data-toggle="dropdown"
+                   class="nav-link dropdown-toggle user-action"><img
                         src="../static/img/ninca.png" class="avatar" alt="Avatar"><span
                         id="user-name-1">{{ current_analyticsemail }}</span><b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="/account/audit-history" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a></li>
-                    <li><a href="/account/connections" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a>
+                    <li><a href="/account/audit-history" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a>
+                    </li>
+                    <li><a href="/account/connections" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected
+                        Accounts</a>
                     </li>
                     <li class="divider dropdown-divider"></li>
                     <li><a href="/logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> &nbsp; Logout</a>
@@ -161,7 +164,8 @@
                                         <h5>{{ AA.totalScore }}</h5>
                                     </td>
                                     <td class="column3">
-                                        <b style="color: #202540">{{ arg.dataSourceName }}</b> Last Updated Time: <b style="color: #202540">{{ AA.localTime }}</b>
+                                        <b style="color: #202540">{{ arg.dataSourceName }}</b> Last Updated Time: <b
+                                            style="color: #202540">{{ AA.localTime }}</b>
                                     </td>
                                 {% endif %}
                             {% if AA.strstat == 'passive' %}
@@ -208,7 +212,8 @@
                                     New Audit Request
                                 </button>
                                 <div id="content" class="collapse dropdown-div">
-                                    <form class="contact100-form validate-form" id="son-care" method="POST" action="/account/audit-history">
+                                    <form class="contact100-form validate-form" id="son-care" method="POST"
+                                          action="/account/audit-history">
                                             <span class="contact100-form-title">
                                                 heybooster
                                             </span>
@@ -357,6 +362,9 @@
 <script type="text/javascript"
         src="{{ url_for('static', filename='/js/main.js') }}"></script>
 
+
+<script type="text/javascript" src="https://a.opmnstr.com/app/js/api.min.js" data-account="47764" data-user="41970"
+        async></script>
 
 </body>
 </html>
