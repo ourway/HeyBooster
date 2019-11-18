@@ -22,6 +22,9 @@ from bson.objectid import ObjectId
 import babel.numbers
 from analyticsAudit import analyticsAudit
 from tasks import run_analyticsAudit
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 
 imageurl = "https://app.heybooster.ai/images/{}.png"
 
@@ -32,6 +35,7 @@ TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
+
 
 # Kullanıcı Giriş Decorator'ı
 def login_required(f):
@@ -46,6 +50,14 @@ def login_required(f):
 
 
 app = Flask(__name__)
+
+#Rate Limiting for Incoming Requests
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["100 per minute"],
+)
+
 
 # Celery for task queue
 #celery = Celery(broker=f'redis://localhost:6379/0')
@@ -66,6 +78,15 @@ app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
 
+
+#Force App to expire session after 20minutes of true inactivity. 
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=30)
+    session.modified = True
+    
+    
 @app.route('/images/<pid>.png')
 def get_image(pid):
     return send_file('slackdb/images/%s.png' % pid, mimetype='image/gif')
@@ -224,6 +245,7 @@ def home():
 
 
 @app.route('/active_audit_test/<UUID>')
+@login_required
 def active_audit_test(UUID):
     analytics_audit = db.find_one("notification", query={"_id": ObjectId(UUID)})
     val = int(analytics_audit['status'])
@@ -234,6 +256,9 @@ def active_audit_test(UUID):
 
 
 @app.route('/test_test/<datasourceID>')
+@login_required
+@limiter.limit("100/day")
+@limiter.limit("5/minute")
 def test_test(datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     user = db.find_one("user", query={"email": dataSource["email"]})

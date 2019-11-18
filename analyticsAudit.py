@@ -825,9 +825,15 @@ def botSpamExcluding(slack_token, dataSource):
 def customDimension(slack_token, dataSource):
     text = "Custom Dimension"
     attachments = []
-
-    metrics = [{'expression': 'ga:hits'}
-               ]
+    
+    metrics = {'HIT': [{'expression': 'ga:hits'}
+                       ],
+               'SESSION':[{'expression': 'ga:sessions'}
+                       ],
+               'USER': [{'expression': 'ga:users'}
+                       ],
+               'PRODUCT':[{'expression': 'ga:productDetailViews'}
+                       ]}
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -844,24 +850,24 @@ def customDimension(slack_token, dataSource):
         webPropertyId=propertyId,
     ).execute()
 
-    hitsdimensions = []
+    dimensionsNmetrics = []
     for dimension in customDimensions.get('items', []):
-        if dimension.get('scope') == 'HIT' and dimension.get('active'):
-            hitsdimensions += [dimension.get('id')]
+        if dimension.get('active'):
+            dimensionsNmetrics += [(dimension.get('id'), metrics[dimension.get('scope')])]
 
     hasHit = False
-    if (hitsdimensions):
+    if (dimensionsNmetrics):
         rservice = google_analytics.build_reporting_api_v4_woutSession(email)
         reportRequests = []
-        for i in range(len(hitsdimensions) // 5 + 1):  # Reporting API allows us to set maximum 5 reports
+        for i in range(len(dimensionsNmetrics) // 5 + 1):  # Reporting API allows us to set maximum 5 reports
             reportRequests = []
             reportRequests += [{
                 'viewId': viewId,
                 'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                'metrics': metrics,
-                'dimensions': [{'name': dimId}],
+                'metrics': DnM[1],
+                'dimensions': [{'name': DnM[0]}],
                 'filtersExpression': "ga:hits>0"
-            } for dimId in hitsdimensions[i:i + 5]]
+            } for DnM in dimensionsNmetrics[i*5:i*5 + 5]]
             results = rservice.reports().batchGet(
                 body={'reportRequests': reportRequests}).execute()
             for report in results['reports']:
