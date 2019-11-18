@@ -778,20 +778,19 @@ def removedatasources(datasourceID):
 @app.route("/removeslackaccount", methods=['GET', 'POST'])
 def removeslackaccount():
     user = db.find_one('user', {'email': session['email']})
-    datasource = db.find_one('datasource', {'email': session['email']})
+    dataSource = db.find_one('datasource', {'email': session['email']})
 
+    db.DATABASE['datasource'].update_one(
+        {'_id': dataSource['_id']},
+        {'$set': {
+            "channelName": ""
+        }}
+    )
     db.DATABASE['user'].update_one(
         {'_id': user['_id']},
         {'$set': {
             "sl_accesstoken": "",
             "sl_userid": ""
-        }}
-    )
-
-    db.DATABASE['datasource'].update_one(
-        {'_id': datasource['_id']},
-        {'$set': {
-            "channelName": ""
         }}
     )
 
