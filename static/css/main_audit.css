@@ -63,7 +63,6 @@
 }
 
 
-
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 * {
@@ -84,7 +83,6 @@ html {
 .nav- {
     background-color: #202540;
 }
-
 
 
 /* ------------------------------------ */
@@ -125,7 +123,6 @@ li {
 }
 
 
-
 /* ------------------------------------ */
 input {
     display: block;
@@ -159,14 +156,8 @@ iframe {
 }
 
 
-
-
 /*//////////////////////////////////////////////////////////////////
 [ Utiliti ]*/
-
-
-
-
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -187,7 +178,8 @@ iframe {
 
 }
 
-.line-row tr {}
+.line-row tr {
+}
 
 .table-border {
     border-top-left-radius: 10px;
@@ -203,7 +195,7 @@ iframe {
     display: block;
     width: 100%;
     text-align: center;
-    color:#303f9f;
+    color: #303f9f;
     margin-bottom: 10px;
     margin-top: 10px;
     font-family: 'Quicksand', sans-serif;
@@ -238,11 +230,10 @@ iframe {
 }
 
 .change-alert {
-    background: #0097a7;
     border: none;
     border-radius: 3px;
     transition: .4s opacity;
-
+    background: #3f51b5;
 }
 
 .change-alert:hover {
@@ -353,17 +344,14 @@ table th.r {
 }
 
 #point {
-    border-bottom: 2px solid rgba(63,81,181,0.4);
-
-
-
+    border-bottom: 2px solid rgba(63, 81, 181, 0.4);
 
 
 }
 
 #point h5 {
     font-weight: 600;
-    color: rgba(63,81,181,1);
+    color: rgba(63, 81, 181, 1);
 }
 
 .form-div {
@@ -385,8 +373,8 @@ table th.r {
 }
 
 
-
-.head-line {}
+.head-line {
+}
 
 tbody tr:nth-child(even) {
     background-color: #fbfbfb;
@@ -442,7 +430,7 @@ tbody tr:hover {
 }
 
 .column5 {
-    padding-right:50px;
+    padding-right: 50px;
     width: 0px;
     text-align: right;
     text-align: center;
@@ -489,8 +477,6 @@ tbody tr:hover {
     cursor: pointer;
     border: 1px solid #dedede;
     border-radius: 4px;
-
-
 
 
 }
@@ -631,7 +617,6 @@ tbody tr:hover {
 }
 
 
-
 .line-row td h5 {
     color: #dd4c4f;
 }
@@ -639,7 +624,6 @@ tbody tr:hover {
 tr#head-audit {
     background-color: #f9f9f9;
 }
-
 
 
 .btnx {
@@ -687,7 +671,6 @@ tr#head-audit {
     margin-top: 20px;
     margin-bottom: 20px;
 }
-
 
 
 .dropdown-item-x {

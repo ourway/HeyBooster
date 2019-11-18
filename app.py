@@ -292,7 +292,7 @@ def test_test(datasourceID):
 #    return render_template('test12.html', JOBID=job.id)
 
 
-@app.route('/audithistory/<datasourceID>')
+@app.route('/account/audit-history/<datasourceID>')
 def audithistory(datasourceID):
     user = db.find_one('user', {'email': session['email']})
     tz_offset = user['tz_offset']
