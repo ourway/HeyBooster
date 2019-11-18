@@ -783,18 +783,18 @@ def removedatasources(datasourceID):
 def removeslackaccount():
     user = db.find_one('user', {'email': session['email']})
 
+    db.DATABASE['datasource'].update_one(
+        {'email': user['email']},
+        {'$set': {
+            "channelName": ""
+        }}
+    )
+
     db.DATABASE['user'].update_one(
         {'_id': user['_id']},
         {'$set': {
             "sl_accesstoken": "",
             "sl_userid": ""
-        }}
-    )
-
-    db.DATABASE['datasource'].update_one(
-        {'email': user['email']},
-        {'$set': {
-            "channelName": ""
         }}
     )
 
