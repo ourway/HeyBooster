@@ -1,8 +1,10 @@
 from database import db
  
 class User(object):
-    def __init__(self, name, email, password):
+    def __init__(self, name, firstname, lastname, email, password):
         self.name = name
+        self.firstname = firstname
+        self.lastname = lastname
         self.email = email
         self.password = password
         self.ga_accesstoken = ''
@@ -14,6 +16,8 @@ class User(object):
     def json(self):
         return {
                 "name": self.name,
+                "firstname": self.firstname,
+                "lastname": self.lastname,
                 "email": self.email,
                 "password": self.password,
                 "ga_accesstoken": self.ga_accesstoken,

@@ -94,6 +94,14 @@ def get_user_info():
 
     return oauth2_client.userinfo().get().execute()
 
+def get_user_info_woutSession(email):
+    credentials = build_credentials_woutSession(email)
+
+    oauth2_client = googleapiclient.discovery.build(
+        'oauth2', 'v2',
+        credentials=credentials)
+
+    return oauth2_client.userinfo().get().execute()
 
 def no_cache(view):
     @functools.wraps(view)
@@ -141,7 +149,12 @@ def google_loginauth_redirect():
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     user_info = get_user_info()
     flask.session['email'] = user_info['email']
-    new_user = User(name=user_info['name'], email=flask.session['email'], password="")
+#    new_user = User(name=user_info['name'], email=flask.session['email'], password="")
+    new_user = User(name = user_info['name'],
+                    firstname=user_info['given_name'], 
+                    lastname = user_info['family_name'], 
+                    email=flask.session['email'], 
+                    password="")
     new_user.insert()
     user = db.find_one('user', {'email': user_info['email']})
     flask.session['sl_accesstoken'] = user['sl_accesstoken']
