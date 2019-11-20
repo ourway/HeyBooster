@@ -34,7 +34,7 @@ def totalScorewithEmoji(totalScore):
     else:
         return f":scream: *{totalScore}*"
 
-def analyticsAudit(slack_token, task, dataSource, sendFeedback):
+def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     db.init()
     if not task:
         actions = [
