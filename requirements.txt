@@ -47,3 +47,5 @@ ccy==1.1.0
 redis==3.3.11
 celery==4.3.0
 Flask-Limiter==1.1.0
+gunicorn==19.9.0
+pyOpenSSL==0.12
