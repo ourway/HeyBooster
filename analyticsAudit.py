@@ -171,7 +171,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     for function in subfunctions:
         currentStates[function.__name__] = None
         trycount = 0
-        while trycount < 3:
+        while trycount < 10:
             try:
                 attachment = function(slack_token, dataSource)
                 if 'color' in attachment[0]:
