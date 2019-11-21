@@ -22,6 +22,8 @@ def do_job(tasks_to_accomplish):
                 queue(False) function would do the same task also.
             '''
             task = tasks_to_accomplish.get_nowait()
+            logging.basicConfig(filename="orchestrator.log", filemode='a',
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
             db.init()
             db2.init()
             user = db.find_one('user', {'email': task['email']})
