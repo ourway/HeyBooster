@@ -205,7 +205,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
             except Exception as ex:
                 logging.error(f"TASK DID NOT RUN --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__} --- {str(ex)}")
                 trycount += 1
-                time.sleep(0.2)
+                time.sleep(1)
     if task:
         db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
     else:
