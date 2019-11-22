@@ -1733,7 +1733,7 @@ def errorPage(slack_token, dataSource):
 #                    'viewId': viewId,
 #                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
 #                    'metrics': metrics,
-#                    'filterExpression':'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404',
+#                    'filtersExpression':'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404',
 #                }]}).execute()
     body={
             'reportRequests': [
@@ -1741,7 +1741,7 @@ def errorPage(slack_token, dataSource):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'filterExpression':'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404',
+                    'filtersExpression':'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404',
                 }]}
     results = makeRequestWithExponentialBackoff(service, body)
     if 'rows' in results['reports'][0]['data'].keys():
