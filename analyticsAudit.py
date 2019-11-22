@@ -6,7 +6,27 @@ from timezonefinder import TimezoneFinder
 import ccy
 import logging
 from database import db
+from apiclient.errors import HttpError
+import random
 
+
+PERMISSION_ERROR = "User does not have sufficient permissions for this account."
+TIMEDOUT_ERROR = "The read operation timed out"
+
+
+def makeRequestWithExponentialBackoff(rservice, body):
+    for n in range(0, 5):
+        try:
+            return rservice.reports().batchGet(body=body).execute()
+        except HttpError as error:
+            loopError = error
+            if error.resp.reason in ['userRateLimitExceeded', 'quotaExceeded',
+                                     'internalServerError', 'backendError']:
+                time.sleep((2 ** n) + random.random())
+            else:
+                break
+    #There has been an error, the request never succeeded.
+    raise loopError
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
@@ -168,44 +188,51 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     currentStates = {}
     totalScore = 0
     redcount = 0
+    isPermitted = True
     for function in subfunctions:
+        if not isPermitted:
+            return
         currentStates[function.__name__] = None
         trycount = 0
-        while trycount < 10:
+        while trycount < 5:
             try:
                 attachment = function(slack_token, dataSource)
-                if 'color' in attachment[0]:
-                    currentState = attachment[0]['color']
-                else:
-                    currentState = None
-                currentStates[function.__name__] = currentState
-                if currentState != "danger":
-                    totalScore += scores[function.__name__]
-#                    attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
-                    attachment[0]['text'] = attachment[0]['text']
-                else:
-#                    attachment[0]['text'] = f":x: *{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
-                    attachment[0]['text'] = f"*{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
-                if task:
-                    lastState = task['lastStates'][function.__name__]
-                    if lastState != currentState:
+                if attachment:
+                    if 'color' in attachment[0]:
+                        currentState = attachment[0]['color']
+                    else:
+                        currentState = None
+                    currentStates[function.__name__] = currentState
+                    if currentState != "danger":
+                        totalScore += scores[function.__name__]
+    #                    attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
+                        attachment[0]['text'] = attachment[0]['text']
+                    else:
+    #                    attachment[0]['text'] = f":x: *{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
+                        attachment[0]['text'] = f"*{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
+                    if task:
+                        lastState = task['lastStates'][function.__name__]
+                        if lastState != currentState:
+                            if currentState == "danger":
+                                attachments = attachments[0:redcount] + attachment + attachments[redcount:]
+                                redcount += 1
+                            else:
+                                attachments += attachment
+                                
+                    else:
                         if currentState == "danger":
                             attachments = attachments[0:redcount] + attachment + attachments[redcount:]
                             redcount += 1
                         else:
                             attachments += attachment
-                            
-                else:
-                    if currentState == "danger":
-                        attachments = attachments[0:redcount] + attachment + attachments[redcount:]
-                        redcount += 1
-                    else:
-                        attachments += attachment
                 break
-            except Exception as ex:
+            except HttpError as ex:
                 logging.error(f"TASK DID NOT RUN --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__} --- {str(ex)}")
-                trycount += 1
-                time.sleep(1)
+                #https://developers.google.com/analytics/devguides/reporting/core/v4/errors
+                if ex.resp.reason in ['userRateLimitExceeded', 'quotaExceeded',
+                                      'internalServerError', 'backendError']:
+                    time.sleep((2 ** trycount) + random.random())
+                    trycount += 1
     if task:
         db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
     else:
@@ -353,8 +380,17 @@ def bounceRateTracking(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    #                    'filtersExpression': "ga:bounceRate>65,ga:bounceRate<30",
+#                    'includeEmptyRows': True
+#                }]}).execute()
+    body = {
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -362,20 +398,22 @@ def bounceRateTracking(slack_token, dataSource):
                     'metrics': metrics,
                     #                    'filtersExpression': "ga:bounceRate>65,ga:bounceRate<30",
                     'includeEmptyRows': True
-                }]}).execute()
+                }]}
+                            
+    results = makeRequestWithExponentialBackoff(service, body=body)
 
     bounceRate = float(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if bounceRate > 65:
         attachments += [{
-            "text": "Bounce rate is more than normal level (avg = %40-%65) , You may need to use adjusted bounce rate to see the real performance of your landing page.",
-            "color": "danger",
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-#            "pretext": text,
-            "title": text,
-            "attachment_type": "default",
-        }]
+                "text": "Bounce rate is more than normal level (avg = %40-%65) , You may need to use adjusted bounce rate to see the real performance of your landing page.",
+                "color": "danger",
+                "callback_id": "notification_form",
+    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+    #            "pretext": text,
+                "title": text,
+                "attachment_type": "default"
+                    }]  
     elif bounceRate < 30:
         attachments += [{
             "text": "Bounce rate is less than normal level (avg = %40-%65) , You may need to check your event which affected the healthy measurement of bounce rate.",
@@ -420,8 +458,17 @@ def notSetLandingPage(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'filtersExpression': "ga:landingPagePath=@not set",
+#                    'includeEmptyRows': True
+#                }]}).execute()
+    body = {
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -429,8 +476,8 @@ def notSetLandingPage(slack_token, dataSource):
                     'metrics': metrics,
                     'filtersExpression': "ga:landingPagePath=@not set",
                     'includeEmptyRows': True
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     pageviews = float(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if pageviews > 0:
@@ -478,8 +525,17 @@ def adwordsAccountConnection(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'filtersExpression': 'ga:sourceMedium=@google / cpc',
+#                    'includeEmptyRows': True
+#                }]}).execute()
+    body = {
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -487,8 +543,8 @@ def adwordsAccountConnection(slack_token, dataSource):
                     'metrics': metrics,
                     'filtersExpression': 'ga:sourceMedium=@google / cpc',
                     'includeEmptyRows': True
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)                       
     result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if result < 20:
@@ -537,8 +593,17 @@ def sessionClickDiscrepancy(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'filtersExpression': 'ga:sourceMedium=@google / cpc',
+#                    'includeEmptyRows': True
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -546,7 +611,8 @@ def sessionClickDiscrepancy(slack_token, dataSource):
                     'metrics': metrics,
                     'filtersExpression': 'ga:sourceMedium=@google / cpc',
                     'includeEmptyRows': True
-                }]}).execute()
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     try:
         sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
     except:
@@ -578,10 +644,18 @@ def sessionClickDiscrepancy(slack_token, dataSource):
                 "attachment_type": "default",
             }]
     else:
-        pass
+        attachments += [{
+                "text": "You don’t have any session from Google Ads campaigns.",
+                "color": "danger",
+    #            "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
+        
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        
         return attachments
     else:
         return []
@@ -604,16 +678,24 @@ def goalSettingActivity(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'includeEmptyRows': True
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     'includeEmptyRows': True
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body) 
     result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if result < 20:
@@ -660,8 +742,21 @@ def selfReferral(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'dimensions': [{'name': 'ga:hostname'}],
+#                    "orderBys": [
+#                        {
+#                            "fieldName": metrics[0]['expression'],
+#                            "sortOrder": "DESCENDING"
+#                        }]
+#                }]}).execute()
+    body = {
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -673,20 +768,28 @@ def selfReferral(slack_token, dataSource):
                             "fieldName": metrics[0]['expression'],
                             "sortOrder": "DESCENDING"
                         }]
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     if 'rows' in results['reports'][0]['data'].keys():
         hostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
-
-        results = service.reports().batchGet(
-            body={
+#        results = service.reports().batchGet(
+#            body={
+#                'reportRequests': [
+#                    {
+#                        'viewId': viewId,
+#                        'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                        'metrics': metrics,
+#                        'filtersExpression': f'ga:source=={hostname};ga:medium==referral'
+#                    }]}).execute()
+        body={
                 'reportRequests': [
                     {
                         'viewId': viewId,
                         'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                         'metrics': metrics,
                         'filtersExpression': f'ga:source=={hostname};ga:medium==referral'
-                    }]}).execute()
+                    }]}
+        results = makeRequestWithExponentialBackoff(service, body)
 
     if 'rows' in results['reports'][0]['data'].keys():
         attachments += [{
@@ -734,8 +837,17 @@ def paymentReferral(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'filtersExpression': 'ga:medium==referral',
+#                    'includeEmptyRows': True
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -743,8 +855,8 @@ def paymentReferral(slack_token, dataSource):
                     'metrics': metrics,
                     'filtersExpression': 'ga:medium==referral',
                     'includeEmptyRows': True
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     newUsers = int(results['reports'][0]['data']['totals'][0]['values'][0])
     sessions = int(results['reports'][0]['data']['totals'][0]['values'][1])
     transactionsPerSession = float(results['reports'][0]['data']['totals'][0]['values'][2])
@@ -868,8 +980,10 @@ def customDimension(slack_token, dataSource):
                 'dimensions': [{'name': DnM[0]}],
                 'filtersExpression': "ga:hits>0"
             } for DnM in dimensionsNmetrics[i*5:i*5 + 5]]
-            results = rservice.reports().batchGet(
-                body={'reportRequests': reportRequests}).execute()
+#            results = rservice.reports().batchGet(
+#                body={'reportRequests': reportRequests}).execute()
+            body = {'reportRequests': reportRequests}
+            results = makeRequestWithExponentialBackoff(rservice, body)
             for report in results['reports']:
                 if 'rows' in results['reports'][0]['data'].keys():
                     for row in results['reports'][0]['data']['rows']:
@@ -925,16 +1039,24 @@ def siteSearchTracking(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'dimensions': [{'name': 'ga:searchKeyword'}]
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:searchKeyword'}]
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     if 'rows' in results['reports'][0]['data'].keys():
         for row in results['reports'][0]['data']['rows']:
             result = int(row['metrics'][0]['values'][0])
@@ -987,8 +1109,17 @@ def gdprCompliant(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'dimensions': [{'name': 'ga:pagePath'}],
+#                    'filtersExpression': "ga:pagePath=@=email,ga:pagePath=@@"
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -996,8 +1127,8 @@ def gdprCompliant(slack_token, dataSource):
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:pagePath'}],
                     'filtersExpression': "ga:pagePath=@=email,ga:pagePath=@@"
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     if 'rows' in results['reports'][0]['data'].keys():
         attachments += [{
             "text": "Check your page paths, there is information which is not compatible with GDPR.",
@@ -1189,20 +1320,28 @@ def customMetric(slack_token, dataSource):
     if (metrics):
         rservice = google_analytics.build_reporting_api_v4_woutSession(email)
         for i in range(len(metrics) // 10 + 1):  ## Reporting API allows us to set maximum 10 metrics
-            results = rservice.reports().batchGet(
-                body={
-                    'reportRequests': [
-                        {
-                            'viewId': viewId,
-                            'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                            'metrics': metrics[i*10:i*10 + 10],
-                            'includeEmptyRows': False
-                        }]}).execute()
-
+#            results = rservice.reports().batchGet(
+#                        body={
+#                            'reportRequests': [
+#                                {
+#                                    'viewId': viewId,
+#                                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                                    'metrics': metrics[i*10:i*10 + 10],
+#                                    'includeEmptyRows': False
+#                                }]}).execute()
+            body = {
+                        'reportRequests': [
+                            {
+                                'viewId': viewId,
+                                'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                                'metrics': metrics[i*10:i*10 + 10],
+                                'includeEmptyRows': False
+                            }]}
+            results = makeRequestWithExponentialBackoff(rservice, body)
             hasRow = False
             if 'rows' in results['reports'][0]['data'].keys():
                 for row in results['reports'][0]['data']['rows']:
-                    if int(row['metrics'][0]['values'][0]) != 0:
+                    if float(row['metrics'][0]['values'][0]) != 0:
                         hasRow = True
                         break
             if (hasRow):
@@ -1255,16 +1394,24 @@ def samplingCheck(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'includeEmptyRows': True
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     'includeEmptyRows': True
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if sessions_result > 500000:
@@ -1419,8 +1566,21 @@ def domainControl(slack_token, dataSource):
     websiteUrl = webProperty['websiteUrl'].replace('https://', '')
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'dimensions': [{'name': 'ga:hostname'}],
+#                    "orderBys": [
+#                        {
+#                            "fieldName": metrics[0]['expression'],
+#                            "sortOrder": "DESCENDING"
+#                        }]
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -1432,27 +1592,38 @@ def domainControl(slack_token, dataSource):
                             "fieldName": metrics[0]['expression'],
                             "sortOrder": "DESCENDING"
                         }]
-                }]}).execute()
-
-    maxHostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
-    maxSession = int(results['reports'][0]['data']['rows'][0]['metrics'][0]['values'][0])
-    totalSession = int(results['reports'][0]['data']['totals'][0]['values'][0])
-    percentage = maxSession / totalSession * 100
-    print(maxHostname, maxSession, totalSession, percentage, '%')
-    if (websiteUrl in maxHostname or maxHostname in websiteUrl):
-        if percentage > 95:
-            attachments += [{
-                "text": f"Most of the visits {round(percentage, 2)}% in the view are happening on the domain, specified in the view settings {websiteUrl}.",
-                "color": "good",
-#                "pretext": text,
-                "title": text,
-                "callback_id": "notification_form",
-#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                "attachment_type": "default",
-            }]
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
+    if 'rows' in results['reports'][0]['data'].keys():
+        maxHostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
+        maxSession = int(results['reports'][0]['data']['rows'][0]['metrics'][0]['values'][0])
+        totalSession = int(results['reports'][0]['data']['totals'][0]['values'][0])
+        percentage = maxSession / totalSession * 100
+#        print(maxHostname, maxSession, totalSession, percentage, '%')
+        if (websiteUrl in maxHostname or maxHostname in websiteUrl):
+            if percentage > 95:
+                attachments += [{
+                    "text": f"Most of the visits {round(percentage, 2)}% in the view are happening on the domain, specified in the view settings {websiteUrl}.",
+                    "color": "good",
+#                    "pretext": text,
+                    "title": text,
+                    "callback_id": "notification_form",
+#                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    "attachment_type": "default",
+                }]
+            else:
+                attachments += [{
+                    "text": f"Check out the website url specified in view setting because only {round(percentage, 2)}% of session is happening on that domain {websiteUrl}.",
+                    "color": "danger",
+#                    "pretext": text,
+                    "title": text,
+                    "callback_id": "notification_form",
+#                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    "attachment_type": "default",
+                }]
         else:
             attachments += [{
-                "text": f"Check out the website url specified in view setting because only {round(percentage, 2)}% of session is happening on that domain {websiteUrl}.",
+                "text": f"Check out the website url specified in view setting because {maxHostname} is getting more traffic than specified domain {websiteUrl}.",
                 "color": "danger",
 #                "pretext": text,
                 "title": text,
@@ -1462,14 +1633,14 @@ def domainControl(slack_token, dataSource):
             }]
     else:
         attachments += [{
-            "text": f"Check out the website url specified in view setting because {maxHostname} is getting more traffic than specified domain {websiteUrl}.",
-            "color": "danger",
-#            "pretext": text,
-            "title": text,
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-            "attachment_type": "default",
-        }]
+                "text": f"There is no session happening on the domain you specified in your view settings.",
+                "color": "danger",
+#                "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
@@ -1493,15 +1664,22 @@ def eventTracking(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if result > 0:
@@ -1548,45 +1726,49 @@ def errorPage(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'filterExpression':'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404',
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'dimensions': [{'name': 'ga:pageTitle'}]
-                }]}).execute()
-
+                    'filterExpression':'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404',
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     if 'rows' in results['reports'][0]['data'].keys():
-        for row in results['reports'][0]['data']['rows']:
-            result = int(row['metrics'][0]['values'][0])
-            if result == "404" or result == "Page Not Found":
-                not_found = 1
+        not_found = True
     else:
-        result = 0
+        not_found = False
 
-    if result > 0:
-        if not_found == 1:
-            attachments += [{
-                "text": "You are tracking how many people ended up in 404 page, set custom alert to let know about spikes in these pages.",
-                "color": "good",
+    if not_found:
+        attachments += [{
+            "text": "You are tracking how many people ended up in 404 page, set custom alert to let know about spikes in these pages.",
+            "color": "good",
 #                "pretext": text,
-                "title": text,
-                "callback_id": "notification_form",
+            "title": text,
+            "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                "attachment_type": "default",
-            }]
-        else:
-            attachments += [{
-                "text": "You are not tracking 404 error pages which might hurt your conversion, brand recognition and Google ranking.",
-                "color": "danger",
+            "attachment_type": "default",
+        }]
+    else:
+        attachments += [{
+            "text": "You are not tracking 404 error pages which might hurt your conversion, brand recognition and Google ranking.",
+            "color": "danger",
 #                "pretext": text,
-                "title": text,
-                "callback_id": "notification_form",
+            "title": text,
+            "callback_id": "notification_form",
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                "attachment_type": "default",
-            }]
+            "attachment_type": "default",
+        }]
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
@@ -1620,8 +1802,22 @@ def timezone(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = rservice.reports().batchGet(
-        body={
+#    results = rservice.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'dimensions': dimensions,
+#                    "orderBys": [
+#                        {
+#                            "fieldName": metrics[0]['expression'],
+#                            "sortOrder": "DESCENDING"
+#                        }],
+#                    "pageSize": 100000,
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -1634,8 +1830,8 @@ def timezone(slack_token, dataSource):
                             "sortOrder": "DESCENDING"
                         }],
                     "pageSize": 100000,
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(rservice, body)
     tf = TimezoneFinder(in_memory=True)
     mapping = {}
     if 'rows' in results['reports'][0]['data'].keys():
@@ -1658,36 +1854,46 @@ def timezone(slack_token, dataSource):
                     mapping[region] += sessions
                 else:
                     mapping[region] = sessions
-    inversemapping = [(value, key) for key, value in mapping.items()]
-    maxTrafficTimezone = max(inversemapping)[1].replace('_', ' ')  # Google uses '_' instead of ' '
-
-    mservice = google_analytics.build_management_api_v3_woutSession(email)
-    profile = mservice.management().profiles().get(accountId=accountId,
-                                                   webPropertyId=propertyId,
-                                                   profileId=viewId
-                                                   ).execute()
-    currentTimezone = profile['timezone'].replace('_', ' ')
-
-    if currentTimezone == maxTrafficTimezone:
-        attachments += [{
-            "text": f"It is okay, timezone which you get the most traffic is same with timezone set on your google analytics account({currentTimezone}).",
-            "color": "good",
-#            "pretext": text,
-            "title": text,
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-            "attachment_type": "default",
-        }]
+        inversemapping = [(value, key) for key, value in mapping.items()]
+        maxTrafficTimezone = max(inversemapping)[1].replace('_', ' ')  # Google uses '_' instead of ' '
+    
+        mservice = google_analytics.build_management_api_v3_woutSession(email)
+        profile = mservice.management().profiles().get(accountId=accountId,
+                                                       webPropertyId=propertyId,
+                                                       profileId=viewId
+                                                       ).execute()
+        currentTimezone = profile['timezone'].replace('_', ' ')
+    
+        if currentTimezone == maxTrafficTimezone:
+            attachments += [{
+                "text": f"It is okay, timezone which you get the most traffic is same with timezone set on your google analytics account({currentTimezone}).",
+                "color": "good",
+#                "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
+        else:
+            attachments += [{
+                "text": f"Your preset timezone is {currentTimezone} but you are getting traffic mostly from {maxTrafficTimezone}.",
+                "color": "danger",
+#                "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
     else:
         attachments += [{
-            "text": f"Your preset timezone is {currentTimezone} but you are getting traffic mostly from {maxTrafficTimezone}.",
-            "color": "danger",
-#            "pretext": text,
-            "title": text,
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-            "attachment_type": "default",
-        }]
+                "text": f"Because there is no session recorded on your account, We couldn’t check the timezone setting. Checkout Google Analytics pixel code.",
+                "color": "danger",
+#                "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
@@ -1723,8 +1929,21 @@ def currency(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     rservice = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = rservice.reports().batchGet(
-        body={
+#    results = rservice.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'dimensions': dimensions,
+#                    "orderBys": [
+#                        {
+#                            "fieldName": metrics[0]['expression'],
+#                            "sortOrder": "DESCENDING"
+#                        }]
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
@@ -1736,8 +1955,8 @@ def currency(slack_token, dataSource):
                             "fieldName": metrics[0]['expression'],
                             "sortOrder": "DESCENDING"
                         }]
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(rservice, body)
     if 'rows' in results['reports'][0]['data'].keys():
         countryIsoCode = results['reports'][0]['data']['rows'][0]['dimensions'][0]
         maxCurrency = ccy.countryccy(countryIsoCode.lower())
@@ -1762,6 +1981,17 @@ def currency(slack_token, dataSource):
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
+    else:
+        attachments += [{
+                "text": f"Because there is no session recorded on your account, We couldn’t check the currency setting. Checkout Google Analytics pixel code.",
+                "color": "danger",
+#                "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
+        
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
@@ -1847,16 +2077,24 @@ def contentGrouping(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'dimensions': dimensions
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     'dimensions': dimensions
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     cond = False
     if 'rows' in results['reports'][0]['data'].keys():
         for row in results['reports'][0]['data']['rows']:
@@ -1915,16 +2153,24 @@ def othersInChannelGrouping(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
-    results = service.reports().batchGet(
-        body={
+#    results = service.reports().batchGet(
+#        body={
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'dimensions': [{'name': 'ga:channelGrouping'}]
+#                }]}).execute()
+    body={
             'reportRequests': [
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:channelGrouping'}]
-                }]}).execute()
-
+                }]}
+    results = makeRequestWithExponentialBackoff(service, body)
     total_session = int(results['reports'][0]['data']['totals'][0]['values'][0])
     other_session = 0
     if 'rows' in results['reports'][0]['data'].keys():
@@ -1934,9 +2180,8 @@ def othersInChannelGrouping(slack_token, dataSource):
                 other_session = int(row['metrics'][0]['values'][0])
                 break
 
-    session_result = other_session / total_session * 100
-    if 'rows' in results['reports'][0]['data'].keys():
-        if session_result > 0.05:
+        session_result = other_session / total_session * 100
+        if session_result > 0.0005:
             attachments += [{
                 "text": "Default channel grouping is not suitable for analysis since there is *(other)* channel which is collecting non-group traffic sources.",
                 "color": "danger",
@@ -1950,6 +2195,16 @@ def othersInChannelGrouping(slack_token, dataSource):
             attachments += [{
                 "text": "Negligible percentage of your total traffic is collecting under other channel.",
                 "color": "good",
+#                "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+#                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
+    else:
+        attachments += [{
+                "text": f"There is no session happening in your view.",
+                "color": "danger",
 #                "pretext": text,
                 "title": text,
                 "callback_id": "notification_form",
