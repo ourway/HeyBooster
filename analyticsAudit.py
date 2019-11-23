@@ -622,27 +622,28 @@ def sessionClickDiscrepancy(slack_token, dataSource):
     except:
         adclicks_result = 0
     
-    if adclicks_result > 0:
-        if adclicks_result > sessions_result * 1.05 or adclicks_result < sessions_result * 1.05:
-            attachments += [{
-                "text": "There is session click discrepancy, you don’t measure your adwords performance properly.",
-                "color": "danger",
-    #            "pretext": text,
-                "title": text,
-                "callback_id": "notification_form",
-    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                "attachment_type": "default",
-            }]
-        else:
-            attachments += [{
-                "text": "Nothing to worry! Number of Google Ads sessions and clicks is almost same.",
-                "color": "good",
-    #            "pretext": text,
-                "title": text,
-                "callback_id": "notification_form",
-    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                "attachment_type": "default",
-            }]
+    if sessions_result > 0 :
+        if adclicks_result > 0:
+            if adclicks_result < sessions_result * 0.95 or adclicks_result > sessions_result * 1.05:
+                attachments += [{
+                    "text": "There is session click discrepancy, you don’t measure your adwords performance properly.",
+                    "color": "danger",
+        #            "pretext": text,
+                    "title": text,
+                    "callback_id": "notification_form",
+        #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    "attachment_type": "default",
+                }]
+            else:
+                attachments += [{
+                    "text": "Nothing to worry! Number of Google Ads sessions and clicks is almost same.",
+                    "color": "good",
+        #            "pretext": text,
+                    "title": text,
+                    "callback_id": "notification_form",
+        #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    "attachment_type": "default",
+                }]
     else:
         attachments += [{
                 "text": "You don’t have any session from Google Ads campaigns.",
@@ -1387,8 +1388,6 @@ def samplingCheck(slack_token, dataSource):
     viewId = dataSource['viewID']
 
     today = datetime.today()
-
-    start_date = datetime(today.year, today.month, 1)
 
     start_date_1 = dtimetostrf((today - timedelta(days=30)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
@@ -2221,25 +2220,23 @@ def othersInChannelGrouping(slack_token, dataSource):
 
 def userPermission(slack_token, dataSource):
     text = "User Permission"
+    accountId = dataSource['accountID']
     attachments = []
 
     email = dataSource['email']
-    result = 1
-    i = 0
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
+    isPermitted = True
+    
     try:
         account_links = mservice.management().accountUserLinks().list(
-            accountId='123456'
-        ).execute()
-        for accountUserLink in account_links.get('items', []):
-            totalResults = accountUserLink.get('totalResults')
-            i += 1
-
-    except Exception:
-        result = 0
-
-    if result == 0:
+                                                            accountId = accountId).execute()
+        numberofLinks = len(account_links.get('items', []))
+    except Exception as ex:
+        if "Insufficient Permission" in str(ex):
+            isPermitted = False
+    
+    if not isPermitted:
         attachments += [{
             "text": "You don’t have enough permission to view users had access to your analytics account.",
 #            "pretext": text,
@@ -2250,8 +2247,7 @@ def userPermission(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "There are {} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.".format(
-                i),
+            "text": f"There are {numberofLinks} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.",
 #            "pretext": text,
             "title": text,
             "callback_id": "notification_form",
