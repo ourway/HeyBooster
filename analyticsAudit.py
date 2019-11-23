@@ -1055,13 +1055,13 @@ def siteSearchTracking(slack_token, dataSource):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'dimensions': [{'name': 'ga:searchKeyword'}]
+                    'dimensions': [{'name': 'ga:searchKeyword'}],
+                    "includeEmptyRows": False
                 }]}
     results = makeRequestWithExponentialBackoff(service, body)
+    
     if 'rows' in results['reports'][0]['data'].keys():
-        for row in results['reports'][0]['data']['rows']:
-            result = int(row['metrics'][0]['values'][0])
-
+        result = 1
     else:
         result = 0
 
