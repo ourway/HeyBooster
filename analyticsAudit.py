@@ -232,7 +232,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                 if ex.resp.reason in ['userRateLimitExceeded', 'quotaExceeded',
                                       'internalServerError', 'backendError']:
                     time.sleep((2 ** trycount) + random.random())
-                    trycount += 1
+                trycount += 1
     if task:
         db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
     else:
