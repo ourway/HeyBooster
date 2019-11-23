@@ -326,13 +326,25 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
         #Send Analytics Audit without showing "Show More" label
         for i in range(len(attachments)//10 + 1):
             start_time = time.time()
-            if i==0:   
-                resp = slack_client.chat_postMessage(blocks = blocks,
-                                                     channel=channel,
-                                                     attachments=attachments[i*10:i*10 + 9])
+            if i==0:
+                for n in range(0,5):
+                    try:    
+                        resp = slack_client.chat_postMessage(blocks = blocks,
+                                                         channel=channel,
+                                                         attachments=attachments[i*10:i*10 + 9])
+                        break
+                    except Exception as error:
+                        logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                        time.sleep((2 ** n) + random.random())
             else:
-                resp = slack_client.chat_postMessage(channel=channel,
+                for n in range(0,5):                    
+                    try:    
+                        resp = slack_client.chat_postMessage(channel=channel,
                                                      attachments=attachments[i*10:i*10 + 10])
+                        break
+                    except Exception as error:
+                        logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                        time.sleep((2 ** n) + random.random())
             stop_time = time.time()
             if(stop_time - start_time < 1):
                 time.sleep(1- (stop_time - start_time))
@@ -359,9 +371,14 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                             },
                         ]
                     }]
-            slack_client.chat_scheduleMessage(text="", channel = channel, 
-                                              attachments = sch_attachments,
-                                              post_at = post_at)
+            for n in range(0,5):
+                try:
+                    slack_client.chat_scheduleMessage(text="", channel = channel, 
+                                                      attachments = sch_attachments,
+                                                      post_at = post_at)
+                except Exception as error:
+                    logging.error(f"SLACK SCHEDULE MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                    time.sleep((2 ** n) + random.random())
         return resp['ts']
 
 
