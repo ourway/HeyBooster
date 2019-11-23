@@ -7,6 +7,9 @@ from modules import performancechangetracking, shoppingfunnelchangetracking, cos
     performancechangealert
 from analyticsAudit import analyticsAudit
 import logging
+import sys
+import os
+
 
 WAITTIME = 1
 def dtimetostrf(x):
@@ -55,8 +58,11 @@ def do_job(tasks_to_accomplish):
             
         except queue.Empty:
             time.sleep(WAITTIME)
-        except Exception as ex:
-            logging.error(f"TASK DID NOT RUN --- User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']} --- {str(ex)}")
+        except Exception as error:
+            exc_type, exc_obj, exc_tb = sys.exc_info()  # this is to get error line number and description.
+            file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]  # to get File Name.
+            error_string = f"ERROR : Error Msg:{error},File Name : {file_name}, Line no : {exc_tb.tb_lineno}"
+            logging.error(f"TASK DID NOT RUN --- User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']} --- {error_string}")
     return True
 
 
