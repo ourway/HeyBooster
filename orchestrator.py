@@ -8,7 +8,7 @@ from modules import performancechangetracking, shoppingfunnelchangetracking, cos
 from analyticsAudit import analyticsAudit
 import logging
 import sys
-import os
+import traceback
 
 
 WAITTIME = 1
@@ -60,8 +60,11 @@ def do_job(tasks_to_accomplish):
             time.sleep(WAITTIME)
         except Exception as error:
             exc_type, exc_obj, exc_tb = sys.exc_info()  # this is to get error line number and description.
-            file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]  # to get File Name.
-            error_string = f"ERROR : Error Msg:{error},File Name : {file_name}, Line no : {exc_tb.tb_lineno}"
+            file_name = traceback.extract_tb(exc_tb)[-1][0]  # to get File Name.
+            line_no = traceback.extract_tb(exc_tb)[-1][1] #to get Line Number
+            error_type = exc_type.__name__
+            error_message =  str(error)
+            error_string = f"Error Type: {error_type}, Error Message: {error_message}, File Name : {file_name}, Line no : {line_no}"
             logging.error(f"TASK DID NOT RUN --- User Email: {user['email']} Data Source ID: {task['datasourceID']} Task Type: {task['type']} --- {error_string}")
     return True
 
