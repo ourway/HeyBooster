@@ -376,6 +376,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                     slack_client.chat_scheduleMessage(text="", channel = channel, 
                                                       attachments = sch_attachments,
                                                       post_at = post_at)
+                    break
                 except Exception as error:
                     logging.error(f"SLACK SCHEDULE MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
                     time.sleep((2 ** n) + random.random())
