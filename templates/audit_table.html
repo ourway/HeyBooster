@@ -158,7 +158,7 @@
                                 {% set AA = analytics_audits[loop.index0] %}
                                 {% if AA.totalScore == 0 %}
                                     <tr class="line-row" id="border-table">
-                                        <td id="point" class="column2">
+                                        <td id="point" class="column1">
                                             <h5>...</h5>
                                         </td>
                                         <td class="column2">
@@ -170,7 +170,7 @@
                                                 <td id="point" class="column2">
                                                     <del><h5>{{ AA.totalScore }}</h5></del>
                                                 </td>
-                                                <td class="column3">
+                                                <td class="column2">
                                                     <del><b style="color: #202540">{{ arg.dataSourceName }}</b> Last
                                                         Updated
                                                         Time: <b
@@ -181,14 +181,14 @@
                                             <td id="point" class="column2">
                                                 <h5>{{ AA.totalScore }}</h5>
                                             </td>
-                                            <td class="column3">
+                                            <td class="column2">
                                                 <b style="color: #202540">{{ arg.dataSourceName }}</b> Last Updated
                                                 Time: <b
                                                     style="color: #202540">{{ AA.localTime }}</b>
                                             </td>
                                         {% endif %}
                                 {% endif %}
-                            {% if AA.strstat == 'passive' %}
+                            <td class="column3">
                                 <div class="dropdown">
                                     <button class="btn btnx " type="button" id="dropdownMenuButton-info"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -202,7 +202,8 @@
                                     </div>
                                 </div>
 
-                                </td>
+                            </td>
+                            {% if AA.strstat == 'passive' %}
                                 <td class="column4">
                                     <a href="/active_audit_test/{{ AA._id }}">
                                         <button class="btn btn-sm text-white change-alert">Activate Change Alert
@@ -210,20 +211,6 @@
                                     </a>
                                 </td>
                             {% else %}
-                                <div class="dropdown">
-                                    <button class="btn btnx " type="button" id="dropdownMenuButton-info"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                            style="cursor: pointer;">
-                                        <i class="fa fa-info"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item">Lorem ipsum dolor.</a>
-                                        <a class="dropdown-item">Lorem ipsum.</a>
-                                        <a class="dropdown-item">Lorem ipsum.</a>
-                                    </div>
-                                </div>
-
-                                </td>
                                 <td class="column4">
                                     <a href="/active_audit_test/{{ AA._id }}">
                                         <button class="btn btn-sm text-white change-alert">Ignore Change Alert
@@ -245,7 +232,32 @@
                             </tr>
                             {% endfor %}
                         {% endif %}
+
                         </tbody>
+                        <thead style="height: 10px;" class="head head-line">
+
+
+                        <tr style="height: 70px;" id="hd-border" class="table100-head">
+
+
+                            <th class="column1" id="hd-bc-b-1">
+
+
+                            </th>
+                            <th id="hd-bc-b" class="column2">
+
+                            </th>
+                            <th id="hd-bc-b" class="column3">
+
+                            </th>
+                            <th id="hd-bc-b-2" class="column4">
+
+                            </th>
+                            <th class="column6" id="hd-bc-b-2"></th>
+
+
+                        </tr>
+                        </thead>
                     </table>
                 </div>
 
