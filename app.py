@@ -256,7 +256,7 @@ def active_audit_test(UUID):
 
 @app.route('/test_test/<datasourceID>')
 @login_required
-@limiter.limit("100/day")
+@limiter.limit("20/day")
 @limiter.limit("5/minute")
 def test_test(datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
