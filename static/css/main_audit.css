@@ -219,7 +219,7 @@ iframe {
     display: -ms-block;
     display: block;
     margin: auto;
-    padding: 120px 30px;
+    padding: 100px 30px;
 }
 
 .test-now {
@@ -344,8 +344,6 @@ table th.r {
 }
 
 #point {
-    border-bottom: 2px solid rgba(63, 81, 181, 0.4);
-
 
 }
 
@@ -449,6 +447,34 @@ tbody tr:hover {
     background-color: #e4e6f1;
 }
 
+#hd-bc-b {
+    background-color: #e4e6f1;
+
+}
+
+#hd-bc-b-1 {
+    background-color: #e4e6f1;
+
+
+}
+
+#hd-bc-b-2 {
+    background-color: #e4e6f1;
+
+
+}
+
+#dropdownMenuButton-info {
+    margin-bottom: 10px;
+    text-align: right;
+    font-size: 30px;
+    color: #212121;
+    background-color: transparent;
+}
+#dropdownMenuButton-info:hover {
+    font-size: 30px;
+    background-color: transparent;
+}
 
 .dropbtn {
     background-color: transparent;

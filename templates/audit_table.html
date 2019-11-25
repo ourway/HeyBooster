@@ -61,7 +61,8 @@
 <body>
 
 <!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
-<script type="text/javascript" src="https://a.opmnstr.com/app/js/api.min.js" data-account="47764" data-user="41970" async></script>
+<script type="text/javascript" src="https://a.opmnstr.com/app/js/api.min.js" data-account="47764" data-user="41970"
+        async></script>
 <!-- / https://optinmonster.com -->
 
 
@@ -160,7 +161,7 @@
                                         <td id="point" class="column2">
                                             <h5>...</h5>
                                         </td>
-                                        <td class="column3">
+                                        <td class="column2">
                                             Last Updated Time: preparing...
                                         </td>
                                         {% else %}
@@ -170,9 +171,10 @@
                                                     <del><h5>{{ AA.totalScore }}</h5></del>
                                                 </td>
                                                 <td class="column3">
-                                                    <del><b style="color: #202540">{{ arg.dataSourceName }}</b> Last Updated
-                                                    Time: <b
-                                                        style="color: #202540">{{ AA.localTime }}</b></del>
+                                                    <del><b style="color: #202540">{{ arg.dataSourceName }}</b> Last
+                                                        Updated
+                                                        Time: <b
+                                                                style="color: #202540">{{ AA.localTime }}</b></del>
                                                 </td>
                                                 {% else %}
                                             <tr class="line-row" id="border-table">
@@ -187,6 +189,20 @@
                                         {% endif %}
                                 {% endif %}
                             {% if AA.strstat == 'passive' %}
+                                <div class="dropdown">
+                                    <button class="btn btnx " type="button" id="dropdownMenuButton-info"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                            style="cursor: pointer;">
+                                        <i class="fa fa-info"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item">Lorem ipsum dolor.</a>
+                                        <a class="dropdown-item">Lorem ipsum.</a>
+                                        <a class="dropdown-item">Lorem ipsum.</a>
+                                    </div>
+                                </div>
+
+                                </td>
                                 <td class="column4">
                                     <a href="/active_audit_test/{{ AA._id }}">
                                         <button class="btn btn-sm text-white change-alert">Activate Change Alert
@@ -194,6 +210,20 @@
                                     </a>
                                 </td>
                             {% else %}
+                                <div class="dropdown">
+                                    <button class="btn btnx " type="button" id="dropdownMenuButton-info"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                            style="cursor: pointer;">
+                                        <i class="fa fa-info"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item">Lorem ipsum dolor.</a>
+                                        <a class="dropdown-item">Lorem ipsum.</a>
+                                        <a class="dropdown-item">Lorem ipsum.</a>
+                                    </div>
+                                </div>
+
+                                </td>
                                 <td class="column4">
                                     <a href="/active_audit_test/{{ AA._id }}">
                                         <button class="btn btn-sm text-white change-alert">Ignore Change Alert
