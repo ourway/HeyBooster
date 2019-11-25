@@ -139,6 +139,7 @@
                             <th class="column5"></th>
 
                         </tr>
+
                         <tr id="hd-border" class="table100-head">
                             <th class="column1" id="hd-bc">
                                 <h1 class="audit-history">Score</h1>
@@ -147,13 +148,14 @@
                                 <h1 class="audit-history">Audit History</h1>
                             </th>
                             <th id="hd-bc" class="column3">
+                                <h1 class="audit-history">Info</h1>
 
                             </th>
                             <th id="hd-bc" class="column4">
                                 <h1 class="audit-history">Change Alert</h1>
                             </th>
                             <th id="hd-bc" class="column5">
-
+                                <h1 class="audit-history">Test</h1>
                             </th>
                         </tr>
                         </thead>
@@ -181,6 +183,22 @@
                                                         Updated
                                                         Time: <b
                                                                 style="color: #202540">{{ AA.localTime }}</b></del>
+                                                </td>
+                                                <td class="column3">
+                                                    <div class="dropdown">
+                                                        <button class="btn btnx " type="button"
+                                                                id="dropdownMenuButton-info" data-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false"
+                                                                style="cursor: pointer;">
+                                                            <i class="fa fa-info"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <a class="dropdown-item">Lorem ipsum dolor.</a>
+                                                            <a class="dropdown-item">Lorem ipsum.</a>
+                                                            <a class="dropdown-item">Lorem ipsum.</a>
+                                                        </div>
+                                                    </div>
+
                                                 </td>
                                                 {% else %}
                                             <tr class="line-row" id="border-table">
