@@ -464,18 +464,6 @@ tbody tr:hover {
 
 }
 
-#dropdownMenuButton-info {
-    margin-bottom: 10px;
-    text-align: right;
-    font-size: 30px;
-    color: #212121;
-    background-color: transparent;
-}
-#dropdownMenuButton-info:hover {
-    font-size: 30px;
-    background-color: transparent;
-}
-
 .dropbtn {
     background-color: transparent;
     color: black;
@@ -695,6 +683,18 @@ tr#head-audit {
 .btnx a:hover {
     background-color: #202540;
     opacity: 0.8;
+}
+
+#dropdownMenuButton-info {
+    margin-bottom: 10px;
+    text-align: right;
+    font-size: 30px;
+    color: #212121;
+    background-color: transparent;
+}
+#dropdownMenuButton-info:hover {
+    font-size: 30px;
+    background-color: transparent;
 }
 
 @media (max-width: 576px) {
