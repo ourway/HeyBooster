@@ -813,7 +813,7 @@ def Timestamp2Date(ts, tz_offset):
         return ""
 
 
-@app.route("/account")
+@app.route("/account/")
 @login_required
 def account():
     return redirect('/account/audit-history')
