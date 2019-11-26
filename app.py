@@ -249,10 +249,11 @@ def active_audit_test(UUID):
         val = int(analytics_audit['status'])
         db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
                            status=str(1 - val))
-    
+
         return redirect('/account/audit-history')
     else:
         return make_response("", 401)
+
 
 @app.route('/test_test/<datasourceID>')
 @login_required
@@ -810,6 +811,12 @@ def Timestamp2Date(ts, tz_offset):
         return date.strftime("%B %d, %Y at %I:%M %p").lstrip("0").replace(" 0", " ")
     else:
         return ""
+
+
+@app.route("/account")
+@login_required
+def account():
+    return redirect('/account/audit-history')
 
 
 @app.route("/account/audit-history", methods=['GET', 'POST'])
