@@ -119,7 +119,7 @@
                                             style="cursor: pointer;">
                                         Data Source Name
                                     </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 10px;">
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {% for arg in args %}
                                             {% if arg.dataSourceName %}
                                                 {% set dataSourceName = arg.dataSourceName %}
@@ -228,7 +228,7 @@
                                                             aria-expanded="false" style="cursor: pointer;">
                                                         <i class="fa fa-info"></i>
                                                     </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 10px;">
                                                         <a class="dropdown-item">GA Account: {{ arg.accountName }}</a>
                                                         <a class="dropdown-item">GA Property: {{ arg.propertyName }}</a>
                                                         <a class="dropdown-item">GA View: {{ arg.viewName }}</a>
