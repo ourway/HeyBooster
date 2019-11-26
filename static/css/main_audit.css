@@ -184,6 +184,7 @@ iframe {
 .table-border {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    margin-bottom: 20px;
 }
 
 .table-border-2 {
@@ -577,7 +578,6 @@ tbody tr:hover {
 
     .container-table100 {
         padding: 60px 30px;
-        margin-bottom: 20px;
     }
 
     .column5 {
