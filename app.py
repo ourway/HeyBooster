@@ -995,7 +995,9 @@ def message_actions():
             dataSource = dataSources[datasourceIDs.index(datasourceID)]
         else:
             print("Data Source is not owned by this user")
-            if "showgraph" in messagename or "viewmore" in messagename:
+            buttons = ['showgraph','viewmore','giveFeedback']
+            foralluser= any([True if x in messagename else False for x in buttons])
+            if foralluser:
                 dS = db.find_one("datasource", {"_id": datasourceID})
                 usr = db.find_one("user", {"email": dS['email']})
                 slack_client = WebClient(token=usr['sl_accesstoken'])
