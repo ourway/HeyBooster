@@ -395,36 +395,30 @@ tbody tr:hover {
     cursor: text;
 }
 
+.column3 i {
+    font-size: 20px;
+    color: #3f51b5;
+    margin-top: 15px;
+}
+
 .column1 {
-    width: 210px;
-    padding-left: 40px;
-    text-align: center;
-    background-color: #FBFBFB;
-}
-
-.column2 i {
-    font-size: 25px;
-    color: #0d8547;
-    opacity: 0.8;
-}
-
-.column2 {
     width: 100px;
     text-align: center;
     background-color: #FBFBFB;
 }
 
 
-.column3 {
+.column2 {
     width: 900px;
     text-align: center;
     background-color: #FBFBFB;
 }
 
-.column3 i {
-    font-size: 20px;
-    color: #3f51b5;
-    margin-top: 15px;
+.column3 {
+    width: 0px;
+    text-align: right;
+    text-align: center;
+    background-color: #FBFBFB;
 }
 
 .column4 {
@@ -433,6 +427,7 @@ tbody tr:hover {
     text-align: center;
     background-color: #FBFBFB;
 }
+
 
 .column5 {
     padding-right: 50px;
