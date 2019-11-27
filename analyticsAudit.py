@@ -256,15 +256,15 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     #    attachments += samplingCheck(slack_token, dataSource)
     text_totalScore = totalScorewithEmoji(totalScore)
     if not task:
-        text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights " + \
-                "we strongly recommend you to solve the issues below. " +  \
+        text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights, " + \
+                " we strongly recommend you first solve the issues below. " +  \
                 f"Your analytics health score is calculated {text_totalScore} over 100.\n" +  \
                 "Do you wanna get to know when anything change on the audit results?"
         maincolor = "#2eb8a6"
     else:
         lastScore = int(task['totalScore'])
         text_lastScore = totalScorewithEmoji(lastScore)
-        text = f"Your analytics health score is change from {text_lastScore} to {text_totalScore}.\n" + \
+        text = f"Your analytics health score is changed from {text_lastScore} to {text_totalScore}.\n" + \
                 "Here is the list of changes."
         if totalScore > lastScore:
             maincolor = "good"
@@ -353,8 +353,8 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
         #After sending analytics Audit, schedule a "give feedback" message 5 minutes later
         if sendFeedback:
             post_at = str(int(time.time() + 300)) # 5 minutes later
-            sch_text = "Your feedbacks make us stronger :muscle: " + \
-                    "Can you share your experience and thoughts with us?"
+            sch_text = "Your feedback makes us stronger. :muscle: " + \
+                    "Please share your experience and thoughts with us?"
             sch_attachments = [
                     {
                         "text": sch_text,
@@ -434,7 +434,7 @@ def bounceRateTracking(slack_token, dataSource):
                     }]  
     elif bounceRate < 30:
         attachments += [{
-            "text": "Bounce rate is less than normal level (avg = %40-%65) , You may need to check your event which affected the healthy measurement of bounce rate.",
+            "text": "Bounce rate is less than normal level (avg = %40-%65) , You may need to check for an event which affected the health measurement of your bounce rate.",
             "color": "danger",
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
@@ -444,7 +444,7 @@ def bounceRateTracking(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Bounce rate is average however it may be affected by any changes on your website, keep track of it",
+            "text": "If your bounce rate remains average, you must keep in mind that it may be affected by any changes you make to your website. So remember to keep track of your changes.",
             "color": "good",
             "callback_id": "notification_form",
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
@@ -500,7 +500,7 @@ def notSetLandingPage(slack_token, dataSource):
 
     if pageviews > 0:
         attachments += [{
-            "text": "(not set) landing pages are seen on your landing page report, it is indicated that there is an issue in your page tracking.",
+            "text": "(not set) landing pages are seen on your landing page report, it indicated that there is an issue in your page tracking.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -510,7 +510,7 @@ def notSetLandingPage(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Good for you! There is no session landed to unknown page",
+            "text": "Good for you! There are no sessions that landed on an unknown page.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -567,7 +567,7 @@ def adwordsAccountConnection(slack_token, dataSource):
 
     if result < 20:
         attachments += [{
-            "text": "Google Ads Account and Google Analytics don’t link them, to track properly you need to connect your account.",
+            "text": "Should your Google Ads Account and Google Analytics not be linked, link them. To track properly, you need to connect your accounts.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -577,7 +577,7 @@ def adwordsAccountConnection(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Google Analytics account is linked with Google Ads, you can analyze Ads performance.",
+            "text": "If your Google Analytics account is linked with Google Ads, you can analyze Ads performance much easier.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -644,7 +644,7 @@ def sessionClickDiscrepancy(slack_token, dataSource):
         if adclicks_result > 0:
             if adclicks_result < sessions_result * 0.95 or adclicks_result > sessions_result * 1.05:
                 attachments += [{
-                    "text": "There is session click discrepancy, you don’t measure your adwords performance properly.",
+                    "text": "There is something like session click discrepancy. If you don’t measure your adwords performance properly.",
                     "color": "danger",
         #            "pretext": text,
                     "title": text,
@@ -654,7 +654,7 @@ def sessionClickDiscrepancy(slack_token, dataSource):
                 }]
             else:
                 attachments += [{
-                    "text": "Nothing to worry! Number of Google Ads sessions and clicks is almost same.",
+                    "text": "Nothing to worry! The number of Google Ads sessions and clicks are almost the same.",
                     "color": "good",
         #            "pretext": text,
                     "title": text,
@@ -719,7 +719,7 @@ def goalSettingActivity(slack_token, dataSource):
 
     if result < 20:
         attachments += [{
-            "text": "Goals are not set up yet, you should configure your macro and micro goals.",
+            "text": "When your goals are not yet set up, you should configure your macro and micro goals.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -812,7 +812,7 @@ def selfReferral(slack_token, dataSource):
 
     if 'rows' in results['reports'][0]['data'].keys():
         attachments += [{
-            "text": "Your own domain shows up in your referral report, it causes one visitor to trigger multiple sessions when there should only be one.",
+            "text": "Your own domain shows up in your referral report, this causes one visitor to trigger multiple sessions, that should only be a single session.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -822,7 +822,7 @@ def selfReferral(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Well done Nothing to worry!\nSelf referral issue is not seen in your account recently,  no worries.",
+            "text": "Well done! Nothing to worry about.  A self referral issue isn’t seen in your account recently.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -882,7 +882,7 @@ def paymentReferral(slack_token, dataSource):
 
     if newUsers < sessions * 0.001 and transactionsPerSession > 0.20:
         attachments += [{
-            "text": "You got traffic from payment referral gateway, it causes to lose the original traffic sources which brings you transaction.",
+            "text": "You get traffic from payment referral gateways, this causes you to lose the original traffic sources which brought you transactions.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -892,7 +892,7 @@ def paymentReferral(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "No worries, you had good job, but don’t forget to track your payment referral if any payment method is added.",
+            "text": "No worries, you did a good job, but don’t forget to track your payment referrals if any new payment method is added.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -927,7 +927,7 @@ def botSpamExcluding(slack_token, dataSource):
 
     if botFilteringEnabled:
         attachments += [{
-            "text": "Well done, you already switch on bot filtering feature of google analytics.",
+            "text": "Well done, you already switched on the bot filtering feature on google analytics.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -937,7 +937,7 @@ def botSpamExcluding(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "You need to switch on bot filtering feature on google analytics to get rid of traffic from bots, spiders and computer programs",
+            "text": "You need to switch on the bot filtering feature on google analytics, in order to get rid of traffic from bots, spiders and computer programs.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -1016,7 +1016,7 @@ def customDimension(slack_token, dataSource):
 
     if hasHit:
         attachments += [{
-            "text": "Well done! You are using custom dimensions, do you know about how you can boost your performance to use them all?",
+            "text": "Well done! You’re using custom dimensions. Do you know how you can boost your performance by using them all?",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -1026,7 +1026,7 @@ def customDimension(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Custom dimensions are not set yet, you are missing the chance to use google analytics advance version effectively.",
+            "text": "Custom dimensions are not yet enabled. You are missing the chance to use google analytics advanced version effectively.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -1085,7 +1085,7 @@ def siteSearchTracking(slack_token, dataSource):
 
     if result > 0:
         attachments += [{
-            "text": "You can analyze which keywords your user searched on your website and which of them is most convertible .",
+            "text": "You can analyze which keywords your user searched on your website and which of them are most convertible.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -1095,7 +1095,7 @@ def siteSearchTracking(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Do you wonder what users search on your website? You can track site search data via google analytics.",
+            "text": "Do you ever wonder what users search on your website? You can track site search data via google analytics.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -1150,7 +1150,7 @@ def gdprCompliant(slack_token, dataSource):
     results = makeRequestWithExponentialBackoff(service, body)
     if 'rows' in results['reports'][0]['data'].keys():
         attachments += [{
-            "text": "Check your page paths, there is information which is not compatible with GDPR.",
+            "text": "Check your page paths, there are information which aren’t compatible with GDPR.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -1160,7 +1160,7 @@ def gdprCompliant(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Nothing to worry, there is no risky page path in terms of GDPR.",
+            "text": "Nothing to worry about, there is no risky page path in terms of GDPR.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -1194,7 +1194,7 @@ def dataRetentionPeriod(slack_token, dataSource):
 
     if dataRetentionTtl != 'INDEFINITE':
         attachments += [{
-            "text": "If you wanna play safe, it is okay your user and event data will be deleted at the end of data retention period, otherwise change it to indefinite one.",
+            "text": "If you wanna play safe, that’s okay. Your user and event data will be deleted at the end of the data retention period, otherwise change it to an indefinite one.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -1204,7 +1204,7 @@ def dataRetentionPeriod(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Data retention period is already set as indefinite, you will never lose your user and event data but be sure about GDPR Compliancy.",
+            "text": "If your data retention period is already set as indefinite, you will never lose your user and event data but be sure about GDPR Compliancy.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -1239,7 +1239,7 @@ def remarketingLists(slack_token, dataSource):
 
     if remarketingAudiences:
         attachments += [{
-            "text": "You have at least one remarketing list, do you know how you can use them to boost your performance?",
+            "text": "You have at least one re-marketing list, do you know how you can use it to boost your performance?",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -1249,7 +1249,7 @@ def remarketingLists(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Sorry, there is no remarketing list, check out remarketing lists which double up revenue you get",
+            "text": "Sorry, there is no re-marketing list, check out the re-marketing lists which doubles up on the revenue you get.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -1285,7 +1285,7 @@ def enhancedECommerceActivity(slack_token, dataSource):
 
     if enhancedECommerceTracking:
         attachments += [{
-            "text": "Your enhanced ecommerce setting is active but how you can sure that it is implemented correctly. heybooster will be sure for you soon",
+            "text": "Your enhanced eCommerce setting is active but how can you ensure that it’s implemented correctly? heybooster will make sure.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -1295,7 +1295,7 @@ def enhancedECommerceActivity(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "Enhanced ecommerce is not active for related view, to track your all ecommerce switch it on.",
+            "text": "Enhanced eCommerce is not active for related view, switch it on to track your eCommerce.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -1433,7 +1433,7 @@ def samplingCheck(slack_token, dataSource):
 
     if sessions_result > 500000:
         attachments += [{
-            "text": "Your analytics reports are sampling when you try to create monthly report because there is more than 500000 session without any filter.",
+            "text": "Your analytics reports are sampling when you try to create a monthly report because there are more than 500000 session without any filters.",
 #            "pretext": text,
             "title": text,
             "callback_id": "notification_form",
@@ -1442,7 +1442,7 @@ def samplingCheck(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "No worries for now, however sampling occurs at 500000 session for the date range you are using",
+            "text": "No worries for now, however sampling occurs at 500000 sessions for the date range you are using.",
 #            "pretext": text,
             "title": text,
             "callback_id": "notification_form",
@@ -1484,7 +1484,7 @@ def internalSearchTermConsistency(slack_token, dataSource):
 
     if hasISTC:
         attachments += [{
-            "text": "No worries! There is no duplicated internal search term because of case sensitivity",
+            "text": "No worries! There is no duplicated internal search term because of case sensitivity.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -1532,7 +1532,7 @@ def defaultPageControl(slack_token, dataSource):
 
     if defaultPage != None:
         attachments += [{
-            "text": "Don’t use default page setting, it is moderately error prone method to fix splitting data issue.",
+            "text": "Don’t use default page settings, it is moderately error prone when used to fix data splitting issues.",
             "color": "red",
 #            "pretext": text,
             "title": text,
@@ -1701,7 +1701,7 @@ def eventTracking(slack_token, dataSource):
 
     if result > 0:
         attachments += [{
-            "text": "You are using event tracking but do you know that every action users take can measure as event and then retargeting?",
+            "text": "You are using event tracking but do you know that every action users take can measure as an event and then re-targeting?",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -1768,7 +1768,7 @@ def errorPage(slack_token, dataSource):
 
     if not_found:
         attachments += [{
-            "text": "You are tracking how many people ended up in 404 page, set custom alert to let know about spikes in these pages.",
+            "text": "You are tracking how many people ended up on the 404 page, set custom alerts to let you know about spikes on these pages.",
             "color": "good",
 #                "pretext": text,
             "title": text,
@@ -1883,7 +1883,7 @@ def timezone(slack_token, dataSource):
     
         if currentTimezone == maxTrafficTimezone:
             attachments += [{
-                "text": f"It is okay, timezone which you get the most traffic is same with timezone set on your google analytics account({currentTimezone}).",
+                "text": f"It is okay, time-zones where you get the most traffic from, it is the same as the timezone set on your google analytics account({currentTimezone}).",
                 "color": "good",
 #                "pretext": text,
                 "title": text,
@@ -1980,7 +1980,7 @@ def currency(slack_token, dataSource):
 
         if currentCurrency == maxCurrency:
             attachments += [{
-                "text": f"It is okay, currency which you get the most traffic is same with currency set on your google analytics account({currentCurrency}).",
+                "text": f"It is okay, the currency which you get the most traffic from, is the same as the currency set on your google analytics account({currentCurrency}).",
                 "color": "good",
 #                "pretext": text,
                 "title": text,
@@ -2046,7 +2046,7 @@ def rawDataView(slack_token, dataSource):
             break
     if unfilteredView:
         attachments += [{
-            "text": "Raw data view is correctly set, it is your backup view against to any wrong filter changes.",
+            "text": "Raw data view is correctly set, it is your backup view against any wrong filter changes.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -2056,7 +2056,7 @@ def rawDataView(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "You must set the raw data view to protect your data from any wrong filter changes and have backup view.",
+            "text": "You must set the raw data view to protect your data from any wrong filter changes and have a backup view.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -2129,7 +2129,7 @@ def contentGrouping(slack_token, dataSource):
 
     if cond:
         attachments += [{
-            "text": "You have made content grouping before, but do you know the alternative usage of content grouping?",
+            "text": "You have made content groupings before, but do you know the alternative usage of content grouping?",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -2139,7 +2139,7 @@ def contentGrouping(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "There is no content grouping in your account, to compare related group pages like men tshirts and woman dresses create your own grouping.",
+            "text": "There is no content grouping in your account, to compare related group pages like men t-shirts and woman dresses create your own grouping.",
             "color": "danger",
 #            "pretext": text,
             "title": text,
@@ -2200,7 +2200,7 @@ def othersInChannelGrouping(slack_token, dataSource):
         session_result = other_session / total_session * 100
         if session_result > 0.0005:
             attachments += [{
-                "text": "Default channel grouping is not suitable for analysis since there is *(other)* channel which is collecting non-group traffic sources.",
+                "text": "Default channel grouping is not suitable for analysis since there is *(other)* channels which are collecting non-group traffic sources.",
                 "color": "danger",
 #                "pretext": text,
                 "title": text,
@@ -2210,7 +2210,7 @@ def othersInChannelGrouping(slack_token, dataSource):
             }]
         else:
             attachments += [{
-                "text": "Negligible percentage of your total traffic is collecting under other channel.",
+                "text": "A negligible percentage of your total traffic is collecting under other channels.",
                 "color": "good",
 #                "pretext": text,
                 "title": text,
@@ -2256,7 +2256,7 @@ def userPermission(slack_token, dataSource):
     
     if not isPermitted:
         attachments += [{
-            "text": "You don’t have enough permission to view users had access to your analytics account.",
+            "text": "You don’t have enough permission to view which users had access to your analytics account.",
 #            "pretext": text,
             "title": text,
             "callback_id": "notification_form",
@@ -2265,7 +2265,7 @@ def userPermission(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": f"There are {numberofLinks} users can access and your analytics account. Best practices is keeping the number of users who has full access minimum.",
+            "text": f"There are {numberofLinks} users who can access your analytics account. The best practice is to keep the number of users who have full access to a minimum.",
 #            "pretext": text,
             "title": text,
             "callback_id": "notification_form",
