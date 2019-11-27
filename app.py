@@ -2199,11 +2199,11 @@ def message_actions():
         feedback = view['state']['values']['multi-line']['ml-value']['value']
         datasourceID = view['private_metadata'].split('_')[-1]
         datasourceID = ObjectId(datasourceID)
-        # Check if the datasource owner clicked the button
-        if (datasourceID in datasourceIDs):
-            dataSource = dataSources[datasourceIDs.index(datasourceID)]
-        else:
-            return make_response("", 200)
+#        # Check if the datasource owner clicked the button
+#        if (datasourceID in datasourceIDs):
+#            dataSource = dataSources[datasourceIDs.index(datasourceID)]
+#        else:
+#            return make_response("", 200)
         db.insert_one("feedback",
                       data={"email": dataSource['email'], "datasourceID": datasourceID, "feedback": feedback,
                             "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")})
