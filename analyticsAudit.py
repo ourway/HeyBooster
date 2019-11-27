@@ -577,7 +577,7 @@ def adwordsAccountConnection(slack_token, dataSource):
         }]
     else:
         attachments += [{
-            "text": "If your Google Analytics account is linked with Google Ads, you can analyze Ads performance much easier.",
+            "text": " Google Analytics and Google Ads have linked successfully.",
             "color": "good",
 #            "pretext": text,
             "title": text,
