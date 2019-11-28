@@ -575,11 +575,14 @@ def get_channels():
             ('types', 'public_channel, private_channel'),
             ('limit', 200)]
     channels = []
-    conversationslist = requests.post(URL.format('conversations.list'), data).json()['channels']
-    for conv in conversationslist:
-        if (conv['is_channel'] or conv['is_group']):
-            conv['name'] = '#' + conv['name']
-            channels += [conv]
+    try:
+        conversationslist = requests.post(URL.format('conversations.list'), data).json()['channels']
+        for conv in conversationslist:
+            if (conv['is_channel'] or conv['is_group']):
+                conv['name'] = '#' + conv['name']
+                channels += [conv]
+    except Exception as ex:
+        print("Conversation List request error %s"%(str(ex)))
     try:
         data = [('token', session['sl_accesstoken']),
                 ('limit', 200)]
