@@ -62,7 +62,7 @@ limiter = Limiter(
 db.init()
 db2.init()
 
-app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
+app.config['SECRET_KEY'] = 'gnuisnotunix'
 
 app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
@@ -80,7 +80,7 @@ app.register_blueprint(google_analytics.app)
 @app.before_request
 def before_request():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(days=1)
+    app.permanent_session_lifetime = timedelta(days=7)
     session.modified = True
 
 
