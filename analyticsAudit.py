@@ -87,7 +87,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     			"text": "Learn More",
     			"type": "button",
     			"value": f"learnmore_{dataSource['_id']}",
-#                "url": "https://medium.com/@neslio/google-analytics-audit-checklist-ff784e589243"
+                "url": "https://medium.com/@neslio/google-analytics-audit-checklist-ff784e589243"
     		}
         ]
     attachment_button = [
@@ -356,25 +356,16 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                         time.sleep((2 ** n) + random.random())
             else:
                 for n in range(0,5):
-                    if dataSource['email'] == "altuntasmuhammet96@gmail.com":
-                        if i == len(attachments)//10:
-                            try:
-                                new_attachments = attachments[i*10:i*10 + 10]
-                                new_attachments += attachment_button
-                                resp = slack_client.chat_postMessage(channel=channel,
-                                                             attachments=new_attachments)
-                                break
-                            except Exception as error:
-                                logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
-                                time.sleep((2 ** n) + random.random())
-                        else:
-                            try:
-                                resp = slack_client.chat_postMessage(channel=channel,
-                                                             attachments=attachments[i*10:i*10 + 10])
-                                break
-                            except Exception as error:
-                                logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
-                                time.sleep((2 ** n) + random.random())
+                    if i == len(attachments)//10:
+                        try:
+                            new_attachments = attachments[i*10:i*10 + 10]
+                            new_attachments += attachment_button
+                            resp = slack_client.chat_postMessage(channel=channel,
+                                                         attachments=new_attachments)
+                            break
+                        except Exception as error:
+                            logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                            time.sleep((2 ** n) + random.random())
                     else:
                         try:
                             resp = slack_client.chat_postMessage(channel=channel,
@@ -383,6 +374,13 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                         except Exception as error:
                             logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
                             time.sleep((2 ** n) + random.random())
+#                    try:
+#                        resp = slack_client.chat_postMessage(channel=channel,
+#                                                     attachments=attachments[i*10:i*10 + 10])
+#                        break
+#                    except Exception as error:
+#                        logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+#                        time.sleep((2 ** n) + random.random())
             stop_time = time.time()
             if(stop_time - start_time < 1):
                 time.sleep(1- (stop_time - start_time))
