@@ -87,7 +87,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     			"text": "Learn More",
     			"type": "button",
     			"value": f"learnmore_{dataSource['_id']}",
-                "url": "https://medium.com/@neslio/google-analytics-audit-checklist-ff784e589243"
+#                "url": "https://medium.com/@neslio/google-analytics-audit-checklist-ff784e589243"
     		}
         ]
     attachment_button = [
