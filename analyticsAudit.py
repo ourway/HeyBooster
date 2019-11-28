@@ -367,6 +367,14 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                             except Exception as error:
                                 logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
                                 time.sleep((2 ** n) + random.random())
+                        else:
+                            try:
+                                resp = slack_client.chat_postMessage(channel=channel,
+                                                             attachments=attachments[i*10:i*10 + 10])
+                                break
+                            except Exception as error:
+                                logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                                time.sleep((2 ** n) + random.random())
                     else:
                         try:
                             resp = slack_client.chat_postMessage(channel=channel,
