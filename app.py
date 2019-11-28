@@ -995,7 +995,7 @@ def message_actions():
             dataSource = dataSources[datasourceIDs.index(datasourceID)]
         else:
             print("Data Source is not owned by this user")
-            buttons = ['showgraph','viewmore','giveFeedback']
+            buttons = ['showgraph','viewmore','giveFeedback', 'learnmore']
             foralluser= any([True if x in messagename else False for x in buttons])
             if foralluser:
                 dS = db.find_one("datasource", {"_id": datasourceID})
@@ -1944,6 +1944,8 @@ def message_actions():
                                             }
                                         ]
                                     })
+        elif "learnmore" in messagename:
+            db.find_and_modify("datasource", query = {"_id":datasourceID}, learnmore = 1)
 
     elif message_action["type"] == "dialog_submission":
         submission = message_action['submission']
