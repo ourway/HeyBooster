@@ -357,7 +357,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
             else:
                 for n in range(0,5):
                     if dataSource['email'] == "altuntasmuhammet96@gmail.com":
-                        if i == 4:
+                        if i == len(attachments)//10:
                             try:
                                 new_attachments = attachments[i*10:i*10 + 10]
                                 new_attachments += attachment_button
