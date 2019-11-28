@@ -150,9 +150,21 @@ def google_loginauth_redirect():
     user_info = get_user_info()
     flask.session['email'] = user_info['email']
 #    new_user = User(name=user_info['name'], email=flask.session['email'], password="")
-    new_user = User(name = user_info['name'],
-                    firstname=user_info['given_name'], 
-                    lastname = user_info['family_name'], 
+    try:
+        name = user_info['name']
+    except:
+        name = ""
+    try:
+        firstname = user_info['given_name']
+    except:
+        firstname = ""
+    try:
+        lastname = user_info['family_name']
+    except:
+        lastname = ""
+    new_user = User(name = name,
+                    firstname=firstname, 
+                    lastname = lastname, 
                     email=flask.session['email'], 
                     password="")
     new_user.insert()
