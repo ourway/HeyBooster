@@ -1945,6 +1945,7 @@ def message_actions():
                                         ]
                                     })
         elif "learnmore" in messagename:
+            print("- - - -- - - Learn More -- - - -- - -")
             db.find_and_modify("datasource", query = {"_id":datasourceID}, learnmore = 1)
 
     elif message_action["type"] == "dialog_submission":
