@@ -355,7 +355,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                         logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
                         if 'missing' in str(error) or 'scope' in str(error):
                             return
-                        if i==4:
+                        if n==4:
                             return
                         time.sleep((2 ** n) + random.random())
             else:
