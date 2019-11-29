@@ -590,7 +590,7 @@ def get_channels():
         data = [('token', session['sl_accesstoken']),
                 ('user', sl_userid)]
         resp = requests.post(URL.format('im.open'), data)
-        print(str(resp))
+        print(str(resp.json()))
     except Exception as ex:
         print(str(ex))
     
