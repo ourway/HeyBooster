@@ -589,7 +589,8 @@ def get_channels():
         sl_userid = db.find_one('user',{'email':session['email']})
         data = [('token', session['sl_accesstoken']),
                 ('user', sl_userid)]
-        requests.post(URL.format('im.open'), data)
+        resp = requests.post(URL.format('im.open'), data)
+        print(str(resp))
     except Exception as ex:
         print(str(ex))
     
