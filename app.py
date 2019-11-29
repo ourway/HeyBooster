@@ -586,7 +586,7 @@ def get_channels():
         
     #Open IM Channel for user
     try:  
-        sl_userid = db.find_one('user',{'email':session['email']})
+        sl_userid = db.find_one('user',{'email':session['email']})['sl_userid']
         data = [('token', session['sl_accesstoken']),
                 ('user', sl_userid)]
         resp = requests.post(URL.format('im.open'), data)
