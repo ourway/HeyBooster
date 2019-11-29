@@ -590,8 +590,8 @@ def get_channels():
         data = [('token', session['sl_accesstoken']),
                 ('user', sl_userid)]
         requests.post(URL.format('im.open'), data)
-    except:
-        pass
+    except Exception as ex:
+        print(str(ex))
     
     requests.post(URL.format('conversations.list'), data)
     try:
