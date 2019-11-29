@@ -583,6 +583,17 @@ def get_channels():
                 channels += [conv]
     except Exception as ex:
         print("Conversation List request error %s"%(str(ex)))
+        
+    #Open IM Channel for user
+    try:  
+        sl_userid = db.find_one('user',{'email':session['email']})
+        data = [('token', session['sl_accesstoken']),
+                ('user', sl_userid)]
+        requests.post(URL.format('im.open'), data)
+    except:
+        pass
+    
+    requests.post(URL.format('conversations.list'), data)
     try:
         data = [('token', session['sl_accesstoken']),
                 ('limit', 200)]
