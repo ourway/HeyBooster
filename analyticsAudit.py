@@ -14,10 +14,10 @@ PERMISSION_ERROR = "User does not have sufficient permissions for this account."
 TIMEDOUT_ERROR = "The read operation timed out"
 
 
-def makeRequestWithExponentialBackoff(rservice, body):
+def makeRequestWithExponentialBackoff(req):
     for n in range(0, 5):
         try:
-            return rservice.reports().batchGet(body=body).execute()
+            return req.execute()
         except HttpError as error:
             loopError = error
             if error.resp.reason in ['userRateLimitExceeded', 'quotaExceeded',
@@ -27,6 +27,7 @@ def makeRequestWithExponentialBackoff(rservice, body):
                 break
     #There has been an error, the request never succeeded.
     raise loopError
+    
 
 def dtimetostrf(x):
     return x.strftime('%Y-%m-%d')
@@ -458,7 +459,9 @@ def bounceRateTracking(slack_token, dataSource):
                     'includeEmptyRows': True
                 }]}
                             
-    results = makeRequestWithExponentialBackoff(service, body=body)
+#    results = makeRequestWithExponentialBackoff(service, body=body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
 
     bounceRate = float(results['reports'][0]['data']['totals'][0]['values'][0])
 
@@ -535,7 +538,10 @@ def notSetLandingPage(slack_token, dataSource):
                     'filtersExpression': "ga:landingPagePath=@not set",
                     'includeEmptyRows': True
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
+    
     pageviews = float(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if pageviews > 0:
@@ -570,52 +576,30 @@ def adwordsAccountConnection(slack_token, dataSource):
     text = "Adwords Account Connection"
     attachments = []
 
-    metrics = [{
-        'expression': 'ga:adClicks'
-    }]
-
     email = dataSource['email']
-    viewId = dataSource['viewID']
+    accountId = dataSource['accountID']    
+    propertyId = dataSource['propertyID']
 
-    today = datetime.today()
+    mservice = google_analytics.build_management_api_v3_woutSession(email)
+    
+    req = mservice.management().webPropertyAdWordsLinks().list(
+                                        accountId=accountId,
+                                        webPropertyId=propertyId
+                                        )
+    adWordsLinks = makeRequestWithExponentialBackoff(req)
 
-    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
-    end_date_1 = dtimetostrf((today - timedelta(days=1)))
-
-    service = google_analytics.build_reporting_api_v4_woutSession(email)
-#    results = service.reports().batchGet(
-#        body={
-#            'reportRequests': [
-#                {
-#                    'viewId': viewId,
-#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-#                    'metrics': metrics,
-#                    'filtersExpression': 'ga:sourceMedium=@google / cpc',
-#                    'includeEmptyRows': True
-#                }]}).execute()
-    body = {
-            'reportRequests': [
-                {
-                    'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
-                    'metrics': metrics,
-                    'filtersExpression': 'ga:sourceMedium=@google / cpc',
-                    'includeEmptyRows': True
-                }]}
-    results = makeRequestWithExponentialBackoff(service, body)                       
-    result = int(results['reports'][0]['data']['totals'][0]['values'][0])
-
-    if result < 20:
-        attachments += [{
-            "text": "Should your Google Ads Account and Google Analytics not be linked, link them. To track properly, you need to connect your accounts.",
-            "color": "danger",
-#            "pretext": text,
-            "title": text,
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-            "attachment_type": "default",
-        }]
-    else:
+    hasAdwordsAccount = False
+    for link in adWordsLinks.get('items', []):
+        # Get the Google Ads accounts.
+        adWordsAccounts = link.get('adWordsAccounts', [])
+        for account in adWordsAccounts:
+            hasAdwordsAccount = True
+            break
+        if hasAdwordsAccount:
+            break
+#    print(hasAdwordsAccount)
+    
+    if hasAdwordsAccount:
         attachments += [{
             "text": " Google Analytics and Google Ads have linked successfully.",
             "color": "good",
@@ -625,6 +609,69 @@ def adwordsAccountConnection(slack_token, dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+    else:
+        attachments += [{
+            "text": "Should your Google Ads Account and Google Analytics not be linked, link them. To track properly, you need to connect your accounts.",
+            "color": "danger",
+#            "pretext": text,
+            "title": text,
+            "callback_id": "notification_form",
+#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+            "attachment_type": "default",
+        }]       
+                            
+                            
+#    viewId = dataSource['viewID']
+#
+#    today = datetime.today()
+#
+#    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+#    end_date_1 = dtimetostrf((today - timedelta(days=1)))
+#
+#    service = google_analytics.build_reporting_api_v4_woutSession(email)
+##    results = service.reports().batchGet(
+##        body={
+##            'reportRequests': [
+##                {
+##                    'viewId': viewId,
+##                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+##                    'metrics': metrics,
+##                    'filtersExpression': 'ga:sourceMedium=@google / cpc',
+##                    'includeEmptyRows': True
+##                }]}).execute()
+#    body = {
+#            'reportRequests': [
+#                {
+#                    'viewId': viewId,
+#                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+#                    'metrics': metrics,
+#                    'filtersExpression': 'ga:sourceMedium=@google / cpc',
+#                    'includeEmptyRows': True
+#                }]}
+#    results = makeRequestWithExponentialBackoff(service, body)                       
+#    result = int(results['reports'][0]['data']['totals'][0]['values'][0])
+#
+#    if result < 20:
+#        attachments += [{
+#            "text": "Should your Google Ads Account and Google Analytics not be linked, link them. To track properly, you need to connect your accounts.",
+#            "color": "danger",
+##            "pretext": text,
+#            "title": text,
+#            "callback_id": "notification_form",
+##            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "attachment_type": "default",
+#        }]
+#    else:
+#        attachments += [{
+#            "text": " Google Analytics and Google Ads have linked successfully.",
+#            "color": "good",
+##            "pretext": text,
+#            "title": text,
+#            "callback_id": "notification_form",
+##            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#            "attachment_type": "default",
+#        }]
+    
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
@@ -670,7 +717,10 @@ def sessionClickDiscrepancy(slack_token, dataSource):
                     'filtersExpression': 'ga:sourceMedium=@google / cpc',
                     'includeEmptyRows': True
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
+    
     try:
         sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
     except:
@@ -754,7 +804,9 @@ def goalSettingActivity(slack_token, dataSource):
                     'metrics': metrics,
                     'includeEmptyRows': True
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body) 
+#    results = makeRequestWithExponentialBackoff(service, body) 
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if result < 20:
@@ -828,7 +880,10 @@ def selfReferral(slack_token, dataSource):
                             "sortOrder": "DESCENDING"
                         }]
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
+    
     if 'rows' in results['reports'][0]['data'].keys():
         hostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
 #        results = service.reports().batchGet(
@@ -848,7 +903,9 @@ def selfReferral(slack_token, dataSource):
                         'metrics': metrics,
                         'filtersExpression': f'ga:source=={hostname};ga:medium==referral'
                     }]}
-        results = makeRequestWithExponentialBackoff(service, body)
+#        results = makeRequestWithExponentialBackoff(service, body)
+        req = service.reports().batchGet(body=body)
+        results = makeRequestWithExponentialBackoff(req)
 
     if 'rows' in results['reports'][0]['data'].keys():
         attachments += [{
@@ -915,7 +972,10 @@ def paymentReferral(slack_token, dataSource):
                     'filtersExpression': 'ga:medium==referral',
                     'includeEmptyRows': True
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
+    
     newUsers = int(results['reports'][0]['data']['totals'][0]['values'][0])
     sessions = int(results['reports'][0]['data']['totals'][0]['values'][1])
     transactionsPerSession = float(results['reports'][0]['data']['totals'][0]['values'][2])
@@ -959,10 +1019,15 @@ def botSpamExcluding(slack_token, dataSource):
     viewId = dataSource['viewID']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    profile = mservice.management().profiles().get(accountId=accountId,
+    req = mservice.management().profiles().get(accountId=accountId,
                                                    webPropertyId=propertyId,
                                                    profileId=viewId
-                                                   ).execute()
+                                                   )
+    profile = makeRequestWithExponentialBackoff(req)
+#    profile = mservice.management().profiles().get(accountId=accountId,
+#                                                   webPropertyId=propertyId,
+#                                                   profileId=viewId
+#                                                   ).execute()
     botFilteringEnabled = profile.get('botFilteringEnabled')
 
     if botFilteringEnabled:
@@ -1016,11 +1081,17 @@ def customDimension(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    customDimensions = mservice.management().customDimensions().list(
+    
+#    customDimensions = mservice.management().customDimensions().list(
+#        accountId=accountId,
+#        webPropertyId=propertyId,
+#    ).execute()
+    
+    req = mservice.management().customDimensions().list(
         accountId=accountId,
-        webPropertyId=propertyId,
-    ).execute()
-
+        webPropertyId=propertyId)
+    customDimensions = makeRequestWithExponentialBackoff(req)
+    
     dimensionsNmetrics = []
     for dimension in customDimensions.get('items', []):
         if dimension.get('active'):
@@ -1042,7 +1113,9 @@ def customDimension(slack_token, dataSource):
 #            results = rservice.reports().batchGet(
 #                body={'reportRequests': reportRequests}).execute()
             body = {'reportRequests': reportRequests}
-            results = makeRequestWithExponentialBackoff(rservice, body)
+#            results = makeRequestWithExponentialBackoff(rservice, body)
+            req = rservice.reports().batchGet(body=body)
+            results = makeRequestWithExponentialBackoff(req)
             for report in results['reports']:
                 if 'rows' in results['reports'][0]['data'].keys():
                     for row in results['reports'][0]['data']['rows']:
@@ -1116,7 +1189,9 @@ def siteSearchTracking(slack_token, dataSource):
                     'dimensions': [{'name': 'ga:searchKeyword'}],
                     "includeEmptyRows": False
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     
     if 'rows' in results['reports'][0]['data'].keys():
         result = 1
@@ -1187,7 +1262,9 @@ def gdprCompliant(slack_token, dataSource):
                     'dimensions': [{'name': 'ga:pagePath'}],
                     'filtersExpression': "ga:pagePath=@=email,ga:pagePath=@@"
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     if 'rows' in results['reports'][0]['data'].keys():
         attachments += [{
             "text": "Check your page paths, there are information which aren’t compatible with GDPR.",
@@ -1226,9 +1303,14 @@ def dataRetentionPeriod(slack_token, dataSource):
     propertyId = dataSource['propertyID']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    webproperty = mservice.management().webproperties().get(accountId=accountId,
+    
+#    webproperty = mservice.management().webproperties().get(accountId=accountId,
+#                                                            webPropertyId=propertyId
+#                                                            ).execute()
+    req = mservice.management().webproperties().get(accountId=accountId,
                                                             webPropertyId=propertyId
-                                                            ).execute()
+                                                            )
+    webproperty = makeRequestWithExponentialBackoff(req)
 
     dataRetentionTtl = webproperty.get('dataRetentionTtl')
 
@@ -1270,10 +1352,15 @@ def remarketingLists(slack_token, dataSource):
     propertyId = dataSource['propertyID']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    remarketingAudiences = mservice.management().remarketingAudience().list(
+    
+#    remarketingAudiences = mservice.management().remarketingAudience().list(
+#        accountId=accountId,
+#        webPropertyId=propertyId,
+#    ).execute()
+    req = mservice.management().remarketingAudience().list(
         accountId=accountId,
-        webPropertyId=propertyId,
-    ).execute()
+        webPropertyId=propertyId)
+    remarketingAudiences = makeRequestWithExponentialBackoff(req)
 
     remarketingAudiences = remarketingAudiences.get('items', [])
 
@@ -1316,11 +1403,16 @@ def enhancedECommerceActivity(slack_token, dataSource):
     viewId = dataSource['viewID']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    profile = mservice.management().profiles().get(accountId=accountId,
+    
+#    profile = mservice.management().profiles().get(accountId=accountId,
+#                                                   webPropertyId=propertyId,
+#                                                   profileId=viewId
+#                                                   ).execute()
+    req = mservice.management().profiles().get(accountId=accountId,
                                                    webPropertyId=propertyId,
-                                                   profileId=viewId
-                                                   ).execute()
-
+                                                   profileId=viewId)
+    profile = makeRequestWithExponentialBackoff(req)
+    
     enhancedECommerceTracking = profile.get('enhancedECommerceTracking')
 
     if enhancedECommerceTracking:
@@ -1365,11 +1457,16 @@ def customMetric(slack_token, dataSource):
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    customMetrics = mservice.management().customMetrics().list(
+    
+#    customMetrics = mservice.management().customMetrics().list(
+#        accountId=accountId,
+#        webPropertyId=propertyId,
+#    ).execute()
+    req = customMetrics = mservice.management().customMetrics().list(
         accountId=accountId,
-        webPropertyId=propertyId,
-    ).execute()
-
+        webPropertyId=propertyId)
+    customMetrics = makeRequestWithExponentialBackoff(req)
+    
     metrics = []
     for metric in customMetrics.get('items', []):
         if metric.get('active'):
@@ -1396,7 +1493,9 @@ def customMetric(slack_token, dataSource):
                                 'metrics': metrics[i*10:i*10 + 10],
                                 'includeEmptyRows': False
                             }]}
-            results = makeRequestWithExponentialBackoff(rservice, body)
+#            results = makeRequestWithExponentialBackoff(rservice, body)
+            req = rservice.reports().batchGet(body=body)
+            results = makeRequestWithExponentialBackoff(req)
             hasRow = False
             if 'rows' in results['reports'][0]['data'].keys():
                 for row in results['reports'][0]['data']['rows']:
@@ -1468,7 +1567,9 @@ def samplingCheck(slack_token, dataSource):
                     'metrics': metrics,
                     'includeEmptyRows': True
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     sessions_result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if sessions_result > 500000:
@@ -1505,8 +1606,11 @@ def internalSearchTermConsistency(slack_token, dataSource):
     accountId = dataSource['accountID']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    filters = mservice.management().filters().list(accountId=accountId).execute()
-
+    
+#    filters = mservice.management().filters().list(accountId=accountId).execute()
+    req = mservice.management().filters().list(accountId=accountId)
+    filters = makeRequestWithExponentialBackoff(req)
+    
     hasISTC = False
     for filter in filters.get('items', []):
         print(filter)
@@ -1560,11 +1664,17 @@ def defaultPageControl(slack_token, dataSource):
     viewId = dataSource['viewID']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    profile = mservice.management().profiles().get(
+    
+#    profile = mservice.management().profiles().get(
+#        accountId=accountId,
+#        webPropertyId=propertyId,
+#        profileId=viewId).execute()
+    req = mservice.management().profiles().get(
         accountId=accountId,
         webPropertyId=propertyId,
-        profileId=viewId).execute()
-
+        profileId=viewId)
+    profile = makeRequestWithExponentialBackoff(req)
+    
     try:
         defaultPage = profile['defaultPage']
     except Exception:
@@ -1573,7 +1683,7 @@ def defaultPageControl(slack_token, dataSource):
     if defaultPage != None:
         attachments += [{
             "text": "Don’t use default page settings, it is moderately error prone when used to fix data splitting issues.",
-            "color": "red",
+            "color": "danger",
 #            "pretext": text,
             "title": text,
             "callback_id": "notification_form",
@@ -1616,10 +1726,16 @@ def domainControl(slack_token, dataSource):
 
     # Obtain websiteURL
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    webProperty = mservice.management().webproperties().get(
+    
+#    webProperty = mservice.management().webproperties().get(
+#        accountId=accountId,
+#        webPropertyId=propertyId,
+#    ).execute()
+    req = mservice.management().webproperties().get(
         accountId=accountId,
-        webPropertyId=propertyId,
-    ).execute()
+        webPropertyId=propertyId)
+    webProperty = makeRequestWithExponentialBackoff(req)
+    
     websiteUrl = webProperty['websiteUrl'].replace('https://', '')
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -1650,7 +1766,9 @@ def domainControl(slack_token, dataSource):
                             "sortOrder": "DESCENDING"
                         }]
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     if 'rows' in results['reports'][0]['data'].keys():
         maxHostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
         maxSession = int(results['reports'][0]['data']['rows'][0]['metrics'][0]['values'][0])
@@ -1736,7 +1854,9 @@ def eventTracking(slack_token, dataSource):
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
     if result > 0:
@@ -1800,7 +1920,9 @@ def errorPage(slack_token, dataSource):
                     'metrics': metrics,
                     'filtersExpression':'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404',
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     if 'rows' in results['reports'][0]['data'].keys():
         not_found = True
     else:
@@ -1888,7 +2010,9 @@ def timezone(slack_token, dataSource):
                         }],
                     "pageSize": 100000,
                 }]}
-    results = makeRequestWithExponentialBackoff(rservice, body)
+#    results = makeRequestWithExponentialBackoff(rservice, body)
+    req = rservice.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     tf = TimezoneFinder(in_memory=True)
     mapping = {}
     if 'rows' in results['reports'][0]['data'].keys():
@@ -1915,10 +2039,17 @@ def timezone(slack_token, dataSource):
         maxTrafficTimezone = max(inversemapping)[1].replace('_', ' ')  # Google uses '_' instead of ' '
     
         mservice = google_analytics.build_management_api_v3_woutSession(email)
-        profile = mservice.management().profiles().get(accountId=accountId,
+        
+#        profile = mservice.management().profiles().get(accountId=accountId,
+#                                                       webPropertyId=propertyId,
+#                                                       profileId=viewId
+#                                                       ).execute()
+        req = mservice.management().profiles().get(accountId=accountId,
                                                        webPropertyId=propertyId,
                                                        profileId=viewId
-                                                       ).execute()
+                                                       )
+        profile = makeRequestWithExponentialBackoff(req)
+        
         currentTimezone = profile['timezone'].replace('_', ' ')
     
         if currentTimezone == maxTrafficTimezone:
@@ -1975,10 +2106,17 @@ def currency(slack_token, dataSource):
     viewId = dataSource['viewID']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
-    profile = mservice.management().profiles().get(accountId=accountId,
+    
+#    profile = mservice.management().profiles().get(accountId=accountId,
+#                                                   webPropertyId=propertyId,
+#                                                   profileId=viewId
+#                                                   ).execute()
+    req = mservice.management().profiles().get(accountId=accountId,
                                                    webPropertyId=propertyId,
                                                    profileId=viewId
-                                                   ).execute()
+                                                   )
+    profile = makeRequestWithExponentialBackoff(req)
+    
     currentCurrency = profile['currency']
 
     today = datetime.today()
@@ -2013,7 +2151,9 @@ def currency(slack_token, dataSource):
                             "sortOrder": "DESCENDING"
                         }]
                 }]}
-    results = makeRequestWithExponentialBackoff(rservice, body)
+#    results = makeRequestWithExponentialBackoff(rservice, body)
+    req = rservice.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     if 'rows' in results['reports'][0]['data'].keys():
         countryIsoCode = results['reports'][0]['data']['rows'][0]['dimensions'][0]
         maxCurrency = ccy.countryccy(countryIsoCode.lower())
@@ -2068,10 +2208,13 @@ def rawDataView(slack_token, dataSource):
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
 
-
-    views = mservice.management().profiles().list(accountId=accountId,
+#    views = mservice.management().profiles().list(accountId=accountId,
+#                                                  webPropertyId=propertyId
+#                                                  ).execute()
+    req = mservice.management().profiles().list(accountId=accountId,
                                                   webPropertyId=propertyId
-                                                  ).execute()
+                                                  )
+    views = makeRequestWithExponentialBackoff(req)
     
     unfilteredView = False
     for view in views.get('items', []):
@@ -2151,7 +2294,9 @@ def contentGrouping(slack_token, dataSource):
                     'metrics': metrics,
                     'dimensions': dimensions
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     cond = False
     if 'rows' in results['reports'][0]['data'].keys():
         for row in results['reports'][0]['data']['rows']:
@@ -2227,7 +2372,9 @@ def othersInChannelGrouping(slack_token, dataSource):
                     'metrics': metrics,
                     'dimensions': [{'name': 'ga:channelGrouping'}]
                 }]}
-    results = makeRequestWithExponentialBackoff(service, body)
+#    results = makeRequestWithExponentialBackoff(service, body)
+    req = service.reports().batchGet(body=body)
+    results = makeRequestWithExponentialBackoff(req)
     total_session = int(results['reports'][0]['data']['totals'][0]['values'][0])
     other_session = 0
     if 'rows' in results['reports'][0]['data'].keys():
@@ -2284,11 +2431,14 @@ def userPermission(slack_token, dataSource):
     email = dataSource['email']
 
     mservice = google_analytics.build_management_api_v3_woutSession(email)
+    
     isPermitted = True
     
     try:
-        account_links = mservice.management().accountUserLinks().list(
-                                                            accountId = accountId).execute()
+        req = mservice.management().accountUserLinks().list(accountId = accountId)
+        account_links = makeRequestWithExponentialBackoff(req)
+#        account_links = mservice.management().accountUserLinks().list(
+#                                                            accountId = accountId).execute()
         numberofLinks = len(account_links.get('items', []))
     except Exception as ex:
         if "Insufficient Permission" in str(ex):
