@@ -21,11 +21,13 @@ GSC_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.c
 ADW_CONNECT_AUTHORIZATION_SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/adwords']
 LOGIN_AUTHORIZATION_SCOPE = ['profile', 'email']
 
-LOGINAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/loginauth"
-GA_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/connectauth"
-GSC_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/gscconnectauth"
-ADW_CONNECTAUTH_REDIRECT_URI = "https://app.heybooster.ai/google/adwconnectauth"
-BASE_URI = "https://app.heybooster.ai/getstarted/connect-accounts"
+DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
+
+LOGINAUTH_REDIRECT_URI = "https://{DOMAIN_NAME}/google/loginauth"
+GA_CONNECTAUTH_REDIRECT_URI = "https://{DOMAIN_NAME}/google/connectauth"
+GSC_CONNECTAUTH_REDIRECT_URI = "https://{DOMAIN_NAME}/google/gscconnectauth"
+ADW_CONNECTAUTH_REDIRECT_URI = "https://{DOMAIN_NAME}/google/adwconnectauth"
+BASE_URI = "https://{DOMAIN_NAME}/getstarted/connect-accounts"
 
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
