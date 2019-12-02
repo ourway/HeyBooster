@@ -27,7 +27,7 @@ from flask_limiter.util import get_remote_address
 
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
-imageurl = "https://{DOMAIN_NAME}/images/{}.png"
+imageurl = f"https://{DOMAIN_NAME}/images/{}.png"
 
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
