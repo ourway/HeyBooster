@@ -25,7 +25,9 @@ from tasks import run_analyticsAudit
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-imageurl = "https://app.heybooster.ai/images/{}.png"
+
+DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
+imageurl = "https://{DOMAIN_NAME}/images/{}.png"
 
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
