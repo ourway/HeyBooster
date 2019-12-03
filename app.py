@@ -25,9 +25,8 @@ from tasks import run_analyticsAudit
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
-imageurl = "https://"+DOMAIN_NAME+"/images/{}.png"
+imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
 
 OAuth2ConsumerBlueprint.authorized = authorized
 URL = "https://slack.com/api/{}"
@@ -68,7 +67,7 @@ app.config['SECRET_KEY'] = 'linuxdegilgnulinux'
 
 app.config["SLACK_OAUTH_CLIENT_ID"] = os.environ.get('SLACK_CLIENT_ID')
 app.config["SLACK_OAUTH_CLIENT_SECRET"] = os.environ.get('SLACK_CLIENT_SECRET')
-#scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"]
+# scope=["identify,bot,commands,channels:read,chat:write:bot,links:read,users:read,groups:read,im:read"]
 slack_bp = make_slack_blueprint(
     scope=["identify,bot,commands,users:read,groups:read,im:read"],
     redirect_url='/getstarted/get-first-insight')
@@ -159,6 +158,17 @@ def home():
             return redirect('/logout')
     else:
         return redirect('/login')
+
+
+@app.route('/without_slack', methods=['GET', 'POST'])
+@login_required
+def without_slack():
+    if 'auth_token' in session.keys():
+        try:
+            if session['ga_accesstoken']:
+                return redirect('/account/audit-history')
+        except:
+            return redirect('/logout')
 
 
 # @app.route('/test_analytics_audit', methods=['GET', 'POST'])
@@ -584,7 +594,7 @@ def get_channels():
                 conv['name'] = '#' + conv['name']
                 channels += [conv]
     except Exception as ex:
-        print("Conversation List request error %s"%(str(ex)))
+        print("Conversation List request error %s" % (str(ex)))
     try:
         data = [('token', session['sl_accesstoken']),
                 ('limit', 200)]
@@ -1000,8 +1010,8 @@ def message_actions():
             dataSource = dataSources[datasourceIDs.index(datasourceID)]
         else:
             print("Data Source is not owned by this user")
-            buttons = ['showgraph','viewmore','giveFeedback']
-            foralluser= any([True if x in messagename else False for x in buttons])
+            buttons = ['showgraph', 'viewmore', 'giveFeedback']
+            foralluser = any([True if x in messagename else False for x in buttons])
             if foralluser:
                 dS = db.find_one("datasource", {"_id": datasourceID})
                 usr = db.find_one("user", {"email": dS['email']})
@@ -2208,8 +2218,8 @@ def message_actions():
         if (datasourceID in datasourceIDs):
             dataSource = dataSources[datasourceIDs.index(datasourceID)]
         else:
-            dataSource = db.find_one('datasource',{'_id':datasourceID})
-#            return make_response("", 200)
+            dataSource = db.find_one('datasource', {'_id': datasourceID})
+        #            return make_response("", 200)
         db.insert_one("feedback",
                       data={"email": dataSource['email'], "datasourceID": datasourceID, "feedback": feedback,
                             "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")})
