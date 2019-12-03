@@ -2662,6 +2662,7 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
                 }]}
         requests.post(URL.format('chat.postMessage'), data=json.dumps(data1), headers=headers)
 
+
 #        #THERE MAY BE A PROBLEM, IF ANALYTICS AUDIT LASTS LONGER THAN EXPECTED
 #        post_at = str(int(time.time() + 300)) # 5 minutes later
 #        text2 = "Your feedbacks make us stronger :muscle: " + \
@@ -2686,3 +2687,75 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
 #                }],
 #            "post_at": post_at}
 #        requests.post(URL.format('chat.scheduleMessage'), data=json.dumps(data2), headers=headers)
+
+
+def insertdefaultnotifications_without_slack(email, userID, dataSourceID, channelID, sendWelcome=False):
+    # Default Notifications will be inserted here
+    #    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
+    #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
+    lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
+    #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
+    data = [('token', session['ga_accesstoken']),
+            ('user', session['ga_accesstoken'])]
+    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
+    if (7 >= (usr_tz_offset - lc_tz_offset)):
+        default_time = str(7 - (usr_tz_offset - lc_tz_offset)).zfill(2)
+    else:
+        default_time = str(24 + (7 - (usr_tz_offset - lc_tz_offset))).zfill(2)
+    dataSource = db.find_one("datasource", query={"_id": dataSourceID})
+
+    db.insert('notification', data={
+        'type': 'analyticsAudit',
+        'email': email,
+        'scheduleType': 'daily',
+        'frequency': 0,
+        'timeofDay': "%s.01" % (default_time),
+        'status': '1',
+        'lastRunDate': '',
+        'datasourceID': dataSourceID,
+        'lastStates': {"bounceRateTracking": "",
+                       "notSetLandingPage": "",
+                       "adwordsAccountConnection": "",
+                       "sessionClickDiscrepancy": "",
+                       "selfReferral": "",
+                       "paymentReferral": "",
+                       "goalSettingActivity": "",
+                       "botSpamExcluding": "",
+                       "customDimension": "",
+                       "siteSearchTracking": "",
+                       "gdprCompliant": "",
+                       "dataRetentionPeriod": "",
+                       "remarketingLists": "",
+                       "enhancedECommerceActivity": "",
+                       "customMetric": "",
+                       "samplingCheck": "",
+                       "internalSearchTermConsistency": "",
+                       "defaultPageControl": "",
+                       "domainControl": "",
+                       "eventTracking": "",
+                       "errorPage": "",
+                       "timezone": "",
+                       "currency": "",
+                       "rawDataView": "",
+                       "contentGrouping": "",
+                       "userPermission": "",
+                       "othersInChannelGrouping": "",
+                       },
+        "totalScore": 0
+    })
+    # When the slack connection is completed send notification user to set time
+    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['ga_accesstoken']}
+
+    if sendWelcome:
+        text1 = "Welcome to heybooster :tada:\n" + \
+                "Your Analytics Audit Insights is preparing :coffee: "
+        data1 = {
+            "channel": channelID,
+            "attachments": [
+                {
+                    "text": text1,
+                    "color": "#2eb8a6",
+                    "attachment_type": "default",
+                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n"
+                }]}
+        requests.post(URL.format('chat.postMessage'), data=json.dumps(data1), headers=headers)
