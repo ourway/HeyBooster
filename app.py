@@ -226,12 +226,12 @@ def connectaccount_without_slack():
             insertdefaultnotifications_without_slack(session['email'],
                                        dataSourceID=_id, userID='',
                                        channelID='', sendWelcome=False)
-            run_analyticsAudit.delay(str(data['_id']), sendFeedback=True)
+            run_analyticsAudit.delay('', str(data['_id']), sendFeedback=True)
         else:
             insertdefaultnotifications_without_slack(session['email'], userID='',
                                        dataSourceID=_id,
                                        channelID='')
-            run_analyticsAudit.delay(str(data['_id']))
+            run_analyticsAudit.delay('', str(data['_id']))
         #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
 
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
@@ -308,12 +308,12 @@ def getaudit_without_slack():
             insertdefaultnotifications_without_slack(session['email'], userID='',
                                        dataSourceID=_id,
                                        channelID='', sendWelcome=False)
-            run_analyticsAudit.delay(str(data['_id']), sendFeedback=True)
+            run_analyticsAudit.delay('', str(data['_id']), sendFeedback=True)
         else:
             insertdefaultnotifications_without_slack(session['email'], userID='',
                                        dataSourceID=_id,
                                        channelID='')
-            run_analyticsAudit.delay(str(data['_id']))
+            run_analyticsAudit.delay('', str(data['_id']))
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         # flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -394,7 +394,7 @@ def audithistory_without_slack(datasourceID):
                                    dataSourceID=_id,
                                    channelID='')
         #        analyticsAudit(slack_token, task=None, dataSource=data)
-        run_analyticsAudit.delay(str(data['_id']))
+        run_analyticsAudit.delay('', str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
