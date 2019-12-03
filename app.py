@@ -163,12 +163,8 @@ def home():
 @app.route('/without_slack', methods=['GET', 'POST'])
 @login_required
 def without_slack():
-    if 'auth_token' in session.keys():
-        try:
-            if session['ga_accesstoken']:
-                return redirect('/account/audit-history')
-        except:
-            return redirect('/logout')
+    if session['ga_accesstoken']:
+        return redirect('/account/audit-history')
 
 
 # @app.route('/test_analytics_audit', methods=['GET', 'POST'])
