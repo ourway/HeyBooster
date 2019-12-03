@@ -248,7 +248,8 @@ def connectaccount_without_slack():
         nForm.view.choices = [('', 'User does not have Google Analytics Account')]
 
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail)
+    return render_template('datasources_without_slack.html', nForm=nForm, args=args,
+                           current_analyticsemail=current_analyticsemail)
 
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
@@ -351,7 +352,7 @@ def getaudit_without_slack():
         else:
             analytics_audit['strstat'] = 'active'
         analytics_audits += [analytics_audit]
-    return render_template('audit_table.html', args=args, selectedargs=args, nForm=nForm,
+    return render_template('audit_table_without_slack.html', args=args, selectedargs=args, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits)
 
