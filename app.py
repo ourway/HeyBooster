@@ -174,7 +174,6 @@ def getaudit_without_slack():
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
-    tz_offset = user['tz_offset']
 
     #    try:
     #        if user['ga_accesstoken']:
@@ -246,12 +245,7 @@ def getaudit_without_slack():
         nForm.account.choices = [('', 'User does not have Google Analytics Account')]
         nForm.property.choices = [('', 'User does not have Google Analytics Account')]
         nForm.view.choices = [('', 'User does not have Google Analytics Account')]
-    try:
-        channels = get_channels()
-        nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
-                                  in channels]
-    except:
-        nForm.channel.choices = [('', 'User does not have Slack Connection')]
+
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
 
     # Sort Order is important, that's why analytics audits are queried
@@ -267,7 +261,7 @@ def getaudit_without_slack():
         #            arg['strstat'] = 'active'
         #        arg['totalScore'] = analytics_audit['totalScore']
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+        analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'])
         if analytics_audit['status'] == '0':
             analytics_audit['strstat'] = 'passive'
         else:
