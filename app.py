@@ -164,12 +164,12 @@ def home():
 @login_required
 def without_slack():
     if session['ga_accesstoken']:
-        return redirect('/account/audit-history-without-slack')
+        return redirect('/getstarted/get-first-insight-without-slack')
 
 
-@app.route("/getstarted/get-first-insight", methods=['GET', 'POST'])
+@app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
 @login_required
-def connectaccount():
+def connectaccount_without_slack():
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
