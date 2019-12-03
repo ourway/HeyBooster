@@ -23,7 +23,6 @@ class DataSourceForm(Form):
     #    start_date = DateField('start_date', format="%Y-%m-%d")
     #    end_date = DateField('end_date', format="%Y-%m-%d")
     channel = SelectField('channel', choices=[('', 'Select your channel')],
-                          validators=[validators.DataRequired(message="This field is required.")],
                           render_kw={"class": "selection-2"})
 
 
