@@ -223,14 +223,14 @@ def connectaccount_without_slack():
         data['_id'] = _id
         unsortedargs.append(data)
         if len(unsortedargs) == 1:
-            insertdefaultnotifications(session['email'], userID=uID,
+            insertdefaultnotifications(session['email'],
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+                                       channelID='', sendWelcome=False)
             run_analyticsAudit.delay(str(data['_id']), sendFeedback=True)
         else:
-            insertdefaultnotifications(session['email'], userID=uID,
+            insertdefaultnotifications(session['email'],
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0])
+                                       channelID='')
             run_analyticsAudit.delay(str(data['_id']))
         #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
 
@@ -307,12 +307,12 @@ def getaudit_without_slack():
         if len(unsortedargs) == 1:
             insertdefaultnotifications(session['email'],
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+                                       channelID='', sendWelcome=False)
             run_analyticsAudit.delay(str(data['_id']), sendFeedback=True)
         else:
             insertdefaultnotifications(session['email'],
                                        dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0])
+                                       channelID='')
             run_analyticsAudit.delay(str(data['_id']))
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
@@ -392,7 +392,7 @@ def audithistory_without_slack(datasourceID):
         unsortedargs.append(data)
         insertdefaultnotifications(session['email'],
                                    dataSourceID=_id,
-                                   channelID=nForm.channel.data.split('\u0007')[0])
+                                   channelID='')
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         run_analyticsAudit.delay(str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
