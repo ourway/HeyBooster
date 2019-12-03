@@ -259,8 +259,8 @@ def getaudit_without_slack():
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
-    tz_offset = user['tz_offset']
-
+    # tz_offset = user['tz_offset']
+    tz_offset = 1
     #    try:
     #        if user['ga_accesstoken']:
     #            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
@@ -361,7 +361,8 @@ def getaudit_without_slack():
 @app.route('/account/audit-history-without-slack<datasourceID>')
 def audithistory_without_slack(datasourceID):
     user = db.find_one('user', {'email': session['email']})
-    tz_offset = user['tz_offset']
+#    tz_offset = user['tz_offset']
+    tz_offset = 1
     current_analyticsemail = user['ga_email']
 
     nForm = DataSourceForm(request.form)
