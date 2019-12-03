@@ -833,7 +833,7 @@ def account():
 @app.route("/account/audit-history", methods=['GET', 'POST'])
 @login_required
 def getaudit():
-    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+    if not (session['sl_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
