@@ -224,11 +224,11 @@ def connectaccount_without_slack():
         unsortedargs.append(data)
         if len(unsortedargs) == 1:
             insertdefaultnotifications(session['email'],
-                                       dataSourceID=_id,
+                                       dataSourceID=_id, userID='',
                                        channelID='', sendWelcome=False)
             run_analyticsAudit.delay(str(data['_id']), sendFeedback=True)
         else:
-            insertdefaultnotifications(session['email'],
+            insertdefaultnotifications(session['email'], userID='',
                                        dataSourceID=_id,
                                        channelID='')
             run_analyticsAudit.delay(str(data['_id']))
@@ -305,12 +305,12 @@ def getaudit_without_slack():
         data['_id'] = _id
         unsortedargs.append(data)
         if len(unsortedargs) == 1:
-            insertdefaultnotifications(session['email'],
+            insertdefaultnotifications(session['email'], userID='',
                                        dataSourceID=_id,
                                        channelID='', sendWelcome=False)
             run_analyticsAudit.delay(str(data['_id']), sendFeedback=True)
         else:
-            insertdefaultnotifications(session['email'],
+            insertdefaultnotifications(session['email'], userID='',
                                        dataSourceID=_id,
                                        channelID='')
             run_analyticsAudit.delay(str(data['_id']))
@@ -390,7 +390,7 @@ def audithistory_without_slack(datasourceID):
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
         unsortedargs.append(data)
-        insertdefaultnotifications(session['email'],
+        insertdefaultnotifications(session['email'], userID='',
                                    dataSourceID=_id,
                                    channelID='')
         #        analyticsAudit(slack_token, task=None, dataSource=data)
