@@ -2697,11 +2697,9 @@ def insertdefaultnotifications_without_slack(email, userID, dataSourceID, channe
     #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
     data = [('token', session['ga_accesstoken']),
             ('user', session['ga_accesstoken'])]
-    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
-    if (7 >= (usr_tz_offset - lc_tz_offset)):
-        default_time = str(7 - (usr_tz_offset - lc_tz_offset)).zfill(2)
-    else:
-        default_time = str(24 + (7 - (usr_tz_offset - lc_tz_offset))).zfill(2)
+
+    default_time = 2
+
     dataSource = db.find_one("datasource", query={"_id": dataSourceID})
 
     db.insert('notification', data={
