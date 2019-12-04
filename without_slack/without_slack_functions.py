@@ -15,7 +15,7 @@ def new_without_slack():
         return redirect('/getstarted/get-first-insight-without-slack')
 
 
-def new_connectaccount_without_slack(nForm, args, current_analyticsemail):
+def new_connectaccount_without_slack():
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
@@ -94,9 +94,9 @@ def new_connectaccount_without_slack(nForm, args, current_analyticsemail):
         nForm.view.choices = [('', 'User does not have Google Analytics Account')]
 
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources_without_slack.html', nForm=nForm, args=args,
-                           current_analyticsemail=current_analyticsemail)
-
+    # return render_template('datasources_without_slack.html', nForm=nForm, args=args,
+    #                       current_analyticsemail=current_analyticsemail)
+    return nForm, args, current_analyticsemail
 
 def new_getaudit_without_slack(args, selectedargs, nForm, current_analyticsemail, analytics_audits):
     if not (session['ga_accesstoken']):

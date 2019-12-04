@@ -122,7 +122,7 @@ def without_slack():
 @app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
 @login_required
 def connectaccount_without_slack(nForm, args, current_analyticsemail):
-    without_slack_functions.new_connectaccount_without_slack(nForm, args, current_analyticsemail)
+    nForm, args, current_analyticsemail = without_slack_functions.new_connectaccount_without_slack()
     return render_template('datasources_without_slack.html', nForm=nForm, args=args,
                            current_analyticsemail=current_analyticsemail)
 
