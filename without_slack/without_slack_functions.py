@@ -10,13 +10,6 @@ from bson.objectid import ObjectId
 from tasks import run_analyticsAudit
 
 
-
-
-
-
-
-
-
 def Timestamp2Date(ts, tz_offset):
     if ts:
         if tz_offset > 0:

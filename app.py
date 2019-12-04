@@ -165,6 +165,7 @@ def without_slack():
         return redirect('/getstarted/get-first-insight-without-slack')
 
 
+@app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
 def connectaccount_without_slack():
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
@@ -248,6 +249,7 @@ def connectaccount_without_slack():
                            current_analyticsemail=current_analyticsemail)
 
 
+@app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
 def getaudit_without_slack():
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
