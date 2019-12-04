@@ -170,7 +170,7 @@ def without_slack():
 @app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
 @login_required
 def connectaccount_without_slack():
-    if not (session['ga_accesstoken']):
+    if not session['ga_accesstoken']:
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
@@ -255,8 +255,8 @@ def connectaccount_without_slack():
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
 @login_required
 def getaudit_without_slack():
-    if not (session['ga_accesstoken']):
-        return redirect('/getstarted/connect-accounts')
+    # if not session['ga_accesstoken']:
+    #     return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
     # tz_offset = user['tz_offset']
@@ -438,7 +438,7 @@ def wrongaccount_without_slack():
     except:
         current_analyticsemail = ""
 
-    return render_template('wrongaccount.html', current_analyticsemail=current_analyticsemail)
+    return render_template('wrongaccount_without_slack.html', current_analyticsemail=current_analyticsemail)
 
 
 # @app.route('/test_analytics_audit', methods=['GET', 'POST'])
