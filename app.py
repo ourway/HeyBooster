@@ -160,6 +160,7 @@ def home():
         return redirect('/login')
 
 
+@app.route("/getstarted/connect-accounts-without-slack", methods=['GET', 'POST'])
 def without_slack():
     if session['ga_accesstoken']:
         return redirect('/getstarted/get-first-insight-without-slack')
