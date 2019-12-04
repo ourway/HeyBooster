@@ -259,8 +259,8 @@ def getaudit_without_slack():
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
-    tz_offset = user['tz_offset']
-    #tz_offset = 1
+    #tz_offset = user['tz_offset']
+    tz_offset = 1
     #    try:
     #        if user['ga_accesstoken']:
     #            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
@@ -347,7 +347,7 @@ def getaudit_without_slack():
         #            arg['strstat'] = 'active'
         #        arg['totalScore'] = analytics_audit['totalScore']
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+        #analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
         if analytics_audit['status'] == '0':
             analytics_audit['strstat'] = 'passive'
         else:
