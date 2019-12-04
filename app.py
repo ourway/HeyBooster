@@ -259,8 +259,8 @@ def getaudit_without_slack():
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
-    #tz_offset = user['tz_offset']
-    tz_offset = 1
+    # tz_offset = user['tz_offset']
+    # tz_offset = 1
     #    try:
     #        if user['ga_accesstoken']:
     #            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
@@ -347,7 +347,7 @@ def getaudit_without_slack():
         #            arg['strstat'] = 'active'
         #        arg['totalScore'] = analytics_audit['totalScore']
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        #analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+        # analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
         if analytics_audit['status'] == '0':
             analytics_audit['strstat'] = 'passive'
         else:
@@ -362,7 +362,7 @@ def getaudit_without_slack():
 def audithistory_without_slack(datasourceID):
     user = db.find_one('user', {'email': session['email']})
     #    tz_offset = user['tz_offset']
-    tz_offset = 1
+    # tz_offset = 1
     current_analyticsemail = user['ga_email']
 
     nForm = DataSourceForm(request.form)
@@ -415,7 +415,7 @@ def audithistory_without_slack(datasourceID):
     analytics_audits = []
     for arg in selectedargs:
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+        # analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
         if analytics_audit['status'] == '0':
             analytics_audit['strstat'] = 'passive'
         else:
@@ -424,6 +424,21 @@ def audithistory_without_slack(datasourceID):
     return render_template('audit_table.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits)
+
+
+@app.route('/account/connections-without-slack')
+def wrongaccount_without_slack():
+    if not session['ga_accesstoken']:
+        return redirect('/getstarted/connect-accounts')
+
+    user = db.find_one('user', {'email': session['email']})
+
+    try:
+        current_analyticsemail = user['ga_email']
+    except:
+        current_analyticsemail = ""
+
+    return render_template('wrongaccount.html', current_analyticsemail=current_analyticsemail)
 
 
 # @app.route('/test_analytics_audit', methods=['GET', 'POST'])

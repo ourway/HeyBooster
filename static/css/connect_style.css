@@ -838,18 +838,18 @@ body {
     text-align: center;
     color: black;
     font-weight: 400;
-    font-size: 20px;
-    padding-top: 20px;
-    opacity: 0.6;
+    font-size: 17px;
+    padding-top: 10px;
+    opacity: 0.8;
     font-family: 'Quicksand', sans-serif;
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .center-left img.logoo {
-    padding-top: 32px;
-    padding-right: 46px;
-    padding-left: 46px;
-    padding-bottom: 32px;
+    padding-top: 18px;
+    padding-right: 66px;
+    padding-left: 66px;
+    padding-bottom: 18px;
     width: 100%;
     text-align: center;
     display: block;
@@ -890,9 +890,33 @@ body {
     box-shadow: 7px 7px 5px 0px rgba(0, 0, 0, 0.3);
 }
 
+.center-right #connect-3 {
+    margin: auto;
+    margin-top: 15px;
+    display: block;
+    transition: .4s box-shadow;
+    background-color: transparent;
+    color: #0097a7;
+    font-family: sans-serif;
+    border: 1px solid #009688;
+    opacity: 0.8;
+}
+
+.center-right #connect-r3 {
+    display: none;
+}
+
+.center-right #connect-3:hover {
+
+    cursor: pointer;
+    box-shadow: 3px 2px 5px 0px rgba(0, 0, 0, 0.3);
+}
+
 .center-right img.logoo {
-    padding-bottom: 22px;
-    padding-top: 32px;
+    padding-bottom: 18px;
+    padding-top: 18px;
+    padding-right: 20px;
+    padding-left: 20px;
     display: block;
     width: 40%;
     text-align: center;
@@ -902,12 +926,13 @@ body {
     display: block;
     text-align: center;
     color: black;
-    font-weight: 400;
-    font-size: 20px;
-    padding-top: 20px;
-    opacity: 0.6;
+    font-weight: 600;
+    font-size: 17px;
+    padding-top: 10px;
+    opacity: 0.8;
     font-family: 'Quicksand', sans-serif;
-    font-weight: 400;}
+    font-weight: 400;
+}
 
 
 .channel {
@@ -916,6 +941,10 @@ body {
     padding: 40px;
 
 
+}
+
+.iltocum {
+    margin-top: 15px;
 }
 
 .center-right {
