@@ -160,13 +160,15 @@ def home():
         return redirect('/login')
 
 
-@app.route("/getstarted/connect-accounts-without-slack", methods=['GET', 'POST'])
+@app.route('/without_slack', methods=['GET', 'POST'])
+@login_required
 def without_slack():
     if session['ga_accesstoken']:
         return redirect('/getstarted/get-first-insight-without-slack')
 
 
 @app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
+@login_required
 def connectaccount_without_slack():
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
@@ -251,6 +253,7 @@ def connectaccount_without_slack():
 
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
+@login_required
 def getaudit_without_slack():
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
