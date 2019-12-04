@@ -2,13 +2,11 @@ from flask import Flask, render_template, flash, redirect, request, session, url
     render_template_string
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-# from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
 from forms import LoginForm, RegisterForm, DataSourceForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 import google_auth
 import google_analytics
 from database import db, db2
-from models.user import User
 from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from datetime import datetime, timedelta, timezone
@@ -24,6 +22,7 @@ from analyticsAudit import analyticsAudit
 from tasks import run_analyticsAudit
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from without_slack import without_slack_functions
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
 imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
@@ -113,6 +112,29 @@ def base():
     return redirect('/getstarted/connect-accounts')
 
 
+@app.route('/without_slack', methods=['GET', 'POST'])
+@login_required
+def without_slack():
+    without_slack_functions.new_without_slack()
+
+
+@app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
+@login_required
+def connectaccount_without_slack():
+    without_slack_functions.new_connectaccount_without_slack()
+
+
+@app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
+@login_required
+def getaudit_without_slack():
+    without_slack_functions.new_getaudit_without_slack()
+
+
+@app.route('/account/audit-history-without-slack<datasourceID>')
+def audithistory_without_slack(datasourceID):
+    without_slack_functions.new_audithistory_without_slack(datasourceID)
+
+
 @app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
 @login_required
 def home():
@@ -128,7 +150,7 @@ def home():
                 else:
                     slack_confirm = False
 
-                # Check if user has analytics connection    
+                # Check if user has analytics connection
                 if session['ga_accesstoken']:
                     user = db.find_one('user', {'email': session['email']})
 
@@ -158,7 +180,6 @@ def home():
             return redirect('/logout')
     else:
         return redirect('/login')
-
 
 
 # @app.route('/test_analytics_audit', methods=['GET', 'POST'])
@@ -2399,7 +2420,6 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
                 }]}
         requests.post(URL.format('chat.postMessage'), data=json.dumps(data1), headers=headers)
 
-
 #        #THERE MAY BE A PROBLEM, IF ANALYTICS AUDIT LASTS LONGER THAN EXPECTED
 #        post_at = str(int(time.time() + 300)) # 5 minutes later
 #        text2 = "Your feedbacks make us stronger :muscle: " + \
@@ -2424,73 +2444,3 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
 #                }],
 #            "post_at": post_at}
 #        requests.post(URL.format('chat.scheduleMessage'), data=json.dumps(data2), headers=headers)
-
-
-def insertdefaultnotifications_without_slack(email, userID, dataSourceID, channelID, sendWelcome=False):
-    # Default Notifications will be inserted here
-    #    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
-    #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
-    lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
-    #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-    data = [('token', session['ga_accesstoken']),
-            ('user', session['ga_accesstoken'])]
-
-    default_time = 2
-
-    dataSource = db.find_one("datasource", query={"_id": dataSourceID})
-
-    db.insert('notification', data={
-        'type': 'analyticsAudit',
-        'email': email,
-        'scheduleType': 'daily',
-        'frequency': 0,
-        'timeofDay': "%s.01" % (default_time),
-        'status': '1',
-        'lastRunDate': '',
-        'datasourceID': dataSourceID,
-        'lastStates': {"bounceRateTracking": "",
-                       "notSetLandingPage": "",
-                       "adwordsAccountConnection": "",
-                       "sessionClickDiscrepancy": "",
-                       "selfReferral": "",
-                       "paymentReferral": "",
-                       "goalSettingActivity": "",
-                       "botSpamExcluding": "",
-                       "customDimension": "",
-                       "siteSearchTracking": "",
-                       "gdprCompliant": "",
-                       "dataRetentionPeriod": "",
-                       "remarketingLists": "",
-                       "enhancedECommerceActivity": "",
-                       "customMetric": "",
-                       "samplingCheck": "",
-                       "internalSearchTermConsistency": "",
-                       "defaultPageControl": "",
-                       "domainControl": "",
-                       "eventTracking": "",
-                       "errorPage": "",
-                       "timezone": "",
-                       "currency": "",
-                       "rawDataView": "",
-                       "contentGrouping": "",
-                       "userPermission": "",
-                       "othersInChannelGrouping": "",
-                       },
-        "totalScore": 0
-    })
-    # When the slack connection is completed send notification user to set time
-    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['ga_accesstoken']}
-
-    if sendWelcome:
-        text1 = "Welcome to heybooster :tada:\n" + \
-                "Your Analytics Audit Insights is preparing :coffee: "
-        data1 = {
-            "channel": channelID,
-            "attachments": [
-                {
-                    "text": text1,
-                    "color": "#2eb8a6",
-                    "attachment_type": "default",
-                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n"
-                }]}
-        requests.post(URL.format('chat.postMessage'), data=json.dumps(data1), headers=headers)

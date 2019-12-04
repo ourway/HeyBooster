@@ -10,12 +10,12 @@ from bson.objectid import ObjectId
 from tasks import run_analyticsAudit
 
 
-def without_slack():
+def new_without_slack():
     if session['ga_accesstoken']:
         return redirect('/getstarted/get-first-insight-without-slack')
 
 
-def connectaccount_without_slack():
+def new_connectaccount_without_slack():
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
@@ -98,7 +98,7 @@ def connectaccount_without_slack():
                            current_analyticsemail=current_analyticsemail)
 
 
-def getaudit_without_slack():
+def new_getaudit_without_slack():
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
@@ -202,8 +202,7 @@ def getaudit_without_slack():
                            analytics_audits=analytics_audits)
 
 
-@app.route('/account/audit-history-without-slack<datasourceID>')
-def audithistory_without_slack(datasourceID):
+def new_audithistory_without_slack(datasourceID):
     user = db.find_one('user', {'email': session['email']})
     #    tz_offset = user['tz_offset']
     tz_offset = 1
