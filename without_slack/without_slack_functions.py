@@ -15,7 +15,7 @@ def new_without_slack():
         return redirect('/getstarted/get-first-insight-without-slack')
 
 
-def new_connectaccount_without_slack():
+def new_connectaccount_without_slack(nForm, args, current_analyticsemail):
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
@@ -98,7 +98,7 @@ def new_connectaccount_without_slack():
                            current_analyticsemail=current_analyticsemail)
 
 
-def new_getaudit_without_slack():
+def new_getaudit_without_slack(args, selectedargs, nForm, current_analyticsemail, analytics_audits):
     if not (session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 

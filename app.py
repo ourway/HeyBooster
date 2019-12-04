@@ -121,14 +121,18 @@ def without_slack():
 
 @app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
 @login_required
-def connectaccount_without_slack():
-    without_slack_functions.new_connectaccount_without_slack()
+def connectaccount_without_slack(nForm, args, current_analyticsemail):
+    return render_template('datasources_without_slack.html', nForm=nForm, args=args,
+                           current_analyticsemail=current_analyticsemail)
 
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
 @login_required
-def getaudit_without_slack():
+def getaudit_without_slack(args, selectedargs, nForm, current_analyticsemail, analytics_audits):
     without_slack_functions.new_getaudit_without_slack()
+    return render_template('audit_table_without_slack.html', args=args, selectedargs=args, nForm=nForm,
+                           current_analyticsemail=current_analyticsemail,
+                           analytics_audits=analytics_audits)
 
 
 @app.route('/account/audit-history-without-slack<datasourceID>')
