@@ -116,13 +116,13 @@ def base():
 @login_required
 def without_slack():
     without_slack_functions.new_without_slack()
+    return redirect('/getstarted/get-first-insight-without-slack')
 
 
 @app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
 @login_required
 def connectaccount_without_slack():
     without_slack_functions.new_connectaccount_without_slack()
-    return redirect('/getstarted/get-first-insight-without-slack')
 
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
