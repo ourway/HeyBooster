@@ -58,7 +58,8 @@ def totalScorewithEmoji(totalScore):
 
 def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     db.init()
-    if not task:
+    is_orchestrated = True if task else False
+    if not is_orchestrated:
         actions = [
             {
     			"name": "trackAnalyticsAudit",
@@ -81,6 +82,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     					}
     		}
         ]
+        task = db.find_one('notification', {'datasourceID':dataSource['_id']})
     else:
         actions = []
     actions_button = [
@@ -230,7 +232,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                     else:
     #                    attachment[0]['text'] = f":x: *{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
                         attachment[0]['text'] = f"*{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
-                    if task:
+                    if is_orchestrated:
                         lastState = task['lastStates'][function.__name__]
                         if lastState != currentState:
                             if currentState == "danger":
@@ -253,13 +255,11 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                                       'internalServerError', 'backendError']:
                     time.sleep((2 ** trycount) + random.random())
                 trycount += 1
-    if task:
-        db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
-    else:
-        db.find_and_modify('notification', query={'datasourceID': dataSource['_id'],
-                                              'type': 'analyticsAudit'},  lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
+    db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, 
+                                                                  totalScore = totalScore, 
+                                                                  lastRunDate = time.time())
     text_totalScore = totalScorewithEmoji(totalScore)
-    if not task:
+    if not is_orchestrated:
         text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights, " + \
                 " we strongly recommend you first solve the issues below. " +  \
                 f"Your analytics health score is calculated {text_totalScore} over 100.\n" +  \
@@ -411,7 +411,8 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
 
 def analyticsAudit_without_slack(task, dataSource):
     db.init()
-    if not task:
+    is_orchestrated = True if task else False
+    if not is_orchestrated:
         actions = [
             {
     			"name": "trackAnalyticsAudit",
@@ -434,8 +435,10 @@ def analyticsAudit_without_slack(task, dataSource):
     					}
     		}
         ]
+        task = db.find_one('notification',{'datasourceID':dataSource['_id']})
     else:
         actions = []
+    
 #    actions = {
 #    			"type": "actions",
 #                "block_id": "notification_form",
@@ -588,13 +591,12 @@ def analyticsAudit_without_slack(task, dataSource):
                                       'internalServerError', 'backendError']:
                     time.sleep((2 ** trycount) + random.random())
                 trycount += 1
-    if task:
-        db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
-    else:
-        db.find_and_modify('notification', query={'datasourceID': dataSource['_id'],
-                                              'type': 'analyticsAudit'},  lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
+    
+    db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates,
+                                                                      totalScore = totalScore,
+                                                                      lastRunDate = time.time())
     text_totalScore = totalScorewithEmoji(totalScore)
-    if not task:
+    if not is_orchestrated:
         text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights, " + \
                 " we strongly recommend you first solve the issues below. " +  \
                 f"Your analytics health score is calculated {text_totalScore} over 100.\n" +  \
