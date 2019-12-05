@@ -634,9 +634,10 @@ def analyticsAudit_without_slack(task, dataSource):
             allattachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
             
         if changedattachments:
-            db.insert('reports', data={'blocks': blocks,
-                                       'attachments': allattachments,
-                                       'datasourceID': dataSource['_id'],
+            db.insert('reports', data={'datasourceID': dataSource['_id'],
+                                        'message':{'blocks': blocks,
+                                                   'attachments': allattachments
+                                                  },
                                        'ts': time.time()})        
         else:
             reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort({'_id': -1})
