@@ -537,6 +537,19 @@ def active_audit_test(UUID):
         return make_response("", 401)
 
 
+@app.route('/test_test_without_slack/<datasourceID>')
+@login_required
+@limiter.limit("20/day")
+@limiter.limit("5/minute")
+def test_test_without_slack(datasourceID):
+    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
+    if dataSource['email'] == session['email']:
+        run_analyticsAudit_without_slack.delay(datasourceID)
+        return redirect('/account/audit-history')
+    else:
+        return make_response("", 401)
+
+
 @app.route('/test_test/<datasourceID>')
 @login_required
 @limiter.limit("20/day")
