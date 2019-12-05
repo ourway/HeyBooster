@@ -640,7 +640,7 @@ def analyticsAudit_without_slack(task, dataSource):
                                                   },
                                        'ts': time.time()})        
         else:
-            reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort({'_id': -1})
+            reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
             report = reports.next()
             db.find_and_modify('report', query={'_id':report['_id']}, ts = time.time())
             

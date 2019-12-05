@@ -545,7 +545,7 @@ def test_test_without_slack(datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     if dataSource['email'] == session['email']:
         run_analyticsAudit_without_slack.delay(datasourceID)
-        return redirect('/account/audit-history')
+        return redirect('/account/audit-history-without-slack')
     else:
         return make_response("", 401)
 
