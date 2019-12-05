@@ -1,6 +1,6 @@
 from celery import Celery
 import os
-from analyticsAudit import analyticsAudit
+from analyticsAudit import analyticsAudit, analyticsAudit_without_slack
 from database import db
 from bson.objectid import ObjectId
 
@@ -19,11 +19,20 @@ BROKER_URI = 'redis://:{}@{}:{}/{}'.format(REDIS_SERVER_SECRET,
 celery_app = Celery('tasks',
              broker=BROKER_URI)
 
+
 @celery_app.task
 def run_analyticsAudit(slack_token, datasourceID, sendFeedback = False):
     db.init()
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     analyticsAudit(slack_token, task=None, dataSource=dataSource, sendFeedback=sendFeedback)
+    return True
+
+
+@celery_app.task
+def run_analyticsAudit_without_slack(datasourceID):
+    db.init()
+    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
+    analyticsAudit_without_slack(task=None, dataSource=dataSource)
     return True
 
 

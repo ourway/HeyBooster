@@ -55,6 +55,7 @@ def totalScorewithEmoji(totalScore):
     else:
         return f":scream: *{totalScore}*"
 
+
 def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     db.init()
     if not task:
@@ -215,7 +216,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
         trycount = 0
         while trycount < 5:
             try:
-                attachment = function(slack_token, dataSource)
+                attachment = function(dataSource)
                 if attachment:
                     if 'color' in attachment[0]:
                         currentState = attachment[0]['color']
@@ -257,22 +258,6 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     else:
         db.find_and_modify('notification', query={'datasourceID': dataSource['_id'],
                                               'type': 'analyticsAudit'},  lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
-    #    attachments += bounceRateTracking(slack_token, dataSource)
-    #    attachments += notSetLandingPage(slack_token, dataSource)
-    #    attachments += adwordsAccountConnection(slack_token, dataSource)
-    #    attachments += sessionClickDiscrepancy(slack_token, dataSource)
-    #    attachments += selfReferral(slack_token, dataSource)
-    #    attachments += paymentReferral(slack_token, dataSource)
-    #    attachments += goalSettingActivity(slack_token, dataSource)
-    #    attachments += botSpamExcluding(slack_token, dataSource)
-    #    attachments += customDimension(slack_token, dataSource)
-    #    attachments += siteSearchTracking(slack_token, dataSource)
-    #    attachments += gdprCompliant(slack_token, dataSource)
-    #    attachments += dataRetentionPeriod(slack_token, dataSource)
-    #    attachments += remarketingLists(slack_token, dataSource)
-    #    attachments += enhancedECommerceActivity(slack_token, dataSource)
-    #    attachments += customMetric(slack_token, dataSource)
-    #    attachments += samplingCheck(slack_token, dataSource)
     text_totalScore = totalScorewithEmoji(totalScore)
     if not task:
         text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights, " + \
@@ -424,7 +409,240 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
 #        return resp['ts']
 
 
-def bounceRateTracking(slack_token, dataSource):
+def analyticsAudit_without_slack(task, dataSource):
+    db.init()
+    if not task:
+        actions = [
+            {
+    			"name": "trackAnalyticsAudit",
+    			"text": "Yes",
+    			"type": "button",
+                "style": "primary",
+    			"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+    		},
+            {
+    			"name": "ignoreAnalyticsAudit",
+    			"text": "No",
+    			"type": "button",
+    			"value": f"ignoreAnalyticsAudit_{dataSource['_id']}",
+                "style": "danger",
+    			"confirm": {
+    						"title": "Warning",
+    						"text": "Are you sure you want to close your Analytics Audit Notifications?",
+    						"ok_text": "Yes",
+    						"dismiss_text": "No"
+    					}
+    		}
+        ]
+    else:
+        actions = []
+#    actions = {
+#    			"type": "actions",
+#                "block_id": "notification_form",
+#    			"elements": [
+#    				{
+#    					"type": "button",
+#                        "style": "primary",
+#    					"text": {
+#    						"type": "plain_text",
+#    						"text": "Yes",
+#    						"emoji": True
+#    					},
+#    					"value": f"trackAnalyticsAudit_{dataSource['_id']}"
+#    				},
+#                    {
+#    					"type": "button",
+#                        "style": "danger",
+#    					"text": {
+#    						"type": "plain_text",
+#    						"text": "No",
+#    						"emoji": True
+#    					},
+#                        "confirm": {
+#                              "title": {
+#                                  "type": "plain_text",
+#                                  "text": "Warning"
+#                              },
+#                              "text": {
+#                                  "type": "mrkdwn",
+#                                  "text": "Are you sure you want to close your Analytics Audit Notifications?"
+#                              },
+#                              "confirm": {
+#                                  "type": "plain_text",
+#                                  "text": "Yes"
+#                              },
+#                              "deny": {
+#                                  "type": "plain_text",
+#                                  "text": "No"
+#                              }
+#                        },
+#    					"value": f"ignoreAnalyticsAudit_{dataSource['_id']}"
+#    				}
+#    			]
+#    		}
+    logging.basicConfig(filename="analyticsAudit.log", filemode='a',
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    subfunctions = [adwordsAccountConnection,
+                    paymentReferral,
+                    gdprCompliant,
+                    dataRetentionPeriod,
+                    enhancedECommerceActivity,
+                    domainControl,
+                    rawDataView,
+                    userPermission,
+                    bounceRateTracking,
+                    selfReferral,
+                    botSpamExcluding,
+                    eventTracking,
+                    errorPage,
+                    timezone,
+                    currency,
+                    notSetLandingPage,
+                    sessionClickDiscrepancy,
+                    goalSettingActivity,
+                    customDimension,
+                    siteSearchTracking,
+                    remarketingLists,
+                    defaultPageControl,
+                    contentGrouping,
+                    othersInChannelGrouping,
+                    customMetric,
+                    internalSearchTermConsistency,
+                    samplingCheck
+                    ]
+    scores = {"adwordsAccountConnection":5,
+              "paymentReferral":5,
+              "gdprCompliant":5,
+              "dataRetentionPeriod":5,
+              "enhancedECommerceActivity":5,
+              "domainControl":5,
+              "rawDataView":5,
+              "userPermission":5,
+              "bounceRateTracking":4,
+              "selfReferral":4,
+              "botSpamExcluding":4,
+              "eventTracking":4,
+              "errorPage":4,
+              "timezone":4,
+              "currency":4,
+              "notSetLandingPage":3,
+              "sessionClickDiscrepancy":3,
+              "goalSettingActivity":3,
+              "customDimension":3,
+              "siteSearchTracking":3,
+              "remarketingLists":3,
+              "defaultPageControl":3,
+              "contentGrouping":3,
+              "othersInChannelGrouping":3,
+              "customMetric":2,
+              "internalSearchTermConsistency":2,
+              "samplingCheck":1
+              }
+    allattachments = []
+    changedattachments = []
+    currentStates = {}
+    totalScore = 0
+    redcount = 0
+    isPermitted = True
+    for function in subfunctions:
+        if not isPermitted:
+            return
+        currentStates[function.__name__] = None
+        trycount = 0
+        while trycount < 5:
+            try:
+                attachment = function(dataSource)
+                if attachment:
+                    if 'color' in attachment[0]:
+                        currentState = attachment[0]['color']
+                    else:
+                        currentState = None
+                    currentStates[function.__name__] = currentState
+                    if currentState != "danger":
+                        totalScore += scores[function.__name__]
+    #                    attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
+                        attachment[0]['text'] = attachment[0]['text']
+                    else:
+    #                    attachment[0]['text'] = f":x: *{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
+                        attachment[0]['text'] = f"*{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
+                    lastState = task['lastStates'][function.__name__]
+                    if lastState != currentState:
+                        if currentState == "danger":
+                            allattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                            changedattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                            redcount += 1
+                        else:
+                            allattachments += attachment
+                            changedattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                    else:
+                        if currentState == "danger":
+                            allattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                            redcount += 1
+                        else:
+                            allattachments += attachment
+                break
+            except HttpError as ex:
+                logging.error(f"TASK DID NOT RUN --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__} --- {str(ex)}")
+                #https://developers.google.com/analytics/devguides/reporting/core/v4/errors
+                if ex.resp.reason in ['userRateLimitExceeded', 'quotaExceeded',
+                                      'internalServerError', 'backendError']:
+                    time.sleep((2 ** trycount) + random.random())
+                trycount += 1
+    if task:
+        db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
+    else:
+        db.find_and_modify('notification', query={'datasourceID': dataSource['_id'],
+                                              'type': 'analyticsAudit'},  lastStates = currentStates, totalScore = totalScore, lastRunDate = time.time())
+    text_totalScore = totalScorewithEmoji(totalScore)
+    if not task:
+        text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights, " + \
+                " we strongly recommend you first solve the issues below. " +  \
+                f"Your analytics health score is calculated {text_totalScore} over 100.\n" +  \
+                "Do you wanna get to know when anything change on the audit results?"
+        maincolor = "#2eb8a6"
+    else:
+        lastScore = int(task['totalScore'])
+        text_lastScore = totalScorewithEmoji(lastScore)
+        text = f"Your analytics health score is changed from {text_lastScore} to {text_totalScore}.\n" + \
+                "Here is the list of changes."
+        if totalScore > lastScore:
+            maincolor = "good"
+        elif totalScore < lastScore:
+            maincolor = "danger"
+        else:
+            maincolor = None
+    if len(allattachments):
+        blocks = [{
+        			"type": "section",
+        			"text": {
+        				"type": "mrkdwn",
+        				"text": "*Analytics Audit*"
+        			}
+        		}]
+        allattachments = [{"text": text,
+                         "color": maincolor,
+#                         "pretext": "*Analytics Audit*",
+                         "callback_id": "notification_form",
+                         "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                         "attachment_type": "default",
+                         "actions": actions}] + allattachments
+      
+        length = len(allattachments)
+        for i in range(length-1):
+            allattachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
+            
+        if changedattachments:
+            db.insert('reports', data={'blocks': blocks,
+                                       'attachments': allattachments,
+                                       'datasourceID': dataSource['_id'],
+                                       'ts': time.time()})        
+        else:
+            reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort({'_id': -1})
+            report = reports.next()
+            db.find_and_modify('report', query={'_id':report['_id']}, ts = time.time())
+            
+
+def bounceRateTracking(dataSource):
     text = "Bounce Rate Tracking"
     attachments = []
 
@@ -503,7 +721,7 @@ def bounceRateTracking(slack_token, dataSource):
         return []
 
 
-def notSetLandingPage(slack_token, dataSource):
+def notSetLandingPage(dataSource):
     text = "Not Set Landing Page Tracking"
     attachments = []
 
@@ -572,7 +790,7 @@ def notSetLandingPage(slack_token, dataSource):
         return []
 
 
-def adwordsAccountConnection(slack_token, dataSource):
+def adwordsAccountConnection(dataSource):
     text = "Adwords Account Connection"
     attachments = []
 
@@ -680,7 +898,7 @@ def adwordsAccountConnection(slack_token, dataSource):
         return []
 
 
-def sessionClickDiscrepancy(slack_token, dataSource):
+def sessionClickDiscrepancy(dataSource):
     text = "Session Click Discrepancy"
     attachments = []
 
@@ -770,7 +988,7 @@ def sessionClickDiscrepancy(slack_token, dataSource):
         return []
 
 
-def goalSettingActivity(slack_token, dataSource):
+def goalSettingActivity(dataSource):
     text = "Goal Setting Activity"
     attachments = []
 
@@ -836,7 +1054,7 @@ def goalSettingActivity(slack_token, dataSource):
         return []
 
 
-def selfReferral(slack_token, dataSource):
+def selfReferral(dataSource):
     text = "Self Referral"
     attachments = []
 
@@ -935,7 +1153,7 @@ def selfReferral(slack_token, dataSource):
         return []
 
 
-def paymentReferral(slack_token, dataSource):
+def paymentReferral(dataSource):
     text = "Payment Referral"
     attachments = []
 
@@ -1008,7 +1226,7 @@ def paymentReferral(slack_token, dataSource):
         return []
 
 
-def botSpamExcluding(slack_token, dataSource):
+def botSpamExcluding(dataSource):
     text = "Bot & Spam Excluding"
 
     attachments = []
@@ -1058,7 +1276,7 @@ def botSpamExcluding(slack_token, dataSource):
         return []
 
 
-def customDimension(slack_token, dataSource):
+def customDimension(dataSource):
     text = "Custom Dimension"
     attachments = []
     
@@ -1155,7 +1373,7 @@ def customDimension(slack_token, dataSource):
         return []
 
 
-def siteSearchTracking(slack_token, dataSource):
+def siteSearchTracking(dataSource):
     text = "Site Search Tracking"
     attachments = []
 
@@ -1226,7 +1444,7 @@ def siteSearchTracking(slack_token, dataSource):
         return []
 
 
-def gdprCompliant(slack_token, dataSource):
+def gdprCompliant(dataSource):
     text = "GDPR Compliant"
     attachments = []
 
@@ -1293,7 +1511,7 @@ def gdprCompliant(slack_token, dataSource):
         return []
 
 
-def dataRetentionPeriod(slack_token, dataSource):
+def dataRetentionPeriod(dataSource):
     text = "Data Retention Period"
 
     attachments = []
@@ -1342,7 +1560,7 @@ def dataRetentionPeriod(slack_token, dataSource):
         return []
 
 
-def remarketingLists(slack_token, dataSource):
+def remarketingLists(dataSource):
     text = "Remarketing Lists"
 
     attachments = []
@@ -1392,7 +1610,7 @@ def remarketingLists(slack_token, dataSource):
         return []
 
 
-def enhancedECommerceActivity(slack_token, dataSource):
+def enhancedECommerceActivity(dataSource):
     text = "Enhanced Ecommerce Activity"
 
     attachments = []
@@ -1443,7 +1661,7 @@ def enhancedECommerceActivity(slack_token, dataSource):
         return []
 
 
-def customMetric(slack_token, dataSource):
+def customMetric(dataSource):
     text = "Custom Metric"
     attachments = []
 
@@ -1533,7 +1751,7 @@ def customMetric(slack_token, dataSource):
         return []
 
 
-def samplingCheck(slack_token, dataSource):
+def samplingCheck(dataSource):
     text = "Sampling Check"
     attachments = []
 
@@ -1598,7 +1816,7 @@ def samplingCheck(slack_token, dataSource):
         return []
 
 
-def internalSearchTermConsistency(slack_token, dataSource):
+def internalSearchTermConsistency(dataSource):
     text = "Internal Search Term Consistency"
     attachments = []
 
@@ -1654,7 +1872,7 @@ def internalSearchTermConsistency(slack_token, dataSource):
         return []
 
 
-def defaultPageControl(slack_token, dataSource):
+def defaultPageControl(dataSource):
     text = "Default Page Control"
     attachments = []
 
@@ -1708,7 +1926,7 @@ def defaultPageControl(slack_token, dataSource):
         return []
 
 
-def domainControl(slack_token, dataSource):
+def domainControl(dataSource):
     text = "Domain Control"
     attachments = []
 
@@ -1824,7 +2042,7 @@ def domainControl(slack_token, dataSource):
         return []
 
 
-def eventTracking(slack_token, dataSource):
+def eventTracking(dataSource):
     text = "Event Tracking"
     attachments = []
 
@@ -1887,7 +2105,7 @@ def eventTracking(slack_token, dataSource):
         return []
 
 
-def errorPage(slack_token, dataSource):
+def errorPage(dataSource):
     text = "404 Error Page"
     attachments = []
     not_found = 0
@@ -1956,7 +2174,7 @@ def errorPage(slack_token, dataSource):
         return []
 
 
-def timezone(slack_token, dataSource):
+def timezone(dataSource):
     text = "Timezone"
     attachments = []
 
@@ -2090,7 +2308,7 @@ def timezone(slack_token, dataSource):
         return []
 
 
-def currency(slack_token, dataSource):
+def currency(dataSource):
     text = "Currency"
     attachments = []
 
@@ -2197,7 +2415,7 @@ def currency(slack_token, dataSource):
         return []
 
 
-def rawDataView(slack_token, dataSource):
+def rawDataView(dataSource):
     text = "Raw Data View"
 
     attachments = []
@@ -2255,7 +2473,7 @@ def rawDataView(slack_token, dataSource):
         return []
 
 
-def contentGrouping(slack_token, dataSource):
+def contentGrouping(dataSource):
     text = "Content Grouping"
     attachments = []
 
@@ -2340,7 +2558,7 @@ def contentGrouping(slack_token, dataSource):
         return []
 
 
-def othersInChannelGrouping(slack_token, dataSource):
+def othersInChannelGrouping(dataSource):
     text = "Others in Channel Grouping"
     attachments = []
 
@@ -2423,7 +2641,7 @@ def othersInChannelGrouping(slack_token, dataSource):
         return []
 
 
-def userPermission(slack_token, dataSource):
+def userPermission(dataSource):
     text = "User Permission"
     accountId = dataSource['accountID']
     attachments = []

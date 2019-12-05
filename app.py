@@ -21,7 +21,7 @@ from modules import performancegoaltracking, costprediction, performancechangeal
 from bson.objectid import ObjectId
 import babel.numbers
 from analyticsAudit import analyticsAudit
-from tasks import run_analyticsAudit
+from tasks import run_analyticsAudit, run_analyticsAudit_without_slack
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -226,12 +226,12 @@ def connectaccount_without_slack():
             insertdefaultnotifications_without_slack(session['email'],
                                                      dataSourceID=_id, userID='',
                                                      channelID='', sendWelcome=False)
-            run_analyticsAudit.delay('', str(data['_id']), sendFeedback=True)
+            run_analyticsAudit_without_slack.delay(str(data['_id']))
         else:
             insertdefaultnotifications_without_slack(session['email'], userID='',
                                                      dataSourceID=_id,
                                                      channelID='')
-            run_analyticsAudit.delay('', str(data['_id']))
+            run_analyticsAudit_without_slack.delay(str(data['_id']))
         #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
 
     #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
@@ -309,12 +309,12 @@ def getaudit_without_slack():
             insertdefaultnotifications_without_slack(session['email'], userID='',
                                                      dataSourceID=_id,
                                                      channelID='', sendWelcome=False)
-            run_analyticsAudit.delay('', str(data['_id']), sendFeedback=True)
+            run_analyticsAudit_without_slack.delay(str(data['_id']))
         else:
             insertdefaultnotifications_without_slack(session['email'], userID='',
                                                      dataSourceID=_id,
                                                      channelID='')
-            run_analyticsAudit.delay('', str(data['_id']))
+            run_analyticsAudit_without_slack.delay(str(data['_id']))
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
         # flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -396,7 +396,7 @@ def audithistory_without_slack(datasourceID):
                                                  dataSourceID=_id,
                                                  channelID='')
         #        analyticsAudit(slack_token, task=None, dataSource=data)
-        run_analyticsAudit.delay('', str(data['_id']))
+        run_analyticsAudit_without_slack.delay(str(data['_id']))
         flash("Check out your connected slack channel, heybooster even wrote you.")
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
