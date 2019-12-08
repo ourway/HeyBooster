@@ -254,12 +254,13 @@ def getaudit_without_slack():
     dt = db.find('datasource', {'email': session['email']})
     datasources = db.find('datasource', query={'email': session['email']})
     user = db.find_one('user', {'email': session['email']})
-
+    print(datasources['_id'])
+    print(ObjectId(datasources['_id']))
     for document in dt:
         if document['email']:
             counter = counter + 1
-            if counter > 1:
-                return redirect('/account/audit-history-without-slack' + datasources['_id'])
+    if counter > 1:
+        return redirect('/account/audit-history-without-slack' + datasources['_id'])
 
     try:
         current_analyticsemail = user['ga_email']
