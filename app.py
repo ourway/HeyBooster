@@ -249,8 +249,16 @@ def connectaccount_without_slack():
 def getaudit_without_slack():
     if not session['email']:
         return redirect('/getstarted/connect-accounts')
-
+    counter = 0
+    dt = db.find('datasource', {'email': 'admin@dioscuritechnologies.com'})
+    datasources = db.find('datasource', query={'email': session['email']})
     user = db.find_one('user', {'email': session['email']})
+
+    for i in dt:
+        if i['email']:
+            counter += 1
+    if counter > 1:
+        return redirect('/account/audit-history-without-slack' + datasources['_id'])
 
     try:
         current_analyticsemail = user['ga_email']
@@ -258,7 +266,6 @@ def getaudit_without_slack():
         current_analyticsemail = ""
 
     nForm = DataSourceForm(request.form)
-    datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
