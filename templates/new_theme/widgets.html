@@ -37,17 +37,18 @@
                 <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
                     <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#" data-toggle="dropdown"
                        id="pagesDropdown">
-                        <span class="nav-profile-name">Pages</span>
+                        <span class="nav-profile-name">Data Source Name</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="pagesDropdown">
-                        <a class="dropdown-item">
-                            <i class="mdi mdi-settings text-primary"></i>
-                            Settings
-                        </a>
-                        <a class="dropdown-item">
-                            <i class="mdi mdi-logout text-primary"></i>
-                            Logout
-                        </a>
+                        {% for arg in args %}
+                            {% if arg.dataSourceName %}
+                                {% set dataSourceName = arg.dataSourceName %}
+                            {% else %}
+                                {% set dataSourceName = arg._id %}
+                            {% endif %}
+                            <a class="dropdown-item"
+                               href="/account/audit-history{{ arg._id }}">{{ dataSourceName }}</a>
+                        {% endfor %}
                     </div>
                 </li>
                 <li class="nav-item dropdown align-items-center d-lg-flex d-none">
@@ -57,17 +58,14 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="messageDropdown">
-                        <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
                         <a class="dropdown-item preview-item">
                             <div class="preview-thumbnail">
-                                <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
+                                <img src="" alt="image" class="profile-pic">
                             </div>
                             <div class="preview-item-content flex-grow">
-                                <h6 class="preview-subject ellipsis font-weight-normal">David Grey
-                                </h6>
-                                <p class="font-weight-light small-text text-muted mb-0">
-                                    The meeting is cancelled
-                                </p>
+                                <a href="/logout">
+                                    <h6 class="preview-subject ellipsis font-weight-normal">Logout</h6>
+                                </a>
                             </div>
                         </a>
                     </div>
@@ -272,55 +270,55 @@
                                         </thead>
                                         <tbody class="text-center">
                                         {% for arg in selectedargs %}
-                                        {% set AA = analytics_audits[loop.index0] %}
-                                        {% if AA.totalScore == 0 %}
-                                        <tr id="tr-link">
-                                            <td id="score-ug">...</td>
-                                            <td onclick="location.href=''">Last Updated Time: preparing...</td>
-                                            <td>
-                                                <button class="btn btn-outline-primary">Ignore Change</button>
-                                            </td>
-                                            <td>
-                                                <div class="dropdown">
-                                                    <button class="btn  dropdown-toggle" type="button"
-                                                            id="dropdownMenuIconButton1" data-toggle="dropdown"
-                                                            aria-haspopup="true" aria-expanded="false">
-                                                        <i class="mdi mdi-earth"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu"
-                                                         aria-labelledby="dropdownMenuIconButton1">
-                                                        <a class="dropdown-item" href="#">Action</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        {% else %}
-                                        <tr id="tr-link">
-                                            <td id="score-ug">{{ AA.totalScore }}</td>
-                                            <td onclick="location.href=''">
-                                                <del><b style="color: #202540">{{ arg.dataSourceName }}</b> Last
-                                                    Updated
-                                                    Time: <b
-                                                            style="color: #202540">{{ AA.localTime }}</b></del>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-outline-primary">Ignore Change</button>
-                                            </td>
-                                            <td>
-                                                <div class="dropdown">
-                                                    <button class="btn  dropdown-toggle" type="button"
-                                                            id="dropdownMenuIconButton1" data-toggle="dropdown"
-                                                            aria-haspopup="true" aria-expanded="false">
-                                                        <i class="mdi mdi-earth"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu"
-                                                         aria-labelledby="dropdownMenuIconButton1">
-                                                        <a class="dropdown-item" href="#">Action</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        {% endif %}
+                                            {% set AA = analytics_audits[loop.index0] %}
+                                            {% if AA.totalScore == 0 %}
+                                                <tr id="tr-link">
+                                                    <td id="score-ug">...</td>
+                                                    <td onclick="location.href=''">Last Updated Time: preparing...</td>
+                                                    <td>
+                                                        <button class="btn btn-outline-primary">Ignore Change</button>
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="btn  dropdown-toggle" type="button"
+                                                                    id="dropdownMenuIconButton1" data-toggle="dropdown"
+                                                                    aria-haspopup="true" aria-expanded="false">
+                                                                <i class="mdi mdi-earth"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu"
+                                                                 aria-labelledby="dropdownMenuIconButton1">
+                                                                <a class="dropdown-item" href="#">Action</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% else %}
+                                                <tr id="tr-link">
+                                                    <td id="score-ug">{{ AA.totalScore }}</td>
+                                                    <td onclick="location.href=''">
+                                                        <b style="color: #202540">{{ arg.dataSourceName }}</b>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/active_audit_test/{{ AA._id }}">
+                                                            <button class="btn btn-outline-primary">Ignore Change
+                                                            </button>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="btn  dropdown-toggle" type="button"
+                                                                    id="dropdownMenuIconButton1" data-toggle="dropdown"
+                                                                    aria-haspopup="true" aria-expanded="false">
+                                                                <i class="mdi mdi-earth"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu"
+                                                                 aria-labelledby="dropdownMenuIconButton1">
+                                                                <a class="dropdown-item" href="#">Test Now</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
                                         {% endfor %}
                                         </tbody>
                                     </table>
