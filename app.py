@@ -113,6 +113,16 @@ def base():
     return redirect('/getstarted/connect-accounts')
 
 
+@app.route('/new_theme_index', methods=['GET', 'POST'])
+def new_theme_index():
+    return render_template('new_theme/index.html')
+
+
+@app.route('/new_theme_widgets', methods=['GET', 'POST'])
+def new_theme_widgets():
+    return render_template('new_theme/widgets.html')
+
+
 @app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
 @login_required
 def home():

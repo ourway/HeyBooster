@@ -1,0 +1,9 @@
+#tr-link {
+    background-color: transparent;
+    transition: .4s background;
+}
+#tr-link:hover{
+    cursor: pointer;
+    background-color: #eeeeee;
+    
+}
