@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('new_static', filename='vendors/mdi/css/materialdesignicons.min.css') }}">
+          href="{{ url_for('static', filename='/new_static/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('new_static', filename='vendors/base/vendor.bundle.base.css') }}">
+          href="{{ url_for('static', filename='/new_static/vendors/base/vendor.bundle.base.css') }}">
 
     <!-- endinject -->
     <!-- plugin css for this page -->
@@ -30,10 +30,10 @@
     <!-- partial:../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-            <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../new_static/images/logo.svg"
+            <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../static/new_static/images/logo.svg"
                                                                             alt="logo"/></a>
             <a class="navbar-brand brand-logo-mini" href="../../index.html"><img
-                    src="../../new_static/images/logo-mini.svg" alt="logo"/></a>
+                    src="../../static/new_static/images/logo-mini.svg" alt="logo"/></a>
             <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
                 <span class="mdi mdi-menu"></span>
             </button>
@@ -653,7 +653,7 @@
 <!-- base:js -->
 
 <script type="text/javascript"
-        src="{{ url_for('new_static', filename='/vendors/base/vendor.bundle.base.js') }}"></script>
+        src="{{ url_for('static', filename='/new_static/vendors/base/vendor.bundle.base.js') }}"></script>
 <!-- endinject -->
 <!-- Plugin js for this page-->
 <!-- End plugin js for this page-->
@@ -676,15 +676,15 @@
 </script>
 
 <script type="text/javascript"
-        src="{{ url_for('new_static', filename='/js/off-canvas.js') }}"></script>
+        src="{{ url_for('static', filename='/new_static/js/off-canvas.js') }}"></script>
 <script type="text/javascript"
-        src="{{ url_for('new_static', filename='/js/hoverable-collapse.js') }}"></script>
+        src="{{ url_for('static', filename='/new_static/js/hoverable-collapse.js') }}"></script>
 <script type="text/javascript"
-        src="{{ url_for('new_static', filename='/js/template.js') }}"></script>
+        src="{{ url_for('static', filename='/new_static/js/template.js') }}"></script>
 <script type="text/javascript"
-        src="{{ url_for('new_static', filename='/js/settings.js') }}"></script>
+        src="{{ url_for('static', filename='/new_static/js/settings.js') }}"></script>
 <script type="text/javascript"
-        src="{{ url_for('new_static', filename='/js/todolist.js') }}"></script>
+        src="{{ url_for('static', filename='/new_static/js/todolist.js') }}"></script>
 <!-- endinject -->
 <!-- plugin js for this page -->
 <!-- End plugin js for this page -->
