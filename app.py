@@ -110,7 +110,7 @@ def send_message():
 @app.route('/', methods=['GET'])
 @login_required
 def base():
-    if not session['email']
+    if not session['email']:
         return redirect('/getstarted/connect-accounts')
     else:
         return redirect('/account/audit-history-without-slack')
