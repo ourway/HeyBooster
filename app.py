@@ -249,15 +249,19 @@ def connectaccount_without_slack():
 def getaudit_without_slack():
     if not session['email']:
         return redirect('/getstarted/connect-accounts')
+
     counter = 0
     dt = db.find('datasource', {'email': 'admin@dioscuritechnologies.com'})
     datasources = db.find('datasource', query={'email': session['email']})
     user = db.find_one('user', {'email': session['email']})
 
     for document in dt:
+        print('print1------------', counter)
         if document['email']:
             counter = counter + 1
+            print('Print2--------------', counter)
             if counter > 1:
+                print('Print3-------------------', counter)
                 return redirect('/account/audit-history-without-slack' + datasources['_id'])
 
     try:
