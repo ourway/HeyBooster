@@ -257,6 +257,8 @@ def getaudit_without_slack():
     for i in dt:
         if i['email']:
             counter += 1
+
+    print(counter)
     if counter > 1:
         return redirect('/account/audit-history-without-slack' + datasources['_id'])
 
