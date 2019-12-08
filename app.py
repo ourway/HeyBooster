@@ -260,7 +260,7 @@ def getaudit_without_slack():
         if document['email']:
             counter = counter + 1
     if counter > 1:
-        return redirect('/account/audit-history-without-slack'+firstDatasourceID['_id'])
+        return redirect('/account/audit-history-without-slack'+str(firstDatasourceID['_id']))
 
     try:
         current_analyticsemail = user['ga_email']
