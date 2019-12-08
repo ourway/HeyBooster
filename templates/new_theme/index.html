@@ -15,9 +15,23 @@
           href="{{ url_for('static', filename='new_static/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='new_static/vendors/base/vendor.bundle.base.css') }}">
-     <link rel="stylesheet" type="text/css"
+    <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='new_static/css/vertical-layout-light/style.css') }}">
-    <link rel="shortcut icon" href="../../static/new_static/images/favicon.png"/>
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');</script>
 </head>
 
 <body class="sidebar-fixed">
@@ -25,10 +39,11 @@
     <!-- partial:../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-            <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../static/new_static/images/logo.svg"
-                                                                            alt="logo"/></a>
+            <a class="navbar-brand brand-logo" href="../../index.html"><img
+                    src="../../static/images/heybooster-preview.png"
+                    alt="logo"/></a>
             <a class="navbar-brand brand-logo-mini" href="../../index.html"><img
-                    src="../../static/new_static/images/logo-mini.svg" alt="logo"/></a>
+                    src="../../static//images/heybooster-preview.png" alt="logo"/></a>
             <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
                 <span class="mdi mdi-menu"></span>
             </button>
@@ -408,15 +423,9 @@
             <ul class="nav">
                 <li class="nav-item nav-profile">
                     <div class="nav-link d-flex">
-                        <div class="profile-image">
-                            <img src="https://via.placeholder.com/37x37" alt="image">
-                        </div>
                         <div class="profile-name">
                             <p class="name">
-                                Edwin Harring
-                            </p>
-                            <p class="designation">
-                                Manager
+                                {{ session['email'] }}
                             </p>
                         </div>
                     </div>
