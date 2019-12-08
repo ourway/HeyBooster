@@ -255,6 +255,11 @@ def getaudit_without_slack():
     datasources = db.find('datasource', query={'email': session['email']})
     user = db.find_one('user', {'email': session['email']})
 
+    print("-----------------------------------------------------")
+    print(datasources)
+    print(datasources['id'])
+    print("-----------------------------------------------------")
+
     for document in dt:
         if document['email']:
             counter = counter + 1
