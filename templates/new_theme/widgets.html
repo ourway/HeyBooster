@@ -24,7 +24,7 @@
     <!-- partial:../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-            <a class="navbar-brand brand-logo" href="index.html"><img src="../../static/new_static/images/logo.svg"
+            <a class="navbar-brand brand-logo" href="index.html"><img src="../../static/images/heyBooster.png"
                                                                       alt="logo"/></a>
             <a class="navbar-brand brand-logo-mini" href="index.html"><img
                     src="../../static/new_static/images/logo-mini.svg" alt="logo"/></a>
@@ -159,15 +159,9 @@
             <ul class="nav">
                 <li class="nav-item nav-profile">
                     <div class="nav-link d-flex">
-                        <div class="profile-image">
-                            <img src="https://via.placeholder.com/37x37" alt="image">
-                        </div>
                         <div class="profile-name">
-                            <p class="name">
-                                Edwin Harring
-                            </p>
                             <p class="designation">
-                                Manager
+                                {{ session['email'] }}
                             </p>
                         </div>
                     </div>
@@ -194,13 +188,14 @@
                         <div class="card">
                             <div class="card-body">
 
-                               <div id="card-tam-ug" class="container text-center">
+                                <div id="card-tam-ug" class="container text-center">
                                     {% for arg in selectedargs %}
-                                    {% set AA = analytics_audits[loop.index0] %}
-                                    <div id="card-ust-ug" class="round" data-value="0.{{ AA.totalScore }}" data-size="100"
-                                         data-thickness="6">
-                                        <strong id="grafik-healty-ug" style="display: block;"></strong>
-                                    </div>
+                                        {% set AA = analytics_audits[loop.index0] %}
+                                        <div id="card-ust-ug" class="round" data-value="0.{{ AA.totalScore }}"
+                                             data-size="100"
+                                             data-thickness="6">
+                                            <strong id="grafik-healty-ug" style="display: block;"></strong>
+                                        </div>
                                     {% endfor %}
                                     <div id="card-alt-ug">
 
@@ -291,7 +286,8 @@
                                             {% else %}
                                                 <tr id="tr-link">
                                                     <td id="score-ug">{{ AA.totalScore }}</td>
-                                                    <td onclick="location.href='https://www.heybooster.rocks/new_theme_index'" style="cursor:pointer;">
+                                                    <td onclick="location.href='https://www.heybooster.rocks/new_theme_index'"
+                                                        style="cursor:pointer;">
                                                         <b style="color: #202540">{{ arg.dataSourceName }}</b>
                                                     </td>
                                                     <td>
