@@ -251,7 +251,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Data Source Name</h4>
-                                {% for arg in lastStates %}
+                                {% for arg in a %}
                                 <div class="mt-4">
                                     <div class="accordion accordion-solid-header" id="accordion-4" role="tablist">
                                         <div class="card">
@@ -259,7 +259,7 @@
                                                 <h6 id="display-h6-ug" class="mb-0">
                                                     <a id="a-ug" data-toggle="collapse" href="#collapse-10"
                                                        aria-expanded="false" aria-controls="collapse-10">
-                                                        {{ arg }}
+                                                        {{ arg['text'] }}
                                                     </a>
                                                     <button id="danger-btn-ug" class="btn text-white"><i>Danger</i>
                                                     </button>
