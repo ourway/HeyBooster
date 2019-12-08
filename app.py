@@ -418,8 +418,8 @@ def audithistory_without_slack(datasourceID):
 @app.route('/account/recommendation<datasourceID>')
 def recommendation(datasourceID):
     user = db.find_one('user', {'email': session['email']})
-    datasources = db.find('datasource', {'email': session['email']})
-    reports = db.find_one('reports', {'datasourceID': datasources['_id']})
+    #datasources = db.find('datasource', {'email': session['email']})
+    reports = db.find_one('reports', {'datasourceID': datasourceID})
     a = reports['message']['attachments']
 
     #    tz_offset = user['tz_offset']
