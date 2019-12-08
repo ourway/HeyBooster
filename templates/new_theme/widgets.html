@@ -194,13 +194,14 @@
                         <div class="card">
                             <div class="card-body">
 
-                                <div id="card-tam-ug" class="container text-center">
-
-                                    <div id="card-ust-ug" class="round" data-value="0.49" data-size="100"
+                               <div id="card-tam-ug" class="container text-center">
+                                    {% for arg in selectedargs %}
+                                    {% set AA = analytics_audits[loop.index0] %}
+                                    <div id="card-ust-ug" class="round" data-value="0.{{ AA.totalScore }}" data-size="100"
                                          data-thickness="6">
                                         <strong id="grafik-healty-ug" style="display: block;"></strong>
-
                                     </div>
+                                    {% endfor %}
                                     <div id="card-alt-ug">
 
                                         <a href="#" class="btn btn-primary" id="g2_refresh">Healty Score</a>
