@@ -115,6 +115,11 @@ def base():
 
 @app.route('/new_theme_index', methods=['GET', 'POST'])
 def new_theme_index():
+    return render_template('new_theme/index.html')
+
+
+@app.route('/new_theme_widgets', methods=['GET', 'POST'])
+def new_theme_widgets():
     # if not session['ga_accesstoken']:
     #     return redirect('/getstarted/connect-accounts')
 
@@ -213,14 +218,9 @@ def new_theme_index():
         else:
             analytics_audit['strstat'] = 'active'
         analytics_audits += [analytics_audit]
-    return render_template('new_theme/index.html', args=args, selectedargs=args, nForm=nForm,
+    return render_template('new_theme/widgets.html', args=args, selectedargs=args, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits)
-
-
-@app.route('/new_theme_widgets', methods=['GET', 'POST'])
-def new_theme_widgets():
-    return render_template('new_theme/widgets.html')
 
 
 @app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
