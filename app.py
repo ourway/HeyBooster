@@ -418,7 +418,11 @@ def audithistory_without_slack(datasourceID):
 @app.route('/account/recommendation<datasourceID>')
 def recommendation(datasourceID):
     user = db.find_one('user', {'email': session['email']})
+    lastStates = []
     datasources = db.find('datasource', {'email': session['email']})
+
+    for i in datasources:
+        lastStates.append(i['lastStates'])
 
     #    tz_offset = user['tz_offset']
     # tz_offset = 1
@@ -445,7 +449,7 @@ def recommendation(datasourceID):
         analytics_audits += [analytics_audit]
     return render_template('new_theme/index.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
-                           analytics_audits=analytics_audits)
+                           analytics_audits=analytics_audits, lastStates=lastStates)
 
 
 @app.route('/account/connections-without-slack')
