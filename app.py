@@ -418,7 +418,7 @@ def audithistory_without_slack(datasourceID):
 @app.route('/account/recommendation<datasourceID>')
 def recommendation(datasourceID):
     user = db.find_one('user', {'email': session['email']})
-    datasources = db.find('datasource', {'email': session['mail']})
+    datasources = db.find('datasource', {'email': session['email']})
 
     #    tz_offset = user['tz_offset']
     # tz_offset = 1
