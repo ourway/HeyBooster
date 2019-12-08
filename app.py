@@ -113,10 +113,65 @@ def base():
     return redirect('/getstarted/connect-accounts')
 
 
-@app.route('/new_theme_index', methods=['GET', 'POST'])
-def new_theme_index():
-    # if not session['ga_accesstoken']:
-    #     return redirect('/getstarted/connect-accounts')
+@app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
+@login_required
+def home():
+    current_analyticsemail = ""
+    if 'auth_token' in session.keys():
+        try:
+            if session['ga_accesstoken'] and session['sl_accesstoken']:
+                return redirect('/account/audit-history')
+            else:
+                # Check if user has slack connection
+                if session['sl_accesstoken']:
+                    slack_confirm = True
+                else:
+                    slack_confirm = False
+
+                # Check if user has analytics connection
+                if session['ga_accesstoken']:
+                    user = db.find_one('user', {'email': session['email']})
+
+                    #                    try:
+                    #                        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
+                    #                        if 'error' in resp.keys():
+                    #                            data = [('client_id', CLIENT_ID.strip()),
+                    #                                    ('client_secret', CLIENT_SECRET.strip()),
+                    #                                    ('refresh_token', user['ga_refreshtoken']),
+                    #                                    ('grant_type', 'refresh_token')]
+                    #                            resp = requests.post(ACCESS_TOKEN_URI, data).json()
+                    #                        current_analyticsemail = resp['email']
+                    #                    except:
+                    #                        current_analyticsemail = ""
+                    try:
+                        current_analyticsemail = user['ga_email']
+                    except:
+                        current_analyticsemail = ""
+
+                    analytics_confirm = True
+                else:
+                    analytics_confirm = False
+                # Fill the boxes for the value of slack_confirm and analytics_confirm
+                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm,
+                                       current_analyticsemail=current_analyticsemail)
+        except:
+            return redirect('/logout')
+    else:
+        return redirect('/login')
+
+
+@app.route('/without_slack', methods=['GET', 'POST'])
+@login_required
+def without_slack():
+    if session['ga_accesstoken']:
+        return redirect('/getstarted/get-first-insight-without-slack')
+
+
+@app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
+@login_required
+def connectaccount_without_slack():
+    if not session['ga_accesstoken']:
+        return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
 
@@ -130,9 +185,12 @@ def new_theme_index():
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
+    #    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
+    #    tForm = TimeForm(request.form)
     if request.method == 'POST':
-        #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
-        #        local_ts = time.asctime(time.localtime(ts))
+        #        data = [('token', session['sl_accesstoken'])]
+        #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
+        uID = db.find_one("user", query={"email": session["email"]})
         ts = time.time()
 
         data = {
@@ -146,15 +204,15 @@ def new_theme_index():
             'viewID': nForm.view.data.split('\u0007')[0],
             'currency': nForm.view.data.split('\u0007')[1],
             'viewName': nForm.view.data.split('\u0007')[2],
-            'channelType': "Web",
+            'channelType': "Slack",
             'createdTS': ts
         }
         _id = db.insert_one("datasource", data=data).inserted_id
         data['_id'] = _id
         unsortedargs.append(data)
         if len(unsortedargs) == 1:
-            insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                     dataSourceID=_id,
+            insertdefaultnotifications_without_slack(session['email'],
+                                                     dataSourceID=_id, userID='',
                                                      channelID='', sendWelcome=False)
             run_analyticsAudit_without_slack.delay(str(data['_id']))
         else:
@@ -162,14 +220,12 @@ def new_theme_index():
                                                      dataSourceID=_id,
                                                      channelID='')
             run_analyticsAudit_without_slack.delay(str(data['_id']))
+        #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
 
-        #        analyticsAudit(slack_token, task=None, dataSource=data)
-        # flash("Check out your connected slack channel, heybooster even wrote you.")
-
-        #        analyticsAudit(slack_token, task=None, dataSource=data)
-
-        flash("Check out your connected slack channel, heybooster even wrote you.")
-
+    #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
+    #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
+    #    else:
+    #        user_info = google_auth.get_user_info()
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
     if (useraccounts):
         nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
@@ -180,51 +236,18 @@ def new_theme_index():
         nForm.view.choices = [('', 'User does not have Google Analytics Account')]
 
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-
-    # Sort Order is important, that's why analytics audits are queried
-    # after sorting to use their status correctly
-    analytics_audits = []
-    for arg in args:
-        #        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        #        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-        #        arg['localTime'] = localTime
-        #        if analytics_audit['status'] == '0':
-        #            arg['strstat'] = 'passive'
-        #        else:
-        #            arg['strstat'] = 'active'
-        #        arg['totalScore'] = analytics_audit['totalScore']
-        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        # analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-        if analytics_audit['status'] == '0':
-            analytics_audit['strstat'] = 'passive'
-        else:
-            analytics_audit['strstat'] = 'active'
-        analytics_audits += [analytics_audit]
-    return render_template('new_theme/index.html', args=args, selectedargs=args, nForm=nForm,
-                           current_analyticsemail=current_analyticsemail,
-                           analytics_audits=analytics_audits)
+    return render_template('datasources_without_slack.html', nForm=nForm, args=args,
+                           current_analyticsemail=current_analyticsemail)
 
 
-@app.route('/new_theme_widgets', methods=['GET', 'POST'])
-def new_theme_widgets():
-    # if not session['ga_accesstoken']:
-    #     return redirect('/getstarted/connect-accounts')
+@app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
+@login_required
+def getaudit_without_slack():
+    if not session['ga_accesstoken']:
+        return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
-    # tz_offset = user['tz_offset']
-    # tz_offset = 1
-    #    try:
-    #        if user['ga_accesstoken']:
-    #            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-    #            if 'error' in resp.keys():
-    #                data = [('client_id', CLIENT_ID.strip()),
-    #                        ('client_secret', CLIENT_SECRET.strip()),
-    #                        ('refresh_token', user['ga_refreshtoken']),
-    #                        ('grant_type', 'refresh_token')]
-    #                resp = requests.post(ACCESS_TOKEN_URI, data).json()
-    #            current_analyticsemail = resp['email']
-    #    except:
-    #        current_analyticsemail = False
+
     try:
         current_analyticsemail = user['ga_email']
     except:
@@ -310,251 +333,6 @@ def new_theme_widgets():
                            analytics_audits=analytics_audits)
 
 
-@app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
-@login_required
-def home():
-    current_analyticsemail = ""
-    if 'auth_token' in session.keys():
-        try:
-            if session['ga_accesstoken'] and session['sl_accesstoken']:
-                return redirect('/account/audit-history')
-            else:
-                # Check if user has slack connection
-                if session['sl_accesstoken']:
-                    slack_confirm = True
-                else:
-                    slack_confirm = False
-
-                # Check if user has analytics connection
-                if session['ga_accesstoken']:
-                    user = db.find_one('user', {'email': session['email']})
-
-                    #                    try:
-                    #                        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-                    #                        if 'error' in resp.keys():
-                    #                            data = [('client_id', CLIENT_ID.strip()),
-                    #                                    ('client_secret', CLIENT_SECRET.strip()),
-                    #                                    ('refresh_token', user['ga_refreshtoken']),
-                    #                                    ('grant_type', 'refresh_token')]
-                    #                            resp = requests.post(ACCESS_TOKEN_URI, data).json()
-                    #                        current_analyticsemail = resp['email']
-                    #                    except:
-                    #                        current_analyticsemail = ""
-                    try:
-                        current_analyticsemail = user['ga_email']
-                    except:
-                        current_analyticsemail = ""
-
-                    analytics_confirm = True
-                else:
-                    analytics_confirm = False
-                # Fill the boxes for the value of slack_confirm and analytics_confirm
-                return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm,
-                                       current_analyticsemail=current_analyticsemail)
-        except:
-            return redirect('/logout')
-    else:
-        return redirect('/login')
-
-
-@app.route('/without_slack', methods=['GET', 'POST'])
-@login_required
-def without_slack():
-    if session['ga_accesstoken']:
-        return redirect('/getstarted/get-first-insight-without-slack')
-
-
-@app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
-@login_required
-def connectaccount_without_slack():
-    if not session['ga_accesstoken']:
-        return redirect('/getstarted/connect-accounts')
-
-    user = db.find_one('user', {'email': session['email']})
-
-    #    try:
-    #        if user['ga_accesstoken']:
-    #            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-    #            if 'error' in resp.keys():
-    #                data = [('client_id', CLIENT_ID.strip()),
-    #                        ('client_secret', CLIENT_SECRET.strip()),
-    #                        ('refresh_token', user['ga_refreshtoken']),
-    #                        ('grant_type', 'refresh_token')]
-    #                resp = requests.post(ACCESS_TOKEN_URI, data).json()
-    #            current_analyticsemail = resp['email']
-    #    except:
-    #        current_analyticsemail = ""
-    try:
-        current_analyticsemail = user['ga_email']
-    except:
-        current_analyticsemail = ""
-
-    nForm = DataSourceForm(request.form)
-    datasources = db.find('datasource', query={'email': session['email']})
-    unsortedargs = []
-    for datasource in datasources:
-        unsortedargs.append(datasource)
-    #    args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
-    #    tForm = TimeForm(request.form)
-    if request.method == 'POST':
-        #        data = [('token', session['sl_accesstoken'])]
-        #        uID = requests.post(URL.format('users.identity'), data).json()['user']['id']
-        uID = db.find_one("user", query={"email": session["email"]})
-        ts = time.time()
-
-        data = {
-            'email': session['email'],
-            'sourceType': "Google Analytics",
-            'dataSourceName': nForm.data_source_name.data,
-            'accountID': nForm.account.data.split('\u0007')[0],
-            'accountName': nForm.account.data.split('\u0007')[1],
-            'propertyID': nForm.property.data.split('\u0007')[0],
-            'propertyName': nForm.property.data.split('\u0007')[1],
-            'viewID': nForm.view.data.split('\u0007')[0],
-            'currency': nForm.view.data.split('\u0007')[1],
-            'viewName': nForm.view.data.split('\u0007')[2],
-            'channelType': "Slack",
-            'createdTS': ts
-        }
-        _id = db.insert_one("datasource", data=data).inserted_id
-        data['_id'] = _id
-        unsortedargs.append(data)
-        if len(unsortedargs) == 1:
-            insertdefaultnotifications_without_slack(session['email'],
-                                                     dataSourceID=_id, userID='',
-                                                     channelID='', sendWelcome=False)
-            run_analyticsAudit_without_slack.delay(str(data['_id']))
-        else:
-            insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                     dataSourceID=_id,
-                                                     channelID='')
-            run_analyticsAudit_without_slack.delay(str(data['_id']))
-        #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
-
-    #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
-    #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
-    #    else:
-    #        user_info = google_auth.get_user_info()
-    useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-    if (useraccounts):
-        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                  useraccounts]
-    else:
-        nForm.account.choices = [('', 'User does not have Google Analytics Account')]
-        nForm.property.choices = [('', 'User does not have Google Analytics Account')]
-        nForm.view.choices = [('', 'User does not have Google Analytics Account')]
-
-    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources_without_slack.html', nForm=nForm, args=args,
-                           current_analyticsemail=current_analyticsemail)
-
-
-@app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
-@login_required
-def getaudit_without_slack():
-    # if not session['ga_accesstoken']:
-    #     return redirect('/getstarted/connect-accounts')
-
-    user = db.find_one('user', {'email': session['email']})
-    # tz_offset = user['tz_offset']
-    # tz_offset = 1
-    #    try:
-    #        if user['ga_accesstoken']:
-    #            resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-    #            if 'error' in resp.keys():
-    #                data = [('client_id', CLIENT_ID.strip()),
-    #                        ('client_secret', CLIENT_SECRET.strip()),
-    #                        ('refresh_token', user['ga_refreshtoken']),
-    #                        ('grant_type', 'refresh_token')]
-    #                resp = requests.post(ACCESS_TOKEN_URI, data).json()
-    #            current_analyticsemail = resp['email']
-    #    except:
-    #        current_analyticsemail = False
-    try:
-        current_analyticsemail = user['ga_email']
-    except:
-        current_analyticsemail = ""
-
-    nForm = DataSourceForm(request.form)
-    datasources = db.find('datasource', query={'email': session['email']})
-    unsortedargs = []
-    for datasource in datasources:
-        unsortedargs.append(datasource)
-    if request.method == 'POST':
-        #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
-        #        local_ts = time.asctime(time.localtime(ts))
-        ts = time.time()
-
-        data = {
-            'email': session['email'],
-            'sourceType': "Google Analytics",
-            'dataSourceName': nForm.data_source_name.data,
-            'accountID': nForm.account.data.split('\u0007')[0],
-            'accountName': nForm.account.data.split('\u0007')[1],
-            'propertyID': nForm.property.data.split('\u0007')[0],
-            'propertyName': nForm.property.data.split('\u0007')[1],
-            'viewID': nForm.view.data.split('\u0007')[0],
-            'currency': nForm.view.data.split('\u0007')[1],
-            'viewName': nForm.view.data.split('\u0007')[2],
-            'channelType': "Web",
-            'createdTS': ts
-        }
-        _id = db.insert_one("datasource", data=data).inserted_id
-        data['_id'] = _id
-        unsortedargs.append(data)
-        if len(unsortedargs) == 1:
-            insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                     dataSourceID=_id,
-                                                     channelID='', sendWelcome=False)
-            run_analyticsAudit_without_slack.delay(str(data['_id']))
-        else:
-            insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                     dataSourceID=_id,
-                                                     channelID='')
-            run_analyticsAudit_without_slack.delay(str(data['_id']))
-
-        #        analyticsAudit(slack_token, task=None, dataSource=data)
-        # flash("Check out your connected slack channel, heybooster even wrote you.")
-
-        #        analyticsAudit(slack_token, task=None, dataSource=data)
-
-        flash("Check out your connected slack channel, heybooster even wrote you.")
-
-    useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-    if (useraccounts):
-        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                  useraccounts]
-    else:
-        nForm.account.choices = [('', 'User does not have Google Analytics Account')]
-        nForm.property.choices = [('', 'User does not have Google Analytics Account')]
-        nForm.view.choices = [('', 'User does not have Google Analytics Account')]
-
-    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-
-    # Sort Order is important, that's why analytics audits are queried
-    # after sorting to use their status correctly
-    analytics_audits = []
-    for arg in args:
-        #        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        #        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-        #        arg['localTime'] = localTime
-        #        if analytics_audit['status'] == '0':
-        #            arg['strstat'] = 'passive'
-        #        else:
-        #            arg['strstat'] = 'active'
-        #        arg['totalScore'] = analytics_audit['totalScore']
-        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        # analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-        if analytics_audit['status'] == '0':
-            analytics_audit['strstat'] = 'passive'
-        else:
-            analytics_audit['strstat'] = 'active'
-        analytics_audits += [analytics_audit]
-    return render_template('audit_table_without_slack.html', args=args, selectedargs=args, nForm=nForm,
-                           current_analyticsemail=current_analyticsemail,
-                           analytics_audits=analytics_audits)
-
-
 @app.route('/account/audit-history-without-slack<datasourceID>')
 def audithistory_without_slack(datasourceID):
     user = db.find_one('user', {'email': session['email']})
@@ -618,7 +396,7 @@ def audithistory_without_slack(datasourceID):
         else:
             analytics_audit['strstat'] = 'active'
         analytics_audits += [analytics_audit]
-    return render_template('audit_table.html', args=args, selectedargs=selectedargs, nForm=nForm,
+    return render_template('new_theme/widgets.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits)
 
