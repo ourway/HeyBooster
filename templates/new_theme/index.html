@@ -25,10 +25,10 @@
     <!-- partial:../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-            <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../static/images/heyBooster.png"
+            <a class="navbar-brand brand-logo" href="/"><img src="../../static/images/heyBooster.png"
                                                                             alt="logo"/></a>
             <a class="navbar-brand brand-logo-mini" href="../../index.html"><img
-                    src="../../static/new_static/images/logo-mini.svg" alt="logo"/></a>
+                    src="../../static/images/heyBooster_small.png" alt="logo"/></a>
             <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
                 <span class="mdi mdi-menu"></span>
             </button>
@@ -48,7 +48,7 @@
                                 {% set dataSourceName = arg._id %}
                             {% endif %}
                             <a class="dropdown-item"
-                               href="/account/audit-history{{ arg._id }}">{{ dataSourceName }}</a>
+                               href="/account/audit-history-without-slack{{ arg._id }}">{{ dataSourceName }}</a>
                         {% endfor %}
                     </div>
                 </li>
@@ -258,7 +258,7 @@
                                         <div class="card">
                                             <div class="card-header" role="tab" id="heading-10">
                                                 <h6 id="display-h6-ug" class="mb-0">
-                                                    <a id="a-ug" data-toggle="collapse" href="#collapse-10"
+                                                    <a id="a-ug" data-toggle="collapse" href="/account/audit-history-without-slack{{ arg._id }}"
                                                        aria-expanded="false" aria-controls="collapse-10">
                                                         {{ arg.dataSourceName }}
                                                     </a>
