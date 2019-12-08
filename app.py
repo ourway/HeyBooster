@@ -418,6 +418,8 @@ def audithistory_without_slack(datasourceID):
 @app.route('/account/recommendation<datasourceID>')
 def recommendation(datasourceID):
     user = db.find_one('user', {'email': session['email']})
+    datasources = db.find('datasource', {'email': session['mail']})
+
     #    tz_offset = user['tz_offset']
     # tz_offset = 1
     current_analyticsemail = user['ga_email']
@@ -427,47 +429,10 @@ def recommendation(datasourceID):
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
-    if request.method == 'POST':
-        #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
-        #        local_ts = time.asctime(time.localtime(ts))
-        ts = time.time()
 
-        data = {
-            'email': session['email'],
-            'sourceType': "Google Analytics",
-            'dataSourceName': nForm.data_source_name.data,
-            'accountID': nForm.account.data.split('\u0007')[0],
-            'accountName': nForm.account.data.split('\u0007')[1],
-            'propertyID': nForm.property.data.split('\u0007')[0],
-            'propertyName': nForm.property.data.split('\u0007')[1],
-            'viewID': nForm.view.data.split('\u0007')[0],
-            'currency': nForm.view.data.split('\u0007')[1],
-            'viewName': nForm.view.data.split('\u0007')[2],
-            'channelType': "Slack",
-            'createdTS': ts
-        }
-        _id = db.insert_one("datasource", data=data).inserted_id
-        data['_id'] = _id
-        unsortedargs.append(data)
-        insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                 dataSourceID=_id,
-                                                 channelID='')
-        #        analyticsAudit(slack_token, task=None, dataSource=data)
-        run_analyticsAudit_without_slack.delay(str(data['_id']))
-        flash("Check out your connected slack channel, heybooster even wrote you.")
-
-    useraccounts = google_analytics.get_accounts(session['email'])['accounts']
-    if (useraccounts):
-        nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                  useraccounts]
-    else:
-        nForm.account.choices = [('', 'User does not have Google Analytics Account')]
-        nForm.property.choices = [('', 'User does not have Google Analytics Account')]
-        nForm.view.choices = [('', 'User does not have Google Analytics Account')]
 
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    # Sort Order is important, that's why analytics audits are queried
-    # after sorting to use their status correctly
+
     selectedargs = [db.find_one("datasource", query={"_id": ObjectId(datasourceID)})]
     analytics_audits = []
     for arg in selectedargs:
