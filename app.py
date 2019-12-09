@@ -301,7 +301,7 @@ def getaudit_without_slack_added():
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
 
-        flash("Check out your connected slack channel, heybooster even wrote you.")
+        return redirect('/account/audit-history-without-slack')
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
     if (useraccounts):
@@ -333,6 +333,8 @@ def getaudit_without_slack_added():
         else:
             analytics_audit['strstat'] = 'active'
         analytics_audits += [analytics_audit]
+
+
     return render_template('new_theme/widgets.html', args=args, selectedargs=args, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits)
