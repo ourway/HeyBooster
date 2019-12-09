@@ -218,7 +218,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
         trycount = 0
         while trycount < 5:
             try:
-                attachment = function(dataSource)
+                attachment, recommendation = function(dataSource)
                 if attachment:
                     if 'color' in attachment[0]:
                         currentState = attachment[0]['color']
@@ -544,6 +544,8 @@ def analyticsAudit_without_slack(task, dataSource):
     allattachments = []
     changedattachments = []
     currentStates = {}
+    recommendations = {}
+    summaries = {}
     totalScore = 0
     redcount = 0
     isPermitted = True
@@ -554,13 +556,15 @@ def analyticsAudit_without_slack(task, dataSource):
         trycount = 0
         while trycount < 5:
             try:
-                attachment = function(dataSource)
+                attachment, recommendation = function(dataSource)
                 if attachment:
                     if 'color' in attachment[0]:
                         currentState = attachment[0]['color']
                     else:
                         currentState = None
                     currentStates[function.__name__] = currentState
+                    recommendations[function.__name__] = recommendation
+                    summaries[function.__name__] = attachment[0]['text']
                     if currentState != "danger":
                         totalScore += scores[function.__name__]
     #                    attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
@@ -634,11 +638,13 @@ def analyticsAudit_without_slack(task, dataSource):
             allattachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
             
         if changedattachments:
-            db.insert('reports', data={'datasourceID': dataSource['_id'],
+            db.insert('reports', data={ 'datasourceID': dataSource['_id'],
                                         'message':{'blocks': blocks,
                                                    'attachments': allattachments
                                                   },
-                                       'ts': time.time()})        
+                                        'summaries': summaries,
+                                        'recommendations': recommendations,
+                                        'ts': time.time()})        
         else:
             reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
             report = reports.next()
@@ -648,6 +654,7 @@ def analyticsAudit_without_slack(task, dataSource):
 def bounceRateTracking(dataSource):
     text = "Bounce Rate Tracking"
     attachments = []
+    recommendations = []
 
     metrics = [{'expression': 'ga:bounceRate'}
                ]
@@ -696,6 +703,8 @@ def bounceRateTracking(dataSource):
                 "title": text,
                 "attachment_type": "default"
                     }]  
+        recommendations += ["Bad design, device / browser compatibility issue, non-closable popup windows can be the reason behind high bounce rates.",
+                            "When pages are getting traffic from unrelated keywords, audiences or campaigns, it is quite normal to have a high bounce rate, checkout your traffic sources and linked URL."]
     elif bounceRate < 30:
         attachments += [{
             "text": "Bounce rate is less than normal level (avg = %40-%65) , You may need to check for an event which affected the health measurement of your bounce rate.",
@@ -706,6 +715,8 @@ def bounceRateTracking(dataSource):
             "title": text,
             "attachment_type": "default",
         }]
+        recommendations += ["Events are counted as interactions by default however some events shouldn’t be. These type of events can be changed to ‘non-interaction hit: true’ to ensure the calculation of the rate of users who exit the page quickly.",
+                            "Google analytics pixel, may have been inserted twice and triggered subsequently triggered this action. When you remove one of them, the bounce rate will move back to the normal level."]
     else:
         attachments += [{
             "text": "If your bounce rate remains average, you must keep in mind that it may be affected by any changes you make to your website. So remember to keep track of your changes.",
@@ -719,7 +730,7 @@ def bounceRateTracking(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -727,7 +738,7 @@ def bounceRateTracking(dataSource):
 def notSetLandingPage(dataSource):
     text = "Not Set Landing Page Tracking"
     attachments = []
-
+    recommendations = []
     metrics = [{
         'expression': 'ga:sessions'
     }]
@@ -775,6 +786,9 @@ def notSetLandingPage(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["Be sure that Google Analytics pixel is triggered on all pages of your website.",
+                            "Hits sent to Google Analytics before the pageview code causes not set landing page problem. Pageview should be the first of all Google Analytics code.",
+                            "Default session duration (30 min) may not be the optimum duration for your website, change this from Google Analytics property settings."]
     else:
         attachments += [{
             "text": "Good for you! There are no sessions that landed on an unknown page.",
@@ -788,7 +802,7 @@ def notSetLandingPage(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -796,6 +810,7 @@ def notSetLandingPage(dataSource):
 def adwordsAccountConnection(dataSource):
     text = "Adwords Account Connection"
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']    
@@ -840,7 +855,8 @@ def adwordsAccountConnection(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]       
-                            
+        recommendations += ["To boost your adwords performance and keep track of full picture of your investment and return, connect your adwords and analytics account from Google Analytics property setting.",
+                            ]
                             
 #    viewId = dataSource['viewID']
 #
@@ -896,7 +912,7 @@ def adwordsAccountConnection(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -904,6 +920,7 @@ def adwordsAccountConnection(dataSource):
 def sessionClickDiscrepancy(dataSource):
     text = "Session Click Discrepancy"
     attachments = []
+    recommendations = []
 
     metrics = [
         {'expression': 'ga:sessions'},
@@ -963,6 +980,12 @@ def sessionClickDiscrepancy(dataSource):
         #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                     "attachment_type": "default",
                 }]
+                if adclicks_result < sessions_result:
+                    recommendations += ["There may be a problem with your Google Ads account where you got traffic, be sure all accounts are connected to your Google Analytics."]
+                else:
+                    recommendations += ["If you don’t use automatic tagging to track Google Ads traffic, you may have trouble with utm building.",
+                                        "Referral from final ads URL to landing page cause the lose of main sources and count as direct traffic instead of Google Ads.",
+                                        "Broken Google Analytics pixel on the landing page may also cause less session."]
             else:
                 attachments += [{
                     "text": "Nothing to worry! The number of Google Ads sessions and clicks are almost the same.",
@@ -986,7 +1009,7 @@ def sessionClickDiscrepancy(dataSource):
         
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -994,6 +1017,7 @@ def sessionClickDiscrepancy(dataSource):
 def goalSettingActivity(dataSource):
     text = "Goal Setting Activity"
     attachments = []
+    recommendations = []
 
     metrics = [{
         'expression': 'ga:goalCompletionsAll'
@@ -1040,6 +1064,9 @@ def goalSettingActivity(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["Critical points to your business should be set as goals in Google Analytics to keep track and optimize your marketing activities.",
+                            "There are four ways to set up goals; URL visited, time spent on website, number of pages seen per session and events triggered",
+                            "For an e-commerce account, each step of the shopping funnel should be setup as a goal. Best and healthiest way is to use events triggered on each."]
     else:
         attachments += [{
             "text": "There are goals set up on your account, but be sure to track all micro and macro conversion.",
@@ -1052,7 +1079,7 @@ def goalSettingActivity(dataSource):
         }]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1060,6 +1087,7 @@ def goalSettingActivity(dataSource):
 def selfReferral(dataSource):
     text = "Self Referral"
     attachments = []
+    recommendations = []
 
     metrics = [{
         'expression': 'ga:sessions'
@@ -1138,6 +1166,9 @@ def selfReferral(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["All pages have to be tagged with Google Analytics pixels to prevent the self referral when a user passes from one page without Google Analytics code to the second page which is tracked.",
+                            "If your analytics account is tracking cross sub-domains, referral exclusion have to be implemented for your domain under Property → Tracking Info → Referral Exclusion",
+                            "Other than cross sub-domain, if you want to track cross-domains in one Google Analytics property, it is not enough to apply referral exclusion, you will need additional special configurations."]
     else:
         attachments += [{
             "text": "Well done! Nothing to worry about.  A self referral issue isn’t seen in your account recently.",
@@ -1151,7 +1182,7 @@ def selfReferral(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1159,6 +1190,7 @@ def selfReferral(dataSource):
 def paymentReferral(dataSource):
     text = "Payment Referral"
     attachments = []
+    recommendations = []
 
     metrics = [{'expression': 'ga:newUsers'},
                {'expression': 'ga:sessions'},
@@ -1221,10 +1253,10 @@ def paymentReferral(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["To prevent the loss of traffic sources of users generated revenue, the payment gateway domain has to be excluded under Property → Tracking Info → Referral Exclusion."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1233,6 +1265,7 @@ def botSpamExcluding(dataSource):
     text = "Bot & Spam Excluding"
 
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -1271,10 +1304,11 @@ def botSpamExcluding(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["Enable bot & spam traffic exclusion under Google Analytics View Setting"]
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1282,6 +1316,7 @@ def botSpamExcluding(dataSource):
 def customDimension(dataSource):
     text = "Custom Dimension"
     attachments = []
+    recommendations = []
     
     metrics = {'HIT': [{'expression': 'ga:hits'}
                        ],
@@ -1368,10 +1403,12 @@ def customDimension(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["Add custom dimensions to analyze performance from different perspectives and not only the Google Analytics default.",
+                            "You can add custom dimensions by using GTM or asking IT to change the Google Analytics code from the source code.",
+                            "Custom dimension can be about hit, user, session, or products like user-id, product size, product color, A/B test option etc."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1379,6 +1416,7 @@ def customDimension(dataSource):
 def siteSearchTracking(dataSource):
     text = "Site Search Tracking"
     attachments = []
+    recommendations = []
 
     metrics = [{'expression': 'ga:sessions'}
                ]
@@ -1439,10 +1477,10 @@ def siteSearchTracking(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["Site search parameter specified under Google Analytics View Setting should be the same as the parameter in your search result page link. eg. if the link configured as /search?q=tshirt  , you should also enter query parameter as ‘q’"]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1450,6 +1488,7 @@ def siteSearchTracking(dataSource):
 def gdprCompliant(dataSource):
     text = "GDPR Compliant"
     attachments = []
+    recommendations = []
 
     metrics = [{
         'expression': 'ga:sessions'
@@ -1496,6 +1535,9 @@ def gdprCompliant(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["Personal information like email, phone number, name are not allowed to be collected in Google Analytics. Ask your IT department to remove the personal information from URL. URL’s with personal information mostly observe in ‘forget password’ or ‘signup’ pages."
+                            "Filter the page URL, which including personal info, by using the Search&Replace filter.",
+                            "Don’t miss the create data deletion request in order to get a review from Google."]
     else:
         attachments += [{
             "text": "Nothing to worry about, there is no risky page path in terms of GDPR.",
@@ -1509,7 +1551,7 @@ def gdprCompliant(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1518,6 +1560,7 @@ def dataRetentionPeriod(dataSource):
     text = "Data Retention Period"
 
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -1545,6 +1588,7 @@ def dataRetentionPeriod(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["Your data will be deleted if all time ranges are more than the data retention period you specified. So we recommend you change it to indefinite after you made sure about the GDPR compatibility of your account."]
     else:
         attachments += [{
             "text": "If your data retention period is already set as indefinite, you will never lose your user and event data but be sure about GDPR Compliancy.",
@@ -1558,7 +1602,7 @@ def dataRetentionPeriod(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1567,6 +1611,7 @@ def remarketingLists(dataSource):
     text = "Remarketing Lists"
 
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -1605,10 +1650,12 @@ def remarketingLists(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["Create re-marketing lists to track the performance of specific audiences and also empower Google Ads to retarget them.",
+                            "You can create unlimited differing lists with any condition, however, only 20 lists can be published and their performance is trackable on Google Analytics Audience report.",
+                            "Remarketing list for Google Ads should be created considering organizational goals"]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1617,6 +1664,7 @@ def enhancedECommerceActivity(dataSource):
     text = "Enhanced Ecommerce Activity"
 
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -1656,10 +1704,10 @@ def enhancedECommerceActivity(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["Even if your website has all the necessary pixel codes, if you don’t enable enhanced ecommerce activity under View → Ecommerce Setting, you can’t track the enhanced ecommerce module."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1667,6 +1715,7 @@ def enhancedECommerceActivity(dataSource):
 def customMetric(dataSource):
     text = "Custom Metric"
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -1746,10 +1795,12 @@ def customMetric(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["Custom metrics help you to collect the numbers, this is crucial for your business but it’s not defined in Google Analytics by default.",
+                            "Custom metric is a version of event tracking in this context because when you create custom metrics it’s easier to track and get detailed reports.",
+                            "As an example, if you have more than one event like add to cart, add to favorite, product view etc. it is not straightforward to analyze by which traffic source these events are triggered, however, with custom metrics you can recollect how many times it happened."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1757,6 +1808,7 @@ def customMetric(dataSource):
 def samplingCheck(dataSource):
     text = "Sampling Check"
     attachments = []
+    recommendations = []
 
     metrics = [
         {'expression': 'ga:sessions'}
@@ -1802,6 +1854,7 @@ def samplingCheck(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["In Google Analytics 360, You can export the unsampled version of reports after a short preparation period."]
     else:
         attachments += [{
             "text": "No worries for now, however sampling occurs at 500000 sessions for the date range you are using.",
@@ -1814,7 +1867,7 @@ def samplingCheck(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1822,6 +1875,7 @@ def samplingCheck(dataSource):
 def internalSearchTermConsistency(dataSource):
     text = "Internal Search Term Consistency"
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -1870,7 +1924,7 @@ def internalSearchTermConsistency(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1878,6 +1932,7 @@ def internalSearchTermConsistency(dataSource):
 def defaultPageControl(dataSource):
     text = "Default Page Control"
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -1911,6 +1966,7 @@ def defaultPageControl(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["Don’t fill the default page field on Google Analytics Setting."]
     else:
         attachments += [{
             "text": "Default page is not set as it should be.",
@@ -1924,7 +1980,7 @@ def defaultPageControl(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -1932,6 +1988,7 @@ def defaultPageControl(dataSource):
 def domainControl(dataSource):
     text = "Domain Control"
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -2017,6 +2074,8 @@ def domainControl(dataSource):
 #                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                     "attachment_type": "default",
                 }]
+                recommendations += ["Change the website URL specified on Google Analytics Setting to the domain you got the most traffic from.",
+                                    "If you don’t want to see any other domain traffic from your Analytics you can filter the domain name by including only your own hostname."]
         else:
             attachments += [{
                 "text": f"Check out the website url specified in view setting because {maxHostname} is getting more traffic than specified domain {websiteUrl}.",
@@ -2027,6 +2086,8 @@ def domainControl(dataSource):
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
+            recommendations += ["Change the website URL specified on Google Analytics Setting to the domain you got the most traffic from.",
+                                "If you don’t want to see any other domain traffic from your Analytics you can filter the domain name by including only your own hostname."]
     else:
         attachments += [{
                 "text": f"There is no session happening on the domain you specified in your view settings.",
@@ -2040,7 +2101,7 @@ def domainControl(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -2048,6 +2109,7 @@ def domainControl(dataSource):
 def eventTracking(dataSource):
     text = "Event Tracking"
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     viewId = dataSource['viewID']
@@ -2100,10 +2162,11 @@ def eventTracking(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["You can track any movement of your users with eventsi. You just need to ask your IT team to implement a piece of code or add a tag from Google Tag Manager without any technical support.",
+                            "Events are mostly used for tracking button click, scroll, video watch and impression of anything on page."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -2111,6 +2174,8 @@ def eventTracking(dataSource):
 def errorPage(dataSource):
     text = "404 Error Page"
     attachments = []
+    recommendations = []
+
     not_found = 0
 
     email = dataSource['email']
@@ -2169,10 +2234,11 @@ def errorPage(dataSource):
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["Change title description of your error page with ’404 Not Found’ or ’404 Error Page’",
+                            "Set an alert to better understand when the number of session from error page is increased."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -2180,6 +2246,7 @@ def errorPage(dataSource):
 def timezone(dataSource):
     text = "Timezone"
     attachments = []
+    recommendations = []
 
     metrics = [{
         'expression': 'ga:sessions'
@@ -2293,6 +2360,7 @@ def timezone(dataSource):
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
+            recommendations += ["To get the most accurate data on your Google Analytics, you need to change the timezone from Google Analytics View Setting."]
     else:
         attachments += [{
                 "text": f"Because there is no session recorded on your account, We couldn’t check the timezone setting. Checkout Google Analytics pixel code.",
@@ -2306,7 +2374,7 @@ def timezone(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -2314,6 +2382,7 @@ def timezone(dataSource):
 def currency(dataSource):
     text = "Currency"
     attachments = []
+    recommendations = []
 
     metrics = [{
         'expression': 'ga:sessions'
@@ -2399,6 +2468,7 @@ def currency(dataSource):
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
+            recommendations += ["It is important to track revenue and cost metrics properly, change the currency under the Google Analytics View setting."]
     else:
         attachments += [{
                 "text": f"Because there is no session recorded on your account, We couldn’t check the currency setting. Checkout Google Analytics pixel code.",
@@ -2413,7 +2483,7 @@ def currency(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -2422,6 +2492,7 @@ def rawDataView(dataSource):
     text = "Raw Data View"
 
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     accountId = dataSource['accountID']
@@ -2468,10 +2539,10 @@ def rawDataView(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["Create a raw data view without any filter or modification. It is a backup against the data loss on your working account because of wrong configuration."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -2479,6 +2550,7 @@ def rawDataView(dataSource):
 def contentGrouping(dataSource):
     text = "Content Grouping"
     attachments = []
+    recommendations = []
 
     metrics = [
         {'expression': 'ga:sessions'}
@@ -2556,7 +2628,7 @@ def contentGrouping(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -2564,6 +2636,7 @@ def contentGrouping(dataSource):
 def othersInChannelGrouping(dataSource):
     text = "Others in Channel Grouping"
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
     viewId = dataSource['viewID']
@@ -2616,6 +2689,8 @@ def othersInChannelGrouping(dataSource):
 #                "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                 "attachment_type": "default",
             }]
+            recommendations += ["The traffic you got from the sources which Google Analytics do not define by default appears under the group named as ‘other’.  Adjust the default channel grouping rules to allocate all sources to a channel under View → Channel Setting",
+                                "When adjusting the default group channel, pay attention to rules with AND / OR expression and the order of channels."]
         else:
             attachments += [{
                 "text": "A negligible percentage of your total traffic is collecting under other channels.",
@@ -2639,7 +2714,7 @@ def othersInChannelGrouping(dataSource):
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
 
@@ -2648,6 +2723,7 @@ def userPermission(dataSource):
     text = "User Permission"
     accountId = dataSource['accountID']
     attachments = []
+    recommendations = []
 
     email = dataSource['email']
 
@@ -2683,9 +2759,9 @@ def userPermission(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-
+        recommendations += ["Remove the users access who are not part of your organization or your support organizations."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
-        return attachments
+        return attachments, recommendations
     else:
         return []
