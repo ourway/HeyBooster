@@ -286,7 +286,7 @@
                                                                             <a class="nav-link active"
                                                                                id="pills-home-tab-custom"
                                                                                data-toggle="pill"
-                                                                               href="#pills-health" role="tab"
+                                                                               href="#pills-health-{{ index }}" role="tab"
                                                                                aria-controls="pills-home"
                                                                                aria-selected="true">
                                                                                 Summary
@@ -295,7 +295,7 @@
                                                                         <li class="nav-item">
                                                                             <a class="nav-link"
                                                                                id="pills-profile-tab-custom"
-                                                                               data-toggle="pill" href="#pills-career"
+                                                                               data-toggle="pill" href="#pills-career-{{ index }}"
                                                                                role="tab" aria-controls="pills-profile"
                                                                                aria-selected="false">
                                                                                 Recommendation
@@ -305,7 +305,7 @@
                                                                     <div class="tab-content tab-content-custom-pill"
                                                                          id="pills-tabContent-custom">
                                                                         <div class="tab-pane fade show active"
-                                                                             id="pills-health" role="tabpanel"
+                                                                             id="pills-health-{{ index }}" role="tabpanel"
                                                                              aria-labelledby="pills-home-tab-custom">
                                                                             <div class="d-flex mb-4">
                                                                             </div>
@@ -313,7 +313,7 @@
                                                                                 {{ summaries[key] }}
                                                                             </p>
                                                                         </div>
-                                                                        <div class="tab-pane fade" id="pills-career"
+                                                                        <div class="tab-pane fade" id="pills-career-{{ index }}"
                                                                              role="tabpanel"
                                                                              aria-labelledby="pills-profile-tab-custom">
                                                                             <div class="media">
