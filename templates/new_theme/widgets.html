@@ -16,6 +16,9 @@
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='new_static/style-extra.css') }}">
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util-form.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main-form.css') }}">
+
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 </head>
 
@@ -343,7 +346,7 @@
 
 
                                             <div class="form-group col-lg-6 offset-md-3">
-                                                <label>Data Source Name</label>
+                                                <label>Data Source Name</label><br>
                                                 {{ nForm.data_source_name }}
                                             </div>
 
