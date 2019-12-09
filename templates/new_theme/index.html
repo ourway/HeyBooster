@@ -251,7 +251,7 @@
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Data Source Name</h4>
+                                <h4 class="card-title">{{ selectedargs[0].dataSourceName }}</h4>
                                 {% for key, value in lastStates.items() %}
                                     {% set index = loop.index0 %}
                                     <div class="mt-4">

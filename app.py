@@ -458,7 +458,6 @@ def recommendation(datasourceID):
     # tz_offset = 1
     current_analyticsemail = user['ga_email']
 
-    nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
     for datasource in datasources:
@@ -477,7 +476,7 @@ def recommendation(datasourceID):
         else:
             analytics_audit['strstat'] = 'active'
         analytics_audits += [analytics_audit]
-    return render_template('new_theme/index.html', args=args, selectedargs=selectedargs, nForm=nForm,
+    return render_template('new_theme/index.html', args=args, selectedargs=selectedargs,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits, lastStates=lastStates, names=names)
 
