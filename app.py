@@ -420,6 +420,8 @@ def recommendation(datasourceID):
     user = db.find_one('user', {'email': session['email']})
     #datasources = db.find('datasource', {'email': session['email']})
     reports = db.find_one('reports', {'datasourceID': datasourceID})
+    import pprint
+    pprint.pprint(reports)
 
     #    tz_offset = user['tz_offset']
     # tz_offset = 1
