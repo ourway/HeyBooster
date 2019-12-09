@@ -541,11 +541,13 @@ def recommendation(datasourceID):
               }
 
     user = db.find_one('user', {'email': session['email']})
-    notification = db.find_one('notification', {'datasourceID': ObjectId(datasourceID)})
-    lastStates = notification['lastStates']
+#    notification = db.find_one('notification', {'datasourceID': ObjectId(datasourceID)})
+#    lastStates = notification['lastStates']
 
-    #reports = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
-
+    report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
+    summaries = report['summaries']
+    recommendations = report['recommendations']
+    lastStates = report['lastStates']    
 
 
     # tz_offset = user['tz_offset']
@@ -572,7 +574,9 @@ def recommendation(datasourceID):
         analytics_audits += [analytics_audit]
     return render_template('new_theme/index.html', args=args, selectedargs=selectedargs,
                            current_analyticsemail=current_analyticsemail,
-                           analytics_audits=analytics_audits, lastStates=lastStates, names=names)
+                           analytics_audits=analytics_audits, lastStates=lastStates,
+                           names = names, summaries = summaries,
+                           recommendations = recommendations)
 
 
 @app.route('/account/connections-without-slack')
