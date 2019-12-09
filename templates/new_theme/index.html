@@ -263,9 +263,15 @@
                                                            aria-expanded="false" aria-controls="collapse-{{ index }}">
                                                             {{ names[key] }}
                                                         </a>
-                                                        <button id="{{ value }}-btn-ug" class="btn text-white">
-                                                            <i>{{ value }}</i>
-                                                        </button>
+                                                        {% if value == 'good' %}
+                                                            <button id="success-btn-ug" class="btn text-white">
+                                                                <i>{{ value }}</i>
+                                                            </button>
+                                                        {% else %}
+                                                            <button id="danger-btn-ug" class="btn text-white">
+                                                                <i>{{ value }}</i>
+                                                            </button>
+                                                        {% endif %}
                                                     </h6>
                                                 </div>
                                                 <div id="collapse-{{ index }}" class="collapse" role="tabpanel"
