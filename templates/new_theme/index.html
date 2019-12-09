@@ -310,7 +310,7 @@
                                                                             <div class="d-flex mb-4">
                                                                             </div>
                                                                             <p>
-                                                                                summaries[key]
+                                                                                {{ summaries[key] }}
                                                                             </p>
                                                                         </div>
                                                                         <div class="tab-pane fade" id="pills-career"
@@ -319,8 +319,8 @@
                                                                             <div class="media">
 
                                                                                 <div class="media-body">
-                                                                                {% for recommendation in recommendations %}
-                                                                                    <p>recommendation</p>
+                                                                                {% for recommendation in recommendations[key] %}
+                                                                                    <p>{{ recommendation }}</p>
                                                                                 {% endfor %}
                                                                                     
                                                                                 </div>
