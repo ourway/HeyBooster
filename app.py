@@ -417,6 +417,35 @@ def audithistory_without_slack(datasourceID):
 
 @app.route('/account/recommendation<datasourceID>')
 def recommendation(datasourceID):
+    names = {"adwordsAccountConnection": "Adwords Account Connection",
+              "paymentReferral": "Payment Referral",
+              "gdprCompliant": "GDPR Compliant",
+              "dataRetentionPeriod": "Data Retention Period",
+              "enhancedECommerceActivity": "Enhanced ECommerce Activity",
+              "domainControl": "Domain Control",
+              "rawDataView": "Raw Data View",
+              "userPermission": "User Permission",
+              "bounceRateTracking": "Bounce Rate Tracking",
+              "selfReferral": "Self Referral",
+              "botSpamExcluding": "Bot Spam Excluding",
+              "eventTracking": "Event Tracking",
+              "errorPage": "404 Error Page",
+              "timezone": "Timezone",
+              "currency": "Currency",
+              "notSetLandingPage": "Not Set Landing PAge",
+              "sessionClickDiscrepancy": "Session Click Discrepancy",
+              "goalSettingActivity": "Goal Setting Activity",
+              "customDimension": "Custom Dimension",
+              "siteSearchTracking": "Site Search Tracking",
+              "remarketingLists": "Remarketing Lists",
+              "defaultPageControl": "Default Page Control",
+              "contentGrouping": "Content Grouping",
+              "othersInChannelGrouping": "Others In Channel Grouping",
+              "customMetric": "Custom Metric",
+              "internalSearchTermConsistency": "Internal Search Term Consistency",
+              "samplingCheck": "Sampling Check"
+              }
+
     user = db.find_one('user', {'email': session['email']})
     notification = db.find_one('notification', {'datasourceID': ObjectId(datasourceID)})
     lastStates = notification['lastStates']
@@ -450,7 +479,7 @@ def recommendation(datasourceID):
         analytics_audits += [analytics_audit]
     return render_template('new_theme/index.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
-                           analytics_audits=analytics_audits, lastStates=lastStates)
+                           analytics_audits=analytics_audits, lastStates=lastStates, names=names)
 
 
 @app.route('/account/connections-without-slack')

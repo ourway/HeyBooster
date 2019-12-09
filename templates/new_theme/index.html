@@ -261,14 +261,14 @@
                                                     <h6 id="display-h6-ug" class="mb-0">
                                                         <a id="a-ug" data-toggle="collapse" href="#collapse-{{ index }}"
                                                            aria-expanded="false" aria-controls="collapse-{{ index }}">
-                                                            {{ key }}
+                                                            {{ names[key] }}
                                                         </a>
                                                         <button id="danger-btn-ug" class="btn text-white">
                                                             <i>{{ value }}</i>
                                                         </button>
                                                     </h6>
                                                 </div>
-                                                <div id="collapse{{ index }}" class="collapse" role="tabpanel"
+                                                <div id="collapse-{{ index }}" class="collapse" role="tabpanel"
                                                      aria-labelledby="heading-10" data-parent="#accordion-4">
                                                     <div class="card">
                                                         <div class="card-body">
@@ -283,7 +283,7 @@
                                                                                href="#pills-health" role="tab"
                                                                                aria-controls="pills-home"
                                                                                aria-selected="true">
-                                                                                Lorem ipsum
+                                                                                Summary
                                                                             </a>
                                                                         </li>
                                                                         <li class="nav-item">
