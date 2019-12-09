@@ -1244,6 +1244,7 @@ def paymentReferral(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ["To prevent the loss of traffic sources of users generated revenue, the payment gateway domain has to be excluded under Property → Tracking Info → Referral Exclusion."]
     else:
         attachments += [{
             "text": "No worries, you did a good job, but don’t forget to track your payment referrals if any new payment method is added.",
@@ -1254,7 +1255,6 @@ def paymentReferral(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-        recommendations += ["To prevent the loss of traffic sources of users generated revenue, the payment gateway domain has to be excluded under Property → Tracking Info → Referral Exclusion."]
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
         return attachments, recommendations

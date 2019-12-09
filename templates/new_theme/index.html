@@ -267,8 +267,12 @@
                                                             <button id="success-btn-ug" class="btn text-white">
                                                                 <i>{{ value }}</i>
                                                             </button>
-                                                        {% else %}
+                                                        {% elif value == 'danger' %}
                                                             <button id="danger-btn-ug" class="btn text-white">
+                                                                <i>{{ value }}</i>
+                                                            </button>
+                                                        {% else %}
+                                                            <button id="secondary-btn-ug" class="btn text-white">
                                                                 <i>{{ value }}</i>
                                                             </button>
                                                         {% endif %}

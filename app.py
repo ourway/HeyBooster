@@ -526,7 +526,7 @@ def recommendation(datasourceID):
               "errorPage": "404 Error Page",
               "timezone": "Timezone",
               "currency": "Currency",
-              "notSetLandingPage": "Not Set Landing PAge",
+              "notSetLandingPage": "Not Set Landing Page",
               "sessionClickDiscrepancy": "Session Click Discrepancy",
               "goalSettingActivity": "Goal Setting Activity",
               "customDimension": "Custom Dimension",
