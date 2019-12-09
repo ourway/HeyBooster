@@ -36448,6 +36448,17 @@ div.tagsinput span.tag a {
     border-radius: 0px;
 }
 
+#none-btn-ug {
+    position: relative;
+    margin-right: 30px;
+    transform: translateY(60%);
+    background-color:transparent;
+    border-right:5px solid rgba(27, 27, 29, 0.78);
+    float: right;
+    border-radius: 4px;
+    text-align: center;
+    border-radius: 0px;
+}
 
 #success-btn-ug i {
     color: #424242;
