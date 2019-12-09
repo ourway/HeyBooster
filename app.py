@@ -247,7 +247,7 @@ def connectaccount_without_slack():
 
 @app.route("/account/audit-history-without-slack-added", methods=['GET', 'POST'])
 @login_required
-def getaudit_without_slack():
+def getaudit_without_slack_added():
     if not session['email']:
         return redirect('/getstarted/connect-accounts')
 
