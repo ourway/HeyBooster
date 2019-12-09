@@ -323,7 +323,6 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-
                         <div class="mt-4">
                             <div class="accordion accordion-solid-header" id="accordion-4" role="tablist">
                                 <div class="card">
@@ -345,47 +344,47 @@
                                             <h4 class="card-title">heybooster</h4>
 
 
-                                            <div class="form-group col-lg-6 offset-md-3">
-                                                <label>Data Source Name</label><br>
+                                            <div class="wrap-input100 validate-input" data-validate="Name is required">
+                                                <span class="label-input100">Data Souce Name</span>
+                                                {#<input class="input100" type="text" name="name"
+                                                   placeholder="Data Source Name" style="text-align: center;">#}
                                                 {{ nForm.data_source_name }}
+                                                <span class="focus-input100"></span>
                                             </div>
 
-                                            <div class="form-group col-lg-6 offset-md-3">
-                                                <label>Google Analytics Account</label>
-                                                <text type="text" class="form-control text-center form-control-sm"
-                                                      placeholder="Type a name eg. 'My store's First Audit'"
-                                                      aria-label="Username">{{ current_analyticsemail }}
-                                                </text>
+                                            <div class="wrap-input100 validate-input"
+                                                 data-validate="Valid email is required: ex@abc.xyz">
+                                                <span class="label-input100">Google Analytics Account</span>
+                                                <text class="input100" type="text" name="email"
+                                                      placeholder="Enter your email addess">{{ current_analyticsemail }}</text>
+                                                <span class="focus-input100"></span>
                                             </div>
 
 
-                                            <div class="form-group">
-                                                <label class="d-block">Select Your Profile Detail</label>
-                                                <select class="js-example-basic-single w-50 text-center">
+                                            <div class="wrap-input100 input100-select">
+                                                <span class="label-input100">Select Your Profile Detail</span>
+                                                <div>
                                                     {{ nForm.account }}
-                                                </select>
+                                                </div>
+                                                <span class="focus-input100"></span>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label class="d-block"></label>
-                                                <select class="js-example-basic-single w-50 text-center">
-                                                    <option value="AL">Select Your Property</option>
-                                                    <option value="WY">Wyoming</option>
-                                                    <option value="AM">America</option>
-                                                    <option value="CA">Canada</option>
-                                                    <option value="RU">Russia</option>
-                                                </select>
+                                            <div class="wrap-input100 input100-select">
+                                                <!--
+                                                 <span class="label-input100"></span> -->
+                                                <div>
+                                                    {{ nForm.property }}
+                                                </div>
+                                                <span class="focus-input100"></span>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label class="d-block"></label>
-                                                <select class="js-example-basic-single w-50 text-center">
-                                                    <option value="AL">Select Your View</option>
-                                                    <option value="WY">Wyoming</option>
-                                                    <option value="AM">America</option>
-                                                    <option value="CA">Canada</option>
-                                                    <option value="RU">Russia</option>
-                                                </select>
+                                            <div class="wrap-input100 input100-select">
+                                                <!--
+                                                 <span class="label-input100"></span> -->
+                                                <div>
+                                                    {{ nForm.view }}
+                                                </div>
+                                                <span class="focus-input100"></span>
                                             </div>
 
                                             <button type="button" class="btn btn-dark btn-lg btn-block ">
