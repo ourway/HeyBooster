@@ -55,7 +55,7 @@
                 <li class="nav-item dropdown align-items-center d-lg-flex d-none">
                     <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#" data-toggle="dropdown"
                        id="appDropdown">
-                        <span class="nav-profile-name">Menu</span>
+                        <span class="nav-profile-name">{{ session['email'] }}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="messageDropdown">
@@ -73,7 +73,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
                        id="notificationDropdown" href="#" data-toggle="dropdown">
-                        <i class="mdi mdi-bell-outline mx-0"></i>
+                        <h5 id="data-source-name-ug" class="btn btn-outline-primary">{{ selectedargs[0].dataSourceName }}</h5>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="notificationDropdown">
@@ -96,7 +96,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
                        id="messageDropdown" href="#" data-toggle="dropdown">
-                        <i class="mdi mdi-email-outline mx-0"></i>
+                        <i class="mdi mdi-account"></i>
                         <p class="notification-ripple notification-ripple-bg">
                             <span class="ripple notification-ripple-bg"></span>
                             <span class="ripple notification-ripple-bg"></span>
@@ -105,7 +105,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="messageDropdown">
-                        <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
+                        <p class="mb-0 font-weight-normal float-left dropdown-header">{{ session['email'] }}</p>
                         <a class="dropdown-item preview-item">
                             <div class="preview-thumbnail">
                                 <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
@@ -200,7 +200,7 @@
                                         {% set AA = analytics_audits[loop.index0] %}
                                         <div id="card-ust-ug" class="round" data-value="0.{{ AA.totalScore }}"
                                              data-size="100"
-                                             data-thickness="6">
+                                             data-thickness="18">
                                             <strong id="grafik-healty-ug" style="display: block;"></strong>
                                         </div>
                                     {% endfor %}
@@ -219,6 +219,7 @@
                                 <div id="card-tam-ug" class="container text-center">
 
                                     <div id="card-ust-ug">
+                                        <i class="mdi mdi-alert-box"></i>
                                         <h1 id="issue-h-ug">4</h1>
 
                                     </div>
@@ -235,8 +236,8 @@
                             <div class="card-body">
                                 <div id="card-tam-ug" class="container text-center">
                                     <div id="card-ust-ug">
-                                        <h1 id="issue-h-ug">3</h1>
-                                    </div>
+                                        <i class="mdi mdi-pencil-box"></i>
+                                        <h1 id="issue-h-ug">4</h1></div>
                                     <div id="card-alt-ug">
                                         <a href="#" class="btn btn-primary" id="g2_refresh">Recommendative</a>
                                     </div>
@@ -290,7 +291,8 @@
                                                                             <a class="nav-link active"
                                                                                id="pills-home-tab-custom"
                                                                                data-toggle="pill"
-                                                                               href="#pills-health-{{ index }}" role="tab"
+                                                                               href="#pills-health-{{ index }}"
+                                                                               role="tab"
                                                                                aria-controls="pills-home"
                                                                                aria-selected="true">
                                                                                 Summary
@@ -299,7 +301,8 @@
                                                                         <li class="nav-item">
                                                                             <a class="nav-link"
                                                                                id="pills-profile-tab-custom"
-                                                                               data-toggle="pill" href="#pills-career-{{ index }}"
+                                                                               data-toggle="pill"
+                                                                               href="#pills-career-{{ index }}"
                                                                                role="tab" aria-controls="pills-profile"
                                                                                aria-selected="false">
                                                                                 Recommendation
@@ -309,7 +312,8 @@
                                                                     <div class="tab-content tab-content-custom-pill"
                                                                          id="pills-tabContent-custom">
                                                                         <div class="tab-pane fade show active"
-                                                                             id="pills-health-{{ index }}" role="tabpanel"
+                                                                             id="pills-health-{{ index }}"
+                                                                             role="tabpanel"
                                                                              aria-labelledby="pills-home-tab-custom">
                                                                             <div class="d-flex mb-4">
                                                                             </div>
@@ -317,16 +321,17 @@
                                                                                 {{ summaries[key] }}
                                                                             </p>
                                                                         </div>
-                                                                        <div class="tab-pane fade" id="pills-career-{{ index }}"
+                                                                        <div class="tab-pane fade"
+                                                                             id="pills-career-{{ index }}"
                                                                              role="tabpanel"
                                                                              aria-labelledby="pills-profile-tab-custom">
                                                                             <div class="media">
 
                                                                                 <div class="media-body">
-                                                                                {% for recommendation in recommendations[key] %}
-                                                                                    <p>{{ recommendation }}</p>
-                                                                                {% endfor %}
-                                                                                    
+                                                                                    {% for recommendation in recommendations[key] %}
+                                                                                        <p>{{ recommendation }}</p>
+                                                                                    {% endfor %}
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
