@@ -36448,6 +36448,17 @@ div.tagsinput span.tag a {
     border-radius: 0px;
 }
 
+#none-btn-ug {
+    position: relative;
+    margin-right: 30px;
+    transform: translateY(60%);
+    background-color: transparent;
+    float: right;
+    border-radius: 3px;
+    text-align: center;
+    border-right: 5px solid #c0c0c0;
+    border-radius: 0px;
+}
 
 #success-btn-ug i {
     color: #424242;
@@ -36475,6 +36486,18 @@ div.tagsinput span.tag a {
 }
 
 #danger-btn-ug i {
+    color: #424242;
+    text-align: center;
+    font-size: 14px;
+    margin: auto;
+    
+    padding-left: 5px;
+    padding-right: 5px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+#none-btn-ug i {
     color: #424242;
     text-align: center;
     font-size: 14px;
