@@ -73,7 +73,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
                        id="notificationDropdown" href="#" data-toggle="dropdown">
-                        <h5 id="data-source-name-ug" class="btn btn-outline-primary">{{ selectedargs[0].dataSourceName }}</h5>
+                        <h5 id="data-source-name-ug"
+                            class="btn btn-outline-primary">{{ selectedargs[0].dataSourceName }}</h5>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="notificationDropdown">
@@ -199,14 +200,14 @@
                                     {% for arg in selectedargs %}
                                         {% set AA = analytics_audits[loop.index0] %}
                                         <div id="card-ust-ug" class="round" data-value="0.{{ AA.totalScore }}"
-                                             data-size="100"
-                                             data-thickness="18">
+                                             data-size="80"
+                                             data-thickness="12">
                                             <strong id="grafik-healty-ug" style="display: block;"></strong>
                                         </div>
                                     {% endfor %}
                                     <div id="card-alt-ug">
 
-                                        <a href="#" class="btn btn-primary" id="g2_refresh">Healty Score</a>
+                                        <a class="" id="g2_refresh">Healty Score</a>
                                     </div>
                                 </div>
                             </div>
@@ -218,14 +219,13 @@
 
                                 <div id="card-tam-ug" class="container text-center">
 
-                                    <div id="card-ust-ug">
-                                        <i class="mdi mdi-alert-box"></i>
+                                    <div id="card-ust-ug" class="text-center">
                                         <h1 id="issue-h-ug">4</h1>
 
                                     </div>
                                     <div id="card-alt-ug">
 
-                                        <a href="#" class="btn btn-primary" id="g2_refresh">Issue Detected</a>
+                                        <a id="g2_refresh">Issue Detected</a>
                                     </div>
                                 </div>
                             </div>
@@ -236,10 +236,9 @@
                             <div class="card-body">
                                 <div id="card-tam-ug" class="container text-center">
                                     <div id="card-ust-ug">
-                                        <i class="mdi mdi-pencil-box"></i>
                                         <h1 id="issue-h-ug">4</h1></div>
                                     <div id="card-alt-ug">
-                                        <a href="#" class="btn btn-primary" id="g2_refresh">Recommendative</a>
+                                        <a id="g2_refresh">Recommendative</a>
                                     </div>
                                 </div>
                             </div>
@@ -266,15 +265,15 @@
                                                         </a>
                                                         {% if value == 'good' %}
                                                             <button id="success-btn-ug" class="btn text-white">
-                                                                <i>{{ value }}</i>
+                                                                {{ value }}
                                                             </button>
                                                         {% elif value == 'danger' %}
                                                             <button id="danger-btn-ug" class="btn text-white">
-                                                                <i>{{ value }}</i>
+                                                                {{ value }}
                                                             </button>
                                                         {% else %}
                                                             <button id="none-btn-ug" class="btn text-white">
-                                                                <i>{{ value }}</i>
+                                                                {{ value }}
                                                             </button>
                                                         {% endif %}
                                                     </h6>

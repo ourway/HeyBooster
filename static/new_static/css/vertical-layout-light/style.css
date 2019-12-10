@@ -36404,15 +36404,16 @@ div.tagsinput span.tag a {
 
 
 #danger-btn-ug {
+    font-size: 14px;
+    color: white;
+    width: 120px;
     position: relative;
-    margin-right: 30px;
+    margin-right: 10px;
     transform: translateY(60%);
-    background-color: transparent;
     float: right;
-    border-radius: 3px;
     text-align: center;
-    border-right: 5px solid #dd4c4f;
-    border-radius: 0px;
+    background: #dd4c4f;
+    border-radius: 4px;
 }
 
 #warning-btn-ug {
@@ -36429,27 +36430,35 @@ div.tagsinput span.tag a {
 }
 
 #success-btn-ug {
+    width: 120px;
+    font-size: 14px;
+    color: white;
     position: relative;
-    margin-right: 30px;
+    margin-right: 10px;
     transform: translateY(60%);
-    background-color: transparent;
-    border-right: 5px solid #388e3c;
+    background: #009688;
     float: right;
     border-radius: 4px;
     text-align: center;
-    border-radius: 0px;
 }
 
 #none-btn-ug {
+    width: 120px;
+    font-size: 14px;
+    color: white;
     position: relative;
-    margin-right: 30px;
+    margin-right: 10px;
     transform: translateY(60%);
-    background-color: transparent;
+    background: #686868;
     float: right;
     border-radius: 3px;
     text-align: center;
-    border-right: 5px solid #c0c0c0;
-    border-radius: 0px;
+    border-radius: 4px;
+}
+
+#info-ug-2 {
+    color: #888888;
+    font-size: 28px;
 }
 
 #success-btn-ug i {

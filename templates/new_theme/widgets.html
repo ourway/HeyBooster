@@ -201,7 +201,7 @@
                                         </div>
                                     {% endfor %}
                                     <div id="card-alt-ug">
-                                        <a href="#" class="" id="g2_refresh">Healty Score</a>
+                                        <a class="" id="g2_refresh">Healty Score</a>
                                     </div>
                                 </div>
                             </div>
@@ -233,7 +233,7 @@
                                         <h1 id="issue-h-ug">3</h1>
                                     </div>
                                     <div id="card-alt-ug">
-                                        <a href="#" id="g2_refresh">Recommendative</a>
+                                        <a id="g2_refresh">Recommendative</a>
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +242,7 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Audit History</h4>
+                        <h4 class="card-title"></h4>
                         <div class="row">
                             <div class="col-12">
                                 <div class="table-responsive">
@@ -251,6 +251,7 @@
                                         <tr>
                                             <th id="score-ug-2">Score</th>
                                             <th>Audit History</th>
+                                            <th>Info</th>
                                             <th>Ignore Change</th>
                                         </tr>
                                         </thead>
@@ -258,7 +259,7 @@
                                         {% for arg in selectedargs %}
                                             {% set AA = analytics_audits[loop.index0] %}
                                             {% if AA.totalScore == 0 %}
-                                                <tr>
+                                                <tr style="height: 20px;">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -267,12 +268,13 @@
                                                 <tr class="height-ug" id="tr-link">
                                                     <td id="score-ug">...</td>
                                                     <td onclick="location.href=''">Last Updated Time: preparing...</td>
-
                                                     <td>
                                                         <div class="dropdown">
-                                                            <button class="btn dropdown-toggle" type="button"
+                                                            <button class="btn " type="button"
                                                                     id="dropdownMenuIconButton1" data-toggle="dropdown"
                                                                     aria-haspopup="true" aria-expanded="false">
+                                                                <i id="info-ug-2"
+                                                                   class="mdi mdi-information-outline"></i>
                                                             </button>
                                                             <div class="dropdown-menu"
                                                                  aria-labelledby="dropdownMenuIconButton1">
@@ -283,14 +285,14 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <tr id="tr-link">
+                                                <tr style="height: 130px;">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
                                             {% else %}
-                                                <tr>
+                                                <tr style="height: 20px;">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -302,15 +304,14 @@
                                                         style="cursor:pointer;">{{ arg.dataSourceName }}
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-outline-primary">Ignore Change</button>
-                                                    </td>
-                                                    <td>
                                                         <div class="dropdown">
-                                                            <button class="btn dropdown-toggle" type="button"
+                                                            <button class="btn " type="button"
                                                                     id="dropdownMenuIconButton1" data-toggle="dropdown"
                                                                     aria-haspopup="true" aria-expanded="false">
+                                                                <i id="info-ug-2"
+                                                                   class="mdi mdi-information-outline"></i>
                                                             </button>
-                                                            <div class="dropdown-menu"
+                                                            <div style="cursor: text;" class="dropdown-menu"
                                                                  aria-labelledby="dropdownMenuIconButton1">
                                                                 <a class="dropdown-item" href="#">Test Now</a>
                                                                 <a class="dropdown-item" href="#">Details</a>
@@ -319,7 +320,7 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <tr id="tr-link">
+                                                <tr style="height: 130px;">
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
