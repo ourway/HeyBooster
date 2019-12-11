@@ -564,6 +564,15 @@ def recommendation(datasourceID):
     summaries = report['summaries']
     recommendations = report['recommendations']
     lastStates = report['lastStates']
+    for key, value in lastStates.items():
+        if value == 'good':
+            lastStates[key] = '3_good'
+        elif value == 'danger':
+            lastStates[key] = '1_good'
+        else:
+            lastState[key] = '2_good'
+        
+    sortedLastStates = {k: v for k, v in sorted(lastStates.items(), key=lambda item: item[1])}
     len_issues = list(lastStates.values()).count('danger')
     len_recommendations = len(recommendations) - list(recommendations.values()).count([])
     totalScore = report['totalScore']
@@ -592,7 +601,7 @@ def recommendation(datasourceID):
         analytics_audits += [analytics_audit]
     return render_template('new_theme/index.html', args=args, selectedargs=selectedargs,
                            current_analyticsemail=current_analyticsemail,
-                           analytics_audits=analytics_audits, lastStates=lastStates,
+                           analytics_audits=analytics_audits, lastStates=sortedLastStates,
                            names = names, summaries = summaries,
                            recommendations = recommendations,
                            len_issues = len_issues,
