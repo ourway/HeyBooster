@@ -397,9 +397,9 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                                         'totalScore': totalScore,
                                         'ts': time.time()})        
         else:
-            reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
+            reports = db.find('reports', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
             report = reports.next()
-            db.find_and_modify('report', query={'_id':report['_id']}, ts = time.time())
+            db.find_and_modify('reports', query={'_id':report['_id']}, ts = time.time())
         sendAnalyticsAudit(slack_token, dataSource, blocks, allattachments, dataSource['channelID'], sendFeedback)
 
 
@@ -642,10 +642,10 @@ def analyticsAudit_without_slack(task, dataSource):
                                         'totalScore': totalScore,
                                         'ts': time.time()})        
         else:
-            reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
+            reports = db.find('reports', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
             for report in reports:
                 break
-            db.find_and_modify('report', query={'_id':report['_id']}, ts = time.time())
+            db.find_and_modify('reports', query={'_id':report['_id']}, ts = time.time())
             
 
 def bounceRateTracking(dataSource):
