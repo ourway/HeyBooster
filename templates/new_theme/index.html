@@ -393,16 +393,18 @@
                                                                                 Summary
                                                                             </a>
                                                                         </li>
-                                                                        <li class="nav-item">
-                                                                            <a class="nav-link"
-                                                                               id="pills-profile-tab-custom"
-                                                                               data-toggle="pill"
-                                                                               href="#pills-career-{{ index }}"
-                                                                               role="tab" aria-controls="pills-profile"
-                                                                               aria-selected="false">
-                                                                                Recommendation
-                                                                            </a>
-                                                                        </li>
+                                                                        {% if recommendations[key] %}
+                                                                            <li class="nav-item">
+                                                                                <a class="nav-link"
+                                                                                   id="pills-profile-tab-custom"
+                                                                                   data-toggle="pill"
+                                                                                   href="#pills-career-{{ index }}"
+                                                                                   role="tab" aria-controls="pills-profile"
+                                                                                   aria-selected="false">
+                                                                                    Recommendation
+                                                                                </a>
+                                                                            </li>
+                                                                        {% endif %}
                                                                     </ul>
                                                                     <div class="tab-content tab-content-custom-pill"
                                                                          id="pills-tabContent-custom">
