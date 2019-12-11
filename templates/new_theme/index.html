@@ -359,11 +359,11 @@
                                                            aria-expanded="false" aria-controls="collapse-{{ index }}">
                                                             {{ names[key] }}
                                                         </a>
-                                                        {% if value == 'good' %}
+                                                        {% if value == '3_good' %}
                                                             <button id="success-btn-ug" class="btn text-white">
                                                                 {{ value | replace("3","") }}
                                                             </button>
-                                                        {% elif value == 'danger' %}
+                                                        {% elif value == '1_danger' %}
                                                             <button id="danger-btn-ug" class="btn text-white">
                                                                 {{ value | replace("1","") }}
                                                             </button>
