@@ -383,11 +383,27 @@
                                                                 <i id="info-ug-2"
                                                                    class="mdi mdi-information-outline"></i>
                                                             </button>
+                                                            <div style="cursor: text;" class="dropdown-menu"
+                                                                 aria-labelledby="dropdownMenuIconButton1">
+
+                                                                <a class="dropdown-item">Account: {{ arg.accountName }}</a>
+                                                                <a class="dropdown-item">Property: {{ arg.propertyName }}</a>
+                                                                <a class="dropdown-item">View: {{ arg.viewName }}</a>
+                                                                <a class="dropdown-item">Workspace: None</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="btn  dropdown-toggle" type="button"
+                                                                    id="dropdownMenuIconButton1" data-toggle="dropdown"
+                                                                    aria-haspopup="true" aria-expanded="false">
+                                                            </button>
                                                             <div class="dropdown-menu"
                                                                  aria-labelledby="dropdownMenuIconButton1">
                                                                 <a class="dropdown-item" href="#">Test Now</a>
-                                                                <a class="dropdown-item" href="#">Details</a>
-                                                                <a class="dropdown-item" href="#">Change Alert</a>
+                                                                <a class="dropdown-item" href="/account/recommendation{{ arg._id }}">Details</a>
+                                                                <a href="/active_audit_test/{{ AA._id }}" class="dropdown-item">Change Alert</a>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -421,10 +437,10 @@
                                                             <div style="cursor: text;" class="dropdown-menu"
                                                                  aria-labelledby="dropdownMenuIconButton1">
 
-                                                                <a class="dropdown-item">Lorem ipsum dolor</a>
-                                                                <a class="dropdown-item">Lorem ipsum.</a>
-                                                                <a class="dropdown-item">Lorem ipsum dolor.</a>
-                                                                <a class="dropdown-item">Lorem ipsum dolor.</a>
+                                                                <a class="dropdown-item">Account: {{ arg.accountName }}</a>
+                                                                <a class="dropdown-item">Property: {{ arg.propertyName }}</a>
+                                                                <a class="dropdown-item">View: {{ arg.viewName }}</a>
+                                                                <a class="dropdown-item">Workspace: None</a>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -437,8 +453,8 @@
                                                             <div class="dropdown-menu"
                                                                  aria-labelledby="dropdownMenuIconButton1">
                                                                 <a class="dropdown-item" href="#">Test Now</a>
-                                                                <a class="dropdown-item" href="#">Details</a>
-                                                                <a class="dropdown-item" href="#">Change Alert</a>
+                                                                <a class="dropdown-item" href="/account/recommendation{{ arg._id }}">Details</a>
+                                                                <a href="/active_audit_test/{{ AA._id }}" class="dropdown-item">Change Alert</a>
                                                             </div>
                                                         </div>
                                                     </td>
