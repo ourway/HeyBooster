@@ -504,9 +504,20 @@ def audithistory_without_slack(datasourceID):
         else:
             analytics_audit['strstat'] = 'active'
         analytics_audits += [analytics_audit]
+
+    report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
+    recommendations = report['recommendations']
+    lastStates = report['lastStates']
+    len_issues = list(lastStates.values()).count('danger')
+    len_recommendations = len(recommendations) - list(recommendations.values()).count([])
+    totalScore = report['totalScore']
+    
     return render_template('new_theme/widgets.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
-                           analytics_audits=analytics_audits)
+                           analytics_audits=analytics_audits,
+                           len_issues = len_issues,
+                           len_recommendations = len_recommendations,
+                           totalScore = totalScore)
 
 
 @app.route('/account/recommendation<datasourceID>')
@@ -550,7 +561,7 @@ def recommendation(datasourceID):
     lastStates = report['lastStates']
     len_issues = list(lastStates.values()).count('danger')
     len_recommendations = len(recommendations) - list(recommendations.values()).count([])
-
+    totalScore = report['totalScore']
 
     # tz_offset = user['tz_offset']
     # tz_offset = 1
@@ -580,7 +591,8 @@ def recommendation(datasourceID):
                            names = names, summaries = summaries,
                            recommendations = recommendations,
                            len_issues = len_issues,
-                           len_recommendations = len_recommendations)
+                           len_recommendations = len_recommendations,
+                           totalScore = totalScore)
 
 
 @app.route('/account/connections-without-slack')

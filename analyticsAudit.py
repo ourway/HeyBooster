@@ -56,6 +56,108 @@ def totalScorewithEmoji(totalScore):
         return f":scream: *{totalScore}*"
 
 
+def sendAnalyticsAudit(slack_token, dataSource, blocks, attachments, channel, sendFeedback):
+    actions_button = [
+            {
+    			"name": "learnmore",
+    			"text": "Learn More",
+    			"type": "button",
+    			"value": f"learnmore_{dataSource['_id']}",
+                "url": "https://medium.com/@neslio/google-analytics-audit-checklist-ff784e589243"
+    		}
+        ]
+    attachment_button = [
+                            {
+                            "text": "",
+                            "color": "#2eb8a6",
+                            "callback_id": "notification_form",
+                            "attachment_type": "default",
+                            "actions": actions_button
+                            }
+                        ]
+    slack_client = WebClient(token=slack_token)
+    #Send Analytics Audit without showing "Show More" label
+    for i in range(len(attachments)//10 + 1):
+        start_time = time.time()
+        if i==0:
+            for n in range(0,5):
+                try:    
+                    resp = slack_client.chat_postMessage(blocks = blocks,
+                                                     channel=channel,
+                                                     attachments=attachments[i*10:i*10 + 9])
+                    break
+                except Exception as error:
+                    logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                    if 'missing' in str(error) or 'scope' in str(error):
+                        return
+                    if n==4:
+                        return
+                    time.sleep((2 ** n) + random.random())
+        else:
+            for n in range(0,5):
+                if i == len(attachments)//10:
+                    try:
+                        new_attachments = attachments[i*10:i*10 + 10]
+                        new_attachments += attachment_button
+                        resp = slack_client.chat_postMessage(channel=channel,
+                                                     attachments=new_attachments)
+                        break
+                    except Exception as error:
+                        logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                        time.sleep((2 ** n) + random.random())
+                else:
+                    try:
+                        resp = slack_client.chat_postMessage(channel=channel,
+                                                     attachments=attachments[i*10:i*10 + 10])
+                        break
+                    except Exception as error:
+                        logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                        time.sleep((2 ** n) + random.random())
+#                    try:
+#                        resp = slack_client.chat_postMessage(channel=channel,
+#                                                     attachments=attachments[i*10:i*10 + 10])
+#                        break
+#                    except Exception as error:
+#                        logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+#                        time.sleep((2 ** n) + random.random())
+        stop_time = time.time()
+        if(stop_time - start_time < 1):
+            time.sleep(1- (stop_time - start_time))
+    
+    #IF ANALYTICS AUDIT CANNOT BE SENT WITHIN 5 MINUTES (NOT FOR NOW!)
+    #After sending analytics Audit, schedule a "give feedback" message 5 minutes later
+    if sendFeedback:
+        post_at = str(int(time.time() + 300)) # 5 minutes later
+        sch_text = "Your feedback makes us stronger. :muscle: " + \
+                "Please share your experience and thoughts with us?"
+        sch_attachments = [
+                {
+                    "text": sch_text,
+                    "callback_id": "notification_form",
+                    "color": "#2eb8a6",
+                    "attachment_type": "default",
+                    "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                    "actions": [
+                        {
+                            "name": "giveFeedback",
+                            "text": "Give Feedback",
+                            "type": "button",
+                            "value": f"giveFeedback_{dataSource['_id']}"
+                        },
+                    ]
+                }]
+        for n in range(0,5):
+            try:
+                slack_client.chat_scheduleMessage(text="", channel = channel, 
+                                                  attachments = sch_attachments,
+                                                  post_at = post_at)
+                break
+            except Exception as error:
+                logging.error(f"SLACK SCHEDULE MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
+                time.sleep((2 ** n) + random.random())
+#        return resp['ts']
+                
+                
 def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     db.init()
     is_orchestrated = True if task else False
@@ -82,27 +184,10 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     					}
     		}
         ]
-        task = db.find_one('notification', {'datasourceID':dataSource['_id']})
+        task = db.find_one('notification',{'datasourceID':dataSource['_id']})
     else:
         actions = []
-    actions_button = [
-            {
-    			"name": "learnmore",
-    			"text": "Learn More",
-    			"type": "button",
-    			"value": f"learnmore_{dataSource['_id']}",
-                "url": "https://medium.com/@neslio/google-analytics-audit-checklist-ff784e589243"
-    		}
-        ]
-    attachment_button = [
-                            {
-                            "text": "",
-                            "color": "#2eb8a6",
-                            "callback_id": "notification_form",
-                            "attachment_type": "default",
-                            "actions": actions_button
-                            }
-                        ]
+    
 #    actions = {
 #    			"type": "actions",
 #                "block_id": "notification_form",
@@ -149,7 +234,6 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
 #    		}
     logging.basicConfig(filename="analyticsAudit.log", filemode='a',
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-    channel = dataSource['channelID']
     subfunctions = [adwordsAccountConnection,
                     paymentReferral,
                     gdprCompliant,
@@ -206,8 +290,11 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
               "internalSearchTermConsistency":2,
               "samplingCheck":1
               }
-    attachments = []
+    allattachments = []
+    changedattachments = []
     currentStates = {}
+    recommendations = {}
+    summaries = {}
     totalScore = 0
     redcount = 0
     isPermitted = True
@@ -225,6 +312,8 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                     else:
                         currentState = None
                     currentStates[function.__name__] = currentState
+                    recommendations[function.__name__] = recommendation
+                    summaries[function.__name__] = attachment[0]['text']
                     if currentState != "danger":
                         totalScore += scores[function.__name__]
     #                    attachment[0]['text'] = ":heavy_check_mark: | " + attachment[0]['text']
@@ -232,21 +321,21 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                     else:
     #                    attachment[0]['text'] = f":x: *{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
                         attachment[0]['text'] = f"*{scoretoText(scores[function.__name__])}* | " + attachment[0]['text']
-                    if is_orchestrated:
-                        lastState = task['lastStates'][function.__name__]
-                        if lastState != currentState:
-                            if currentState == "danger":
-                                attachments = attachments[0:redcount] + attachment + attachments[redcount:]
-                                redcount += 1
-                            else:
-                                attachments += attachment
-                                
-                    else:
+                    lastState = task['lastStates'][function.__name__]
+                    if lastState != currentState:
                         if currentState == "danger":
-                            attachments = attachments[0:redcount] + attachment + attachments[redcount:]
+                            allattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                            changedattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
                             redcount += 1
                         else:
-                            attachments += attachment
+                            allattachments += attachment
+                            changedattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                    else:
+                        if currentState == "danger":
+                            allattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                            redcount += 1
+                        else:
+                            allattachments += attachment
                 break
             except HttpError as ex:
                 logging.error(f"TASK DID NOT RUN --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__} --- {str(ex)}")
@@ -255,9 +344,10 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                                       'internalServerError', 'backendError']:
                     time.sleep((2 ** trycount) + random.random())
                 trycount += 1
-    db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates, 
-                                                                  totalScore = totalScore, 
-                                                                  lastRunDate = time.time())
+    
+    db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates,
+                                                                      totalScore = totalScore,
+                                                                      lastRunDate = time.time())
     text_totalScore = totalScorewithEmoji(totalScore)
     if not is_orchestrated:
         text = "Hey! :raised_hand_with_fingers_splayed: To trust your analytics data for further insights, " + \
@@ -276,7 +366,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
             maincolor = "danger"
         else:
             maincolor = None
-    if len(attachments):
+    if len(allattachments):
         blocks = [{
         			"type": "section",
         			"text": {
@@ -284,129 +374,33 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
         				"text": "*Analytics Audit*"
         			}
         		}]
-        attachments = [{"text": text,
+        allattachments = [{"text": text,
                          "color": maincolor,
 #                         "pretext": "*Analytics Audit*",
                          "callback_id": "notification_form",
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
-                         "actions": actions}] + attachments
-        
-        length = len(attachments)
+                         "actions": actions}] + allattachments
+      
+        length = len(allattachments)
         for i in range(length-1):
-            attachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
-        
-#        attachments = [{"blocks": [
-#                		{
-#                			"type": "section",
-#                			"text": {
-#                				"type": "mrkdwn",
-#                				"text": "*Analytics Audit*"
-#                			}
-#                		},
-#                        {
-#                			"type": "section",
-#                			"text": {
-#                				"type": "mrkdwn",
-#                				"text": text
-#                			}
-#                		},
-#                        actions,
-#                        {
-#                			"type": "context",
-#                			"elements": [
-#                				{
-#                					"type": "mrkdwn",
-#                					"text": f"{dataSource['propertyName']} & {dataSource['viewName']}"
-#                				}
-#                			]
-#                		},
-#                        {
-#                			"type": "divider"
-#                		}],
-#                        "color": "#2eb8a6" }]  + attachments
-        slack_client = WebClient(token=slack_token)
-        
-        #Send Analytics Audit without showing "Show More" label
-        for i in range(len(attachments)//10 + 1):
-            start_time = time.time()
-            if i==0:
-                for n in range(0,5):
-                    try:    
-                        resp = slack_client.chat_postMessage(blocks = blocks,
-                                                         channel=channel,
-                                                         attachments=attachments[i*10:i*10 + 9])
-                        break
-                    except Exception as error:
-                        logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
-                        if 'missing' in str(error) or 'scope' in str(error):
-                            return
-                        if n==4:
-                            return
-                        time.sleep((2 ** n) + random.random())
-            else:
-                for n in range(0,5):
-                    if i == len(attachments)//10:
-                        try:
-                            new_attachments = attachments[i*10:i*10 + 10]
-                            new_attachments += attachment_button
-                            resp = slack_client.chat_postMessage(channel=channel,
-                                                         attachments=new_attachments)
-                            break
-                        except Exception as error:
-                            logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
-                            time.sleep((2 ** n) + random.random())
-                    else:
-                        try:
-                            resp = slack_client.chat_postMessage(channel=channel,
-                                                         attachments=attachments[i*10:i*10 + 10])
-                            break
-                        except Exception as error:
-                            logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
-                            time.sleep((2 ** n) + random.random())
-#                    try:
-#                        resp = slack_client.chat_postMessage(channel=channel,
-#                                                     attachments=attachments[i*10:i*10 + 10])
-#                        break
-#                    except Exception as error:
-#                        logging.error(f"SLACK POST MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
-#                        time.sleep((2 ** n) + random.random())
-            stop_time = time.time()
-            if(stop_time - start_time < 1):
-                time.sleep(1- (stop_time - start_time))
-        
-        #IF ANALYTICS AUDIT CANNOT BE SENT WITHIN 5 MINUTES (NOT FOR NOW!)
-        #After sending analytics Audit, schedule a "give feedback" message 5 minutes later
-        if sendFeedback:
-            post_at = str(int(time.time() + 300)) # 5 minutes later
-            sch_text = "Your feedback makes us stronger. :muscle: " + \
-                    "Please share your experience and thoughts with us?"
-            sch_attachments = [
-                    {
-                        "text": sch_text,
-                        "callback_id": "notification_form",
-                        "color": "#2eb8a6",
-                        "attachment_type": "default",
-                        "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-                        "actions": [
-                            {
-                                "name": "giveFeedback",
-                                "text": "Give Feedback",
-                                "type": "button",
-                                "value": f"giveFeedback_{dataSource['_id']}"
-                            },
-                        ]
-                    }]
-            for n in range(0,5):
-                try:
-                    slack_client.chat_scheduleMessage(text="", channel = channel, 
-                                                      attachments = sch_attachments,
-                                                      post_at = post_at)
-                    break
-                except Exception as error:
-                    logging.error(f"SLACK SCHEDULE MESSAGE FAILED --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: Analytics Audit --- {str(error)}")
-                    time.sleep((2 ** n) + random.random())
-#        return resp['ts']
+            allattachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
+            
+        if changedattachments:
+            db.insert('reports', data={ 'datasourceID': dataSource['_id'],
+                                        'message':{'blocks': blocks,
+                                                   'attachments': allattachments
+                                                  },
+                                        'summaries': summaries,
+                                        'recommendations': recommendations,
+                                        'lastStates': currentStates,
+                                        'totalScore': totalScore,
+                                        'ts': time.time()})        
+        else:
+            reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
+            report = reports.next()
+            db.find_and_modify('report', query={'_id':report['_id']}, ts = time.time())
+        sendAnalyticsAudit(slack_token, dataSource, blocks, allattachments, channel, sendFeedback)
 
 
 def analyticsAudit_without_slack(task, dataSource):
@@ -1536,7 +1530,7 @@ def gdprCompliant(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
-        recommendations += ["Personal information like email, phone number, name are not allowed to be collected in Google Analytics. Ask your IT department to remove the personal information from URL. URL’s with personal information mostly observe in ‘forget password’ or ‘signup’ pages."
+        recommendations += ["Personal information like email, phone number, name are not allowed to be collected in Google Analytics. Ask your IT department to remove the personal information from URL. URL’s with personal information mostly observe in ‘forget password’ or ‘signup’ pages.",
                             "Filter the page URL, which including personal info, by using the Search&Replace filter.",
                             "Don’t miss the create data deletion request in order to get a review from Google."]
     else:

@@ -300,14 +300,11 @@
                             <div class="card-body">
 
                                 <div id="card-tam-ug" class="container text-center">
-                                    {% for arg in selectedargs %}
-                                        {% set AA = analytics_audits[loop.index0] %}
-                                        <div id="card-ust-ug" class="round" data-value="0.{{ AA.totalScore }}"
+                                        <div id="card-ust-ug" class="round" data-value="0.{{ totalScore }}"
                                              data-size="80"
                                              data-thickness="12">
                                             <strong id="grafik-healty-ug" style="display: block;"></strong>
                                         </div>
-                                    {% endfor %}
                                     <div id="card-alt-ug">
                                         <a class="" id="g2_refresh">Healty Score</a>
                                     </div>
@@ -322,7 +319,7 @@
                                 <div id="card-tam-ug" class="container text-center">
 
                                     <div id="card-ust-ug" class="text-center">
-                                        <h1 id="issue-h-ug">4</h1>
+                                        <h1 id="issue-h-ug">{{ len_issues }}</h1>
                                     </div>
                                     <div id="card-alt-ug">
                                         <a class="" id="g2_refresh">Issue Detected</a>
@@ -338,7 +335,7 @@
                                 <div id="card-tam-ug" class="container text-center">
 
                                     <div id="card-ust-ug">
-                                        <h1 id="issue-h-ug">3</h1>
+                                        <h1 id="issue-h-ug">{{ len_recommendations }}</h1>
                                     </div>
                                     <div id="card-alt-ug">
                                         <a id="g2_refresh">Recommendative</a>

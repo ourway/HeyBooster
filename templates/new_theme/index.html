@@ -296,18 +296,13 @@
                     <div class="col-md-4 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-
                                 <div id="card-tam-ug" class="container text-center">
-                                    {% for arg in selectedargs %}
-                                        {% set AA = analytics_audits[loop.index0] %}
-                                        <div id="card-ust-ug" class="round" data-value="0.{{ AA.totalScore }}"
+                                        <div id="card-ust-ug" class="round" data-value="0.{{ totalScore }}"
                                              data-size="80"
                                              data-thickness="12">
                                             <strong id="grafik-healty-ug" style="display: block;"></strong>
                                         </div>
-                                    {% endfor %}
                                     <div id="card-alt-ug">
-
                                         <a class="" id="g2_refresh">Healty Score</a>
                                     </div>
                                 </div>
