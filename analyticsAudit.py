@@ -639,10 +639,12 @@ def analyticsAudit_without_slack(task, dataSource):
                                         'summaries': summaries,
                                         'recommendations': recommendations,
                                         'lastStates': currentStates,
+                                        'totalScore': totalScore,
                                         'ts': time.time()})        
         else:
             reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
-            report = reports.next()
+            for report in reports:
+                break
             db.find_and_modify('report', query={'_id':report['_id']}, ts = time.time())
             
 
