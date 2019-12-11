@@ -451,8 +451,6 @@ def audithistory_without_slack(datasourceID):
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
 
-    new_datasources = db.find_one('datasources', {'_id': ObjectId(datasourceID)})
-    lastRunDate = time.asctime(time.localtime(new_datasources['lastRunDate']))
 
     unsortedargs = []
     for datasource in datasources:
@@ -521,8 +519,7 @@ def audithistory_without_slack(datasourceID):
                            analytics_audits=analytics_audits,
                            len_issues=len_issues,
                            len_recommendations=len_recommendations,
-                           totalScore=totalScore,
-                           lastRunDate=lastRunDate)
+                           totalScore=totalScore)
 
 
 @app.route('/account/recommendation<datasourceID>')
