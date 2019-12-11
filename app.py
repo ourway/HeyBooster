@@ -451,8 +451,8 @@ def audithistory_without_slack(datasourceID):
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
 
-    lastRunDate = datasources['lastRunDate']
-    lastRunDate = time.asctime(time.localtime(lastRunDate))
+    new_datasources = db.find_one('datasources', {'_id': ObjectId(datasourceID)})
+    lastRunDate = time.asctime(time.localtime(new_datasources['lastRunDate']))
 
     unsortedargs = []
     for datasource in datasources:
