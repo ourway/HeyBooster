@@ -547,7 +547,9 @@ def recommendation(datasourceID):
     report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
     summaries = report['summaries']
     recommendations = report['recommendations']
-    lastStates = report['lastStates']    
+    lastStates = report['lastStates']
+    len_issues = list(lastStates.values()).count('danger')
+    len_recommendations = len(recommendations) - list(recommendations.values()).count([])
 
 
     # tz_offset = user['tz_offset']
@@ -576,7 +578,9 @@ def recommendation(datasourceID):
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits, lastStates=lastStates,
                            names = names, summaries = summaries,
-                           recommendations = recommendations)
+                           recommendations = recommendations,
+                           len_issues = len_issues,
+                           len_recommendations = len_recommendations)
 
 
 @app.route('/account/connections-without-slack')
