@@ -11004,7 +11004,7 @@ pre code {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #edeef2;
+    background-color: #fff;
 }
 
 .table-hover tbody tr:hover {
