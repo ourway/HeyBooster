@@ -9696,6 +9696,7 @@ summary {
 }
 
 template {
+
     display: none;
 }
 
@@ -28464,6 +28465,7 @@ dl li {
     font-weight: 600;
     font-size: 0.8125rem;
     padding: 1rem 0.9375rem;
+
 }
 
 .table thead th i,
@@ -32628,6 +32630,7 @@ div.tagsinput span.tag a {
     white-space: nowrap;
     padding: 0.625rem 1.25rem 0.625rem 1.25rem;
     color: #242635;
+
     -webkit-transition-duration: 0.45s;
     -moz-transition-duration: 0.45s;
     -o-transition-duration: 0.45s;
@@ -32635,14 +32638,17 @@ div.tagsinput span.tag a {
     transition-property: color;
     -webkit-transition-property: color;
     font-weight: 400;
+
 }
 
 .sidebar .nav .nav-item:hover {
     background-color: transparent;
+
 }
 
 .sidebar .nav .nav-item:focus {
     background-color: transparent;
+
 }
 
 .sidebar .nav .nav-item .nav-link i {
@@ -32653,7 +32659,7 @@ div.tagsinput span.tag a {
     font-size: 1.125rem;
     line-height: 1;
     margin-right: 0.625rem;
-    color: #242635;
+    color: #242635;;
 }
 
 .rtl .sidebar .nav .nav-item .nav-link i.menu-icon {
@@ -32727,8 +32733,8 @@ div.tagsinput span.tag a {
 
 .sidebar .nav .nav-item.active {
     background: #cccccc;
-}
 
+}
 
 .sidebar .nav .nav-item nav-link.active {
 
@@ -32826,6 +32832,7 @@ div.tagsinput span.tag a {
 
 .sidebar .nav.sub-menu .nav-item:hover {
     background: transparent;
+
 }
 
 .sidebar-light .sidebar {
@@ -32902,6 +32909,7 @@ div.tagsinput span.tag a {
 
 .sidebar-light .sidebar .nav.sub-menu .nav-item:hover {
     background: transparent;
+
 }
 
 /* style for off-canvas menu*/
@@ -32955,6 +32963,7 @@ div.tagsinput span.tag a {
     padding: .25rem 0;
 }
 
+
 .navbar .navbar-brand-wrapper .navbar-brand.brand-logo-mini {
     display: none;
 }
@@ -32996,22 +33005,13 @@ div.tagsinput span.tag a {
 .navbar .navbar-brand-wrapper .brand-logo-mini {
     padding-left: 0;
     text-align: center;
+
 }
 
 .navbar .navbar-brand-wrapper .brand-logo-mini img {
     width: calc(70px - 30px);
     max-width: 100%;
     margin: auto;
-    -webkit-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
-    box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
-}
-
-#pills-home-tab-custom-2 {
-    background-color: transparent;
-    color: #424242;
-    font-weight: 600;
-    padding-bottom: -20px;
 }
 
 .navbar .navbar-menu-wrapper {
@@ -33025,6 +33025,10 @@ div.tagsinput span.tag a {
     padding-right: 2.5rem;
     width: calc(100% - 210px);
     height: 63px;
+    -webkit-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+
 }
 
 @media (max-width: 991px) {
@@ -36290,6 +36294,7 @@ div.tagsinput span.tag a {
     background: transparent;
 }
 
+
 #settings-trigger {
     position: fixed;
     bottom: 40px;
@@ -36384,6 +36389,13 @@ div.tagsinput span.tag a {
     color: white;
 }
 
+#pills-home-tab-custom-2 {
+    background-color: transparent;
+    color: #424242;
+    font-weight: 600;
+    padding-bottom: -20px;
+}
+
 
 #pills-home-tab-custom:hover {
     opacity: 0.8;
@@ -36429,23 +36441,29 @@ div.tagsinput span.tag a {
     width: 120px;
     position: relative;
     margin-right: 10px;
+
     transform: translateY(60%);
+    background-color: transparent;
     float: right;
+    border-radius: 3px;
     text-align: center;
     background: #dd4c4f;
     border-radius: 4px;
 }
 
 #warning-btn-ug {
+    font-size: 14px;
+    color: white;
+    width: 120px;
     position: relative;
-    margin-right: 30px;
+    margin-right: 10px;
     transform: translateY(60%);
     background-color: transparent;
-    border-right: 5px solid #fbc02d;
+    background: #fbc02d;
     float: right;
     border-radius: 4px;
     text-align: center;
-    border-radius: 0px;
+    border-radius: 4px;
 
 }
 
@@ -36456,30 +36474,14 @@ div.tagsinput span.tag a {
     position: relative;
     margin-right: 10px;
     transform: translateY(60%);
+    background-color: transparent;
     background: #009688;
     float: right;
     border-radius: 4px;
     text-align: center;
-}
-
-#none-btn-ug {
-    width: 120px;
-    font-size: 14px;
-    color: white;
-    position: relative;
-    margin-right: 10px;
-    transform: translateY(60%);
-    background: #686868;
-    float: right;
-    border-radius: 3px;
-    text-align: center;
     border-radius: 4px;
 }
 
-#info-ug-2 {
-    color: #888888;
-    font-size: 28px;
-}
 
 #success-btn-ug i {
     color: #424242;
@@ -36518,27 +36520,18 @@ div.tagsinput span.tag a {
     font-weight: 500;
 }
 
-#none-btn-ug i {
-    color: #424242;
-    text-align: center;
+#none-btn-ug {
+    width: 120px;
     font-size: 14px;
-    margin: auto;
-
-    padding-left: 5px;
-    padding-right: 5px;
-    font-style: normal;
-    font-weight: 500;
-}
-
-#warning-2-btn-ug {
+    color: white;
     position: relative;
-    margin-right: 30px;
+    margin-right: 10px;
     transform: translateY(60%);
     background-color: transparent;
     float: right;
-    border-right: 5px solid #FFA000;
+    background: #686868;
     text-align: center;
-    border-radius: 0px;
+    border-radius: 4px;
 }
 
 #warning-2-btn-ug i {
@@ -36588,6 +36581,7 @@ div.tagsinput span.tag a {
 
 
 #score-ug {
+
     background-color: rgba(2, 171, 254, 0.7);
     color: white;
     font-size: 16px;
@@ -36595,13 +36589,17 @@ div.tagsinput span.tag a {
     border-radius: 7px;
     font-size: 20px;
     font-weight: 400;
+
+
 }
 
 #score-ug-2 {
     width: 80px;
 }
 
+
 /*-----------*/
+
 
 #circleBar {
     margin-top: 200px;
@@ -36667,18 +36665,21 @@ section button:hover {
 #card-alt-ug {
     height: 50px;
     border-top: 1px solid #ededed;
-    padding: 20px;
     margin-top: 10px;
+    padding: 20px;
 }
 
 #issue-h-ug {
-    font-size: 80px;
-    font-weight: 500;
     top: 15%;
     position: relative;
+    font-size: 80px;
+    font-weight: 500;
     display: inline-block;
     color: #2c2f41;
+
+
 }
+
 
 #data-source-name-ug {
     padding-top: 5px;
@@ -36694,7 +36695,9 @@ section button:hover {
 }
 
 #data-source-name-ug:hover {
+
     box-shadow: 1px 2px 5px 0px rgba(26, 28, 41, 0.2);
+
 }
 
 #tr-link-2 {
@@ -36710,6 +36713,7 @@ section button:hover {
 }
 
 .height-ug {
+
     height: 100px;
 }
 
@@ -36720,16 +36724,17 @@ section button:hover {
 }
 
 
+#info-ug-2 {
+    color: #888888;
+    font-size: 20px;
+}
+
 #history-row {
     font-size: 14px;
     font-weight: 600;
     color: #666666;
 }
 
-#info-ug-2 {
-    color: #888888;
-    font-size: 20px;
-}
 
 #display-ug-ib {
     display: inline-block;
