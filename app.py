@@ -180,8 +180,6 @@ def connectaccount_without_slack():
 
     user = db.find_one('user', {'email': session['email']})
     datasources = db.find('datasource', query={'email': session['email']})
-    if datasources:
-        return redirect('/account/audit-history-without-slack')
 
     try:
         current_analyticsemail = user['ga_email']
