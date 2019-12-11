@@ -36705,3 +36705,12 @@ section button:hover {
     font-weight: 600;
     color: #666666;
 }
+
+#info-ug-2 {
+    color: #888888;
+    font-size: 20px;
+}
+
+#display-ug-ib {
+    display: inline-block;
+}
