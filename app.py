@@ -591,7 +591,7 @@ def wrongaccount_without_slack():
     except:
         current_analyticsemail = ""
 
-    return render_template('wrongaccount_without_slack.html', current_analyticsemail=current_analyticsemail)
+    return render_template('new_theme/connected_accounts.html', current_analyticsemail=current_analyticsemail)
 
 
 # @app.route('/test_analytics_audit', methods=['GET', 'POST'])
