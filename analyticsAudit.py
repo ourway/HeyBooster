@@ -400,7 +400,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
             reports = db.find('report', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
             report = reports.next()
             db.find_and_modify('report', query={'_id':report['_id']}, ts = time.time())
-        sendAnalyticsAudit(slack_token, dataSource, blocks, allattachments, channel, sendFeedback)
+        sendAnalyticsAudit(slack_token, dataSource, blocks, allattachments, dataSource['channelID'], sendFeedback)
 
 
 def analyticsAudit_without_slack(task, dataSource):
