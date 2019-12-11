@@ -119,6 +119,9 @@ def base():
 @app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
 @login_required
 def home():
+    datasources = db.find('datasource', query={'email': session['email']})
+    if datasources:
+        return redirect('/account/audit-history-without-slack')
     current_analyticsemail = ""
     if 'auth_token' in session.keys():
         try:
@@ -179,6 +182,9 @@ def connectaccount_without_slack():
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
+    datasources = db.find('datasource', query={'email': session['email']})
+    if datasources:
+        return redirect('/account/audit-history-without-slack')
 
     try:
         current_analyticsemail = user['ga_email']
@@ -186,7 +192,6 @@ def connectaccount_without_slack():
         current_analyticsemail = ""
 
     nForm = DataSourceForm(request.form)
-    datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
