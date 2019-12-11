@@ -334,10 +334,10 @@ def getaudit_without_slack_added():
             analytics_audit['strstat'] = 'active'
         analytics_audits += [analytics_audit]
 
-
     return render_template('new_theme/widgets.html', args=args, selectedargs=args, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits)
+
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
 @login_required
@@ -450,6 +450,10 @@ def audithistory_without_slack(datasourceID):
 
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
+
+    lastRunDate = datasources['lastRunDate']
+    lastRunDate = time.asctime(time.localtime(lastRunDate))
+
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
@@ -511,49 +515,50 @@ def audithistory_without_slack(datasourceID):
     len_issues = list(lastStates.values()).count('danger')
     len_recommendations = len(recommendations) - list(recommendations.values()).count([])
     totalScore = report['totalScore']
-    
+
     return render_template('new_theme/widgets.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits,
-                           len_issues = len_issues,
-                           len_recommendations = len_recommendations,
-                           totalScore = totalScore)
+                           len_issues=len_issues,
+                           len_recommendations=len_recommendations,
+                           totalScore=totalScore,
+                           lastRunDate=lastRunDate)
 
 
 @app.route('/account/recommendation<datasourceID>')
 def recommendation(datasourceID):
     names = {"adwordsAccountConnection": "Adwords Account Connection",
-              "paymentReferral": "Payment Referral",
-              "gdprCompliant": "GDPR Compliant",
-              "dataRetentionPeriod": "Data Retention Period",
-              "enhancedECommerceActivity": "Enhanced ECommerce Activity",
-              "domainControl": "Domain Control",
-              "rawDataView": "Raw Data View",
-              "userPermission": "User Permission",
-              "bounceRateTracking": "Bounce Rate Tracking",
-              "selfReferral": "Self Referral",
-              "botSpamExcluding": "Bot Spam Excluding",
-              "eventTracking": "Event Tracking",
-              "errorPage": "404 Error Page",
-              "timezone": "Timezone",
-              "currency": "Currency",
-              "notSetLandingPage": "Not Set Landing Page",
-              "sessionClickDiscrepancy": "Session Click Discrepancy",
-              "goalSettingActivity": "Goal Setting Activity",
-              "customDimension": "Custom Dimension",
-              "siteSearchTracking": "Site Search Tracking",
-              "remarketingLists": "Remarketing Lists",
-              "defaultPageControl": "Default Page Control",
-              "contentGrouping": "Content Grouping",
-              "othersInChannelGrouping": "Others In Channel Grouping",
-              "customMetric": "Custom Metric",
-              "internalSearchTermConsistency": "Internal Search Term Consistency",
-              "samplingCheck": "Sampling Check"
-              }
+             "paymentReferral": "Payment Referral",
+             "gdprCompliant": "GDPR Compliant",
+             "dataRetentionPeriod": "Data Retention Period",
+             "enhancedECommerceActivity": "Enhanced ECommerce Activity",
+             "domainControl": "Domain Control",
+             "rawDataView": "Raw Data View",
+             "userPermission": "User Permission",
+             "bounceRateTracking": "Bounce Rate Tracking",
+             "selfReferral": "Self Referral",
+             "botSpamExcluding": "Bot Spam Excluding",
+             "eventTracking": "Event Tracking",
+             "errorPage": "404 Error Page",
+             "timezone": "Timezone",
+             "currency": "Currency",
+             "notSetLandingPage": "Not Set Landing Page",
+             "sessionClickDiscrepancy": "Session Click Discrepancy",
+             "goalSettingActivity": "Goal Setting Activity",
+             "customDimension": "Custom Dimension",
+             "siteSearchTracking": "Site Search Tracking",
+             "remarketingLists": "Remarketing Lists",
+             "defaultPageControl": "Default Page Control",
+             "contentGrouping": "Content Grouping",
+             "othersInChannelGrouping": "Others In Channel Grouping",
+             "customMetric": "Custom Metric",
+             "internalSearchTermConsistency": "Internal Search Term Consistency",
+             "samplingCheck": "Sampling Check"
+             }
 
     user = db.find_one('user', {'email': session['email']})
-#    notification = db.find_one('notification', {'datasourceID': ObjectId(datasourceID)})
-#    lastStates = notification['lastStates']
+    #    notification = db.find_one('notification', {'datasourceID': ObjectId(datasourceID)})
+    #    lastStates = notification['lastStates']
 
     report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
     summaries = report['summaries']
@@ -571,7 +576,6 @@ def recommendation(datasourceID):
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
-
 
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
 
@@ -594,15 +598,15 @@ def recommendation(datasourceID):
         else:
             lastStates[key] = '2_none'
     sortedLastStates = {k: v for k, v in sorted(lastStates.items(), key=lambda item: item[1])}
-    
+
     return render_template('new_theme/index.html', args=args, selectedargs=selectedargs,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits, lastStates=sortedLastStates,
-                           names = names, summaries = summaries,
-                           recommendations = recommendations,
-                           len_issues = len_issues,
-                           len_recommendations = len_recommendations,
-                           totalScore = totalScore)
+                           names=names, summaries=summaries,
+                           recommendations=recommendations,
+                           len_issues=len_issues,
+                           len_recommendations=len_recommendations,
+                           totalScore=totalScore)
 
 
 @app.route('/account/connections-without-slack')
