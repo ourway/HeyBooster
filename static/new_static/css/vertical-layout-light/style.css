@@ -32627,7 +32627,7 @@ div.tagsinput span.tag a {
     align-items: center;
     white-space: nowrap;
     padding: 0.625rem 1.25rem 0.625rem 1.25rem;
-    color: #a2a3b7;
+    color: #242635;
     -webkit-transition-duration: 0.45s;
     -moz-transition-duration: 0.45s;
     -o-transition-duration: 0.45s;
@@ -32635,6 +32635,14 @@ div.tagsinput span.tag a {
     transition-property: color;
     -webkit-transition-property: color;
     font-weight: 400;
+}
+
+.sidebar .nav .nav-item:hover {
+    background-color: transparent;
+}
+
+.sidebar .nav .nav-item:focus {
+    background-color: transparent;
 }
 
 .sidebar .nav .nav-item .nav-link i {
@@ -32645,7 +32653,7 @@ div.tagsinput span.tag a {
     font-size: 1.125rem;
     line-height: 1;
     margin-right: 0.625rem;
-    color: #a2a3b7;
+    color: #242635;
 }
 
 .rtl .sidebar .nav .nav-item .nav-link i.menu-icon {
@@ -32706,7 +32714,7 @@ div.tagsinput span.tag a {
 
 .sidebar .nav .nav-item .nav-link[aria-expanded="true"] {
     border-radius: 1.313rem 0rem 0rem 0;
-    background: #1a1c29;
+    background: transparent;
 }
 
 .sidebar .nav .nav-item .nav-link[aria-expanded="true"] i.menu-arrow:before {
@@ -32718,7 +32726,12 @@ div.tagsinput span.tag a {
 }
 
 .sidebar .nav .nav-item.active {
-    background: #1a1c29;
+    background: #cccccc;
+}
+
+
+.sidebar .nav .nav-item nav-link.active {
+
 }
 
 .sidebar .nav .nav-item.active > .nav-link {
@@ -32747,19 +32760,19 @@ div.tagsinput span.tag a {
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item:hover > .nav-link {
-    color: #fff;
-    background: #1a1c29;
+    color: #1a1c29;
+    background: transparent;
     border-radius: 1.313rem 0rem 0rem 1.313rem;
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item:hover > .nav-link[aria-expanded="true"] {
     border-radius: 1.313rem 0rem 0rem 0;
-    background: #1a1c29;
+    background: transparent;
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item:active > .nav-link {
     border-radius: 1.313rem 0rem 0rem 1.313rem;
-    background: #1a1c29;
+    background: transparent;
 }
 
 .sidebar .nav:not(.sub-menu) > .nav-item:focus > .nav-link {
@@ -32792,7 +32805,7 @@ div.tagsinput span.tag a {
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link {
-    color: #a2a3b7;
+    color: #000;
     padding: 0.625rem 0.825rem;
     position: relative;
     font-size: 0.75rem;
@@ -32802,11 +32815,11 @@ div.tagsinput span.tag a {
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link:hover {
-    color: #fff;
+    color: #242635;
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link.active {
-    color: #fff;
+    color: #000;
     background: transparent;
     font-weight: 500;
 }
@@ -32989,6 +33002,16 @@ div.tagsinput span.tag a {
     width: calc(70px - 30px);
     max-width: 100%;
     margin: auto;
+    -webkit-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+}
+
+#pills-home-tab-custom-2 {
+    background-color: transparent;
+    color: #424242;
+    font-weight: 600;
+    padding-bottom: -20px;
 }
 
 .navbar .navbar-menu-wrapper {
