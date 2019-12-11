@@ -570,7 +570,7 @@ def recommendation(datasourceID):
         elif value == 'danger':
             lastStates[key] = '1_good'
         else:
-            lastState[key] = '2_good'
+            lastStates[key] = '2_good'
         
     sortedLastStates = {k: v for k, v in sorted(lastStates.items(), key=lambda item: item[1])}
     len_issues = list(lastStates.values()).count('danger')
