@@ -25,21 +25,19 @@
 <body class="sidebar-fixed">
 <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
-    <nav style="background-color: #dddee3;" class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div style="background: #fff"
              class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
             <a class="navbar-brand brand-logo" href="/"><img style="width: 300px; height: 50px; background: #fff;"
                                                              src="../../static/images/logo-2.svg" alt="logo"/></a>
-            <a style="background: #fff" class="navbar-brand brand-logo-mini" href="/"><img
+            <a style="background: #fff;" class="navbar-brand brand-logo-mini" href="/"><img
                     src="../../static/images/heybooster-icon.svg" alt="logo"/></a>
             <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
                 <span class="mdi mdi-menu"></span>
             </button>
         </div>
-        <div style="background: #ffffff" class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-
+        <div style="background: #ffffff;" class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
             <ul class="navbar-nav navbar-nav-right">
-
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
                        id="notificationDropdown" href="#" data-toggle="dropdown">
@@ -56,8 +54,8 @@
                             {% else %}
                                 {% set dataSourceName = arg._id %}
                             {% endif %}
-                            <a class="dropdown-item preview-item"
-                               href="/account/audit-history-without-slack{{ arg._id }}">
+                            <a href="/account/audit-history-without-slack{{ arg._id }}"
+                               class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                 </div>
                                 <div class="preview-item-content">
@@ -240,7 +238,7 @@
         </div>
         <!-- partial -->
         <!-- partial:../../partials/_sidebar.html -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <nav style="background-color: #dddee3;" class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
                 <!--
                  <li class="nav-item nav-profile">
@@ -269,8 +267,8 @@
                 -->
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                        <i style="color: #242635" class="mdi mdi-account-circle menu-icon"></i>
-                        <span style="color: #242635" class="menu-title">{{ session['email'] }}</span>
+                        <i class="mdi mdi-account-circle menu-icon"></i>
+                        <span style="color: black;" class="menu-title">{{ session['email'] }}</span>
                         <i class="menu-arrow"></i>
                     </a>
                     <div class="collapse" id="auth">
@@ -278,16 +276,17 @@
                             <li style="background-color: transparent; color: #242635;" class="nav-item"><a
                                     class="nav-link" href="/logout"> Logout </a></li>
 
-
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/account/audit-history-without-slack">
                         <i style="color: #242635" class="mdi mdi-puzzle menu-icon"></i>
-                        <span style="color: #242635" class="menu-title">Audit History</span>
+                        <span style="color: #242635;" class="menu-title">Audit History
+                            <!--<span class="badge badge-danger">New</span>--></span>
                     </a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="/account/connections-without-slack">
                         <i style="color: #242635" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
