@@ -361,15 +361,15 @@
                                                         </a>
                                                         {% if value == '3_good' %}
                                                             <button id="success-btn-ug" class="btn text-white">
-                                                                {{ value | replace("3","") }}
+                                                                {{ value | replace("3_","") }}
                                                             </button>
                                                         {% elif value == '1_danger' %}
                                                             <button id="danger-btn-ug" class="btn text-white">
-                                                                {{ value | replace("1","") }}
+                                                                {{ value | replace("1_","") }}
                                                             </button>
                                                         {% else %}
                                                             <button id="none-btn-ug" class="btn text-white">
-                                                                {{ value | replace("2","") }}
+                                                                {{ value | replace("2_","") }}
                                                             </button>
                                                         {% endif %}
                                                     </h6>
