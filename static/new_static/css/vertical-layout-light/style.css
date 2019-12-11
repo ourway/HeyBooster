@@ -36677,6 +36677,18 @@ section button:hover {
     box-shadow: 1px 2px 5px 0px rgba(26, 28, 41, 0.2);
 }
 
+#tr-link-2 {
+    background-color: transparent;
+    transition: .4s background;
+    cursor: pointer;
+
+}
+
+#tr-link-2:hover {
+    background-color: #f2f5f8;
+
+}
+
 .height-ug {
     height: 100px;
 }
@@ -36688,21 +36700,8 @@ section button:hover {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#history-row {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666666;
+}

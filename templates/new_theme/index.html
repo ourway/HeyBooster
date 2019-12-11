@@ -25,10 +25,9 @@
     <!-- partial:../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-            <a class="navbar-brand brand-logo" href="/"><img src="../../static/images/heyBooster.png"
+            <a class="navbar-brand brand-logo" href="/"><img src="../../static/images/heybooster-icon.svg"
                                                              alt="logo"/></a>
-            <a class="navbar-brand brand-logo-mini" href="../../index.html"><img
-                    src="../../static/images/heyBooster_small.png" alt="logo"/></a>
+            <a class="navbar-brand brand-logo" href="#.html"><img src="../../static/images/logo-2.svg" alt="logo"/></a>
             <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
                 <span class="mdi mdi-menu"></span>
             </button>
@@ -78,30 +77,25 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="notificationDropdown">
-                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
                         <a class="dropdown-item preview-item">
                             <div class="preview-thumbnail">
-                                <div class="preview-icon bg-success">
-                                    <i class="mdi mdi-information mx-0"></i>
-                                </div>
+
                             </div>
                             <div class="preview-item-content">
                                 <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    Just now
-                                </p>
                             </div>
                         </a>
                     </div>
                 </li>
+                <!--
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
                        id="messageDropdown" href="#" data-toggle="dropdown">
-                        <i class="mdi mdi-account"></i>
-                        <p class="notification-ripple notification-ripple-bg">
-                            <span class="ripple notification-ripple-bg"></span>
-                            <span class="ripple notification-ripple-bg"></span>
-                            <span class="ripple notification-ripple-bg"></span>
+                        <i class="mdi mdi-account">user</i>
+                        <p class="">
+                        <span class="ripple notification-ripple-bg"></span>
+                        <span class="ripple notification-ripple-bg"></span>
+                        <span class="ripple notification-ripple-bg"></span>
                         </p>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
@@ -121,6 +115,7 @@
                         </a>
                     </div>
                 </li>
+                -->
                 <!--
                 <li class="nav-item nav-settings d-none d-lg-flex">
                     <a class="nav-link" href="#">
@@ -138,33 +133,10 @@
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
         <!-- partial:../../partials/_settings-panel.html -->
-        <div class="theme-setting-wrapper">
-            <div id="settings-trigger"><i class="mdi mdi-settings"></i></div>
-            <div id="theme-settings" class="settings-panel">
-                <i class="settings-close mdi mdi-close"></i>
-                <p class="settings-heading">SIDEBAR SKINS</p>
-                <div class="sidebar-bg-options" id="sidebar-light-theme">
-                    <div class="img-ss rounded-circle bg-light border mr-3"></div>
-                    Light
-                </div>
-                <div class="sidebar-bg-options selected" id="sidebar-dark-theme">
-                    <div class="img-ss rounded-circle bg-dark border mr-3"></div>
-                    Dark
-                </div>
-                <p class="settings-heading mt-2">HEADER SKINS</p>
-                <div class="color-tiles mx-0 px-4">
-                    <div class="tiles success"></div>
-                    <div class="tiles warning"></div>
-                    <div class="tiles danger"></div>
-                    <div class="tiles primary"></div>
-                    <div class="tiles info"></div>
-                    <div class="tiles dark"></div>
-                    <div class="tiles default"></div>
-                </div>
-            </div>
-        </div>
+
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
+                <!--
                 <li class="nav-item nav-profile">
                     <div class="nav-link d-flex">
                         <div class="profile-name">
@@ -174,16 +146,25 @@
                         </div>
                     </div>
                 </li>
+                -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/account/audit-history-without-slack">
-                        <i class="mdi mdi-shield-check menu-icon"></i>
-                        <span class="menu-title">Audit History</span>
+                    <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+                        <i class="mdi mdi-account-circle menu-icon"></i>
+                        <span class="menu-title">{{ session['email'] }}</span>
+                        <i class="menu-arrow"></i>
                     </a>
+                    <div class="collapse" id="auth">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="/logout"> Logout </a>
+                            </li>
+
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/account/connections-without-slack">
+                    <a class="nav-link" href="/account/audit-history-without-slack">
                         <i class="mdi mdi-puzzle menu-icon"></i>
-                        <span class="menu-title">Connected Account</span>
+                        <span class="menu-title">Audit History</span>
                     </a>
                 </li>
             </ul>
