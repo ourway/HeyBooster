@@ -119,13 +119,10 @@ def base():
 @app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
 @login_required
 def home():
-    datasources = db.find('datasource', query={'email': session['email']})
-    if datasources:
-        return redirect('/account/audit-history-without-slack')
     current_analyticsemail = ""
     if 'auth_token' in session.keys():
         try:
-            if session['ga_accesstoken'] and session['sl_accesstoken']:
+            if session['ga_accesstoken'] or session['sl_accesstoken']:
                 return redirect('/account/audit-history')
             else:
                 # Check if user has slack connection
