@@ -5,7 +5,7 @@ import queue  # imported for using queue.Empty exception
 from database import db, db2
 from modules import performancechangetracking, shoppingfunnelchangetracking, costprediction, performancegoaltracking, \
     performancechangealert
-from analyticsAudit import analyticsAudit
+from analyticsAudit import analyticsAudit, analyticsAudit_without_slack
 import logging
 import sys
 import traceback
@@ -54,7 +54,10 @@ def do_job(tasks_to_accomplish):
                 db.find_and_modify('notification', query={'_id': task['_id']},
                                lastRunDate=time.time())
             elif task['type'] == 'analyticsAudit':
-                analyticsAudit(slack_token, task, dataSource)
+                if slack_token:
+                    analyticsAudit(slack_token, task, dataSource)
+                else:
+                    analyticsAudit_without_slack(task, dataSource)
             
         except queue.Empty:
             time.sleep(WAITTIME)
