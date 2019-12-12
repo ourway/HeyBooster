@@ -1,139 +1,337 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Connected Account</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,600,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700&display=swap" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,900&display=swap" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Connected Accounts</title>
+    <!-- base:css -->
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
-
+          href="{{ url_for('static', filename='new_static/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
-
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/animate/animate.css') }}">
-
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
-
+          href="{{ url_for('static', filename='new_static/vendors/base/vendor.bundle.base.css') }}">
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+          href="{{ url_for('static', filename='new_static/css/vertical-layout-light/style.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='new_static/style-extra.css') }}">
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util-form.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main-form.css') }}">
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ilto.css') }}">
-
-    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
-
-    <!-- Google Tag Manager -->
-    <script>(function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start':
-                new Date().getTime(), event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');</script>
+    <link rel="shortcut icon" href="../static/images/heybooster-icon.png"/>
 </head>
+<body class="sidebar-fixed">
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div style="background: #fff"
+             class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
+            <a class="navbar-brand brand-logo" href="/"><img style="width: 300px; height: 50px; background: #fff;"
+                                                             src="../static/images/logo-2.svg" alt="logo"/></a>
+            <a style="background: #fff;" class="navbar-brand brand-logo-mini" href="/"><img
+                    src="../static/images/heybooster-icon.svg" alt="logo"/></a>
+            <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                <span class="mdi mdi-menu"></span>
+            </button>
+        </div>
+        <div style="background: #ffffff;" class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
+                       id="notificationDropdown" href="" data-toggle="dropdown">
+                        <!--<i class="mdi mdi-bell-outline mx-0">asas</i>-->
 
-<body>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                         aria-labelledby="notificationDropdown">
 
-<!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
-<script type="text/javascript" src="https://a.opmnstr.com/app/js/api.min.js" data-account="47764" data-user="41970" async></script>
-<!-- / https://optinmonster.com -->
+                    </div>
+                </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                <span class="mdi mdi-menu"></span>
+            </button>
+        </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
 
-
-<nav class="navbar navbar-default navbar-expand-xl navbar-light">
-    <div class="navbar-header d-flex col">
-        <a class="navbar-brand" href="/getstarted/connect-accounts"><img src="../static/images/heybooster-preview.png"></a>
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse"
-                class="navbar-toggle navbar-toggler ml-auto">
-            <span class="navbar-toggler-icon"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-    </div>
-    <!-- Collection of nav links, forms, and other content for toggling -->
-    <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
-
-        <ul class="nav navbar-nav navbar-right ml-auto">
-
-
-            <li class="nav-item dropdown">
-                <a id="drop-icon" href="/getstarted/connect-accounts" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img
-                        src="../static/img/ninca.png" class="avatar" alt="Avatar"><span
-                        id="user-name-1">{{ session['email'] }}</span><b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="/account/audit-history" class="dropdown-item"><i class="fa fa-user-o"></i>Audit History</a></li>
-                    <li><a href="/account/connections" class="dropdown-item"><i class="fa fa-calendar-o"></i>Connected Accounts</a></li>
-                    <li class="divider dropdown-divider"></li>
-                    <li><a href="/logout" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> &nbsp; Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<div class="limiter">
-    <div class="container-table100">
-        <div class="wrap-table100">
-            <div class="table100">
-                <table>
-                    <thead class="head head-line">
-                    <tr class="table100-head">
-                        <th class="column2"></th>
-                        <th class="column3" style="font-family: 'Josefin Sans', sans-serif; font-weight: 300;">Connected
-                            Accounts
-                        </th>
-                        <th class="column4"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% if current_analyticsemail %}
-                            <tr class="line-row">
-                                <td id="icon-text" class="column2"><img src="../static/img/google-icon.png"
-                                                                        class="icon-img">Google Analytics
-                                </td>
-                                <td class="column3">{{ current_analyticsemail }}</td>
-                                <td class="column4">
-                                    <button onclick="myFunction()" class="btn btn-sm text-white change-alert"> Change
-                                        Account
-                                    </button>
-                                </td>
-                            </tr>
-                    {% endif %}
-                    <tr class="line-row">
-                        <td id="icon-text" class="column2"><img class="icon-img" src="../static/img/slack-icon.png">Slack
-                        </td>
-                        <td class="column3">{{ workspace }}</td>
-                        <td class="column4"><a>
-                            <button onclick="slackRemove()" class="btn btn-sm text-white change-alert"> Change
-                                Workspace
-                            </button>
-                        </a></td>
-                    </tr>
-                    </tbody>
-                </table>
+        <div id="right-sidebar" class="settings-panel">
+            <i class="settings-close mdi mdi-close"></i>
+            <ul class="nav nav-tabs" id="setting-panel" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab"
+                       aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab"
+                       aria-controls="chats-section">CHATS</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="setting-content">
+                <div class="tab-pane fade show active scroll-wrapper" id="todo-section" role="tabpanel"
+                     aria-labelledby="todo-section">
+                    <div class="add-items d-flex px-3 mb-0">
+                        <form class="form w-100">
+                            <div class="form-group d-flex">
+                                <input type="text" class="form-control todo-list-input" placeholder="Add To-do">
+                                <button type="submit" class="add btn btn-primary todo-list-add-btn" id="add-task">Add
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="list-wrapper px-3">
+                        <ul class="d-flex flex-column-reverse todo-list">
+                            <li>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Team review meeting at 3.00 PM
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Prepare for presentation
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Resolve all the low priority tickets due today
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                            <li class="completed">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox" checked>
+                                        Schedule meeting for next week
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                            <li class="completed">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox" checked>
+                                        Project review
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="events py-4 border-bottom px-3">
+                        <div class="wrapper d-flex mb-2">
+                            <i class="mdi mdi-circle-outline text-primary mr-2"></i>
+                            <span>Feb 11 2018</span>
+                        </div>
+                        <p class="mb-0 font-weight-thin text-gray">Creating component page</p>
+                        <p class="text-gray mb-0">build a js based app</p>
+                    </div>
+                    <div class="events pt-4 px-3">
+                        <div class="wrapper d-flex mb-2">
+                            <i class="mdi mdi-circle-outline text-primary mr-2"></i>
+                            <span>Feb 7 2018</span>
+                        </div>
+                        <p class="mb-0 font-weight-thin text-gray">Meeting with Alisa</p>
+                        <p class="text-gray mb-0 ">Call Sarah Graves</p>
+                    </div>
+                </div>
+                <!-- To do section tab ends -->
+                <div class="tab-pane fade" id="chats-section" role="tabpanel" aria-labelledby="chats-section">
+                    <div class="d-flex align-items-center justify-content-between border-bottom">
+                        <p class="settings-heading border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Friends</p>
+                        <small class="settings-heading border-top-0 mb-3 pt-0 border-bottom-0 pb-0 pr-3 font-weight-normal">See
+                            All</small>
+                    </div>
+                    <ul class="chat-list">
+                        <li class="list active">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="online"></span></div>
+                            <div class="info">
+                                <p>Thomas Douglas</p>
+                                <p>Available</p>
+                            </div>
+                            <small class="text-muted my-auto">19 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="offline"></span></div>
+                            <div class="info">
+                                <div class="wrapper d-flex">
+                                    <p>Catherine</p>
+                                </div>
+                                <p>Away</p>
+                            </div>
+                            <div class="badge badge-success badge-pill my-auto mx-2">4</div>
+                            <small class="text-muted my-auto">23 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="online"></span></div>
+                            <div class="info">
+                                <p>Daniel Russell</p>
+                                <p>Available</p>
+                            </div>
+                            <small class="text-muted my-auto">14 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="offline"></span></div>
+                            <div class="info">
+                                <p>James Richardson</p>
+                                <p>Away</p>
+                            </div>
+                            <small class="text-muted my-auto">2 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="online"></span></div>
+                            <div class="info">
+                                <p>Madeline Kennedy</p>
+                                <p>Available</p>
+                            </div>
+                            <small class="text-muted my-auto">5 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="online"></span></div>
+                            <div class="info">
+                                <p>Sarah Graves</p>
+                                <p>Available</p>
+                            </div>
+                            <small class="text-muted my-auto">47 min</small>
+                        </li>
+                    </ul>
+                </div>
+                <!-- chat tab ends -->
             </div>
         </div>
-    </div>
-</div>
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav style="background-color: #dddee3;" class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+                        <i class="mdi mdi-account-circle menu-icon"></i>
+                        <span style="color: black;" class="menu-title">{{ session['email'] }}</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="auth">
+                        <ul style="background-color:transparent;" class="nav flex-column sub-menu">
+                            <li style="background-color: transparent; color: #242635;" class="nav-item"><a
+                                    class="nav-link" href="/logout"> Logout </a></li>
 
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/audit-history">
+                        <i style="color: #242635" class="mdi mdi-puzzle menu-icon"></i>
+                        <span style="color: #242635;" class="menu-title">Audit History
+                            <!--<span class="badge badge-danger">New</span>--></span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/connections">
+                        <i style="color: #242635" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
+                        <span style="color: #242635" class="menu-title">Connected Accounts</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Connected</h4>
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead class="text-center">
+                                        <tr>
+                                            <th>
+
+                                            </th>
+                                            <th></th>
+                                            <th>
+
+                                            </th>
+
+                                            <th>
+
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                        {% if current_analyticsemail %}
+                                            <tr>
+                                                <td class="py-1">
+                                                    <img src="../static/img/google-icon.png" alt="image"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    Google Analytics
+                                                </td>
+                                                <td>
+                                                    {{ current_analyticsemail }}
+                                                </td>
+                                                <td>
+                                                    <button onclick="myFunction()"
+                                                            class="btn btn-outline-primary btn-md">Change Account
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <td class="py-1">
+                                                <img src="../static/img/slack-icon.png" alt="image"/>
+                                            </td>
+                                            <td class="text-left">
+                                                Slack Workspace
+                                            </td>
+                                            <td>
+                                                {{ workspace }}
+                                            </td>
+                                            <td>
+                                                <button onclick="slackRemove()"
+                                                        class="btn btn-outline-primary btn-md">Change Workspace
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- base:js -->
 <script>
     function myFunction() {
         var r = confirm("If you change the analytics account, your recent analytics audit will be deleted. Are you sure to continue?");
@@ -153,18 +351,17 @@
         }
     }
 </script>
-
-
 <script type="text/javascript"
-        src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+        src="{{ url_for('static', filename='new_static/vendors/base/vendor.bundle.base.js') }}"></script>
 <script type="text/javascript"
-        src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js') }}"></script>
+        src="{{ url_for('static', filename='new_static/js/off-canvas.js') }}"></script>
 <script type="text/javascript"
-        src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+        src="{{ url_for('static', filename='new_static/js/hoverable-collapse.js') }}"></script>
 <script type="text/javascript"
-        src="{{ url_for('static', filename='/vendor/select2/select2.min.js') }}"></script>
+        src="{{ url_for('static', filename='new_static/js/template.js') }}"></script>
 <script type="text/javascript"
-        src="{{ url_for('static', filename='/js/main.js') }}"></script>
-
+        src="{{ url_for('static', filename='new_static/js/settings.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/todolist.js') }}"></script>
 </body>
 </html>
