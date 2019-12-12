@@ -605,6 +605,7 @@ def recommendation(datasourceID):
         #Old Version
         notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
         recommendations = None
+        summaries = None
         len_recommendations = 0
         lastStates = notification['lastStates']
         len_issues = list(lastStates.values()).count('danger')
