@@ -395,11 +395,24 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                                         'recommendations': recommendations,
                                         'lastStates': currentStates,
                                         'totalScore': totalScore,
-                                        'ts': time.time()})        
+                                        'ts': time.time()})  
         else:
             reports = db.find('reports', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
-            report = reports.next()
-            db.find_and_modify('reports', query={'_id':report['_id']}, ts = time.time())
+            report = None
+            for report in reports:
+                break
+            if report:
+                db.find_and_modify('reports', query={'_id':report['_id']}, ts = time.time())
+            else:
+                db.insert('reports', data={ 'datasourceID': dataSource['_id'],
+                                        'message':{'blocks': blocks,
+                                                   'attachments': allattachments
+                                                  },
+                                        'summaries': summaries,
+                                        'recommendations': recommendations,
+                                        'lastStates': currentStates,
+                                        'totalScore': totalScore,
+                                        'ts': time.time()})  
         sendAnalyticsAudit(slack_token, dataSource, blocks, allattachments, dataSource['channelID'], sendFeedback)
 
 
@@ -643,9 +656,21 @@ def analyticsAudit_without_slack(task, dataSource):
                                         'ts': time.time()})        
         else:
             reports = db.find('reports', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
+            report = None
             for report in reports:
                 break
-            db.find_and_modify('reports', query={'_id':report['_id']}, ts = time.time())
+            if report:
+                db.find_and_modify('reports', query={'_id':report['_id']}, ts = time.time())
+            else:
+                db.insert('reports', data={ 'datasourceID': dataSource['_id'],
+                                            'message':{'blocks': blocks,
+                                                       'attachments': allattachments
+                                                      },
+                                            'summaries': summaries,
+                                            'recommendations': recommendations,
+                                            'lastStates': currentStates,
+                                            'totalScore': totalScore,
+                                            'ts': time.time()})  
             
 
 def bounceRateTracking(dataSource):

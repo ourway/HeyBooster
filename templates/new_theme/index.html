@@ -354,6 +354,8 @@
                                 <h4 class="card-title">{{ selectedargs[0].dataSourceName }}</h4>
                                 {% for key, value in lastStates.items() %}
                                     {% set index = loop.index0 %}
+                                    {% set listvalue = value.split('_') %}
+                                    {% set newvalue = listvalue[1] %}
                                     <div class="mt-4">
                                         <div class="accordion accordion-solid-header" id="accordion-4" role="tablist">
                                             <div class="card">
@@ -363,17 +365,21 @@
                                                            aria-expanded="false" aria-controls="collapse-{{ index }}">
                                                             {{ names[key] }}
                                                         </a>
-                                                        {% if value == '3_good' %}
+                                                        {% if newvalue == 'good' %}
                                                             <button id="success-btn-ug" class="btn text-white">
-                                                                {{ value | replace("3_","") }}
+                                                                {{ newvalue }}
                                                             </button>
-                                                        {% elif value == '1_danger' %}
+                                                        {% elif newvalue == 'danger' %}
                                                             <button id="danger-btn-ug" class="btn text-white">
-                                                                {{ value | replace("1_","") }}
+                                                                {{ newvalue }}
+                                                            </button>
+                                                        {% elif newvalue == 'warning' %}
+                                                            <button id="warning-btn-ug" class="btn text-white">
+                                                                {{ newvalue }}
                                                             </button>
                                                         {% else %}
                                                             <button id="none-btn-ug" class="btn text-white">
-                                                                {{ value | replace("2_","") }}
+                                                                {{ newvalue }}
                                                             </button>
                                                         {% endif %}
                                                     </h6>
