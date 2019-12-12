@@ -518,7 +518,7 @@ def audithistory_without_slack(datasourceID):
         #Old Version
         notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
         recommendations = None
-        len_recommendations
+        len_recommendations = 0
         lastStates = notification['lastStates']
         len_issues = list(lastStates.values()).count('danger')
 
@@ -605,7 +605,7 @@ def recommendation(datasourceID):
         #Old Version
         notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
         recommendations = None
-        len_recommendations
+        len_recommendations = 0
         lastStates = notification['lastStates']
         len_issues = list(lastStates.values()).count('danger')
     # tz_offset = user['tz_offset']
