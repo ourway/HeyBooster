@@ -508,11 +508,19 @@ def audithistory_without_slack(datasourceID):
         analytics_audits += [analytics_audit]
 
     report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
-    recommendations = report['recommendations']
-    lastStates = report['lastStates']
-    len_issues = list(lastStates.values()).count('danger')
-    len_recommendations = len(recommendations) - list(recommendations.values()).count([])
-    totalScore = report['totalScore']
+    if report:
+        recommendations = report['recommendations']
+        lastStates = report['lastStates']
+        len_issues = list(lastStates.values()).count('danger')
+        len_recommendations = len(recommendations) - list(recommendations.values()).count([])
+        totalScore = report['totalScore']
+    else:
+        #Old Version
+        notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
+        recommendations = None
+        len_recommendations
+        lastStates = notification['lastStates']
+        len_issues = list(lastStates.values()).count('danger')
 
     return render_template('new_theme/widgets.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
@@ -552,19 +560,54 @@ def recommendation(datasourceID):
              "internalSearchTermConsistency": "Internal Search Term Consistency",
              "samplingCheck": "Sampling Check"
              }
+    scores = {"adwordsAccountConnection":5,
+              "paymentReferral":5,
+              "gdprCompliant":5,
+              "dataRetentionPeriod":5,
+              "enhancedECommerceActivity":5,
+              "domainControl":5,
+              "rawDataView":5,
+              "userPermission":5,
+              "bounceRateTracking":4,
+              "selfReferral":4,
+              "botSpamExcluding":4,
+              "eventTracking":4,
+              "errorPage":4,
+              "timezone":4,
+              "currency":4,
+              "notSetLandingPage":3,
+              "sessionClickDiscrepancy":3,
+              "goalSettingActivity":3,
+              "customDimension":3,
+              "siteSearchTracking":3,
+              "remarketingLists":3,
+              "defaultPageControl":3,
+              "contentGrouping":3,
+              "othersInChannelGrouping":3,
+              "customMetric":2,
+              "internalSearchTermConsistency":2,
+              "samplingCheck":1
+              }
 
     user = db.find_one('user', {'email': session['email']})
     #    notification = db.find_one('notification', {'datasourceID': ObjectId(datasourceID)})
     #    lastStates = notification['lastStates']
 
     report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
-    summaries = report['summaries']
-    recommendations = report['recommendations']
-    lastStates = report['lastStates']
-    len_issues = list(lastStates.values()).count('danger')
-    len_recommendations = len(recommendations) - list(recommendations.values()).count([])
-    totalScore = report['totalScore']
-
+    if report:
+        summaries = report['summaries']
+        recommendations = report['recommendations']
+        lastStates = report['lastStates']
+        len_issues = list(lastStates.values()).count('danger')
+        len_recommendations = len(recommendations) - list(recommendations.values()).count([])
+        totalScore = report['totalScore']
+    else:
+        #Old Version
+        notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
+        recommendations = None
+        len_recommendations
+        lastStates = notification['lastStates']
+        len_issues = list(lastStates.values()).count('danger')
     # tz_offset = user['tz_offset']
     # tz_offset = 1
     current_analyticsemail = user['ga_email']
@@ -589,11 +632,39 @@ def recommendation(datasourceID):
 
     for key, value in lastStates.items():
         if value == 'good':
-            lastStates[key] = '3_good'
+            if scores[key] == 5:
+                lastStates[key] = '41_good'
+            elif scores[key] == 4:
+                lastStates[key] = '42_good'
+            elif scores[key] == 3:
+                lastStates[key] = '43_good'
+            elif scores[key] == 2:
+                lastStates[key] = '44_good'
+            else:
+                lastStates[key] = '45_good'
         elif value == 'danger':
-            lastStates[key] = '1_danger'
+            if scores[key] == 5:
+                lastStates[key] = '11_urgent'
+            elif scores[key] == 4:
+                lastStates[key] = '12_urgent'
+            elif scores[key] == 3:
+                lastStates[key] = '21_warning'
+            elif scores[key] == 2:
+                lastStates[key] = '22_warning'
+            else:
+                lastStates[key] = '23_warning'
         else:
-            lastStates[key] = '2_none'
+            if scores[key] == 5:
+                lastStates[key] = '31_none'
+            elif scores[key] == 4:
+                lastStates[key] = '32_none'
+            elif scores[key] == 3:
+                lastStates[key] = '33_none'
+            elif scores[key] == 2:
+                lastStates[key] = '34_none'
+            else:
+                lastStates[key] = '35_none'
+                
     sortedLastStates = {k: v for k, v in sorted(lastStates.items(), key=lambda item: item[1])}
 
     return render_template('new_theme/index.html', args=args, selectedargs=selectedargs,
