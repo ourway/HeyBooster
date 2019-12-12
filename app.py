@@ -644,9 +644,9 @@ def recommendation(datasourceID):
                 lastStates[key] = '45_good'
         elif value == 'danger':
             if scores[key] == 5:
-                lastStates[key] = '11_danger'
+                lastStates[key] = '11_urgent'
             elif scores[key] == 4:
-                lastStates[key] = '12_danger'
+                lastStates[key] = '12_urgent'
             elif scores[key] == 3:
                 lastStates[key] = '21_warning'
             elif scores[key] == 2:
