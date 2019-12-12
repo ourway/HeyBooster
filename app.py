@@ -517,10 +517,12 @@ def audithistory_without_slack(datasourceID):
     else:
         #Old Version
         notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
+        totalScore = notification['totalScore']
         recommendations = None
         len_recommendations = 0
         lastStates = notification['lastStates']
         len_issues = list(lastStates.values()).count('danger')
+        
 
     return render_template('new_theme/widgets.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
@@ -604,6 +606,7 @@ def recommendation(datasourceID):
     else:
         #Old Version
         notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
+        totalScore = notification['totalScore']
         recommendations = None
         summaries = None
         len_recommendations = 0
