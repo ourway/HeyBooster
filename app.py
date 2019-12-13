@@ -328,6 +328,15 @@ def getaudit_without_slack_added():
                            analytics_audits=analytics_audits)
 
 
+@app.route('/get_my_ip', methods=['GET'])
+def get_my_ip():
+    ip_addr = request.remote_addr
+    url = 'https://ipinfo.io/' + ip_addr + '/json'
+    res = urlopen(url)
+    data = load(res)
+    return data['timezone']
+
+
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
 @login_required
 def getaudit_without_slack():
@@ -335,11 +344,10 @@ def getaudit_without_slack():
         return redirect('/getstarted/connect-accounts')
 
     ip_addr = request.remote_addr
-    if ip_addr:
-        url = 'https://ipinfo.io/' + ip_addr + '/json'
-        res = urlopen(url)
-        data = load(res)
-        return data['timezone']
+    url = 'https://ipinfo.io/' + ip_addr + '/json'
+    res = urlopen(url)
+    data = load(res)
+    print(data['timezone'])
 
     counter = 0
     dt = db.find('datasource', {'email': session['email']})
