@@ -22,8 +22,9 @@ from analyticsAudit import analyticsAudit
 from tasks import run_analyticsAudit, run_analyticsAudit_without_slack
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from urllib.request import Request, urlopen
+from urllib.request import urlopen
 from json import load
+import pytz
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
 imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
@@ -334,8 +335,12 @@ def get_my_ip():
     url = 'https://ipinfo.io/' + ip_addr + '/json'
     res = urlopen(url)
     data = load(res)
-    return data['timezone']
-
+    tz = data['timezone']
+    pst = pytz.timezone(tz)
+    now = datetime.datetime.now()
+    now = datetime.datetime.strptime(now, '%d/%m/%Y')
+    localize = pst.localize(now)
+    return localize.tzname()
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
 @login_required
@@ -343,12 +348,12 @@ def getaudit_without_slack():
     if not session['email']:
         return redirect('/getstarted/connect-accounts')
 
-    ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-    if ip_addr:
-        url = 'https://ipinfo.io/' + ip_addr + '/json'
-        res = urlopen(url)
-        data = load(res)
-        return timezone(data['timezone'])
+    # ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+    # if ip_addr:
+    #     url = 'https://ipinfo.io/' + ip_addr + '/json'
+    #     res = urlopen(url)
+    #     data = load(res)
+    #     return data['timezone']
 
     counter = 0
     dt = db.find('datasource', {'email': session['email']})
