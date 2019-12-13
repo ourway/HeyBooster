@@ -337,8 +337,8 @@ def get_my_ip():
     data = load(res)
     tz = data['timezone']
     pst = pytz.timezone(tz)
-    now = datetime.datetime.now()
-    now = datetime.datetime.strptime(now, '%d/%m/%Y')
+    now = datetime.now()
+    now = datetime.strptime(now, '%d/%m/%Y')
     localize = pst.localize(now)
     return localize.tzname()
 
