@@ -348,7 +348,7 @@ def getaudit_without_slack():
         url = 'https://ipinfo.io/' + ip_addr + '/json'
         res = urlopen(url)
         data = load(res)
-        return data['timezone']
+        return timezone(data['timezone'])
 
     counter = 0
     dt = db.find('datasource', {'email': session['email']})
