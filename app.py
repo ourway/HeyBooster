@@ -332,9 +332,8 @@ def getaudit_without_slack_added():
 def get_my_ip():
     ip_addr = request.remote_addr
     url = 'https://ipinfo.io/' + ip_addr + '/json'
-    res = urlopen(url)
-    data = load(res)
-    return data['timezone']
+    res = request.get(url)
+    return res
 
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
