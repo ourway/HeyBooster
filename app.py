@@ -24,7 +24,6 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from urllib.request import Request, urlopen
 from json import load
-import requests as rq
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
 imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
@@ -333,9 +332,10 @@ def getaudit_without_slack_added():
 def get_my_ip():
     ip_addr = request.remote_addr
     url = 'https://ipinfo.io/' + ip_addr + '/json'
-    res = rq.get(url)
-    return res
-
+    #res = urlopen(url)
+    #data = load(res)
+    #return data['timezone']
+    return ip_addr
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
 @login_required
