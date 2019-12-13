@@ -2,13 +2,11 @@ from flask import Flask, render_template, flash, redirect, request, session, url
     render_template_string
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-# from forms import LoginForm, RegisterForm, NotificationForm, TimeForm
 from forms import LoginForm, RegisterForm, DataSourceForm
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 import google_auth
 import google_analytics
 from database import db, db2
-from models.user import User
 from slack_auth import authorized
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from datetime import datetime, timedelta, timezone
@@ -24,6 +22,8 @@ from analyticsAudit import analyticsAudit
 from tasks import run_analyticsAudit, run_analyticsAudit_without_slack
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from urllib.request import Request, urlopen
+from json import load
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
 imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
@@ -135,17 +135,6 @@ def home():
                 if session['ga_accesstoken']:
                     user = db.find_one('user', {'email': session['email']})
 
-                    #                    try:
-                    #                        resp = requests.get(TOKEN_INFO_URI.format(user['ga_accesstoken'])).json()
-                    #                        if 'error' in resp.keys():
-                    #                            data = [('client_id', CLIENT_ID.strip()),
-                    #                                    ('client_secret', CLIENT_SECRET.strip()),
-                    #                                    ('refresh_token', user['ga_refreshtoken']),
-                    #                                    ('grant_type', 'refresh_token')]
-                    #                            resp = requests.post(ACCESS_TOKEN_URI, data).json()
-                    #                        current_analyticsemail = resp['email']
-                    #                    except:
-                    #                        current_analyticsemail = ""
                     try:
                         current_analyticsemail = user['ga_email']
                     except:
@@ -344,6 +333,13 @@ def getaudit_without_slack_added():
 def getaudit_without_slack():
     if not session['email']:
         return redirect('/getstarted/connect-accounts')
+
+    ip_addr = request.remote_addr
+    if ip_addr:
+        url = 'https://ipinfo.io/' + ip_addr + '/json'
+        res = urlopen(url)
+        data = load(res)
+        return data['timezone']
 
     counter = 0
     dt = db.find('datasource', {'email': session['email']})
