@@ -329,7 +329,7 @@ def getaudit_without_slack_added():
                            analytics_audits=analytics_audits)
 
 
-@app.route('/get_my_ip', methods=['GET'])
+@app.route('/get_my_ip', methods=['GET', 'POST'])
 def get_my_ip():
     user = db.find_one('user', {'email': session['email']})
     ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
