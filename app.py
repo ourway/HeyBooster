@@ -354,12 +354,22 @@ def getaudit_without_slack():
     if not session['email']:
         return redirect('/getstarted/connect-accounts')
 
-    # ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-    # if ip_addr:
-    #     url = 'https://ipinfo.io/' + ip_addr + '/json'
-    #     res = urlopen(url)
-    #     data = load(res)
-    #     return data['timezone']
+    ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+    user = db.find_one('user', {'email': session['email']})
+
+    if ip_addr:
+        url = 'https://ipinfo.io/' + ip_addr + '/json'
+        res = urlopen(url)
+        data = load(res)
+        tz = data['timezone']
+        pst = pytz.timezone(tz)
+        now = datetime.now()
+        now = datetime.strftime(now, '%d/%m/%Y')
+        now = datetime.strptime(now, '%d/%m/%Y')
+        localize = pst.localize(now)
+        tz_offset = int(localize.tzname())
+        db.find_and_modify('user', query={'_id': user['_id']},
+                           tz_offset=tz_offset)
 
     counter = 0
     dt = db.find('datasource', {'email': session['email']})
