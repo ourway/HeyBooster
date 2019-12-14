@@ -331,6 +331,7 @@ def getaudit_without_slack_added():
 
 @app.route('/get_my_ip', methods=['GET'])
 def get_my_ip():
+    user = db.find_one('user', {'email': session['email']})
     ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     url = 'https://ipinfo.io/' + ip_addr + '/json'
     res = urlopen(url)
@@ -341,7 +342,11 @@ def get_my_ip():
     now = datetime.strftime(now, '%d/%m/%Y')
     now = datetime.strptime(now, '%d/%m/%Y')
     localize = pst.localize(now)
-    return localize.tzname()
+    tz_offset = int(localize.tzname())
+    db.find_and_modify('user', query={'_id': user['_id']},
+                       tz_offset=tz_offset)
+    return tz_offset
+
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
 @login_required
@@ -462,7 +467,6 @@ def audithistory_without_slack(datasourceID):
     nForm = DataSourceForm(request.form)
     datasources = db.find('datasource', query={'email': session['email']})
 
-
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
@@ -526,14 +530,13 @@ def audithistory_without_slack(datasourceID):
         len_recommendations = len(recommendations) - list(recommendations.values()).count([])
         totalScore = report['totalScore']
     else:
-        #Old Version
-        notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
+        # Old Version
+        notification = db.find_one('notification', query={'datasourceID': ObjectId(datasourceID)})
         totalScore = notification['totalScore']
         recommendations = None
         len_recommendations = 0
         lastStates = notification['lastStates']
         len_issues = list(lastStates.values()).count('danger')
-        
 
     return render_template('new_theme/widgets.html', args=args, selectedargs=selectedargs, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
@@ -573,33 +576,33 @@ def recommendation(datasourceID):
              "internalSearchTermConsistency": "Internal Search Term Consistency",
              "samplingCheck": "Sampling Check"
              }
-    scores = {"adwordsAccountConnection":5,
-              "paymentReferral":5,
-              "gdprCompliant":5,
-              "dataRetentionPeriod":5,
-              "enhancedECommerceActivity":5,
-              "domainControl":5,
-              "rawDataView":5,
-              "userPermission":5,
-              "bounceRateTracking":4,
-              "selfReferral":4,
-              "botSpamExcluding":4,
-              "eventTracking":4,
-              "errorPage":4,
-              "timezone":4,
-              "currency":4,
-              "notSetLandingPage":3,
-              "sessionClickDiscrepancy":3,
-              "goalSettingActivity":3,
-              "customDimension":3,
-              "siteSearchTracking":3,
-              "remarketingLists":3,
-              "defaultPageControl":3,
-              "contentGrouping":3,
-              "othersInChannelGrouping":3,
-              "customMetric":2,
-              "internalSearchTermConsistency":2,
-              "samplingCheck":1
+    scores = {"adwordsAccountConnection": 5,
+              "paymentReferral": 5,
+              "gdprCompliant": 5,
+              "dataRetentionPeriod": 5,
+              "enhancedECommerceActivity": 5,
+              "domainControl": 5,
+              "rawDataView": 5,
+              "userPermission": 5,
+              "bounceRateTracking": 4,
+              "selfReferral": 4,
+              "botSpamExcluding": 4,
+              "eventTracking": 4,
+              "errorPage": 4,
+              "timezone": 4,
+              "currency": 4,
+              "notSetLandingPage": 3,
+              "sessionClickDiscrepancy": 3,
+              "goalSettingActivity": 3,
+              "customDimension": 3,
+              "siteSearchTracking": 3,
+              "remarketingLists": 3,
+              "defaultPageControl": 3,
+              "contentGrouping": 3,
+              "othersInChannelGrouping": 3,
+              "customMetric": 2,
+              "internalSearchTermConsistency": 2,
+              "samplingCheck": 1
               }
 
     user = db.find_one('user', {'email': session['email']})
@@ -615,8 +618,8 @@ def recommendation(datasourceID):
         len_recommendations = len(recommendations) - list(recommendations.values()).count([])
         totalScore = report['totalScore']
     else:
-        #Old Version
-        notification = db.find_one('notification',query = {'datasourceID':ObjectId(datasourceID)})
+        # Old Version
+        notification = db.find_one('notification', query={'datasourceID': ObjectId(datasourceID)})
         totalScore = notification['totalScore']
         recommendations = None
         summaries = None
@@ -679,7 +682,7 @@ def recommendation(datasourceID):
                 lastStates[key] = '34_none'
             else:
                 lastStates[key] = '35_none'
-                
+
     sortedLastStates = {k: v for k, v in sorted(lastStates.items(), key=lambda item: item[1])}
 
     return render_template('new_theme/index.html', args=args, selectedargs=selectedargs,
