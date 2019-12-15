@@ -114,7 +114,7 @@ def base():
     if not session['email']:
         return redirect('/getstarted/connect-accounts')
     else:
-        return redirect('/account/audit-history-without-slack')
+        return redirect('/account/audit-history')
 
 
 @app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
@@ -157,9 +157,9 @@ def home():
 @login_required
 def without_slack():
     if session['ga_accesstoken']:
-        return redirect('/getstarted/get-first-insight-without-slack')
+        return redirect('/getstarted/get-first-insight')
     else:
-        return redirect('/account/audit-history-without-slack')
+        return redirect('/account/audit-history')
 
 
 @app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
@@ -327,25 +327,6 @@ def getaudit_without_slack_added():
     return render_template('new_theme/widgets.html', args=args, selectedargs=args, nForm=nForm,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits)
-
-
-@app.route('/get_my_ip', methods=['GET', 'POST'])
-def get_my_ip():
-    user = db.find_one('user', {'email': session['email']})
-    ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-    url = 'https://ipinfo.io/' + ip_addr + '/json'
-    res = urlopen(url)
-    data = load(res)
-    tz = data['timezone']
-    pst = pytz.timezone(tz)
-    now = datetime.now()
-    now = datetime.strftime(now, '%d/%m/%Y')
-    now = datetime.strptime(now, '%d/%m/%Y')
-    localize = pst.localize(now)
-    tz_offset = int(localize.tzname())
-    db.find_and_modify('user', query={'_id': user['_id']},
-                       tz_offset=tz_offset)
-    return tz_offset
 
 
 @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
@@ -1030,8 +1011,12 @@ def wrongaccount():
     #        unsortedargs.append(datasource)
     #
     #    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('wrongaccount.html', current_analyticsemail=current_analyticsemail,
-                           workspace=workspace)
+
+    if not user['sl_accesstoken']:
+        return render_template('new_theme/connected_accounts.html', current_analyticsemail=current_analyticsemail)
+    else:
+        return render_template('wrongaccount.html', current_analyticsemail=current_analyticsemail,
+                               workspace=workspace)
 
 
 @app.route('/change', methods=['POST'])
@@ -1344,8 +1329,14 @@ def connectaccount():
     # incoming_webhook = slack.token['incoming_webhook']
     #        return render_template('datasourcesinfo.html', nForm = nForm, args = args)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    return render_template('datasources.html', nForm=nForm, args=args, current_analyticsemail=current_analyticsemail,
-                           workspace=workspace)
+
+    if not user['sl_accesstoken']:
+        return render_template('datasources_without_slack.html', nForm=nForm, args=args,
+                               current_analyticsemail=current_analyticsemail)
+    else:
+        return render_template('datasources.html', nForm=nForm, args=args,
+                               current_analyticsemail=current_analyticsemail,
+                               workspace=workspace)
 
 
 @app.route("/removedatasources/<datasourceID>", methods=['GET', 'POST'])
@@ -1510,9 +1501,15 @@ def getaudit():
         else:
             analytics_audit['strstat'] = 'active'
         analytics_audits += [analytics_audit]
-    return render_template('audit_table.html', args=args, selectedargs=args, nForm=nForm,
-                           current_analyticsemail=current_analyticsemail, workspace=workspace,
-                           analytics_audits=analytics_audits)
+
+    if not user['sl_accesstoken']:
+        return render_template('new_theme/widgets.html', args=args, selectedargs=args, nForm=nForm,
+                               current_analyticsemail=current_analyticsemail,
+                               analytics_audits=analytics_audits)
+    else:
+        return render_template('audit_table.html', args=args, selectedargs=args, nForm=nForm,
+                               current_analyticsemail=current_analyticsemail, workspace=workspace,
+                               analytics_audits=analytics_audits)
 
 
 @app.route("/gatest/<email>")
