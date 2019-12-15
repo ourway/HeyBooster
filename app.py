@@ -978,7 +978,7 @@ def audithistory(datasourceID):
 
 @app.route('/account/connections')
 def wrongaccount():
-    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+    if not (session['sl_accesstoken'] or session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
@@ -1236,7 +1236,7 @@ def get_channels():
 @app.route("/getstarted/get-first-insight", methods=['GET', 'POST'])
 @login_required
 def connectaccount():
-    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+    if not (session['sl_accesstoken'] or session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
@@ -1390,7 +1390,7 @@ def account():
 @app.route("/account/audit-history", methods=['GET', 'POST'])
 @login_required
 def getaudit():
-    if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+    if not (session['sl_accesstoken'] or session['ga_accesstoken']):
         return redirect('/getstarted/connect-accounts')
 
     user = db.find_one('user', {'email': session['email']})
