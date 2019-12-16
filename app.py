@@ -121,11 +121,14 @@ def base():
 @login_required
 def home():
     current_analyticsemail = ""
+    user = db.find_one('user', {'email': session['email']})
     if 'auth_token' in session.keys():
         try:
-            # if session['ga_accesstoken'] and session['sl_accesstoken']:
-            #     return redirect('/account/audit-history')
-            if session['ga_accesstoken'] == False and session['sl_accesstoken'] == False:
+            if session['ga_accesstoken'] and session['sl_accesstoken']:
+                return redirect('/account/audit-history')
+            elif session['ga_accesstoken'] and user['sl_accesstoken'] == False:
+                return redirect('/account/audit-history')
+            else:
                 # Check if user has slack connection
                 if session['sl_accesstoken']:
                     slack_confirm = True
@@ -291,7 +294,7 @@ def getaudit_without_slack_added():
 
         #        analyticsAudit(slack_token, task=None, dataSource=data)
 
-        return redirect('/account/audit-history-without-slack')
+        return redirect('/account/audit-history')
 
     useraccounts = google_analytics.get_accounts(session['email'])['accounts']
     if (useraccounts):
@@ -362,7 +365,7 @@ def getaudit_without_slack():
         if document['email']:
             counter = counter + 1
     if counter > 1:
-        return redirect('/account/audit-history-without-slack' + str(firstDatasourceID['_id']))
+        return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
 
     try:
         current_analyticsemail = user['ga_email']
@@ -805,7 +808,7 @@ def test_test_without_slack(datasourceID):
     dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
     if dataSource['email'] == session['email']:
         run_analyticsAudit_without_slack.delay(datasourceID)
-        return redirect('/account/audit-history-without-slack')
+        return redirect('/account/audit-history')
     else:
         return make_response("", 401)
 
@@ -1499,7 +1502,7 @@ def getaudit():
             if document['email']:
                 counter = counter + 1
         if counter > 1:
-            return redirect('/account/audit-history-without-slack' + str(firstDatasourceID['_id']))
+            return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
 
         try:
             current_analyticsemail = user['ga_email']
