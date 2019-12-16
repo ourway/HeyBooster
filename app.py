@@ -126,7 +126,7 @@ def home():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
                 return redirect('/account/audit-history')
-            elif session['ga_accesstoken'] and user['sl_accesstoken'] == False:
+            elif user['ga_accesstoken'] and user['sl_accesstoken'] == False:
                 return redirect('/account/audit-history')
             else:
                 # Check if user has slack connection
