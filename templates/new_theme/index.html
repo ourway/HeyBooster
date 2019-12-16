@@ -52,7 +52,7 @@
                             {% else %}
                                 {% set dataSourceName = arg._id %}
                             {% endif %}
-                            <a href="/account/audit-history-without-slack{{ arg._id }}"
+                            <a href="/account/audit-history{{ arg._id }}"
                                class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                 </div>
@@ -278,7 +278,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/account/audit-history-without-slack">
+                    <a class="nav-link" href="/account/audit-history">
                         <i style="color: #242635" class="mdi mdi-puzzle menu-icon"></i>
                         <span style="color: #242635;" class="menu-title">Audit History
                             <!--<span class="badge badge-danger">New</span>--></span>
@@ -286,7 +286,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/account/connections-without-slack">
+                    <a class="nav-link" href="/account/connections">
                         <i style="color: #242635" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
                         <span style="color: #242635" class="menu-title">Connected Accounts</span>
                     </a>
