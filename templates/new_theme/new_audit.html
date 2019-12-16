@@ -219,32 +219,26 @@
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
                             <i class="mdi mdi-account-circle menu-icon"></i>
-                            <span style="color: #fff;" class="menu-title">User Pages</span>
+                            <span style="color: #fff;" class="menu-title">{{ session['email'] }}</span>
                             <i style="color: #fff;" class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="auth">
                             <ul style="background-color:transparent; color: #fff;" class="nav flex-column sub-menu">
-                                <li style="background-color: transparent; color: #fff;" class="nav-item"> <a style="color: #fff;" class="nav-link" href="../../pages/samples/login.html"> Logout </a></li>
+                                <li style="background-color: transparent; color: #fff;" class="nav-item"> <a style="color: #fff;" class="nav-link" href="/logout"> Logout </a></li>
                                 
                             </ul>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/widgets/widgets.html">
+                        <a class="nav-link" href="/account/audit-history">
                             <i style="color: #fff" class="mdi mdi-puzzle menu-icon"></i>
-                            <span style="color: #fff;" class="menu-title">Audit<!--<span class="badge badge-danger">New</span>--></span>
+                            <span style="color: #fff;" class="menu-title">Audit History<!--<span class="badge badge-danger">New</span>--></span>
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/ui-features/accordions.html">
+                        <a class="nav-link" href="/account/connections">
                             <i  style="color: #fff" class="mdi mdi-calendar-blank menu-icon"></i>
-                            <span  style="color: #fff" class="menu-title">Audit Details</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../../pages/tables/basic-table.html">
-                            <i  style="color: #fff" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
                             <span  style="color: #fff" class="menu-title">Connected Accounts</span>
                         </a>
                     </li>
@@ -267,10 +261,14 @@
                             
                           </button>
                           <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
-                            
-                            <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum dolor.</a>
+                            {% for arg in args %}
+                            {% if arg.dataSourceName %}
+                                {% set dataSourceName = arg.dataSourceName %}
+                            {% else %}
+                                {% set dataSourceName = arg._id %}
+                            {% endif %}
+                                <a href="/account/audit-history{{ arg._id }}" class="dropdown-item" href="#">{{ dataSourceName }}</a>
+                            {% endfor %}
                             
                           </div>
                         </div></div>
@@ -341,53 +339,99 @@
                 </div>
               </div>
               
+              {% for arg in selectedargs %}
+              {% set AA = analytics_audits[loop.index0] %}
+              {% if AA.totalScore == 0 %}
               <div class=" pl-2 pr-2 card" style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #F1F5FA; border-radius: 0px; padding-top: 10px; border-bottom: 1px solid #ededed;">
                 <div style="height: 80px;" id="card-ug-mt"  class=" align-items-center card-body">
-                 
-                  
-                  
                   <div class="table-responsive col-md-10 d-inline-block float-left grid-margin stretch-card">
-                    <table class="table table-striped">
-                     
-                      
+                    <table class="table table-striped">                      
                       <tbody class="text-center">
-                        <tr style=" background-color:#F1F5FA; border-top: 2px solid #F1F5FA;">
-                          <td  style="border-right: 2px solid #F1F5FA;"  class="py-1 col-lg-2 text-left">
-                            <div id="audit-history-ug-score"><h4>41</h4></div>
-                          </td>
-                          
-                          <td class="col-lg-6 text-center">
-                            Google Analytics Last Updated Time 8 November at 8:44 2019
-                          </td>
-                          
-                          
-                          <td class="col-lg-2 text-center">
-                            <button style="font-size: 13px;"  class="btn btn-md btn-inverse-dark btn-md">Show Detail</button>
-                          </td>
-                          
-                          
-                        </tr>
-                    
-                      </tbody>
-                    </table>
-                    
-                  </div>
-                  
-                  <div  class="col-md-2 d-inline-block float-left mt-2 grid-margin stretch-card"><div class="dropdown text-center">
-                          <button class="btn dropdown-toggle" type="button" id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <tr style=" background-color:#F1F5FA; border-top: 2px solid #F1F5FA;">
+                                <td  style="border-right: 2px solid #F1F5FA;"  class="py-1 col-lg-2 text-left">
+                                    <div id="audit-history-ug-score"><h4>41</h4></div>
+                                </td>
+                                
+                                <td class="col-lg-6 text-center">
+                                        Last Updated Time: Preparing...
+                                </td>
+                                
+                                
+                                <td class="col-lg-2 text-center">
+                                    <a href="">
+                                        <button style="font-size: 13px;"  class="btn btn-md btn-inverse-dark btn-md">Show Detail</button>
+                                    </a>
+                                </td>
+                                
+                                
+                                </tr>
                             
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
+                            </tbody>
+                            </table>
                             
-                            <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum dolor.</a>
-                            
-                          </div>
-                        </div></div>       
+                        </div>
+                        
+                        <div  class="col-md-2 d-inline-block float-left mt-2 grid-margin stretch-card"><div class="dropdown text-center">
+                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
+                                    
+                                        <a class="dropdown-item" href="#">Test Now</a>
+                                        <a href="/active_audit_test/{{ AA._id }}"
+                                           class="dropdown-item">Change Alert</a>
+                                </div>
+                                </div>
+                            </div>       
                     
                 </div>
               </div>
+              {% else %}
+              <div class=" pl-2 pr-2 card" style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #F1F5FA; border-radius: 0px; padding-top: 10px; border-bottom: 1px solid #ededed;">
+                    <div style="height: 80px;" id="card-ug-mt"  class=" align-items-center card-body">
+                      <div class="table-responsive col-md-10 d-inline-block float-left grid-margin stretch-card">
+                        <table class="table table-striped">                      
+                          <tbody class="text-center">
+                                    <tr style=" background-color:#F1F5FA; border-top: 2px solid #F1F5FA;">
+                                    <td  style="border-right: 2px solid #F1F5FA;"  class="py-1 col-lg-2 text-left">
+                                        <div id="audit-history-ug-score"><h4>41</h4></div>
+                                    </td>
+                                    
+                                    <a href="/account/recommendation{{ arg._id }}">
+                                    <td class="col-lg-6 text-center">
+                                            {{ dataSourceName }}
+                                    </td>
+                                </a>
+                                    
+                                    <td class="col-lg-2 text-center">
+                                        <a href="/account/recommendation{{ arg._id }}">
+                                            <button style="font-size: 13px;"  class="btn btn-md btn-inverse-dark btn-md">Show Detail</button>
+                                        </a>
+                                    </td>
+                                    
+                                    
+                                    </tr>
+                                
+                                </tbody>
+                                </table>
+                                
+                            </div>
+                            
+                            <div  class="col-md-2 d-inline-block float-left mt-2 grid-margin stretch-card"><div class="dropdown text-center">
+                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
+                                        
+                                            <a class="dropdown-item" href="#">Test Now</a>
+                                            <a href="/active_audit_test/{{ AA._id }}"
+                                               class="dropdown-item">Change Alert</a>
+                                    </div>
+                                    </div>
+                                </div>       
+                        
+                    </div>
+                  </div>
               
               <!-- PREVIOUS AUDIT KISIMI -----------------  -->
               <!--
@@ -425,77 +469,13 @@
                     
                   </div>
                   
-                  <div   class="col-md-2 d-inline-block float-left mt-2 grid-margin stretch-card"><h4  id="td-head-ug" class="text-center"></h4></div>
-                        
-                    
-                        
+                  <div   class="col-md-2 d-inline-block float-left mt-2 grid-margin stretch-card"><h4  id="td-head-ug" class="text-center"></h4></div>      
                     
                 </div>
               </div>
               
               -->
               <!-- PREVIOUS AUDİT BİTİŞ -------------- -->
-
-              <div class=" pl-2 pr-2 card" style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #F1F5FA; border-radius: 0px; padding-top: 10px;">
-                <div style="height: 80px;" id="card-ug-mt"  class=" align-items-center card-body">
-                 
-                  
-                  
-                  <div class="table-responsive col-md-10 d-inline-block float-left grid-margin stretch-card">
-                    <table class="table table-striped">
-                     
-                      
-                      <tbody class="text-center">
-                        <tr style=" background-color: #F1F5FA;">
-                          <td style="border-right: 2px solid #F1F5FA;;" class="py-1 col-lg-2 text-left">
-                            <div id="audit-history-ug-score"><h4>82</h4></div>
-                          </td>
-                          
-                          <td class="col-lg-6 text-center">
-                            Google Analytics Last Updated Time 8 November at 8:44 2019
-                          </td>
-                          
-                          
-                          <td class="col-lg-2 text-center">
-                            <button  class="btn btn-inverse-dark btn-md">Show Detail</button>
-                          </td>
-                          
-                          
-                        </tr>
-                    
-                      </tbody>
-                    </table>
-                    
-                  </div>
-                  
-                  <div  class="col-md-2 d-inline-block float-left mt-2 grid-margin stretch-card"><div class="dropdown text-center">
-                          <button class="btn dropdown-toggle" type="button" id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
-                             <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum dolor.</a>
-                          </div>
-                        </div></div>
-                        
-                    
-                        
-                    
-                </div>
-              </div>
-              
-              
-              
-              
-            
-            
-            
-              
-              
-              
-              
-            
             </div>
             </div>
             
