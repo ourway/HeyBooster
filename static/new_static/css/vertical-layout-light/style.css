@@ -9696,7 +9696,7 @@ summary {
 }
 
 template {
-
+    
     display: none;
 }
 
@@ -21658,7 +21658,7 @@ a.text-dark:focus {
     }
 
     abbr[title]::after {
-        content: " (" attr(title) ")";
+        content: " ("attr(title) ")";
     }
 
     pre {
@@ -25250,10 +25250,34 @@ code {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     -ms-box-shadow: none;
+    
 }
 
 .card .card-body {
     padding: 1.875rem 1.875rem;
+}
+
+#card-ug-mt {
+    padding: 0px;
+    padding-top: 5px;
+    
+}
+
+#border-ug-i {
+    
+}
+
+#m-left-right-ug {
+   
+ 
+}
+
+#card-genel-ug {
+    
+    height: auto;
+   
+    
+    
 }
 
 .card .card-body + .card-body {
@@ -26203,8 +26227,7 @@ select.border-dark.tt-hint:focus {
 }
 
 @-webkit-keyframes rota {
-    from {
-    }
+    from {}
 
     to {
         -webkit-transform: rotate(360deg);
@@ -26212,8 +26235,7 @@ select.border-dark.tt-hint:focus {
 }
 
 @keyframes rota {
-    from {
-    }
+    from {}
 
     to {
         -webkit-transform: rotate(360deg);
@@ -26222,8 +26244,7 @@ select.border-dark.tt-hint:focus {
 }
 
 @-webkit-keyframes opa {
-    0% {
-    }
+    0% {}
 
     12.0% {
         opacity: 0.80;
@@ -26271,8 +26292,7 @@ select.border-dark.tt-hint:focus {
 }
 
 @keyframes opa {
-    0% {
-    }
+    0% {}
 
     12.0% {
         opacity: 0.80;
@@ -28465,7 +28485,7 @@ dl li {
     font-weight: 600;
     font-size: 0.8125rem;
     padding: 1rem 0.9375rem;
-
+    
 }
 
 .table thead th i,
@@ -29122,7 +29142,7 @@ dl li {
 
 .tooltip-static-demo .bs-tooltip-right-demo .arrow:before,
 .tooltip-static-demo .bs-tooltip-left-demo .arrow:before {
-    top: calc((100% - 0.8rem) / 2);
+    top: calc((100%-0.8rem)/2);
 }
 
 .tooltip {
@@ -32629,8 +32649,8 @@ div.tagsinput span.tag a {
     align-items: center;
     white-space: nowrap;
     padding: 0.625rem 1.25rem 0.625rem 1.25rem;
-    color: #242635;
-
+    color: #fff;
+    
     -webkit-transition-duration: 0.45s;
     -moz-transition-duration: 0.45s;
     -o-transition-duration: 0.45s;
@@ -32638,17 +32658,17 @@ div.tagsinput span.tag a {
     transition-property: color;
     -webkit-transition-property: color;
     font-weight: 400;
-
+    
 }
 
 .sidebar .nav .nav-item:hover {
     background-color: transparent;
-
+    
 }
 
 .sidebar .nav .nav-item:focus {
     background-color: transparent;
-
+    
 }
 
 .sidebar .nav .nav-item .nav-link i {
@@ -32659,7 +32679,7 @@ div.tagsinput span.tag a {
     font-size: 1.125rem;
     line-height: 1;
     margin-right: 0.625rem;
-    color: #242635;;
+    color: #fff;;
 }
 
 .rtl .sidebar .nav .nav-item .nav-link i.menu-icon {
@@ -32733,11 +32753,11 @@ div.tagsinput span.tag a {
 
 .sidebar .nav .nav-item.active {
     background: #cccccc;
-
+    
 }
 
 .sidebar .nav .nav-item nav-link.active {
-
+    
 }
 
 .sidebar .nav .nav-item.active > .nav-link {
@@ -32821,7 +32841,7 @@ div.tagsinput span.tag a {
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link:hover {
-    color: #242635;
+    color: #fff;
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link.active {
@@ -32832,11 +32852,11 @@ div.tagsinput span.tag a {
 
 .sidebar .nav.sub-menu .nav-item:hover {
     background: transparent;
-
+    
 }
 
 .sidebar-light .sidebar {
-    background: #dddee3;
+    background: #242635;
 }
 
 .sidebar-light .sidebar .nav .nav-item .nav-link {
@@ -32909,7 +32929,7 @@ div.tagsinput span.tag a {
 
 .sidebar-light .sidebar .nav.sub-menu .nav-item:hover {
     background: transparent;
-
+   
 }
 
 /* style for off-canvas menu*/
@@ -32958,10 +32978,11 @@ div.tagsinput span.tag a {
 
 .navbar .navbar-brand-wrapper .navbar-brand {
     color: #27367f;
-    font-size: 1.5rem;
+    font-size:1.5rem;
     margin-right: 0;
     padding: .25rem 0;
 }
+
 
 
 .navbar .navbar-brand-wrapper .navbar-brand.brand-logo-mini {
@@ -33005,7 +33026,7 @@ div.tagsinput span.tag a {
 .navbar .navbar-brand-wrapper .brand-logo-mini {
     padding-left: 0;
     text-align: center;
-
+    
 }
 
 .navbar .navbar-brand-wrapper .brand-logo-mini img {
@@ -33026,9 +33047,9 @@ div.tagsinput span.tag a {
     width: calc(100% - 210px);
     height: 63px;
     -webkit-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
-    box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
-
+     -moz-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+     box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+    
 }
 
 @media (max-width: 991px) {
@@ -33501,12 +33522,12 @@ div.tagsinput span.tag a {
 
 @media (min-width: 992px) {
     .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right {
-        margin-right: auto;
+        margin-left: auto;
     }
 
     .rtl .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right {
         margin-left: 0;
-        margin-right: auto;
+        margin-left: auto;
     }
 }
 
@@ -36295,6 +36316,7 @@ div.tagsinput span.tag a {
 }
 
 
+
 #settings-trigger {
     position: fixed;
     bottom: 40px;
@@ -36347,6 +36369,13 @@ div.tagsinput span.tag a {
 /*# sourceMappingURL=../maps/vertical-layout-light/style.css.map */
 
 
+
+
+
+
+
+
+
 /* extra css */
 
 
@@ -36381,6 +36410,7 @@ div.tagsinput span.tag a {
     margin: auto;
     */
 }
+
 
 
 #pills-home-tab-custom {
@@ -36420,6 +36450,8 @@ div.tagsinput span.tag a {
 }
 
 
+
+
 #pills-contact-tab-custom {
     background-color: #25378b;
     opacity: 0.8;
@@ -36435,13 +36467,14 @@ div.tagsinput span.tag a {
 }
 
 
+
 #danger-btn-ug {
     font-size: 14px;
     color: white;
     width: 120px;
     position: relative;
     margin-right: 10px;
-
+    
     transform: translateY(60%);
     background-color: transparent;
     float: right;
@@ -36474,7 +36507,7 @@ div.tagsinput span.tag a {
     position: relative;
     margin-right: 10px;
     transform: translateY(60%);
-    background-color: transparent;
+    background-color:transparent;
     background: #009688;
     float: right;
     border-radius: 4px;
@@ -36488,7 +36521,7 @@ div.tagsinput span.tag a {
     text-align: center;
     font-size: 14px;
     margin: auto;
-
+    
     padding-left: 5px;
     padding-right: 5px;
     font-style: normal;
@@ -36500,8 +36533,8 @@ div.tagsinput span.tag a {
     text-align: center;
     font-size: 14px;
     margin: auto;
-
-
+    
+    
     padding-left: 5px;
     padding-right: 5px;
     font-style: normal;
@@ -36513,7 +36546,7 @@ div.tagsinput span.tag a {
     text-align: center;
     font-size: 14px;
     margin: auto;
-
+    
     padding-left: 5px;
     padding-right: 5px;
     font-style: normal;
@@ -36527,7 +36560,7 @@ div.tagsinput span.tag a {
     position: relative;
     margin-right: 10px;
     transform: translateY(60%);
-    background-color: transparent;
+    background-color:transparent;
     float: right;
     background: #686868;
     text-align: center;
@@ -36539,7 +36572,7 @@ div.tagsinput span.tag a {
     text-align: center;
     font-size: 14px;
     margin: auto;
-
+    
     font-style: normal;
     font-weight: 500;
     padding-left: 5px;
@@ -36567,30 +36600,32 @@ div.tagsinput span.tag a {
     background-color: #fff;
     border: none;
     border-color: #eeeeee;
-    box-shadow: 3px 2px 5px 0px rgba(0, 0, 0, 0.13);
+    box-shadow: 3px 2px 5px 0px rgba(0,0,0,0.13);
     transition: .4s box-shadow;
     border: 1px solid #fefefe;
-
+    
 }
 
 .card .card-body .card:hover {
     background-color: #fff;
-
-    box-shadow: 3px 3px 4px 0px rgba(0, 0, 0, 0.15);
+    
+    box-shadow: 3px 3px 4px 0px rgba(0,0,0,0.15);
 }
 
 
 #score-ug {
-
-    background-color: rgba(2, 171, 254, 0.7);
+    
+    background-color:  rgba(2, 171, 254, 0.7);
     color: white;
     font-size: 16px;
     border: 5px solid white;
     border-radius: 7px;
     font-size: 20px;
     font-weight: 400;
-
-
+    
+    
+   
+    
 }
 
 #score-ug-2 {
@@ -36612,6 +36647,7 @@ div.tagsinput span.tag a {
     margin-top: 30px;
     position: relative;
     margin-bottom: 20px;
+    
 }
 
 #circleBar .round strong {
@@ -36645,6 +36681,7 @@ section button:hover {
 
 #grafik-healty-ug {
     margin: 10px;
+    color: black;
 }
 
 #card-tam-ug {
@@ -36653,7 +36690,7 @@ section button:hover {
 
 #card-ust-ug {
     height: 115px;
-
+    
 }
 
 #card-ust-ug i {
@@ -36676,14 +36713,14 @@ section button:hover {
     font-weight: 500;
     display: inline-block;
     color: #2c2f41;
-
-
+    
+    
 }
 
 
 #data-source-name-ug {
     padding-top: 5px;
-    background-color: transparent;
+    background-color:transparent;
     border: 1px solid rgba(26, 28, 41, 0.6);
     padding: 10px;
     border-radius: 7px;
@@ -36695,25 +36732,23 @@ section button:hover {
 }
 
 #data-source-name-ug:hover {
-
+    
     box-shadow: 1px 2px 5px 0px rgba(26, 28, 41, 0.2);
-
+    
 }
-
 #tr-link-2 {
     background-color: transparent;
     transition: .4s background;
     cursor: pointer;
-
+    
 }
-
 #tr-link-2:hover {
     background-color: #f2f5f8;
-
+    
 }
 
 .height-ug {
-
+    
     height: 100px;
 }
 
@@ -36738,4 +36773,33 @@ section button:hover {
 
 #display-ug-ib {
     display: inline-block;
+}
+
+#audit-history-ug-score{
+    height: 50px;
+    width: 70px;
+    background-color: #2C6C8C;
+    border-radius: 4px;
+
+}
+
+#audit-history-ug-score h4 {
+    color: #fff;
+}
+
+
+#audit-history-ug-score h4{
+    color: white;
+    text-align: center;
+    padding-top: 14px;
+    font-weight: 300;
+    font-family: sans-serif;
+    font-size: 22px;
+}
+
+
+#td-head-ug {
+    font-size: 13px;
+    font-weight: 500;
+    color: #666666;
 }
