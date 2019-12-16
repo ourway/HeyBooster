@@ -123,9 +123,9 @@ def home():
     current_analyticsemail = ""
     if 'auth_token' in session.keys():
         try:
-            if session['ga_accesstoken'] and session['sl_accesstoken']:
-                return redirect('/account/audit-history')
-            else:
+            # if session['ga_accesstoken'] and session['sl_accesstoken']:
+            #     return redirect('/account/audit-history')
+            if session['ga_accesstoken'] == False and session['sl_accesstoken'] == False:
                 # Check if user has slack connection
                 if session['sl_accesstoken']:
                     slack_confirm = True
