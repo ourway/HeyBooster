@@ -122,6 +122,9 @@ def base():
 def home():
     current_analyticsemail = ""
     user = db.find_one('user', {'email': session['email']})
+    print('********************')
+    print(user['ga_accesstoken'])
+    print(user['sl_accesstoken'])
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
