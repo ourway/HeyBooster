@@ -754,8 +754,8 @@ def bounceRateTracking(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
-
+        return [], []
+    
 
 def notSetLandingPage(dataSource):
     text = "Not Set Landing Page Tracking"
@@ -789,16 +789,22 @@ def notSetLandingPage(dataSource):
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'filtersExpression': "ga:landingPagePath=@not set",
+                    'dimensions': [{'name': 'ga:landingPagePath'}],
+#                    'filtersExpression': "ga:landingPagePath=@not set",
                     'includeEmptyRows': True
                 }]}
 #    results = makeRequestWithExponentialBackoff(service, body)
     req = service.reports().batchGet(body=body)
     results = makeRequestWithExponentialBackoff(req)
     
-    pageviews = float(results['reports'][0]['data']['totals'][0]['values'][0])
-
-    if pageviews > 0:
+    totalsessions = float(results['reports'][0]['data']['totals'][0]['values'][0])
+    sessions = 0
+    for row in results['reports'][0]['data']['rows']:
+        landingPage = row['dimensions'][0]
+        if 'not set' in landingPage:
+            sessions = int(row['metrics'][0]['values'][0])
+            break
+    if sessions/totalsessions > 0.0001:
         attachments += [{
             "text": "(not set) landing pages are seen on your landing page report, it indicated that there is an issue in your page tracking.",
             "color": "danger",
@@ -813,7 +819,7 @@ def notSetLandingPage(dataSource):
                             "Default session duration (30 min) may not be the optimum duration for your website, change this from Google Analytics property settings."]
     else:
         attachments += [{
-            "text": "Good for you! There are no sessions that landed on an unknown page.",
+            "text": "There is no important issue about not set landing pages, the number of session landed on unknown page is ignorable.",
             "color": "good",
 #            "pretext": text,
             "title": text,
@@ -826,7 +832,7 @@ def notSetLandingPage(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def adwordsAccountConnection(dataSource):
@@ -936,7 +942,7 @@ def adwordsAccountConnection(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def sessionClickDiscrepancy(dataSource):
@@ -954,7 +960,7 @@ def sessionClickDiscrepancy(dataSource):
 
     today = datetime.today()
 
-    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    start_date_1 = dtimetostrf((today - timedelta(days=30)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -994,7 +1000,7 @@ def sessionClickDiscrepancy(dataSource):
         if adclicks_result > 0:
             if adclicks_result < sessions_result * 0.95 or adclicks_result > sessions_result * 1.05:
                 attachments += [{
-                    "text": "There is something like session click discrepancy. If you don’t measure your adwords performance properly.",
+                    "text": "Click session discrepancy is higher than expected. That may have negative impact on the Google Ads performance.",
                     "color": "danger",
         #            "pretext": text,
                     "title": text,
@@ -1018,6 +1024,16 @@ def sessionClickDiscrepancy(dataSource):
         #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                     "attachment_type": "default",
                 }]
+        else:
+            attachments += [{
+                "text": "You don’t have any session from Google Ads campaigns.",
+                "color": "danger",
+    #            "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
     else:
         attachments += [{
                 "text": "You don’t have any session from Google Ads campaigns.",
@@ -1033,7 +1049,7 @@ def sessionClickDiscrepancy(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def goalSettingActivity(dataSource):
@@ -1103,7 +1119,7 @@ def goalSettingActivity(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def selfReferral(dataSource):
@@ -1157,6 +1173,7 @@ def selfReferral(dataSource):
     
     if 'rows' in results['reports'][0]['data'].keys():
         hostname = results['reports'][0]['data']['rows'][0]['dimensions'][0]
+        hostname.replace('www.','')
 #        results = service.reports().batchGet(
 #            body={
 #                'reportRequests': [
@@ -1172,7 +1189,7 @@ def selfReferral(dataSource):
                         'viewId': viewId,
                         'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                         'metrics': metrics,
-                        'filtersExpression': f'ga:source=={hostname};ga:medium==referral'
+                        'filtersExpression': f'ga:source=@{hostname};ga:medium==referral'
                     }]}
 #        results = makeRequestWithExponentialBackoff(service, body)
         req = service.reports().batchGet(body=body)
@@ -1206,7 +1223,7 @@ def selfReferral(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def paymentReferral(dataSource):
@@ -1280,7 +1297,7 @@ def paymentReferral(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def botSpamExcluding(dataSource):
@@ -1332,7 +1349,7 @@ def botSpamExcluding(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def customDimension(dataSource):
@@ -1432,7 +1449,7 @@ def customDimension(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def siteSearchTracking(dataSource):
@@ -1504,8 +1521,8 @@ def siteSearchTracking(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
-
+        return [], []
+    
 
 def gdprCompliant(dataSource):
     text = "GDPR Compliant"
@@ -1575,8 +1592,8 @@ def gdprCompliant(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
-
+        return [], []
+    
 
 def dataRetentionPeriod(dataSource):
     text = "Data Retention Period"
@@ -1626,7 +1643,7 @@ def dataRetentionPeriod(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def remarketingLists(dataSource):
@@ -1679,7 +1696,7 @@ def remarketingLists(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def enhancedECommerceActivity(dataSource):
@@ -1731,7 +1748,7 @@ def enhancedECommerceActivity(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def customMetric(dataSource):
@@ -1824,7 +1841,7 @@ def customMetric(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def samplingCheck(dataSource):
@@ -1891,7 +1908,7 @@ def samplingCheck(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def internalSearchTermConsistency(dataSource):
@@ -1948,7 +1965,7 @@ def internalSearchTermConsistency(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def defaultPageControl(dataSource):
@@ -2004,7 +2021,7 @@ def defaultPageControl(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def domainControl(dataSource):
@@ -2125,7 +2142,7 @@ def domainControl(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def eventTracking(dataSource):
@@ -2190,15 +2207,13 @@ def eventTracking(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def errorPage(dataSource):
     text = "404 Error Page"
     attachments = []
     recommendations = []
-
-    not_found = 0
 
     email = dataSource['email']
     viewId = dataSource['viewID']
@@ -2207,7 +2222,7 @@ def errorPage(dataSource):
 
     today = datetime.today()
 
-    start_date_1 = dtimetostrf((today - timedelta(days=7)))  # Convert it to string format
+    start_date_1 = dtimetostrf((today - timedelta(days=30)))  # Convert it to string format
     end_date_1 = dtimetostrf((today - timedelta(days=1)))
 
     service = google_analytics.build_reporting_api_v4_woutSession(email)
@@ -2220,22 +2235,52 @@ def errorPage(dataSource):
 #                    'metrics': metrics,
 #                    'filtersExpression':'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404',
 #                }]}).execute()
-    condition = 'ga:pageTitle=@Page%20Not%20Found,ga:pageTitle=@404%20Not%20Found,ga:pageTitle=@404%20Pages,ga:pageTitle=@404%20Error'
+    condition_pageTitle = ('ga:pageTitle=@Page Not Found,'
+                 'ga:pageTitle=@404 Not Found,'
+                 'ga:pageTitle=@404 Pages,'
+                 'ga:pageTitle=@404Error,'
+                 'ga:pageTitle=@404 Response')
+    condition_eventCategory = ('ga:eventCategory=@Page Not Found,'
+                 'ga:eventCategory=@404 Not Found,'
+                 'ga:eventCategory=@404 Pages,'
+                 'ga:eventCategory=@404 Error,'
+                 'ga:eventCategory=@404 Response')
+    condition_eventAction = ('ga:eventAction=@Page Not Found,'
+                 'ga:eventAction=@404 Not Found,'
+                 'ga:eventAction=@404 Pages,'
+                 'ga:eventAction=@404 Error,'
+                 'ga:eventAction=@404 Response')
+    
     body={
             'reportRequests': [
                 {
                     'viewId': viewId,
                     'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
-                    'filtersExpression':condition,
+                    'filtersExpression':condition_pageTitle,
+                },
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'filtersExpression':condition_eventCategory,
+                },
+                {
+                    'viewId': viewId,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'metrics': metrics,
+                    'filtersExpression':condition_eventAction,
                 }]}
 #    results = makeRequestWithExponentialBackoff(service, body)
     req = service.reports().batchGet(body=body)
     results = makeRequestWithExponentialBackoff(req)
-    if 'rows' in results['reports'][0]['data'].keys():
-        not_found = True
-    else:
-        not_found = False
+    
+    not_found = False
+    for report in results['reports']:
+        if 'rows' in results['reports'][0]['data'].keys():
+            not_found = True
+        else:
+            not_found = False
 
     if not_found:
         attachments += [{
@@ -2263,7 +2308,7 @@ def errorPage(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def timezone(dataSource):
@@ -2399,7 +2444,7 @@ def timezone(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def currency(dataSource):
@@ -2508,7 +2553,7 @@ def currency(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def rawDataView(dataSource):
@@ -2567,7 +2612,7 @@ def rawDataView(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def contentGrouping(dataSource):
@@ -2653,7 +2698,7 @@ def contentGrouping(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def othersInChannelGrouping(dataSource):
@@ -2739,7 +2784,7 @@ def othersInChannelGrouping(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
 
 
 def userPermission(dataSource):
@@ -2787,4 +2832,4 @@ def userPermission(dataSource):
 #        attachments[0]['pretext'] = text
         return attachments, recommendations
     else:
-        return []
+        return [], []
