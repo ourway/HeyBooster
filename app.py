@@ -354,24 +354,23 @@ def getaudit_without_slack():
         tz_offset = int(localize.tzname())
         db.find_and_modify('user', query={'_id': user['_id']},
                            tz_offset=tz_offset)
+#    counter = 0
+#    dt = db.find('datasource', {'email': session['email']})
+#    user = db.find_one('user', {'email': session['email']})
+#    firstDatasourceID = db.find_one('datasource', {'email': session['email']})
 
-    counter = 0
-    dt = db.find('datasource', {'email': session['email']})
-    datasources = db.find('datasource', query={'email': session['email']})
-    user = db.find_one('user', {'email': session['email']})
-    firstDatasourceID = db.find_one('datasource', {'email': session['email']})
-
-    for document in dt:
-        if document['email']:
-            counter = counter + 1
-    if counter > 1:
-        return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
+#    for document in dt:
+#        if document['email']:
+#            counter = counter + 1
+#    if counter > 1:
+#        return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
 
     try:
         current_analyticsemail = user['ga_email']
     except:
         current_analyticsemail = ""
-
+    
+    datasources = db.find('datasource', query={'email': session['email']})
     nForm = DataSourceForm(request.form)
     unsortedargs = []
     for datasource in datasources:
@@ -1578,23 +1577,23 @@ def getaudit():
             db.find_and_modify('user', query={'_id': user['_id']},
                                tz_offset=tz_offset)
 
-        counter = 0
-        dt = db.find('datasource', {'email': session['email']})
-        datasources = db.find('datasource', query={'email': session['email']})
-        user = db.find_one('user', {'email': session['email']})
-        firstDatasourceID = db.find_one('datasource', {'email': session['email']})
+#        counter = 0
+#        dt = db.find('datasource', {'email': session['email']})
+#        user = db.find_one('user', {'email': session['email']})
+#        firstDatasourceID = db.find_one('datasource', {'email': session['email']})
 
-        for document in dt:
-            if document['email']:
-                counter = counter + 1
-        if counter > 1:
-            return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
+#        for document in dt:
+#            if document['email']:
+#                counter = counter + 1
+#        if counter > 1:
+#            return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
 
         try:
             current_analyticsemail = user['ga_email']
         except:
             current_analyticsemail = ""
-
+            
+        datasources = db.find('datasource', query={'email': session['email']})
         nForm = DataSourceForm(request.form)
         unsortedargs = []
         for datasource in datasources:
