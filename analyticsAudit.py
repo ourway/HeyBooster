@@ -374,6 +374,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
         				"text": "*Analytics Audit*"
         			}
         		}]
+        
         allattachments = [{"text": text,
                          "color": maincolor,
 #                         "pretext": "*Analytics Audit*",
@@ -381,12 +382,22 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
                          "actions": actions}] + allattachments
-      
         length = len(allattachments)
         for i in range(length-1):
             allattachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
             
         if changedattachments:
+            changedattachments = [{"text": text,
+                             "color": maincolor,
+    #                         "pretext": "*Analytics Audit*",
+                             "callback_id": "notification_form",
+                             "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                             "attachment_type": "default",
+                             "actions": actions}] + changedattachments
+            length2 = len(changedattachments)
+            for i in range(length2-1):
+                changedattachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
+            
             db.insert('reports', data={ 'datasourceID': dataSource['_id'],
                                         'message':{'blocks': blocks,
                                                    'attachments': allattachments
@@ -395,7 +406,7 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                                         'recommendations': recommendations,
                                         'lastStates': currentStates,
                                         'totalScore': totalScore,
-                                        'ts': time.time()})  
+                                        'ts': time.time()})
         else:
             reports = db.find('reports', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
             report = None
@@ -413,8 +424,12 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                                         'lastStates': currentStates,
                                         'totalScore': totalScore,
                                         'ts': time.time()})  
-        sendAnalyticsAudit(slack_token, dataSource, blocks, allattachments, dataSource['channelID'], sendFeedback)
-
+        if is_orchestrated:
+            if changedattachments:
+                sendAnalyticsAudit(slack_token, dataSource, blocks, changedattachments, dataSource['channelID'], sendFeedback)
+        else:
+            sendAnalyticsAudit(slack_token, dataSource, blocks, allattachments, dataSource['channelID'], sendFeedback)
+            
 
 def analyticsAudit_without_slack(task, dataSource):
     db.init()
@@ -632,6 +647,7 @@ def analyticsAudit_without_slack(task, dataSource):
         				"text": "*Analytics Audit*"
         			}
         		}]
+        
         allattachments = [{"text": text,
                          "color": maincolor,
 #                         "pretext": "*Analytics Audit*",
@@ -639,12 +655,22 @@ def analyticsAudit_without_slack(task, dataSource):
                          "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
                          "attachment_type": "default",
                          "actions": actions}] + allattachments
-      
         length = len(allattachments)
         for i in range(length-1):
             allattachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
             
         if changedattachments:
+            changedattachments = [{"text": text,
+                             "color": maincolor,
+    #                         "pretext": "*Analytics Audit*",
+                             "callback_id": "notification_form",
+                             "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                             "attachment_type": "default",
+                             "actions": actions}] + changedattachments
+            length2 = len(changedattachments)
+            for i in range(length2-1):
+                changedattachments.insert(2*i-1, {"blocks": [{"type": "divider"}]})
+            
             db.insert('reports', data={ 'datasourceID': dataSource['_id'],
                                         'message':{'blocks': blocks,
                                                    'attachments': allattachments
@@ -653,7 +679,7 @@ def analyticsAudit_without_slack(task, dataSource):
                                         'recommendations': recommendations,
                                         'lastStates': currentStates,
                                         'totalScore': totalScore,
-                                        'ts': time.time()})        
+                                        'ts': time.time()})
         else:
             reports = db.find('reports', query={'datasourceID':dataSource['_id']}).sort([('_id', -1)])
             report = None
@@ -663,14 +689,14 @@ def analyticsAudit_without_slack(task, dataSource):
                 db.find_and_modify('reports', query={'_id':report['_id']}, ts = time.time())
             else:
                 db.insert('reports', data={ 'datasourceID': dataSource['_id'],
-                                            'message':{'blocks': blocks,
-                                                       'attachments': allattachments
-                                                      },
-                                            'summaries': summaries,
-                                            'recommendations': recommendations,
-                                            'lastStates': currentStates,
-                                            'totalScore': totalScore,
-                                            'ts': time.time()})  
+                                        'message':{'blocks': blocks,
+                                                   'attachments': allattachments
+                                                  },
+                                        'summaries': summaries,
+                                        'recommendations': recommendations,
+                                        'lastStates': currentStates,
+                                        'totalScore': totalScore,
+                                        'ts': time.time()})   
             
 
 def bounceRateTracking(dataSource):
