@@ -245,6 +245,7 @@
                 </ul>
             </nav>
       <!-- partial -->
+      {% if current_analyticsemail %}
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">                    
@@ -349,7 +350,7 @@
                       <tbody class="text-center">
                                 <tr style=" background-color:#F1F5FA; border-top: 2px solid #F1F5FA;">
                                 <td  style="border-right: 2px solid #F1F5FA;"  class="py-1 col-lg-2 text-left">
-                                    <div id="audit-history-ug-score"><h4>41</h4></div>
+                                    <div id="audit-history-ug-score"><h4>{{AA.totalScore}}</h4></div>
                                 </td>
                                 
                                 <td class="col-lg-6 text-center">
@@ -394,7 +395,7 @@
                           <tbody class="text-center">
                                     <tr style=" background-color:#F1F5FA; border-top: 2px solid #F1F5FA;">
                                     <td  style="border-right: 2px solid #F1F5FA;"  class="py-1 col-lg-2 text-left">
-                                        <div id="audit-history-ug-score"><h4>41</h4></div>
+                                        <div id="audit-history-ug-score"><h4>{{AA.totalScore}}</h4></div>
                                     </td>
                                     
                                     <a href="/account/recommendation{{ arg._id }}">
@@ -512,41 +513,29 @@
 
                                                         <div class="form-group col-lg-6 offset-md-3  mt-5">
                                                             <label  style="color: #25378b; font-weight: 500;">Google Analytics Account</label>
-                                                            <text type="text" class="form-control text-center form-control-sm" placeholder="Type a name eg. 'My store's First Audit'" aria-label="Username">uguryucae19@gmail.com</text>
+                                                            <text type="text" class="form-control text-center form-control-sm" placeholder="Type a name eg. 'My store's First Audit'" aria-label="Username">current_analyticsemail</text>
                                                         </div>
 
 
                                                         <div class="form-group col-lg-6 offset-md-3  mt-5">
                                                             <label class="d-block"  style="color: #25378b; font-weight: 500;">Select Your Profile Detail</label>
-                                                            <select class="js-example-basic-single w-100 text-center">
-                                                                <option value="AL">Select your account</option>
-                                                                <option value="WY">Wyoming</option>
-                                                                <option value="AM">America</option>
-                                                                <option value="CA">Canada</option>
-                                                                <option value="RU">Russia</option>
-                                                            </select>
+                                                            <div>
+                                                                {{ nForm.account }}
+                                                            </div>
                                                         </div>
 
                                                         <div class="form-group col-lg-6 offset-md-3">
                                                             <label class="d-block"></label>
-                                                            <select class="js-example-basic-single w-100 text-center">
-                                                                <option value="AL">Select Your Property</option>
-                                                                <option value="WY">Wyoming</option>
-                                                                <option value="AM">America</option>
-                                                                <option value="CA">Canada</option>
-                                                                <option value="RU">Russia</option>
-                                                            </select>
+                                                            <div>
+                                                                {{ nForm.property }}
+                                                            </div>
                                                         </div>
 
                                                         <div class="form-group col-lg-6 offset-md-3">
                                                             <label class="d-block"></label>
-                                                            <select class="js-example-basic-single w-100 text-center">
-                                                                <option value="AL">Select Your View</option>
-                                                                <option value="WY">Wyoming</option>
-                                                                <option value="AM">America</option>
-                                                                <option value="CA">Canada</option>
-                                                                <option value="RU">Russia</option>
-                                                            </select>
+                                                            <div>
+                                                                {{ nForm.view }}
+                                                            </div>
                                                         </div>
 
                                                         <button type="button" class="btn btn-inverse-dark btn-lg col-md-6 col-md-offset-3">
@@ -576,9 +565,65 @@
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
+      {% else %}
+        <script>
+            location.reload();
+        </script>
+      {% endif %}
     </div>
     <!-- page-body-wrapper ends -->
   </div>
+<script>
+    function gizleGoster(ID) {
+        var secilenID = document.getElementById(ID);
+        if (secilenID.style.display == "none") {
+            secilenID.style.display = "";
+        } else {
+            secilenID.style.display = "none";
+        }
+    }
+</script>
+
+
+<script>
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
+</script>
+
+<script>
+    document.getElementById('account').value = '';
+    let account_select = document.getElementById("account");
+    let property_select = document.getElementById("property");
+    let view_select = document.getElementById("view");
+    let bellchar = '';
+    account_select.onchange = function () {
+        account = account_select.value.split(bellchar)[0];
+        fetch('/analytics/properties/' + account).then(function (response) {
+            response.json().then(function (data) {
+                var optionHTML = '<option value="' + '' + '">' + ' Select an Option ' + '</option>';
+                for (var property of data.properties) {
+                    optionHTML += '<option value="' + property.id + bellchar + property.name + '">' + property.name + '</option>';
+                }
+                property_select.innerHTML = optionHTML;
+            })
+
+        });
+    }
+    property_select.onchange = function () {
+        property = property_select.value.split(bellchar)[0];
+        fetch('/analytics/views/' + account_select.value.split(bellchar)[0] + '/' + property).then(function (response) {
+            response.json().then(function (data) {
+                var optionHTML = '<option value="' + '' + '">' + ' Select an Option ' + '</option>';
+                for (var view of data.views) {
+                    optionHTML += '<option value="' + view.id + bellchar + view.name + '">' + view.name + '</option>';
+                }
+                view_select.innerHTML = optionHTML;
+            })
+
+        });
+    }
+</script>
 
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-circle-progress/1.2.0/circle-progress.min.js'></script>
