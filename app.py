@@ -520,7 +520,9 @@ def audithistory_without_slack(datasourceID):
         recommendations = report['recommendations']
         lastStates = report['lastStates']
         len_issues = list(lastStates.values()).count('danger')
-        len_recommendations = len(recommendations) - list(recommendations.values()).count([])
+        len_recommendations = 0
+        for rec in recommendations.values():
+            len_recommendations += len(rec)
         totalScore = report['totalScore']
     else:
         # Old Version
@@ -608,7 +610,9 @@ def recommendation(datasourceID):
         recommendations = report['recommendations']
         lastStates = report['lastStates']
         len_issues = list(lastStates.values()).count('danger')
-        len_recommendations = len(recommendations) - list(recommendations.values()).count([])
+        len_recommendations = 0
+        for rec in recommendations.values():
+            len_recommendations += len(rec)
         totalScore = report['totalScore']
     else:
         # Old Version
@@ -947,7 +951,9 @@ def audithistory(datasourceID):
             recommendations = report['recommendations']
             lastStates = report['lastStates']
             len_issues = list(lastStates.values()).count('danger')
-            len_recommendations = len(recommendations) - list(recommendations.values()).count([])
+            len_recommendations = 0
+            for rec in recommendations.values():
+                len_recommendations += len(rec)
             totalScore = report['totalScore']
         else:
             # Old Version
