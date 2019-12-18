@@ -1031,13 +1031,15 @@
 
 
                                                         <div class="form-group col-lg-6 offset-md-3 mt-5">
-                                                            <label style="color: #25378b; font-weight: 500;">Data Source Name</label>
-                                                            {{ nForm.data_source_name }}
+                                                            <label style="color: #25378b; font-weight: 500;"></label>
+                                                            <div>
+                                                                {{ nForm.data_source_name }}
+                                                            </div>
                                                         </div>
 
                                                         <div class="form-group col-lg-6 offset-md-3  mt-5">
                                                             <label  style="color: #25378b; font-weight: 500;">Google Analytics Account</label>
-                                                            <text type="text" class="form-control text-center form-control-sm" placeholder="Type a name eg. 'My store's First Audit'" aria-label="Username">uguryucae19@gmail.com</text>
+                                                            <text type="text" class="form-control text-center form-control-sm" placeholder="Type a name eg. 'My store's First Audit'" aria-label="Username">{{ current_analyticsemail }}</text>
                                                         </div>
 
 
