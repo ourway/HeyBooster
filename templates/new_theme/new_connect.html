@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Audit History</title>
+
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='new_static/vendors/mdi/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='new_static/vendors/base/vendor.bundle.base.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='new_static/css/vertical-layout-light/style.css') }}">
+
+    <link rel="shortcut icon" href="static/images/heybooster-icon.png"/>
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');</script>
+</head>
+
+<body class="sidebar-fixed">
+<script type="text/javascript" src="https://a.opmnstr.com/app/js/api.min.js" data-account="47764" data-user="41970"
+        async></script>
+<div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div style="background-image: url(../../static/new_static/images/a7.png); object-fit: cover;background-size: cover;"
+             class="content-wrapper d-flex align-items-center auth px-0">
+            <div class="row w-100 mx-0">
+                <div class="col-lg-6 mx-auto">
+                    <div id="card-shadow-ug" style="border-radius: 5px; background-color: #fbfbfb;"
+                         class="auth-form-light text-left py-5 px-4 px-sm-5">
+                        <div class="row">
+
+                            <div style="border: none; background-color: #fbfbfb;" class="card">
+                                <div class="card-body">
+                                    <div class="container text-center pt-1">
+                                        <h4 class="mb-5 mt-0">Lorem ipsum dolor sit amets</h4>
+                                        <div class="wrapper">
+                                            <div class="arrow-steps clearfix">
+                                                <div class="step  current"><span>Account</span></div>
+                                                <div class="step "><span>Connections</span></div>
+                                                <div class="step"><span>First Insights</span></div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row pricing-table mt-5">
+                                            <div class="col-sm-8 offset-sm-4 text-center mx-auto grid-margin stretch-card pricing-card">
+                                                <div style="border:1px solid #e48131;"
+                                                     class="card pricing-card-body pr-0 pl-0 w-100 mr-0 ml-0 mt-0 pt-0">
+                                                    <div class="text-center pricing-card-head ">
+                                                        <h1 class="font-weight-normal mb-4" style="font-size: 20px;">
+                                                            <img src="../../static/images/card-google.png"
+                                                                 style="width: 100% ; border-top-left-radius: 5px; border-top-right-radius: 5px; height: 150px; object-fit: cover;background-size: cover;">
+                                                        </h1>
+                                                        <h3 class="" style="font-size: 16px; color: #e48131;">Data
+                                                            Sources</h3>
+                                                        <h1 class="font-weight-normal text-center mx-auto mb-4 mt-3"
+                                                            style="font-size: 20px;"><img
+                                                                src="../../static/img/google.png" style="width: 80%;"
+                                                                class="mb-3"></h1>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <a style="background-color: #e48131;" href="/google/connect"
+                                                           class=" text-white btn ">Connect</a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- base:js -->
+<script>
+    function myFunction() {
+        var r = confirm("If you change the analytics account, your recent analytics audit will be deleted. Are you sure to continue?");
+        if (r == true) {
+            window.location.href = '/google/connect';
+        } else {
+
+        }
+    }
+</script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/vendors/base/vendor.bundle.base.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/off-canvas.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/hoverable-collapse.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/template.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/settings.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/todolist.js') }}"></script>
+<!-- endinject -->
+</body>
+
+</html>

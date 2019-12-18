@@ -32311,8 +32311,19 @@ div.tagsinput span.tag a {
 }
 
 .auth .register-half-bg {
-    background: url("https://via.placeholder.com/735x595");
+    background-image: url(../../demo/new-template/pages/samples/img-ug/a5.jpeg);
     background-size: cover;
+    background-repeat: no-repeat;
+    object-fit: cover;
+    width: 100%;
+}
+
+#card-shadow-ug {
+    box-shadow: 15px 15px 25px 5px rgba(0,0,0,0.3);
+    transition: .5s box-shadow;
+}
+#card-shadow-ug:hover {
+    box-shadow: 5px 7px 25px 1px rgba(0,0,0,0.4);
 }
 
 .auth.lock-full-bg {
@@ -36824,4 +36835,164 @@ section button:hover {
     font-weight: 500;
     color: #666666;
     border: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0px;
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+    background-color: transparent;
+    background-color: transparent;
+}
+
+
+
+.pull-right {
+    float: right;
+}
+
+/* Breadcrups CSS */
+
+.arrow-steps .step {
+    font-size: 10px;
+    text-align: center;
+    color: #666;
+    cursor: default;
+    margin: 3px 3px;
+    padding: 10px 0px 10px 5px;
+    min-width: auto;
+    float: left;
+    position: relative;
+    background-color: #d9e3f7;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.arrow-steps .step:after,
+.arrow-steps .step:before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: -17px;
+    width: 0;
+    height: 0;
+    border-top: 19px solid transparent;
+    border-bottom: 17px solid transparent;
+    border-left: 17px solid #d9e3f7;
+    z-index: 2;
+    transition: border-color 0.2s ease;
+}
+
+.arrow-steps .step:before {
+    right: auto;
+    left: 0;
+    border-left: 17px solid #fff;
+    z-index: 0;
+}
+
+.arrow-steps .step:first-child:before {
+    border: none;
+}
+
+.arrow-steps .step:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.arrow-steps .step span {
+    position: relative;
+    padding: 20px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+@media (max-width: 1288px) {
+    .arrow-steps .step span {
+        padding: 20px;
+    }
+
+}
+
+
+@media (max-width: 1266px) {
+    .wrapper {
+        padding: 0px;
+        background-color: transparent;
+    }
+
+    .arrow-steps .step span {
+        font-size: 14px;
+    }
+
+}
+
+@media (max-width:462px) {
+    .wrapper {
+        display: none;
+    }
+}
+
+
+
+
+@media (max-width: 1186px) {
+    .wrapper .step {
+        padding: 10px 0px 10px 0px;
+
+    }
+
+    .wrapper .step span {
+        padding-left: 20px;
+        padding-right: 15px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    }
+}
+
+
+
+.arrow-steps .step span:before {
+    opacity: 0;
+    content: "✔";
+    position: absolute;
+    top: -2px;
+    left: -20px;
+}
+
+.arrow-steps .step.done span:before {
+    opacity: 1;
+    -webkit-transition: opacity 0.3s ease 0.5s;
+    -moz-transition: opacity 0.3s ease 0.5s;
+    -ms-transition: opacity 0.3s ease 0.5s;
+    transition: opacity 0.3s ease 0.5s;
+}
+
+.arrow-steps .step.current {
+    color: #f9f9f9;
+    background-color: #23468c;
+}
+
+.arrow-steps .step.current:after {
+    border-left: 17px solid #23468c;
 }
