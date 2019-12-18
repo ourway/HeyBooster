@@ -711,7 +711,7 @@
                             
                           </button>
                           <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
-                            % for arg in args %}
+                            {% for arg in args %}
                             {% if arg.dataSourceName %}
                                 {% set dataSourceName = arg.dataSourceName %}
                             {% else %}
