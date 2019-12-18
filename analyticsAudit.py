@@ -296,7 +296,8 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
     recommendations = {}
     summaries = {}
     totalScore = 0
-    redcount = 0
+    redcount_changed = 0
+    redcount_all = 0
     isPermitted = True
     for function in subfunctions:
         if not isPermitted:
@@ -324,16 +325,17 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
                         if currentState == "danger":
-                            allattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
-                            changedattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
-                            redcount += 1
+                            allattachments = allattachments[0:redcount_all] + attachment + allattachments[redcount_all:]
+                            changedattachments = changedattachments[0:redcount_changed] + attachment + changedattachments[redcount_changed:]
+                            redcount_changed += 1
+                            redcount_all += 1
                         else:
                             allattachments += attachment
-                            changedattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                            changedattachments += attachment
                     else:
                         if currentState == "danger":
-                            allattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
-                            redcount += 1
+                            allattachments = allattachments[0:redcount_all] + attachment + allattachments[redcount_all:]
+                            redcount_all += 1
                         else:
                             allattachments += attachment
                 break
@@ -569,7 +571,8 @@ def analyticsAudit_without_slack(task, dataSource):
     recommendations = {}
     summaries = {}
     totalScore = 0
-    redcount = 0
+    redcount_changed = 0
+    redcount_all = 0
     isPermitted = True
     for function in subfunctions:
         if not isPermitted:
@@ -597,16 +600,17 @@ def analyticsAudit_without_slack(task, dataSource):
                     lastState = task['lastStates'][function.__name__]
                     if lastState != currentState:
                         if currentState == "danger":
-                            allattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
-                            changedattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
-                            redcount += 1
+                            allattachments = allattachments[0:redcount_all] + attachment + allattachments[redcount_all:]
+                            changedattachments = changedattachments[0:redcount_changed] + attachment + changedattachments[redcount_changed:]
+                            redcount_all += 1
+                            redcount_changed += 1
                         else:
                             allattachments += attachment
-                            changedattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
+                            changedattachments += attachment
                     else:
                         if currentState == "danger":
-                            allattachments = allattachments[0:redcount] + attachment + allattachments[redcount:]
-                            redcount += 1
+                            allattachments = allattachments[0:redcount_all] + attachment + allattachments[redcount_all:]
+                            redcount_all += 1
                         else:
                             allattachments += attachment
                 break
@@ -2719,6 +2723,8 @@ def contentGrouping(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ['If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
+                            'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
