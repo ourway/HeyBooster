@@ -430,16 +430,16 @@ def getaudit_without_slack():
     # after sorting to use their status correctly
     analytics_audits = []
     for arg in args:
-        #        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        #        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-        #        arg['localTime'] = localTime
-        #        if analytics_audit['status'] == '0':
-        #            arg['strstat'] = 'passive'
-        #        else:
-        #            arg['strstat'] = 'active'
-        #        arg['totalScore'] = analytics_audit['totalScore']
         analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        # analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+        arg['localTime'] = localTime
+        if analytics_audit['status'] == '0':
+            arg['strstat'] = 'passive'
+        else:
+            arg['strstat'] = 'active'
+        arg['totalScore'] = analytics_audit['totalScore']
+        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
+        analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
         if analytics_audit['status'] == '0':
             analytics_audit['strstat'] = 'passive'
         else:
