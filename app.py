@@ -519,6 +519,11 @@ def audithistory_without_slack(datasourceID):
     if report:
         recommendations = report['recommendations']
         lastStates = report['lastStates']
+        ####  Temporary Add-on ####
+        if lastStates['contentGrouping'] == 'danger':
+            recommendations['contentGrouping'] = ['If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
+                            'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
+        ####  Temporary Add-on ####
         len_issues = list(lastStates.values()).count('danger')
         len_recommendations = 0
         for rec in recommendations.values():
@@ -609,6 +614,11 @@ def recommendation(datasourceID):
         summaries = report['summaries']
         recommendations = report['recommendations']
         lastStates = report['lastStates']
+        ####  Temporary Add-on ####
+        if lastStates['contentGrouping'] == 'danger':
+            recommendations['contentGrouping'] = ['If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
+                            'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
+        ####  Temporary Add-on ####
         len_issues = list(lastStates.values()).count('danger')
         len_recommendations = 0
         for rec in recommendations.values():
@@ -950,6 +960,11 @@ def audithistory(datasourceID):
         if report:
             recommendations = report['recommendations']
             lastStates = report['lastStates']
+            ####  Temporary Add-on ####
+            if lastStates['contentGrouping'] == 'danger':
+                recommendations['contentGrouping'] = ['If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
+                                'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
+            ####  Temporary Add-on ####
             len_issues = list(lastStates.values()).count('danger')
             len_recommendations = 0
             for rec in recommendations.values():
