@@ -678,7 +678,7 @@ def recommendation(datasourceID):
 
     sortedLastStates = {k: v for k, v in sorted(lastStates.items(), key=lambda item: item[1])}
 
-    return render_template('new_theme/index.html', args=args, selectedargs=selectedargs,
+    return render_template('new_theme/new_detail.html', args=args, selectedargs=selectedargs,
                            current_analyticsemail=current_analyticsemail,
                            analytics_audits=analytics_audits, lastStates=sortedLastStates,
                            names=names, summaries=summaries,
