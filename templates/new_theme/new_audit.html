@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='new_static/css/vertical-layout-light/style.css') }}">
 
-    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+    <link rel="shortcut icon" href="static/images/heybooster-icon.png"/>
 </head>
 
 <body class="sidebar-fixed">
@@ -97,37 +97,25 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
                             <!--<i class="mdi mdi-bell-outline mx-0">asas</i>-->
-                            <h5 id="" class="btn btn-outline-light text-dark">uguryuce19@gmail.com &nbsp;<i style="opacity: 0.8; font-size: 17px;" class="mdi mdi-arrow-down-drop-circle-outline "></i></h5>
+                            <h5 id="" class="btn btn-outline-light text-dark">session['email']<i style="opacity: 0.8; font-size: 17px;" class="mdi mdi-arrow-down-drop-circle-outline "></i></h5>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                            
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                                    
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject font-weight-normal">Settings</h6>
-                                   
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject font-weight-normal">New user registration</h6>
-                                    
-                                </div>
-                            </a>
+                            {% for arg in args %}
+                                {% if arg.dataSourceName %}
+                                    {% set dataSourceName = arg.dataSourceName %}
+                                {% else %}
+                                    {% set dataSourceName = arg._id %}
+                                {% endif %}
+                                <a href="/account/audit-history{{ arg._id }}" class="dropdown-item preview-item">
+                                    <div class="preview-thumbnail">
+                                        
+                                    </div>
+                                    <div class="preview-item-content">
+                                        <h6 class="preview-subject font-weight-normal">{{ dataSourceName }}</h6>
+                                        
+                                    </div>
+                                </a>
+                            {% endfor %}
                         </div>
                     </li>
                     
@@ -387,13 +375,13 @@
                         </a>
                         <div class="collapse" id="auth">
                             <ul style="background-color:transparent;" class="nav flex-column sub-menu">
-                                <li style="background-color: transparent; color: #242635;" class="nav-item"> <a style="color: black;" class="nav-link" href="../../pages/samples/login.html"> Logout </a></li>
+                                <li style="background-color: transparent; color: #242635;" class="nav-item"> <a style="color: black;" class="nav-link" href="/logout"> Logout </a></li>
                                 
                             </ul>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/ui-features/buttons.html">
+                        <a class="nav-link" href="/account/audit-history">
                             <i style="color: #242635" class="mdi mdi-puzzle menu-icon"></i>
                             <span style="color: #242635;" class="menu-title">Audit<!--<span class="badge badge-danger">New</span>--></span>
                         </a>
@@ -607,13 +595,13 @@
                     </li>
                     -->
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/ui-features/accordions.html">
+                        <a class="nav-link" href="/account/audit-history">
                             <i  style="color: #242635" class="mdi mdi-calendar-blank menu-icon"></i>
                             <span  style="color: #242635" class="menu-title">Audit Details</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/tables/basic-table.html">
+                        <a class="nav-link" href="/account/connections">
                             <i  style="color: #242635" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
                             <span  style="color: #242635" class="menu-title">Connected Accounts</span>
                         </a>
@@ -723,11 +711,14 @@
                             
                           </button>
                           <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
-                            
-                            <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum dolor.</a>
-                            
+                            % for arg in args %}
+                            {% if arg.dataSourceName %}
+                                {% set dataSourceName = arg.dataSourceName %}
+                            {% else %}
+                                {% set dataSourceName = arg._id %}
+                            {% endif %}
+                            <a href="/account/audit-history{{ arg._id }}" class="dropdown-item">{{ dataSourceName }}</a>
+                            {% endfor %}
                           </div>
                         </div></div>
                   <div class="table-responsive d-inline-block float-left grid-margin stretch-card">
@@ -912,56 +903,96 @@
               
               
               
-              
-              <div id="resp-height" class=" pl-2 pr-2 card" style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #F1F5FA; border-radius: 0px; padding-top: 10px;">
-                <div id="card-ug-mt"  class=" align-items-center card-body">
-                 
-                  
-                  
-                  <div class="table-responsive col-md-11 d-inline-block float-left grid-margin stretch-card">
-                    <table class="table table-striped">
-                     
-                      
-                      <tbody class="text-center">
-                        <tr style=" background-color: #F1F5FA;">
-                          <td style="border-right: 2px solid #F1F5FA;;" class=" col-lg-2 float-left d-inline-block py-1 text-center">
-                            <div id="audit-history-ug-score"><h4 class="text-center">82</h4></div>
-                          </td>
-                          
-                          <td class="mt-2 col-lg-7 float-left d-inline-block text-center">
-                            Google Analytics Last Updated Time 8 November at 8:44 2019
-                          </td>
-                          
-                          
-                          <td class="col-lg-2 float-left d-inline-block text-center">
-                            <button id="show-ug-2" class="btn btn-inverse-dark ">Show Detail</button>
-                          </td>
-                          
-                          
-                        </tr>
-                    
-                      </tbody>
-                    </table>
-                    
-                  </div>
-                  
-                  <div  class="col-md-1 d-inline-block float-left mt-1 grid-margin stretch-card"><div class="dropdown text-center">
-                          <button class="btn dropdown-toggle" type="button" id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
-                             <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum.</a>
-                            <a class="dropdown-item" href="#">Lorem ipsum dolor.</a>
-                          </div>
-                        </div></div>
-                        
-                    
-                        
-                    
-                </div>
-              </div>
-              
+              {% for arg in selectedargs %}
+                  {% set AA = analytics_audits[loop.index0] %}
+                  {% if AA.totalScore == 0 %}
+                      <div id="resp-height" class=" pl-2 pr-2 card" style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #F1F5FA; border-radius: 0px; padding-top: 10px;">
+                            <div id="card-ug-mt"  class=" align-items-center card-body">
+                              <div class="table-responsive col-md-11 d-inline-block float-left grid-margin stretch-card">
+                                <table class="table table-striped">
+                                 
+                                  
+                                  <tbody class="text-center">
+                                    <tr style=" background-color: #F1F5FA;">
+                                      <td style="border-right: 2px solid #F1F5FA;;" class=" col-lg-2 float-left d-inline-block py-1 text-center">
+                                        <div id="audit-history-ug-score"><h4 class="text-center">{{AA.totalScore}}</h4></div>
+                                      </td>
+                                      
+                                      <td class="mt-2 col-lg-7 float-left d-inline-block text-center">
+                                        Last Updated Time: Preparing...
+                                      </td>
+                                      
+                                      
+                                      <td class="col-lg-2 float-left d-inline-block text-center">
+                                        <button id="show-ug-2" class="btn btn-inverse-dark ">Show Detail</button>
+                                      </td>
+                                      
+                                      
+                                    </tr>
+                                
+                                  </tbody>
+                                </table>
+                                
+                              </div>
+                              
+                              <div  class="col-md-1 d-inline-block float-left mt-1 grid-margin stretch-card">
+                                      <div class="dropdown text-center">
+                                      <button class="btn dropdown-toggle" type="button" id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
+                                         <a class="dropdown-item" href="/test_test/{{ arg._id }}">Test Now</a>
+                                         <a href="/active_audit_test/{{ AA._id }}" class="dropdown-item">Change Alert</a>
+                                      </div>
+                                      </div>
+                              </div>                                
+                            </div>
+                      </div>
+                {% else %}
+                      <div id="resp-height" class=" pl-2 pr-2 card" style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #F1F5FA; border-radius: 0px; padding-top: 10px;">
+                            <div id="card-ug-mt"  class=" align-items-center card-body">
+                              <div class="table-responsive col-md-11 d-inline-block float-left grid-margin stretch-card">
+                                <table class="table table-striped">
+                                 
+                                  
+                                  <tbody class="text-center">
+                                    <tr style=" background-color: #F1F5FA;">
+                                      <td style="border-right: 2px solid #F1F5FA;;" class=" col-lg-2 float-left d-inline-block py-1 text-center">
+                                        <div id="audit-history-ug-score"><h4 class="text-center">{{AA.totalScore}}</h4></div>
+                                      </td>
+                                      
+                                      <td class="mt-2 col-lg-7 float-left d-inline-block text-center">
+                                        {{ arg.dataSourceName }}
+                                      </td>
+                                      
+                                      
+                                      <td class="col-lg-2 float-left d-inline-block text-center">
+                                        <button id="show-ug-2" class="btn btn-inverse-dark ">Show Detail</button>
+                                      </td>
+                                      
+                                      
+                                    </tr>
+                                
+                                  </tbody>
+                                </table>
+                                
+                              </div>
+                              
+                              <div  class="col-md-1 d-inline-block float-left mt-1 grid-margin stretch-card">
+                                      <div class="dropdown text-center">
+                                      <button class="btn dropdown-toggle" type="button" id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
+                                         <a class="dropdown-item" href="/test_test/{{ arg._id }}">Test Now</a>
+                                         <a href="/active_audit_test/{{ AA._id }}" class="dropdown-item">Change Alert</a>
+                                      </div>
+                                      </div>
+                              </div>                                
+                            </div>
+                      </div>
+                {% endif %}
+              {% endfor %}
               
               
               
@@ -1001,7 +1032,7 @@
 
                                                         <div class="form-group col-lg-6 offset-md-3 mt-5">
                                                             <label style="color: #25378b; font-weight: 500;">Data Source Name</label>
-                                                            <input type="text" class="form-control text-center form-control-sm" placeholder="Type a name eg. 'My store's First Audit'" aria-label="Username">
+                                                            {{ nForm.data_source_name }}
                                                         </div>
 
                                                         <div class="form-group col-lg-6 offset-md-3  mt-5">
@@ -1012,38 +1043,20 @@
 
                                                         <div class="form-group col-lg-6 offset-md-3  mt-5">
                                                             <label class="d-block"  style="color: #25378b; font-weight: 500;">Select Your Profile Detail</label>
-                                                            <select class="js-example-basic-single w-100 text-center">
-                                                                <option value="AL">Select your account</option>
-                                                                <option value="WY">Wyoming</option>
-                                                                <option value="AM">America</option>
-                                                                <option value="CA">Canada</option>
-                                                                <option value="RU">Russia</option>
-                                                            </select>
+                                                            {{ nForm.account }}
                                                         </div>
 
                                                         <div class="form-group col-lg-6 offset-md-3">
                                                             <label class="d-block"></label>
-                                                            <select class="js-example-basic-single w-100 text-center">
-                                                                <option value="AL">Select Your Property</option>
-                                                                <option value="WY">Wyoming</option>
-                                                                <option value="AM">America</option>
-                                                                <option value="CA">Canada</option>
-                                                                <option value="RU">Russia</option>
-                                                            </select>
+                                                            {{ nForm.property }}
                                                         </div>
 
                                                         <div class="form-group col-lg-6 offset-md-3">
                                                             <label class="d-block"></label>
-                                                            <select class="js-example-basic-single w-100 text-center">
-                                                                <option value="AL">Select Your View</option>
-                                                                <option value="WY">Wyoming</option>
-                                                                <option value="AM">America</option>
-                                                                <option value="CA">Canada</option>
-                                                                <option value="RU">Russia</option>
-                                                            </select>
+                                                            {{ nForm.view }}
                                                         </div>
 
-                                                        <button type="button" class="btn btn-inverse-dark btn-lg col-md-6 col-md-offset-3">
+                                                        <button type="submit" class="btn btn-inverse-dark btn-lg col-md-6 col-md-offset-3">
 
                                                             Submit
                                                             <i class="mdi mdi-arrow-right"></i>
