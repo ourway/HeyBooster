@@ -490,7 +490,6 @@
                                                     </button>
                                                     <div class="dropdown-menu"
                                                          aria-labelledby="dropdownMenuIconButton1">
-                                                        <a class="dropdown-item" href="/removeignore/{{ arg._id }}">Remove</a>
                                                         <a href="/active_audit_test/{{ AA._id }}" class="dropdown-item">Ignore</a>
                                                     </div>
                                                 </div>
@@ -533,7 +532,6 @@
                                                     <button class="btn dropdown-toggle" type="button"
                                                             id="dropdownMenuIconButton2" data-toggle="dropdown"
                                                             aria-haspopup="true" aria-expanded="false">
-
                                                     </button>
                                                     <div class="dropdown-menu"
                                                          aria-labelledby="dropdownMenuIconButton1">
@@ -551,15 +549,9 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
-
-
                         </div>
                     </div>
-
-
                     <div class=" mt-5 col-lg-12 grid-margin stretch-card">
-
-
                         <div class="mt-4 col-lg-12">
                             <div class="accordion accordion-solid-header" id="accordion-4" role="tablist">
                                 <div class="card">
@@ -576,65 +568,49 @@
 
                                     <div style="background-color: #fff;" id="collapse-41" class="collapse "
                                          role="tabpanel" aria-labelledby="heading-41" data-parent="#accordion-4">
-
-                                        <div class="card-body text-center">
-                                            <h4 class="card-title" style="letter-spacing: 1px;">heybooster</h4>
-
-
-                                            <div class="form-group col-lg-6 offset-md-3 mt-5">
-                                                <label style="color: #25378b; font-weight: 500;"></label>
-                                                <div>
-                                                    {{ nForm.data_source_name }}
+                                        <form method="POST" action="/account/audit-history-without-slack-added">
+                                            <div class="card-body text-center">
+                                                <h4 class="card-title" style="letter-spacing: 1px;">heybooster</h4>
+                                                <div class="form-group col-lg-6 offset-md-3 mt-5">
+                                                    <label style="color: #25378b; font-weight: 500;"></label>
+                                                    <div>
+                                                        {{ nForm.data_source_name }}
+                                                    </div>
                                                 </div>
+                                                <div class="form-group col-lg-6 offset-md-3  mt-5">
+                                                    <label style="color: #25378b; font-weight: 500;">Google Analytics
+                                                        Account</label>
+                                                    <text type="text" class="form-control text-center form-control-sm"
+                                                          placeholder="Type a name eg. 'My store's First Audit'"
+                                                          aria-label="Username">{{ current_analyticsemail }}</text>
+                                                </div>
+                                                <div class="form-group col-lg-6 offset-md-3  mt-5">
+                                                    <label class="d-block" style="color: #25378b; font-weight: 500;">Select
+                                                        Your Profile Detail</label>
+                                                    {{ nForm.account }}
+                                                </div>
+                                                <div class="form-group col-lg-6 offset-md-3">
+                                                    <label class="d-block"></label>
+                                                    {{ nForm.property }}
+                                                </div>
+                                                <div class="form-group col-lg-6 offset-md-3">
+                                                    <label class="d-block"></label>
+                                                    {{ nForm.view }}
+                                                </div>
+                                                <button type="submit"
+                                                        class="btn btn-inverse-dark btn-lg col-md-6 col-md-offset-3">
+                                                    Submit
+                                                    <i class="mdi mdi-arrow-right"></i>
+                                                </button>
                                             </div>
-
-                                            <div class="form-group col-lg-6 offset-md-3  mt-5">
-                                                <label style="color: #25378b; font-weight: 500;">Google Analytics
-                                                    Account</label>
-                                                <text type="text" class="form-control text-center form-control-sm"
-                                                      placeholder="Type a name eg. 'My store's First Audit'"
-                                                      aria-label="Username">{{ current_analyticsemail }}</text>
-                                            </div>
-
-
-                                            <div class="form-group col-lg-6 offset-md-3  mt-5">
-                                                <label class="d-block" style="color: #25378b; font-weight: 500;">Select
-                                                    Your Profile Detail</label>
-                                                {{ nForm.account }}
-                                            </div>
-
-                                            <div class="form-group col-lg-6 offset-md-3">
-                                                <label class="d-block"></label>
-                                                {{ nForm.property }}
-                                            </div>
-
-                                            <div class="form-group col-lg-6 offset-md-3">
-                                                <label class="d-block"></label>
-                                                {{ nForm.view }}
-                                            </div>
-
-                                            <button type="submit"
-                                                    class="btn btn-inverse-dark btn-lg col-md-6 col-md-offset-3">
-
-                                                Submit
-                                                <i class="mdi mdi-arrow-right"></i>
-                                            </button>
-
-
-                                        </div>
+                                        </form>
                                     </div>
-
-
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
     <!-- content-wrapper ends -->
