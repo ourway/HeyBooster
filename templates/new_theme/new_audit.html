@@ -22,76 +22,13 @@
         <!-- partial:../../partials/_navbar.html -->
         <nav  class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div style="background: #fff" class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
-                <a class="navbar-brand brand-logo" href="#.html"><img  style="width: 300px; height: 50px; background: #fff;" src="../../../../images/logo-2.svg" alt="logo" /></a>
-                <a style="background: #fff;" class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../../../images/heybooster-icon.svg" alt="logo" /></a>
+                <a class="navbar-brand brand-logo" href="#.html"><img  style="width: 300px; height: 50px; background: #fff;" src="../../static/images/logo-2.svg" alt="logo" /></a>
+                <a style="background: #fff;" class="navbar-brand brand-logo-mini" href="/"><img src="../../static/images/heybooster-icon.svg" alt="logo" /></a>
                 <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
                     <span class="mdi mdi-menu"></span>
                 </button>
             </div>
             <div style="background: #ffffff;" class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-                <!--
-                <ul class="navbar-nav">
-                    <li class="nav-item  dropdown d-none align-items-center d-lg-flex d-none">
-                        <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#" data-toggle="dropdown" id="pagesDropdown">
-                            <span class="nav-profile-name">Data Source Name</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="pagesDropdown">
-                            <a class="dropdown-item">
-                                <i class="mdi mdi-settings text-primary"></i>
-                                Settings
-                            </a>
-                            <a class="dropdown-item">
-                                <i class="mdi mdi-logout text-primary"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown align-items-center d-lg-flex d-none">
-                        <a class="dropdown-toggle btn btn-outline-secondary btn-fw" href="#" data-toggle="dropdown" id="appDropdown">
-                            <span class="nav-profile-name">uguryuce19@gmail.com</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                            <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow">
-                                    <h6 class="preview-subject ellipsis font-weight-normal">David Grey
-                                    </h6>
-                                    <p class="font-weight-light small-text text-muted mb-0">
-                                        The meeting is cancelled
-                                    </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow">
-                                    <h6 class="preview-subject ellipsis font-weight-normal">Tim Cook
-                                    </h6>
-                                    <p class="font-weight-light small-text text-muted mb-0">
-                                        New product launch
-                                    </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow">
-                                    <h6 class="preview-subject ellipsis font-weight-normal"> Johnson
-                                    </h6>
-                                    <p class="font-weight-light small-text text-muted mb-0">
-                                        Upcoming board meeting
-                                    </p>
-                                </div>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-                -->
                 <ul class="navbar-nav navbar-nav-right">
 
                     <li class="nav-item dropdown">
@@ -118,67 +55,6 @@
                             {% endfor %}
                         </div>
                     </li>
-                    
-                    <!--
-                    <li class="nav-item dropdown">
-                        <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center" id="messageDropdown" href="#" data-toggle="dropdown">
-                            
-
-                            <i class="mdi mdi-account">user</i>
-                            <p class="">
-                                <span class="ripple notification-ripple-bg"></span>
-                                <span class="ripple notification-ripple-bg"></span>
-                                <span class="ripple notification-ripple-bg"></span>
-                            </p>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                            <p class="mb-0 font-weight-normal float-left dropdown-header">uguryuce19@gmail.com</p>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow">
-                                    <h6 class="preview-subject ellipsis font-weight-normal">David Grey
-                                    </h6>
-                                    <p class="font-weight-light small-text text-muted mb-0">
-                                        The meeting is cancelled
-                                    </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow">
-                                    <h6 class="preview-subject ellipsis font-weight-normal">Tim Cook
-                                    </h6>
-                                    <p class="font-weight-light small-text text-muted mb-0">
-                                        New product launch
-                                    </p>
-                                </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <img src="https://via.placeholder.com/36x36" alt="image" class="profile-pic">
-                                </div>
-                                <div class="preview-item-content flex-grow">
-                                    <h6 class="preview-subject ellipsis font-weight-normal"> Johnson
-                                    </h6>
-                                    <p class="font-weight-light small-text text-muted mb-0">
-                                        Upcoming board meeting
-                                    </p>
-                                </div>
-                            </a>
-                        </div>
-                    </li>
-                    -->
-                    <!--
-                    <li class="nav-item nav-settings d-none d-lg-flex">
-                        <a class="nav-link" href="#">
-                            <i class="mdi mdi-dots-horizontal"></i>
-                        </a>
-                    </li>
-                    -->
                 </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
                     <span class="mdi mdi-menu"></span>

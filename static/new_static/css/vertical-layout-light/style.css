@@ -25264,7 +25264,8 @@ code {
 }
 
 #border-ug-i {
-
+    border: none;
+    background-color: #fff;
 }
 
 #m-left-right-ug {
@@ -32483,6 +32484,27 @@ div.tagsinput span.tag a {
     }
 }
 
+
+
+#resp-height #card-ug-mt {
+        height: 80px;
+    }
+
+@media (max-width: 768px) {
+    #card-ug-mt .dropdown #dropdownMenuIconButton2 {
+
+    }
+
+    #card-ug-mt #show-ug-2 {
+
+
+    }
+
+    #resp-height #card-ug-mt {
+        height: 180px;
+    }
+}
+
 .auth .brand-logo {
     margin-bottom: 2rem;
 }
@@ -36775,25 +36797,25 @@ section button:hover {
 }
 
 #audit-history-ug-score{
-    height: 50px;
-    width: 70px;
+    width: 55px;
+    height: auto;
     background-color: #2C6C8C;
     border-radius: 4px;
-
 }
 
-#audit-history-ug-score h4 {
-    color: #fff;
-}
 
 
 #audit-history-ug-score h4{
     color: white;
+    padding-bottom: 10px;
     text-align: center;
     padding-top: 14px;
     font-weight: 300;
     font-family: sans-serif;
     font-size: 22px;
+    color: #fff;
+    text-align: center;
+
 }
 
 
@@ -36801,4 +36823,5 @@ section button:hover {
     font-size: 13px;
     font-weight: 500;
     color: #666666;
+    border: none;
 }
