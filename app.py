@@ -1059,7 +1059,7 @@ def audithistory(datasourceID):
             else:
                 analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
-        return render_template('audit_table.html', args=args, selectedargs=selectedargs, nForm=nForm,
+        return render_template('new_theme/new_audit.html', args=args, selectedargs=selectedargs, nForm=nForm,
                                current_analyticsemail=current_analyticsemail, workspace=workspace,
                                analytics_audits=analytics_audits)
 
@@ -1785,7 +1785,7 @@ def getaudit():
                 analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
 
-        return render_template('audit_table.html', args=args, selectedargs=args, nForm=nForm,
+        return render_template('new_theme/new_audit.html', args=args, selectedargs=args, nForm=nForm,
                                current_analyticsemail=current_analyticsemail, workspace=workspace,
                                analytics_audits=analytics_audits)
 

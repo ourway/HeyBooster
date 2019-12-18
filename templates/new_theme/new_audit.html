@@ -597,6 +597,12 @@
                                                     <label class="d-block"></label>
                                                     {{ nForm.view }}
                                                 </div>
+                                                {% if session['sl_accesstoken'] %}
+                                                    <div class="form-group col-lg-6 offset-md-3">
+                                                        <label class="d-block"></label>
+                                                        {{ nForm.channel }}
+                                                    </div>
+                                                {% endif %}
                                                 <button type="submit"
                                                         class="btn btn-inverse-dark btn-lg col-md-6 col-md-offset-3">
                                                     Submit
