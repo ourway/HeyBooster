@@ -354,22 +354,22 @@ def getaudit_without_slack():
         tz_offset = int(localize.tzname())
         db.find_and_modify('user', query={'_id': user['_id']},
                            tz_offset=tz_offset)
-#    counter = 0
-#    dt = db.find('datasource', {'email': session['email']})
-#    user = db.find_one('user', {'email': session['email']})
-#    firstDatasourceID = db.find_one('datasource', {'email': session['email']})
+    #    counter = 0
+    #    dt = db.find('datasource', {'email': session['email']})
+    #    user = db.find_one('user', {'email': session['email']})
+    #    firstDatasourceID = db.find_one('datasource', {'email': session['email']})
 
-#    for document in dt:
-#        if document['email']:
-#            counter = counter + 1
-#    if counter > 1:
-#        return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
+    #    for document in dt:
+    #        if document['email']:
+    #            counter = counter + 1
+    #    if counter > 1:
+    #        return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
 
     try:
         current_analyticsemail = user['ga_email']
     except:
         current_analyticsemail = ""
-    
+
     datasources = db.find('datasource', query={'email': session['email']})
     nForm = DataSourceForm(request.form)
     unsortedargs = []
@@ -799,6 +799,20 @@ def active_audit_test(UUID):
         return make_response("", 401)
 
 
+@app.route('/removeignore/<UUID>')
+@login_required
+def removeignore(UUID):
+    analytics_audit = db.find_one("notification", query={"_id": ObjectId(UUID)})
+    if analytics_audit['email'] == session['email']:
+        val = int(analytics_audit['status'])
+        db.find_and_modify('notification', query={'_id': analytics_audit['_id']},
+                           status=str(1 - val))
+
+        return render_template('new_theme/new_audit.html', val)
+    else:
+        return make_response("", 401)
+
+
 @app.route('/test_test_without_slack/<datasourceID>')
 @login_required
 @limiter.limit("20/day")
@@ -913,8 +927,8 @@ def audithistory(datasourceID):
             data['_id'] = _id
             unsortedargs.append(data)
             insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                    dataSourceID=_id,
-                                                    channelID='')
+                                                     dataSourceID=_id,
+                                                     channelID='')
             #        analyticsAudit(slack_token, task=None, dataSource=data)
             run_analyticsAudit_without_slack.delay(str(data['_id']))
             flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -922,7 +936,7 @@ def audithistory(datasourceID):
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
         if (useraccounts):
             nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                    useraccounts]
+                                      useraccounts]
         else:
             nForm.account.choices = [('', 'User does not have Google Analytics Account')]
             nForm.property.choices = [('', 'User does not have Google Analytics Account')]
@@ -959,11 +973,11 @@ def audithistory(datasourceID):
             len_issues = list(lastStates.values()).count('danger')
 
         return render_template('new_theme/new_audit.html', args=args, selectedargs=selectedargs, nForm=nForm,
-                            current_analyticsemail=current_analyticsemail,
-                            analytics_audits=analytics_audits,
-                            len_issues=len_issues,
-                            len_recommendations=len_recommendations,
-                            totalScore=totalScore)
+                               current_analyticsemail=current_analyticsemail,
+                               analytics_audits=analytics_audits,
+                               len_issues=len_issues,
+                               len_recommendations=len_recommendations,
+                               totalScore=totalScore)
     else:
         tz_offset = user['tz_offset']
         slack_token = user['sl_accesstoken']
@@ -1017,8 +1031,8 @@ def audithistory(datasourceID):
             data['_id'] = _id
             unsortedargs.append(data)
             insertdefaultnotifications(session['email'], userID=uID,
-                                    dataSourceID=_id,
-                                    channelID=nForm.channel.data.split('\u0007')[0])
+                                       dataSourceID=_id,
+                                       channelID=nForm.channel.data.split('\u0007')[0])
             #        analyticsAudit(slack_token, task=None, dataSource=data)
             run_analyticsAudit.delay(slack_token, str(data['_id']))
             flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -1026,7 +1040,7 @@ def audithistory(datasourceID):
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
         if (useraccounts):
             nForm.account.choices += [(acc['id'] + '\u0007' + acc['name'], acc['name']) for acc in
-                                    useraccounts]
+                                      useraccounts]
         else:
             nForm.account.choices = [('', 'User does not have Google Analytics Account')]
             nForm.property.choices = [('', 'User does not have Google Analytics Account')]
@@ -1034,7 +1048,7 @@ def audithistory(datasourceID):
         try:
             channels = get_channels()
             nForm.channel.choices += [(channel['id'] + '\u0007' + channel['name'], channel['name']) for channel
-                                    in channels]
+                                      in channels]
         except:
             nForm.channel.choices = [('', 'User does not have Slack Connection')]
 
@@ -1060,8 +1074,8 @@ def audithistory(datasourceID):
                 analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
         return render_template('audit_table.html', args=args, selectedargs=selectedargs, nForm=nForm,
-                            current_analyticsemail=current_analyticsemail, workspace=workspace,
-                            analytics_audits=analytics_audits)
+                               current_analyticsemail=current_analyticsemail, workspace=workspace,
+                               analytics_audits=analytics_audits)
 
 
 @app.route('/account/connections')
@@ -1577,22 +1591,22 @@ def getaudit():
             db.find_and_modify('user', query={'_id': user['_id']},
                                tz_offset=tz_offset)
 
-#        counter = 0
-#        dt = db.find('datasource', {'email': session['email']})
-#        user = db.find_one('user', {'email': session['email']})
-#        firstDatasourceID = db.find_one('datasource', {'email': session['email']})
+        #        counter = 0
+        #        dt = db.find('datasource', {'email': session['email']})
+        #        user = db.find_one('user', {'email': session['email']})
+        #        firstDatasourceID = db.find_one('datasource', {'email': session['email']})
 
-#        for document in dt:
-#            if document['email']:
-#                counter = counter + 1
-#        if counter > 1:
-#            return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
+        #        for document in dt:
+        #            if document['email']:
+        #                counter = counter + 1
+        #        if counter > 1:
+        #            return redirect('/account/audit-history' + str(firstDatasourceID['_id']))
 
         try:
             current_analyticsemail = user['ga_email']
         except:
             current_analyticsemail = ""
-            
+
         datasources = db.find('datasource', query={'email': session['email']})
         nForm = DataSourceForm(request.form)
         unsortedargs = []
