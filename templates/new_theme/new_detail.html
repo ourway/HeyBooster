@@ -44,20 +44,13 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="notificationDropdown">
-                        {% for arg in args %}
-                            {% if arg.dataSourceName %}
-                                {% set dataSourceName = arg.dataSourceName %}
-                            {% else %}
-                                {% set dataSourceName = arg._id %}
-                            {% endif %}
-                            <a href="/account/audit-history{{ arg._id }}" class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                </div>
-                                <div class="preview-item-content">
-                                    <h6 class="preview-subject font-weight-normal">{{ dataSourceName }}</h6>
-                                </div>
-                            </a>
-                        {% endfor %}
+                        <a href="/logout" class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">Logout</h6>
+                            </div>
+                        </a>
                     </div>
                 </li>
             </ul>
@@ -236,35 +229,14 @@
         <nav style="background-color: #dddee3;" class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                        <i style="color: black;" class="mdi mdi-account-circle menu-icon"></i>
-                        <span style="color: black;" class="menu-title">User Pages</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="auth">
-                        <ul style="background-color:transparent;" class="nav flex-column sub-menu">
-                            <li style="background-color: transparent; color: #242635;" class="nav-item"><a
-                                    style="color: black;" class="nav-link" href="../../pages/samples/login.html">
-                                Logout </a></li>
-
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../../pages/ui-features/buttons.html">
+                    <a class="nav-link" href="/account/audit-history">
                         <i style="color: #242635" class="mdi mdi-puzzle menu-icon"></i>
-                        <span style="color: #242635;" class="menu-title">Audit
+                        <span style="color: #242635;" class="menu-title">Audit History
                             <!--<span class="badge badge-danger">New</span>--></span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../../pages/ui-features/accordions.html">
-                        <i style="color: #242635" class="mdi mdi-calendar-blank menu-icon"></i>
-                        <span style="color: #242635" class="menu-title">Audit Details</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../../pages/tables/basic-table.html">
+                    <a class="nav-link" href="/account/connections">
                         <i style="color: #242635" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
                         <span style="color: #242635" class="menu-title">Connected Accounts</span>
                     </a>
@@ -278,17 +250,12 @@
                     <div class="col-md-4 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-
                                 <div id="card-tam-ug" class="container text-center">
-
-                                    <div id="card-ust-ug" class="round" data-value="0.74" data-size="80"
+                                    <div id="card-ust-ug" class="round" data-value="0.{{ totalScore }}" data-size="80"
                                          data-thickness="12">
-
                                         <strong id="grafik-healty-ug" style="display: block;"></strong>
-
                                     </div>
                                     <div id="card-alt-ug">
-
                                         <a class="" id="g2_refresh">Healty Score</a>
                                     </div>
                                 </div>
@@ -298,16 +265,12 @@
                     <div class="col-md-4 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-
                                 <div id="card-tam-ug" class="container text-center">
-
                                     <div id="card-ust-ug" class="text-center">
                                         <!--<i class="mdi mdi-exclamation"></i>-->
-                                        <h1 id="issue-h-ug">4</h1>
-
+                                        <h1 id="issue-h-ug">{{ len_issues }}</h1>
                                     </div>
                                     <div id="card-alt-ug">
-
                                         <a class="" id="g2_refresh">Issue Detected</a>
                                     </div>
                                 </div>
@@ -317,18 +280,14 @@
                     <div class="col-md-4 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-
                                 <div id="card-tam-ug" class="container text-center">
-
                                     <div id="card-ust-ug">
                                         <!--
                                          <i class="mdi mdi-pencil "></i> -->
-                                        <h1 id="issue-h-ug">4</h1>
-
+                                        <h1 id="issue-h-ug">{{ len_recommendations }}</h1>
                                     </div>
                                     <div id="card-alt-ug">
-
-                                        <a class="" id="g2_refresh">Recommendation</a>
+                                        <a class="" id="g2_refresh">Recommendative</a>
                                     </div>
                                 </div>
                             </div>
@@ -337,368 +296,110 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
-
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title ml-5" style="letter-spacing: 1px;">Details</h4>
-
-                                <div class="mt-4">
-                                    <div class="accordion accordion-solid-header" id="accordion-4" role="tablist">
-                                        <div style="border: none; border-radius: 4px;" class="card col-lg-12">
-                                            <div class="card-header col-lg-12" role="tab" id="heading-10">
-                                                <h6 id="display-h6-ug" class="mb-0 col-lg-12">
-
-
-                                                    <a class="col-lg-12" id="a-ug" data-toggle="collapse"
-                                                       href="#collapse-10" aria-controls="collapse-10"><i
-                                                            class="mdi mdi-chevron-right "></i>
-                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                    </a>
-                                                    <button style="font-size: 11px;padding-left: 2px;padding-right: 2px;  ; width: 70px; height: auto;"
-                                                            id="danger-btn-ug" class="btn text-white">URGENT
-                                                    </button>
-                                                </h6>
-
-                                            </div>
-                                            <div id="collapse-10" class="collapse" role="tabpanel"
-                                                 aria-labelledby="heading-10" data-parent="#accordion-4">
-
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h4 class="card-title"></h4>
-
-                                                        <div class="row">
-
-                                                            <div style="margin-top: -20px;" class="col-md-12">
-                                                                <ul class="nav nav-pills nav-pills-custom "
-                                                                    id="pills-tab-custom" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class=" active" id="pills-home-tab-custom-2"
-                                                                           data-toggle="pill" href="#pills-health"
-                                                                           role="tab" aria-controls="pills-home"
-                                                                           aria-selected="true">
-                                                                            Summary:
-                                                                        </a>
-                                                                    </li>
-
-
-                                                                </ul>
-                                                                <div class="tab-content tab-content-custom-pill"
-                                                                     id="pills-tabContent-custom">
-                                                                    <div class="tab-pane fade show active"
-                                                                         id="pills-health" role="tabpanel"
-                                                                         aria-labelledby="pills-home-tab-custom">
-                                                                        <div class="d-flex ">
-
-
-                                                                        </div>
-                                                                        <p style="margin-top: -10px;">
-                                                                            Lorem ipsum dolor.
-                                                                        </p>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div style="margin-top: 0px;" class="col-md-12">
-                                                                <ul class="nav nav-pills nav-pills-custom "
-                                                                    id="pills-tab-custom" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class=" active" id="pills-home-tab-custom-2"
-                                                                           data-toggle="pill" href="#pills-health"
-                                                                           role="tab" aria-controls="pills-home"
-                                                                           aria-selected="true">
-                                                                            Recommendation:
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                                <div class="tab-content tab-content-custom-pill"
-                                                                     id="pills-tabContent-custom">
-                                                                    <div class="tab-pane fade show active"
-                                                                         id="pills-health" role="tabpanel"
-                                                                         aria-labelledby="pills-home-tab-custom">
-                                                                        <div class="d-flex ">
-                                                                        </div>
-                                                                        <ul>
-                                                                            <li>Lorem ipsum dolor.</li>
-                                                                            <li>Lorem ipsum dolor sit amet.</li>
-                                                                            <li>Lorem ipsum dolor sit.</li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                <h4 class="card-title ml-5"
+                                    style="letter-spacing: 1px;">{{ selectedargs[0].dataSourceName }}</h4>
+                                {% for key, value in lastStates.items() %}
+                                    {% set index = loop.index0 %}
+                                    {% set listvalue = value.split('_') %}
+                                    {% set newvalue = listvalue[1] %}
+                                    <div class="mt-4">
+                                        <div class="accordion accordion-solid-header" id="accordion-4" role="tablist">
+                                            <div style="border: none; border-radius: 4px;" class="card col-lg-12">
+                                                <div class="card-header col-lg-12" role="tab" id="heading-10">
+                                                    <h6 id="display-h6-ug" class="mb-0 col-lg-12">
+                                                        <a class="col-lg-12" id="a-ug" data-toggle="collapse"
+                                                           href="#collapse-{{ index }}"
+                                                           aria-controls="collapse-{{ index }}"><i
+                                                                class="mdi mdi-chevron-right "></i>
+                                                            {{ names[key] }}
+                                                        </a>
+                                                        {% if newvalue == 'good' %}
+                                                            <button style="font-size: 11px;padding-left: 2px;padding-right: 2px;  ; width: 70px; height: auto;"
+                                                                    id="success-btn-ug" class="btn text-white">
+                                                                {{ newvalue }}
+                                                            </button>
+                                                        {% elif newvalue == 'urgent' %}
+                                                            <button id="danger-btn-ug" class="btn text-white">
+                                                                {{ newvalue }}
+                                                            </button>
+                                                        {% elif newvalue == 'warning' %}
+                                                            <button id="warning-btn-ug" class="btn text-white">
+                                                                {{ newvalue }}
+                                                            </button>
+                                                        {% else %}
+                                                            <button id="none-btn-ug" class="btn text-white">
+                                                                {{ newvalue }}
+                                                            </button>
+                                                        {% endif %}
+                                                    </h6>
                                                 </div>
-
-                                            </div>
-                                        </div>
-                                        <div style="border: none; border-radius: 4px;" class="card col-lg-12">
-                                            <div class="card-header col-lg-12" role="tab" id="heading-12">
-                                                <h6 id="display-h6-ug" class="mb-0 col-lg-12">
-                                                    <a id="a-ug" class="collapsed col-lg-12" data-toggle="collapse"
-                                                       href="#collapse-12" aria-controls="none"><i
-                                                            class="mdi mdi-chevron-right "></i>
-                                                        Lorem ipsum dolor sit amet.
-
-                                                    </a>
-                                                    <button style="font-size: 11px;padding-left: 5px;padding-right: 5px;  ; width: 70px; height: auto;"
-                                                            id="success-btn-ug" class="btn text-white text-center">GOOD
-                                                    </button>
-                                                </h6>
-                                            </div>
-                                            <div id="collapse-12" class="collapse" role="tabpanel"
-                                                 aria-labelledby="heading-12" data-parent="#accordion-4">
-                                                <div class="card">
-                                                    <div class="card-body">
-
-
-                                                        <div class="row">
-
-                                                            <div style="margin-top: -20px;" class="col-md-12">
-                                                                <ul class="nav nav-pills nav-pills-custom "
-                                                                    id="pills-tab-custom" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class=" active" id="pills-home-tab-custom-2"
-                                                                           data-toggle="pill" href="#pills-health"
-                                                                           role="tab" aria-controls="pills-home"
-                                                                           aria-selected="true">
-                                                                            Summary:
-                                                                        </a>
-                                                                    </li>
-
-
-                                                                </ul>
-                                                                <div class="tab-content tab-content-custom-pill"
-                                                                     id="pills-tabContent-custom">
-                                                                    <div class="tab-pane fade show active"
-                                                                         id="pills-health" role="tabpanel"
-                                                                         aria-labelledby="pills-home-tab-custom">
-                                                                        <div class="d-flex ">
-
-
+                                                <div id="collapse-{{ index }}" class="collapse" role="tabpanel"
+                                                     aria-labelledby="heading-10" data-parent="#accordion-4">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h4 class="card-title"></h4>
+                                                            <div class="row">
+                                                                <div style="margin-top: -20px;" class="col-md-12">
+                                                                    <ul class="nav nav-pills nav-pills-custom "
+                                                                        id="pills-tab-custom" role="tablist">
+                                                                        <li class="nav-item">
+                                                                            <a class=" active"
+                                                                               id="pills-home-tab-custom-2"
+                                                                               data-toggle="pill"
+                                                                               href="#pills-health-{{ index }}"
+                                                                               role="tab" aria-controls="pills-home"
+                                                                               aria-selected="true">
+                                                                                Summary:
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="tab-content tab-content-custom-pill"
+                                                                         id="pills-tabContent-custom">
+                                                                        <div class="tab-pane fade show active"
+                                                                             id="pills-health-{{ index }}"
+                                                                             role="tabpanel"
+                                                                             aria-labelledby="pills-home-tab-custom">
+                                                                            <div class="d-flex ">
+                                                                            </div>
+                                                                            <p style="margin-top: -10px;">
+                                                                                {{ summaries[key] }}
+                                                                            </p>
                                                                         </div>
-                                                                        <p style="margin-top: -10px;">
-                                                                            Lorem ipsum dolor.
-                                                                        </p>
-
-                                                                    </div>
-
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="row">
-
-                                                            <div style="margin-top: 0px;" class="col-md-12">
-                                                                <ul class="nav nav-pills nav-pills-custom "
-                                                                    id="pills-tab-custom" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class=" active" id="pills-home-tab-custom-2"
-                                                                           data-toggle="pill" href="#pills-health"
-                                                                           role="tab" aria-controls="pills-home"
-                                                                           aria-selected="true">
-                                                                            Recommendation:
-                                                                        </a>
-                                                                    </li>
-
-
-                                                                </ul>
-                                                                <div class="tab-content tab-content-custom-pill"
-                                                                     id="pills-tabContent-custom">
-                                                                    <div class="tab-pane fade show active"
-                                                                         id="pills-health" role="tabpanel"
-                                                                         aria-labelledby="pills-home-tab-custom">
-                                                                        <div class="d-flex ">
-
-
-                                                                        </div>
-                                                                        <ul>
-                                                                            <li>Lorem ipsum dolor.</li>
-                                                                            <li>Lorem ipsum dolor sit amet.</li>
-                                                                            <li>Lorem ipsum dolor sit.</li>
-                                                                        </ul>
-
-                                                                    </div>
-
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div style="border: none; border-radius: 4px;" class="card col-lg-12">
-                                            <div class="card-header col-lg-12" role="tab" id="heading-13">
-                                                <h6 id="display-h6-ug" class="mb-0 col-lg-12">
-                                                    <a id="a-ug" class="collapsed col-lg-12" data-toggle="collapse"
-                                                       href="#collapse-13" aria-controls="collapse-13"><i
-                                                            class="mdi mdi-chevron-right "></i>
-                                                        Lorem ipsum dolor sit amet, consectetur adipisicing.
-                                                    </a>
-                                                    <button style="font-size: 11px;padding-left: 5px;padding-right: 5px;  ; width: 70px; height: auto;"
-                                                            id="none-btn-ug" class="btn  text-center">NONE
-                                                    </button>
-                                                </h6>
-                                            </div>
-                                            <div id="collapse-13" class="collapse" role="tabpanel"
-                                                 aria-labelledby="heading-13" data-parent="#accordion-4">
-                                                <div class="card">
-                                                    <div class="card-body">
-
-
-                                                        <div class="row">
-
-                                                            <div style="margin-top: -20px;" class="col-md-12">
-                                                                <ul class="nav nav-pills nav-pills-custom "
-                                                                    id="pills-tab-custom" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class=" active" id="pills-home-tab-custom-2"
-                                                                           data-toggle="pill" href="#pills-health"
-                                                                           role="tab" aria-controls="pills-home"
-                                                                           aria-selected="true">
-                                                                            Summary:
-                                                                        </a>
-                                                                    </li>
-
-
-                                                                </ul>
-                                                                <div class="tab-content tab-content-custom-pill"
-                                                                     id="pills-tabContent-custom">
-                                                                    <div class="tab-pane fade show active"
-                                                                         id="pills-health" role="tabpanel"
-                                                                         aria-labelledby="pills-home-tab-custom">
-                                                                        <div class="d-flex ">
-
-
-                                                                        </div>
-                                                                        <p style="margin-top: -10px;">
-                                                                            Lorem ipsum dolor.
-                                                                        </p>
-
-                                                                    </div>
-
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="row">
-
-                                                            <div style="margin-top: 0px;" class="col-md-12">
-                                                                <ul class="nav nav-pills nav-pills-custom "
-                                                                    id="pills-tab-custom" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class=" active" id="pills-home-tab-custom-2"
-                                                                           data-toggle="pill" href="#pills-health"
-                                                                           role="tab" aria-controls="pills-home"
-                                                                           aria-selected="true">
-                                                                            Recommendation:
-                                                                        </a>
-                                                                    </li>
-
-
-                                                                </ul>
-                                                                <div class="tab-content tab-content-custom-pill"
-                                                                     id="pills-tabContent-custom">
-                                                                    <div class="tab-pane fade show active"
-                                                                         id="pills-health" role="tabpanel"
-                                                                         aria-labelledby="pills-home-tab-custom">
-                                                                        <div class="d-flex ">
-
-
-                                                                        </div>
-                                                                        <ul>
-                                                                            <li>Lorem ipsum dolor.</li>
-                                                                            <li>Lorem ipsum dolor sit amet.</li>
-                                                                            <li>Lorem ipsum dolor sit.</li>
-                                                                        </ul>
-
-                                                                    </div>
-
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div style="border: none; border-radius: 4px;" class="card col-lg-12">
-                                            <div class="card-header col-lg-12" role="tab" id="heading-12">
-                                                <h6 id="display-h6-ug" class="mb-0 col-lg-12">
-                                                    <a id="a-ug" class="collapsed col-lg-12" data-toggle="collapse"
-                                                       href="#collapse-12" aria-controls="none"><i
-                                                            class="mdi mdi-chevron-right "></i>
-                                                        Lorem ipsum dolor sit amet.
-                                                    </a>
-                                                    <button style="font-size: 11px;padding-left: 5px;padding-right: 5px;  ; width: 70px; height: auto;"
-                                                            id="warning-btn-ug" class="btn text-white text-center">
-                                                        WARNING
-                                                    </button>
-                                                </h6>
-                                            </div>
-                                            <div id="collapse-12" class="collapse" role="tabpanel"
-                                                 aria-labelledby="heading-12" data-parent="#accordion-4">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <div style="margin-top: -20px;" class="col-md-12">
-                                                                <ul class="nav nav-pills nav-pills-custom "
-                                                                    id="pills-tab-custom" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class=" active" id="pills-home-tab-custom-2"
-                                                                           data-toggle="pill" href="#pills-health"
-                                                                           role="tab" aria-controls="pills-home"
-                                                                           aria-selected="true">
-                                                                            Summary:
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                                <div class="tab-content tab-content-custom-pill"
-                                                                     id="pills-tabContent-custom">
-                                                                    <div class="tab-pane fade show active"
-                                                                         id="pills-health" role="tabpanel"
-                                                                         aria-labelledby="pills-home-tab-custom">
-                                                                        <div class="d-flex ">
-                                                                        </div>
-                                                                        <p style="margin-top: -10px;">
-                                                                            Lorem ipsum dolor.
-                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div style="margin-top: 0px;" class="col-md-12">
-                                                                <ul class="nav nav-pills nav-pills-custom "
-                                                                    id="pills-tab-custom" role="tablist">
-                                                                    <li class="nav-item">
-                                                                        <a class=" active" id="pills-home-tab-custom-2"
-                                                                           data-toggle="pill" href="#pills-health"
-                                                                           role="tab" aria-controls="pills-home"
-                                                                           aria-selected="true">
-                                                                            Recommendation:
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                                <div class="tab-content tab-content-custom-pill"
-                                                                     id="pills-tabContent-custom">
-                                                                    <div class="tab-pane fade show active"
-                                                                         id="pills-health" role="tabpanel"
-                                                                         aria-labelledby="pills-home-tab-custom">
-                                                                        <div class="d-flex ">
+                                                            <div class="row">
+                                                                <div style="margin-top: 0px;" class="col-md-12">
+                                                                    <ul class="nav nav-pills nav-pills-custom "
+                                                                        id="pills-tab-custom" role="tablist">
+                                                                        {% if recommendations[key] %}
+                                                                            <li class="nav-item">
+                                                                                <a class=" active"
+                                                                                   id="pills-home-tab-custom-2"
+                                                                                   data-toggle="pill"
+                                                                                   href="#pills-health"
+                                                                                   role="tab" aria-controls="pills-home"
+                                                                                   aria-selected="true">
+                                                                                    Recommendative:
+                                                                                </a>
+                                                                            </li>
+                                                                        {% endif %}
+                                                                    </ul>
+                                                                    <div class="tab-content tab-content-custom-pill"
+                                                                         id="pills-tabContent-custom">
+                                                                        <div class="tab-pane fade show active"
+                                                                             id="pills-health" role="tabpanel"
+                                                                             aria-labelledby="pills-home-tab-custom">
+                                                                            <div class="d-flex ">
+                                                                            </div>
+                                                                            <ul>
+                                                                                {% for recommendation in recommendations[key] %}
+                                                                                    <li>{{ recommendation }}</li>
+                                                                                {% endfor %}
+                                                                            </ul>
                                                                         </div>
-                                                                        <ul>
-                                                                            <li>Lorem ipsum dolor.</li>
-                                                                            <li>Lorem ipsum dolor sit amet.</li>
-                                                                            <li>Lorem ipsum dolor sit.</li>
-                                                                        </ul>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -708,7 +409,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
