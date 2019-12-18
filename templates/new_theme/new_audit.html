@@ -708,6 +708,18 @@
         src="{{ url_for('static', filename='new_static/js/settings.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='new_static/js/todolist.js') }}"></script>
+<script>
+setTimeout(function() {
+  var auditnames = document.getElementsByClassName("mt-2 col-lg-7 float-left d-inline-block text-center");
+    for (var i=0, len=auditnames.length|0; i<len; i=i+1|0) {
+        text = auditnames[i].textContent;
+        if (text.includes("Preparing") )
+        {
+             locations.reload();
+         }
+    }
+}, 5000);
+</script>
 </body>
 
 </html>
