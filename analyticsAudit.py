@@ -1990,6 +1990,7 @@ def internalSearchTermConsistency(dataSource):
 #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
             "attachment_type": "default",
         }]
+        recommendations += ['Apply lowercase filter under View Setting to enforce all terms to be seen as lowercase.']
 
     if len(attachments) != 0:
 #        attachments[0]['pretext'] = text
