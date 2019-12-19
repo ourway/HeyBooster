@@ -630,7 +630,7 @@ def recommendation(datasourceID):
         if lastStates['contentGrouping'] == 'danger':
             recommendations['contentGrouping'] = ['If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
                             'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
-        elif lastStates['internalSearchTermConsistency'] == 'danger':
+        if lastStates['internalSearchTermConsistency'] == 'danger':
             recommendations['internalSearchTermConsistency'] = ['Apply lowercase filter under View Setting to enforce all terms to be seen as lowercase.']
         ####  Temporary Add-on ####
         len_issues = list(lastStates.values()).count('danger')
@@ -978,7 +978,7 @@ def audithistory(datasourceID):
             if lastStates['contentGrouping'] == 'danger':
                 recommendations['contentGrouping'] = ['If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
                                 'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
-            elif lastStates['internalSearchTermConsistency'] == 'danger':
+            if lastStates['internalSearchTermConsistency'] == 'danger':
                 recommendations['internalSearchTermConsistency'] = ['Apply lowercase filter under View Setting to enforce all terms to be seen as lowercase.']
             ####  Temporary Add-on ####
             len_issues = list(lastStates.values()).count('danger')
