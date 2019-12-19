@@ -9696,7 +9696,7 @@ summary {
 }
 
 template {
-    
+
     display: none;
 }
 
@@ -25268,10 +25268,7 @@ code {
     background-color: #fff;
 }
 
-#m-left-right-ug {
-
-
-}
+#m-left-right-ug {}
 
 #card-genel-ug {
 
@@ -25706,6 +25703,21 @@ code {
     border-bottom: 0;
     font: normal normal normal 24px/1 "Material Design Icons";
     content: "\F140";
+    width: auto;
+    height: auto;
+    vertical-align: middle;
+    line-height: .625rem;
+    font-size: 1.25rem;
+    margin-left: 0;
+}
+
+.dropdown dropdownMenuIconButton1:after {
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 0;
+    font: normal normal normal 24px/1 "Material Design Icons";
+    content: "\";
     width: auto;
     height: auto;
     vertical-align: middle;
@@ -32319,11 +32331,12 @@ div.tagsinput span.tag a {
 }
 
 #card-shadow-ug {
-    box-shadow: 15px 15px 25px 5px rgba(0,0,0,0.3);
+    box-shadow: 15px 15px 25px 5px rgba(0, 0, 0, 0.3);
     transition: .5s box-shadow;
 }
+
 #card-shadow-ug:hover {
-    box-shadow: 5px 7px 25px 1px rgba(0,0,0,0.4);
+    box-shadow: 5px 7px 25px 1px rgba(0, 0, 0, 0.4);
 }
 
 .auth.lock-full-bg {
@@ -32498,18 +32511,13 @@ div.tagsinput span.tag a {
 
 
 #resp-height #card-ug-mt {
-        height: 80px;
-    }
+    height: 80px;
+}
 
 @media (max-width: 768px) {
-    #card-ug-mt .dropdown #dropdownMenuIconButton2 {
+    #card-ug-mt .dropdown #dropdownMenuIconButton2 {}
 
-    }
-
-    #card-ug-mt #show-ug-2 {
-
-
-    }
+    #card-ug-mt #show-ug-2 {}
 
     #resp-height #card-ug-mt {
         height: 180px;
@@ -32712,7 +32720,8 @@ div.tagsinput span.tag a {
     font-size: 1.125rem;
     line-height: 1;
     margin-right: 0.625rem;
-    color: #fff;;
+    color: #fff;
+    ;
 }
 
 .rtl .sidebar .nav .nav-item .nav-link i.menu-icon {
@@ -32789,9 +32798,7 @@ div.tagsinput span.tag a {
 
 }
 
-.sidebar .nav .nav-item nav-link.active {
-
-}
+.sidebar .nav .nav-item nav-link.active {}
 
 .sidebar .nav .nav-item.active > .nav-link {
     position: relative;
@@ -33011,7 +33018,7 @@ div.tagsinput span.tag a {
 
 .navbar .navbar-brand-wrapper .navbar-brand {
     color: #27367f;
-    font-size:1.5rem;
+    font-size: 1.5rem;
     margin-right: 0;
     padding: .25rem 0;
 }
@@ -33080,8 +33087,8 @@ div.tagsinput span.tag a {
     width: calc(100% - 210px);
     height: 63px;
     -webkit-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
-     -moz-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
-     box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 3px 21px 0px rgba(0, 0, 0, 0.1);
 
 }
 
@@ -36541,7 +36548,7 @@ div.tagsinput span.tag a {
     position: relative;
     margin-right: 10px;
     transform: translateY(60%);
-    background-color:transparent;
+    background-color: transparent;
     background: #6CBA7B;
     float: right;
     border-radius: 4px;
@@ -36595,7 +36602,7 @@ div.tagsinput span.tag a {
     position: relative;
     margin-right: 10px;
     transform: translateY(60%);
-    background-color:transparent;
+    background-color: transparent;
     float: right;
     background: #C9CED2;
     text-align: center;
@@ -36619,7 +36626,7 @@ div.tagsinput span.tag a {
 #a-ug {
     display: inline-block;
     background-color: transparent;
-    color:#24282C;
+    color: #24282C;
     width: 85%;
     opacity: 0.7;
     float: left;
@@ -36647,7 +36654,7 @@ div.tagsinput span.tag a {
 
 #score-ug {
 
-    background-color:  rgba(2, 171, 254, 0.7);
+    background-color: rgba(2, 171, 254, 0.7);
     color: white;
     font-size: 16px;
     border: 5px solid white;
@@ -36752,7 +36759,7 @@ section button:hover {
 
 #data-source-name-ug {
     padding-top: 5px;
-    background-color:transparent;
+    background-color: transparent;
     border: 1px solid rgba(26, 28, 41, 0.6);
     padding: 10px;
     border-radius: 7px;
@@ -36768,12 +36775,14 @@ section button:hover {
     box-shadow: 1px 2px 5px 0px rgba(26, 28, 41, 0.2);
 
 }
+
 #tr-link-2 {
     background-color: transparent;
     transition: .4s background;
     cursor: pointer;
 
 }
+
 #tr-link-2:hover {
     background-color: #f2f5f8;
 
@@ -36792,7 +36801,7 @@ section button:hover {
 
 
 #info-ug-2 {
-    color: #888888;
+    color: #555555;
     font-size: 20px;
 }
 
@@ -36807,7 +36816,7 @@ section button:hover {
     display: inline-block;
 }
 
-#audit-history-ug-score{
+#audit-history-ug-score {
     width: 55px;
     height: auto;
     background-color: #2C6C8C;
@@ -36816,7 +36825,7 @@ section button:hover {
 
 
 
-#audit-history-ug-score h4{
+#audit-history-ug-score h4 {
     color: white;
     padding-bottom: 10px;
     text-align: center;
@@ -36964,8 +36973,8 @@ section button:hover {
     .wrapper .step span {
         padding-left: 20px;
         padding-right: 15px;
-    padding-top: 40px;
-    padding-bottom: 40px;
+        padding-top: 40px;
+        padding-bottom: 40px;
 
     }
 }
@@ -36996,3 +37005,37 @@ section button:hover {
 .arrow-steps .step.current:after {
     border-left: 17px solid #23468c;
 }
+
+
+
+@media (max-width: 992px) {
+    #resp-height #card-ug-mt {
+        height: 220px;
+    }
+
+    #resp-height #card-ug-mt #audit-history-ug-score{
+        height: 250px;
+        float: left;
+        height: 50px;
+        width: 100%;
+
+    }
+
+
+
+}
+
+
+@media (max-width: 768px) {
+    #resp-height #card-ug-mt {
+        height: 250px;
+    }
+
+}
+
+
+/* ---info için eklendi ---- */
+#info-h-ug {
+    margin-top: 11px;
+}
+/* --------- */

@@ -17,11 +17,19 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T">
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-KMNKXGH');
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');
     </script>
     <!-- End Google Tag Manager -->
 </head>
@@ -306,8 +314,20 @@
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title ml-5"
-                                    style="letter-spacing: 1px;">{{ selectedargs[0].dataSourceName }}</h4>
+                                <h4 id="info-h-ug" class="card-title ml-5"
+                                    style="letter-spacing: 1px; display: inline-block; float: left;">{{ selectedargs[0].dataSourceName }}</h4>
+                                <!-- info için eklendi ------------ -->
+                                <div class="dropdown dropup" id=display-ug-ib>
+                                    <button class="btn " type="button" id="dropdownMenuIconButton1"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i id="info-ug-2" class="mdi mdi-information-outline"></i>
+                                    </button>
+                                    <div style="cursor: text;" class="dropdown-menu"
+                                         aria-labelledby="dropdownMenuIconButton1">
+
+                                        <a class="dropdown-item">{{ arg.accountName }} & {{ arg.propertyName }} & {{ arg.viewName }}</a>
+                                    </div>
+                                </div>
                                 {% for key, value in lastStates.items() %}
                                     {% set index = loop.index0 %}
                                     {% set listvalue = value.split('_') %}
