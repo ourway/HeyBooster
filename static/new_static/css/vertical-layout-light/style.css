@@ -36511,7 +36511,6 @@ div.tagsinput span.tag a {
 #danger-btn-ug {
     font-size: 14px;
     color: white;
-    width: 120px;
     position: relative;
     margin-right: 10px;
     font-weight: 500;
@@ -36522,12 +36521,13 @@ div.tagsinput span.tag a {
     text-align: center;
     background: #E87470;
     border-radius: 4px;
+    width: 70px;
 }
 
 #warning-btn-ug {
     font-size: 14px;
     color: white;
-    width: 120px;
+    width: 70px;
     position: relative;
     margin-right: 10px;
     transform: translateY(60%);
@@ -36542,7 +36542,7 @@ div.tagsinput span.tag a {
 }
 
 #success-btn-ug {
-    width: 120px;
+    width: 70px;
     font-size: 14px;
     color: white;
     position: relative;
@@ -36596,7 +36596,7 @@ div.tagsinput span.tag a {
 }
 
 #none-btn-ug {
-    width: 120px;
+    width: 70px;
     font-size: 14px;
     color: black;
     position: relative;
@@ -36742,7 +36742,8 @@ section button:hover {
     height: 50px;
     border-top: 1px solid #ededed;
     margin-top: 10px;
-    padding: 20px;
+    padding-top: 20px;
+    padding-bottom: 20x;
 }
 
 #issue-h-ug {
@@ -36797,6 +36798,29 @@ section button:hover {
     color: #25378b;
     font-size: 18px;
     letter-spacing: 1px;
+}
+
+@media (max-width:1270px){
+    #g2_refresh {
+        font-size: 18px;
+    }
+
+}
+
+@media (max-width:1217px){
+    #g2_refresh {
+        font-size: 15px;
+        letter-spacing: 0px;
+    }
+
+}
+
+@media (max-width:767px){
+    #g2_refresh {
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
 }
 
 
@@ -37039,3 +37063,63 @@ section button:hover {
     margin-top: 11px;
 }
 /* --------- */
+
+
+@media (max-width: 630px) {
+    .card-header #danger-btn-ug {
+        width: 100%;
+        text-align: center;
+        display: block;
+        float: left;
+    }
+
+    .card-header #success-btn-ug {
+        width: 100%;
+        text-align: center;
+        display: block;
+        float: left;
+    }
+
+    .card-header #warning-btn-ug {
+        width: 100%;
+        text-align: center;
+        display: block;
+        float: left;
+    }
+
+    .card-header #none-btn-ug {
+        width: 100%;
+        text-align: center;
+        display: block;
+        float: left;
+    }
+
+    #details-row-height-ug{
+        height: 200px;
+        text-align: center;
+        float:center;
+    }
+
+    #a-ug {
+        text-align: left;
+        float: center;
+        display: block;
+        width: 100%;
+    }
+
+    #display-h6-ug {
+        text-align: left;
+        float: center;
+        display: block;
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 1270) {
+    .card .card-body #g2_refresh{
+        font-size: 20px;
+    }
+
+
+}
