@@ -1591,28 +1591,32 @@ def account():
 @login_required
 def getaudit():
     user = db.find_one('user', {'email': session['email']})
-    
+    try:
+        tz_offset = user["tz_offset"]
+    except:
+        tz_offset = 0
+#        db.find_and_modify('user', query={'_id': user['_id']}, tz_offset=tz_offset)
     if user['sl_accesstoken'] == '':
         print('************************************************************************************')
         if not session['email']:
             return redirect('/getstarted/connect-accounts')
 
-        ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        #user = db.find_one('user', {'email': session['email']})
-
-        if ip_addr:
-            url = 'https://ipinfo.io/' + ip_addr + '/json'
-            res = urlopen(url)
-            data = load(res)
-            tz = data['timezone']
-            pst = pytz.timezone(tz)
-            now = datetime.now()
-            now = datetime.strftime(now, '%d/%m/%Y')
-            now = datetime.strptime(now, '%d/%m/%Y')
-            localize = pst.localize(now)
-            tz_offset = int(localize.tzname())
-            db.find_and_modify('user', query={'_id': user['_id']},
-                               tz_offset=tz_offset)
+#        ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+#        #user = db.find_one('user', {'email': session['email']})
+#
+#        if ip_addr:
+#            url = 'https://ipinfo.io/' + ip_addr + '/json'
+#            res = urlopen(url)
+#            data = load(res)
+#            tz = data['timezone']
+#            pst = pytz.timezone(tz)
+#            now = datetime.now()
+#            now = datetime.strftime(now, '%d/%m/%Y')
+#            now = datetime.strptime(now, '%d/%m/%Y')
+#            localize = pst.localize(now)
+#            tz_offset = int(localize.tzname())
+#            db.find_and_modify('user', query={'_id': user['_id']},
+#                               tz_offset=tz_offset)
 
         #        counter = 0
         #        dt = db.find('datasource', {'email': session['email']})
