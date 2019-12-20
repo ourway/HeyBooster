@@ -905,7 +905,7 @@ def active_audit_test(UUID):
 @app.route('/account/audit-history<datasourceID>')
 def audithistory(datasourceID):
     user = db.find_one('user', {'email': session['email']})
-    if not user['sl_accesstoken']:
+    if user['sl_accesstoken'] == '':
         #    tz_offset = user['tz_offset']
         # tz_offset = 1
         current_analyticsemail = user['ga_email']
