@@ -1591,7 +1591,7 @@ def account():
 def getaudit():
     user = db.find_one('user', {'email': session['email']})
     
-    if not user['sl_accesstoken']:
+    if user['sl_accesstoken'] == '':
         print('************************************************************************************')
         if not session['email']:
             return redirect('/getstarted/connect-accounts')
@@ -1698,11 +1698,11 @@ def getaudit():
             #            arg['strstat'] = 'active'
             #        arg['totalScore'] = analytics_audit['totalScore']
             analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-            # analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-            # if analytics_audit['status'] == '0':
-            #     analytics_audit['strstat'] = 'passive'
-            # else:
-            #     analytics_audit['strstat'] = 'active'
+            analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+            if analytics_audit['status'] == '0':
+                analytics_audit['strstat'] = 'passive'
+            else:
+                analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
         return render_template('new_theme/new_audit.html', args=args, selectedargs=args, nForm=nForm,
                                current_analyticsemail=current_analyticsemail,
