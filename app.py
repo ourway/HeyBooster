@@ -122,6 +122,9 @@ def base():
 def home():
     current_analyticsemail = ""
     user = db.find_one('user', {'email': session['email']})
+    datasource = db.find_one("datasource", {"email":user["email"]})
+    if datasource:
+        return redirect('/account/audit-history')
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
@@ -966,7 +969,7 @@ def audithistory(datasourceID):
         analytics_audits = []
         for arg in selectedargs:
             analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-            # analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+            analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
             if analytics_audit['status'] == '0':
                 analytics_audit['strstat'] = 'passive'
             else:
