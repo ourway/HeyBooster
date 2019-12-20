@@ -829,28 +829,39 @@ def notSetLandingPage(dataSource):
     
     totalsessions = float(results['reports'][0]['data']['totals'][0]['values'][0])
     sessions = 0
-    for row in results['reports'][0]['data']['rows']:
-        landingPage = row['dimensions'][0]
-        if 'not set' in landingPage:
-            sessions = int(row['metrics'][0]['values'][0])
-            break
-    if sessions/totalsessions > 0.0001:
-        attachments += [{
-            "text": "(not set) landing pages are seen on your landing page report, it indicated that there is an issue in your page tracking.",
-            "color": "danger",
-#            "pretext": text,
-            "title": text,
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-            "attachment_type": "default",
-        }]
-        recommendations += ["Be sure that Google Analytics pixel is triggered on all pages of your website.",
-                            "Hits sent to Google Analytics before the pageview code causes not set landing page problem. Pageview should be the first of all Google Analytics code.",
-                            "Default session duration (30 min) may not be the optimum duration for your website, change this from Google Analytics property settings."]
+    if 'rows' in results['reports'][0]['data'].keys():
+        for row in results['reports'][0]['data']['rows']:
+            landingPage = row['dimensions'][0]
+            if 'not set' in landingPage:
+                sessions = int(row['metrics'][0]['values'][0])
+                break
+        if sessions/totalsessions > 0.0001:
+            attachments += [{
+                "text": "(not set) landing pages are seen on your landing page report, it indicated that there is an issue in your page tracking.",
+                "color": "danger",
+    #            "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
+            recommendations += ["Be sure that Google Analytics pixel is triggered on all pages of your website.",
+                                "Hits sent to Google Analytics before the pageview code causes not set landing page problem. Pageview should be the first of all Google Analytics code.",
+                                "Default session duration (30 min) may not be the optimum duration for your website, change this from Google Analytics property settings."]
+        else:
+            attachments += [{
+                "text": "There is no important issue about not set landing pages, the number of session landed on unknown page is ignorable.",
+                "color": "good",
+    #            "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
     else:
         attachments += [{
-            "text": "There is no important issue about not set landing pages, the number of session landed on unknown page is ignorable.",
-            "color": "good",
+            "text": "Because there is no hit recorded on your account for a while, the problem about (not set) landing page can not identified.",
+            "color": "danger",
 #            "pretext": text,
             "title": text,
             "callback_id": "notification_form",
