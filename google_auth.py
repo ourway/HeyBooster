@@ -10,6 +10,10 @@ import google_analytics
 from database import db
 import requests
 import segmentationOfAnalytics
+from urllib.request import urlopen
+from json import load
+import pytz
+from datetime import datetime
 
 
 TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'
@@ -171,6 +175,46 @@ def google_loginauth_redirect():
                     password="")
     new_user.insert()
     user = db.find_one('user', {'email': user_info['email']})
+    ip_addr = flask.request.environ.get('HTTP_X_REAL_IP', flask.request.remote_addr)
+    if 'tz_offset' in user.keys():
+        if not user['tz_offset']:
+            if ip_addr:
+                url = 'https://ipinfo.io/' + ip_addr + '/json'
+                res = urlopen(url)
+                data = load(res)
+                tz = data['timezone']
+                pst = pytz.timezone(tz)
+                now = datetime.now()
+                days = pst.utcoffset(now).days
+                if days < 0:
+                    tz_offset = (pst.utcoffset(now).days*24*60*60 + pst.utcoffset(now).seconds)//3600
+                else:
+                    tz_offset = pst.utcoffset(now).seconds//3600
+                db.find_and_modify('user', query={'_id': user['_id']},
+                                      tz_offset=tz_offset)
+            else:
+                tz_offset = 0
+                db.find_and_modify('user', query={'_id': user['_id']},
+                                       tz_offset=tz_offset)
+    else:
+        if ip_addr:
+            url = 'https://ipinfo.io/' + ip_addr + '/json'
+            res = urlopen(url)
+            data = load(res)
+            tz = data['timezone']
+            pst = pytz.timezone(tz)
+            now = datetime.now()
+            days = pst.utcoffset(now).days
+            if days < 0:
+                tz_offset = (pst.utcoffset(now).days*24*60*60 + pst.utcoffset(now).seconds)//3600
+            else:
+                tz_offset = pst.utcoffset(now).seconds//3600
+            db.find_and_modify('user', query={'_id': user['_id']},
+                                  tz_offset=tz_offset)
+        else:
+            tz_offset = 0
+            db.find_and_modify('user', query={'_id': user['_id']},
+                                   tz_offset=tz_offset)
     flask.session['sl_accesstoken'] = user['sl_accesstoken']
     flask.session['ga_accesstoken'] = user['ga_accesstoken']
     return flask.redirect(BASE_URI, code=302)

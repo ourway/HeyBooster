@@ -906,6 +906,10 @@ def active_audit_test(UUID):
 @app.route('/account/audit-history<datasourceID>')
 def audithistory(datasourceID):
     user = db.find_one('user', {'email': session['email']})
+    try:
+        tz_offset = user["tz_offset"]
+    except:
+        tz_offset = 0
     if user['sl_accesstoken'] == '':
         #    tz_offset = user['tz_offset']
         # tz_offset = 1
@@ -1001,7 +1005,6 @@ def audithistory(datasourceID):
                                len_recommendations=len_recommendations,
                                totalScore=totalScore)
     else:
-        tz_offset = user['tz_offset']
         slack_token = user['sl_accesstoken']
         current_analyticsemail = user['ga_email']
         client = WebClient(token=slack_token)
@@ -1597,7 +1600,6 @@ def getaudit():
         tz_offset = 0
 #        db.find_and_modify('user', query={'_id': user['_id']}, tz_offset=tz_offset)
     if user['sl_accesstoken'] == '':
-        print('************************************************************************************')
         if not session['email']:
             return redirect('/getstarted/connect-accounts')
 
@@ -1714,11 +1716,8 @@ def getaudit():
                                analytics_audits=analytics_audits)
 
     else:
-
         if not (session['sl_accesstoken'] or session['ga_accesstoken']):
             return redirect('/getstarted/connect-accounts')
-
-        tz_offset = user['tz_offset']
         slack_token = user['sl_accesstoken']
         client = WebClient(token=slack_token)
         response = client.auth_test()
