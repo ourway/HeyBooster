@@ -1591,12 +1591,13 @@ def account():
 def getaudit():
     user = db.find_one('user', {'email': session['email']})
     
-    if not user['sl_accesstoken']:
+    if user['sl_accesstoken'] == '':
+        print('************************************************************************************')
         if not session['email']:
             return redirect('/getstarted/connect-accounts')
 
         ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        user = db.find_one('user', {'email': session['email']})
+        #user = db.find_one('user', {'email': session['email']})
 
         if ip_addr:
             url = 'https://ipinfo.io/' + ip_addr + '/json'
