@@ -1591,7 +1591,7 @@ def account():
 def getaudit():
     user = db.find_one('user', {'email': session['email']})
     
-    if user['sl_accesstoken'] == '':
+    if not user['sl_accesstoken']:
         print('************************************************************************************')
         if not session['email']:
             return redirect('/getstarted/connect-accounts')
@@ -1698,7 +1698,7 @@ def getaudit():
             #            arg['strstat'] = 'active'
             #        arg['totalScore'] = analytics_audit['totalScore']
             analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-            analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
+            #analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
             if analytics_audit['status'] == '0':
                 analytics_audit['strstat'] = 'passive'
             else:
