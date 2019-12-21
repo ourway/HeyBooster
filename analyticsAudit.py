@@ -1444,7 +1444,7 @@ def customDimension(dataSource):
                 'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                 'metrics': DnM[1],
                 'dimensions': [{'name': DnM[0]}],
-                'filtersExpression': "ga:hits>0"
+                'filtersExpression': f"{DnM[1][0]['expression']}>0"
             } for DnM in dimensionsNmetrics[i*5:i*5 + 5]]
 #            results = rservice.reports().batchGet(
 #                body={'reportRequests': reportRequests}).execute()
