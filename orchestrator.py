@@ -63,8 +63,8 @@ def do_job(tasks_to_accomplish):
             time.sleep(WAITTIME)
         except Exception as error:
             exc_type, exc_obj, exc_tb = sys.exc_info()  # this is to get error line number and description.
-            file_name = traceback.extract_tb(exc_tb)[-1][0]  # to get File Name.
-            line_no = traceback.extract_tb(exc_tb)[-1][1] #to get Line Number
+            file_name = [tb[0] for tb in traceback.extract_tb(exc_tb)]  # to get File Name.
+            line_no = [tb[1] for tb in traceback.extract_tb(exc_tb)]  #to get Line Number
             error_type = exc_type.__name__
             error_message =  str(error)
             error_string = f"Error Type: {error_type}, Error Message: {error_message}, File Name : {file_name}, Line no : {line_no}"
