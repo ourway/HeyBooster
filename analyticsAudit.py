@@ -1437,7 +1437,8 @@ def customDimension(dataSource):
     if (dimensionsNmetrics):
         rservice = google_analytics.build_reporting_api_v4_woutSession(email)
         reportRequests = []
-        for i in range(len(dimensionsNmetrics) // 5 + 1):  # Reporting API allows us to set maximum 5 reports
+        length = len(dimensionsNmetrics) // 5 + 1 if len(dimensionsNmetrics) % 5 else len(dimensionsNmetrics) // 5
+        for i in range(length):  # Reporting API allows us to set maximum 5 reports
             reportRequests = []
             reportRequests += [{
                 'viewId': viewId,
