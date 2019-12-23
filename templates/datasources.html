@@ -67,7 +67,8 @@
 <body>
 
 <!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
-<script type="text/javascript" src="https://a.opmnstr.com/app/js/api.min.js" data-account="47764" data-user="41970" async></script>
+<script type="text/javascript" src="https://a.opmnstr.com/app/js/api.min.js" data-account="47764" data-user="41970"
+        async></script>
 <!-- / https://optinmonster.com -->
 
 
@@ -85,69 +86,46 @@
 
             </div>
 
-            <form class="contact100-form validate-form" method="POST" action="/account/audit-history">
-                <div class="wrap-input100 validate-input" data-validate="Name is required">
-                    <span class="label-input100">Data Souce Name</span>
-                    {#<input class="input100" type="text" name="name"
-                                                   placeholder="Data Source Name" style="text-align: center;">#}
-                    {{ nForm.data_source_name }}
-                    <span class="focus-input100"></span>
-                </div>
-
-                <div class="wrap-input100 validate-input"
-                     data-validate="Valid email is required: ex@abc.xyz">
-                    <span class="label-input100">Google Analytics Account</span>
-                    <text class="input100" type="text" name="email"
-                          placeholder="Enter your email addess">{{ current_analyticsemail }}</text>
-                    <span class="focus-input100"></span>
-                </div>
-
-                <div class="wrap-input100 input100-select">
-                    <span class="label-input100">Select Your Profile Detail</span>
-                    <div>
+            <form method="POST" action="/account/audit-history">
+                <div class="card-body text-center">
+                    <h4 class="card-title" style="letter-spacing: 1px;">heybooster</h4>
+                    <div class="form-group col-lg-6 offset-md-3 mt-5">
+                        <label style="color: #25378b; font-weight: 500;"></label>
+                        <div>
+                            {{ nForm.data_source_name }}
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6 offset-md-3  mt-5">
+                        <label style="color: #25378b; font-weight: 500;">Google Analytics
+                            Account</label>
+                        <text type="text" class="form-control text-center form-control-sm"
+                              placeholder="Type a name eg. 'My store's First Audit'"
+                              aria-label="Username">{{ current_analyticsemail }}</text>
+                    </div>
+                    <div class="form-group col-lg-6 offset-md-3  mt-5">
+                        <label class="d-block" style="color: #25378b; font-weight: 500;">Select
+                            Your Profile Detail</label>
                         {{ nForm.account }}
                     </div>
-                    <span class="focus-input100"></span>
-                </div>
-
-                <div class="wrap-input100 input100-select">
-                    <!--
-                     <span class="label-input100"></span> -->
-                    <div>
+                    <div class="form-group col-lg-6 offset-md-3">
+                        <label class="d-block"></label>
                         {{ nForm.property }}
                     </div>
-                    <span class="focus-input100"></span>
-                </div>
-
-                <div class="wrap-input100 input100-select">
-                    <!--
-                     <span class="label-input100"></span> -->
-                    <div>
+                    <div class="form-group col-lg-6 offset-md-3">
+                        <label class="d-block"></label>
                         {{ nForm.view }}
                     </div>
-                    <span class="focus-input100"></span>
-                </div>
-
-                <div class="wrap-input100 input100-select">
-                    <span class="label-input100">Slack</span>
-                    <div>
-                        {{ nForm.channel }}
-                    </div>
-                    <span class="focus-input100"></span>
-                </div>
-
-
-                <div class="container-contact100-form-btn">
-                    <div class="wrap-contact100-form-btn">
-                        <div class="contact100-form-bgbtn"></div>
-                        <button type="submit" class="contact100-form-btn">
-                            <span>
-                                Get First Insight
-                                <i class="fa fa-long-arrow-right m-l-7"
-                                   aria-hidden="true"></i>
-                            </span>
-                        </button>
-                    </div>
+                    {% if session['sl_accesstoken'] %}
+                        <div class="form-group col-lg-6 offset-md-3">
+                            <label class="d-block"></label>
+                            {{ nForm.channel }}
+                        </div>
+                    {% endif %}
+                    <button type="submit"
+                            class="btn btn-inverse-dark btn-lg col-md-6 col-md-offset-3">
+                        Submit
+                        <i class="mdi mdi-arrow-right"></i>
+                    </button>
                 </div>
             </form>
         </div>
