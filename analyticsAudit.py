@@ -24,7 +24,8 @@ def makeRequestWithExponentialBackoff(req):
                                      'internalServerError', 'backendError']:
                 time.sleep((2 ** n) + random.random())
             else:
-                break
+#                break
+                time.sleep((2 ** n) + random.random())
     #There has been an error, the request never succeeded.
     raise loopError
     
