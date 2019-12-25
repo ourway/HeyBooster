@@ -24,8 +24,14 @@ def makeRequestWithExponentialBackoff(req):
                                      'internalServerError', 'backendError']:
                 time.sleep((2 ** n) + random.random())
             else:
-#                break
+                break
+#                time.sleep((2 ** n) + random.random())
+        except Exception as error:
+            loopError = error
+            if 'timeout' in str(error).lower() or 'timed out' in str(error).lower():
                 time.sleep((2 ** n) + random.random())
+            else:
+                break
     #There has been an error, the request never succeeded.
     raise loopError
     
@@ -41,7 +47,8 @@ def scoretoText(score):
         return "IMPORTANT"
     else:
         return "MODERATE"
-    
+
+
 def totalScorewithEmoji(totalScore):
     if totalScore > 85:
         return f":first_place_medal: *{totalScore}*"
