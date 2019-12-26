@@ -718,6 +718,12 @@ def recommendation(datasourceID):
                            totalScore=totalScore)
 
 
+@app.route('/account/insights')
+@login_required
+def insights():
+    return render_template('new_theme/insights.html')
+
+
 @app.route('/account/connections-without-slack')
 def wrongaccount_without_slack():
     if not session['ga_accesstoken']:

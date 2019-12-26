@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audit Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='new_static/vendors/mdi/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='new_static/vendors/base/vendor.bundle.base.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='new_static/css/vertical-layout-light/style.css') }}">
+    <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T">
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');
+    </script>
+    <!-- End Google Tag Manager -->
+</head>
+
+<body class="sidebar-fixed">
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div style="background: #fff"
+             class="text-left navbar-brand-wrapper d-flex align-items-center justify-content-between">
+            <a class="navbar-brand brand-logo" href="/"><img style="width: 300px; height: 50px; background: #fff;"
+                                                             src="../../static/images/logo-2.svg" alt="logo"/></a>
+            <a style="background: #fff;" class="navbar-brand brand-logo-mini" href="/"><img
+                    src="../../static/images/heybooster-icon.svg" alt="logo"/></a>
+            <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                <span class="mdi mdi-menu"></span>
+            </button>
+        </div>
+        <div style="background: #ffffff;" class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
+                       id="notificationDropdown" href="#" data-toggle="dropdown">
+                        <!--<i class="mdi mdi-bell-outline mx-0">asas</i>-->
+                        <h5 id="" class="btn btn-outline-light text-dark">{{ session['email'] }} &nbsp;<i
+                                style="opacity: 0.8; font-size: 17px;"
+                                class="mdi mdi-arrow-down-drop-circle-outline "></i></h5>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                         aria-labelledby="notificationDropdown">
+                        <a href="/logout" class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">Logout</h6>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                <span class="mdi mdi-menu"></span>
+            </button>
+        </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+
+        <div id="right-sidebar" class="settings-panel">
+            <i class="settings-close mdi mdi-close"></i>
+            <ul class="nav nav-tabs" id="setting-panel" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab"
+                       aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab"
+                       aria-controls="chats-section">CHATS</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="setting-content">
+                <div class="tab-pane fade show active scroll-wrapper" id="todo-section" role="tabpanel"
+                     aria-labelledby="todo-section">
+                    <div class="add-items d-flex px-3 mb-0">
+                        <form class="form w-100">
+                            <div class="form-group d-flex">
+                                <input type="text" class="form-control todo-list-input" placeholder="Add To-do">
+                                <button type="submit" class="add btn btn-primary todo-list-add-btn" id="add-task">Add
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="list-wrapper px-3">
+                        <ul class="d-flex flex-column-reverse todo-list">
+                            <li>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Team review meeting at 3.00 PM
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Prepare for presentation
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Resolve all the low priority tickets due today
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                            <li class="completed">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox" checked>
+                                        Schedule meeting for next week
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                            <li class="completed">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox" checked>
+                                        Project review
+                                    </label>
+                                </div>
+                                <i class="remove mdi mdi-delete"></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="events py-4 border-bottom px-3">
+                        <div class="wrapper d-flex mb-2">
+                            <i class="mdi mdi-circle-outline text-primary mr-2"></i>
+                            <span>Feb 11 2018</span>
+                        </div>
+                        <p class="mb-0 font-weight-thin text-gray">Creating component page</p>
+                        <p class="text-gray mb-0">build a js based app</p>
+                    </div>
+                    <div class="events pt-4 px-3">
+                        <div class="wrapper d-flex mb-2">
+                            <i class="mdi mdi-circle-outline text-primary mr-2"></i>
+                            <span>Feb 7 2018</span>
+                        </div>
+                        <p class="mb-0 font-weight-thin text-gray">Meeting with Alisa</p>
+                        <p class="text-gray mb-0 ">Call Sarah Graves</p>
+                    </div>
+                </div>
+                <!-- To do section tab ends -->
+                <div class="tab-pane fade" id="chats-section" role="tabpanel" aria-labelledby="chats-section">
+                    <div class="d-flex align-items-center justify-content-between border-bottom">
+                        <p class="settings-heading border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Friends</p>
+                        <small class="settings-heading border-top-0 mb-3 pt-0 border-bottom-0 pb-0 pr-3 font-weight-normal">See
+                            All</small>
+                    </div>
+                    <ul class="chat-list">
+                        <li class="list active">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="online"></span></div>
+                            <div class="info">
+                                <p>Thomas Douglas</p>
+                                <p>Available</p>
+                            </div>
+                            <small class="text-muted my-auto">19 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="offline"></span></div>
+                            <div class="info">
+                                <div class="wrapper d-flex">
+                                    <p>Catherine</p>
+                                </div>
+                                <p>Away</p>
+                            </div>
+                            <div class="badge badge-success badge-pill my-auto mx-2">4</div>
+                            <small class="text-muted my-auto">23 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="online"></span></div>
+                            <div class="info">
+                                <p>Daniel Russell</p>
+                                <p>Available</p>
+                            </div>
+                            <small class="text-muted my-auto">14 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="offline"></span></div>
+                            <div class="info">
+                                <p>James Richardson</p>
+                                <p>Away</p>
+                            </div>
+                            <small class="text-muted my-auto">2 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="online"></span></div>
+                            <div class="info">
+                                <p>Madeline Kennedy</p>
+                                <p>Available</p>
+                            </div>
+                            <small class="text-muted my-auto">5 min</small>
+                        </li>
+                        <li class="list">
+                            <div class="profile"><img src="https://via.placeholder.com/40x40" alt="image"><span
+                                    class="online"></span></div>
+                            <div class="info">
+                                <p>Sarah Graves</p>
+                                <p>Available</p>
+                            </div>
+                            <small class="text-muted my-auto">47 min</small>
+                        </li>
+                    </ul>
+                </div>
+                <!-- chat tab ends -->
+            </div>
+        </div>
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav style="background-color: #dddee3;" class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/audit-history">
+                        <i style="color: #242635" class="mdi mdi-puzzle menu-icon"></i>
+                        <span style="color: #242635;" class="menu-title">Audit History
+                            <!--<span class="badge badge-danger">New</span>--></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/connections">
+                        <i style="color: #242635" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
+                        <span style="color: #242635" class="menu-title">Connected Accounts</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 id="info-h-ug" class="card-title ml-5"
+                                    style="letter-spacing: 1px; display: inline-block; float: left;">Data Source Name</h4>
+                                <!-- info için eklendi ------------ -->
+                                <div class="dropdown dropup" id=display-ug-ib>
+                                    <button class="btn " type="button" id="dropdownMenuIconButton1"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i id="info-ug-2" class="mdi mdi-information-outline"></i>
+                                    </button>
+                                    <div style="cursor: text;" class="dropdown-menu"
+                                         aria-labelledby="dropdownMenuIconButton1">
+                                        Deneme 12
+                                    </div>
+                                </div>
+                                    <div class="mt-4">
+                                        <div class="accordion accordion-solid-header" id="accordion-4" role="tablist">
+                                            <div style="border: none; border-radius: 4px;" class="card col-lg-12">
+                                                <div class="card-header col-lg-12" role="tab"
+                                                     id="details-row-height-ug">
+                                                    <h6 id="display-h6-ug"
+                                                        class="mb-0 col-lg-12 col-xlg-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                        <a class="col-xlg-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" id="a-ug" data-toggle="collapse"
+                                                           href="#collapse-10"
+                                                           aria-controls="collapse-10"><i
+                                                                class="mdi mdi-chevron-right "></i>
+                                                            Test1
+                                                        </a>
+
+                                                            <button style="font-size: 11px;padding-left: 2px;padding-right: 2px;  ; height: auto;"
+                                                                    id="success-btn-ug" class="btn text-white">
+                                                                test2
+                                                            </button>
+
+                                                            <button style="font-size: 11px;padding-left: 2px;padding-right: 2px;  ; height: auto;"
+                                                                    id="danger-btn-ug" class="btn text-white">
+                                                                test3
+                                                            </button>
+
+                                                            <button style="font-size: 11px;padding-left: 2px;padding-right: 2px;  ; height: auto;"
+                                                                    id="warning-btn-ug" class="btn text-white">
+                                                                test4
+                                                            </button>
+
+                                                            <button style="font-size: 11px;padding-left: 2px;padding-right: 2px;  ; height: auto;"
+                                                                    id="none-btn-ug" class="btn text-white">
+                                                                test5
+                                                            </button>
+
+                                                    </h6>
+                                                </div>
+                                                <div id="collapse-10" class="collapse" role="tabpanel"
+                                                     aria-labelledby="heading-10" data-parent="#accordion-4">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h4 class="card-title"></h4>
+                                                            <div class="row">
+                                                                <div style="margin-top: -20px;" class="col-md-12">
+                                                                    <ul class="nav nav-pills nav-pills-custom "
+                                                                        id="pills-tab-custom" role="tablist">
+                                                                        <li class="nav-item">
+                                                                            <a class=" active"
+                                                                               id="pills-home-tab-custom-2"
+                                                                               data-toggle="pill"
+                                                                               href="#pills-health-10"
+                                                                               role="tab" aria-controls="pills-home"
+                                                                               aria-selected="true">
+                                                                                Summary:
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="tab-content tab-content-custom-pill"
+                                                                         id="pills-tabContent-custom">
+                                                                        <div class="tab-pane fade show active"
+                                                                             id="pills-health-10"
+                                                                             role="tabpanel"
+                                                                             aria-labelledby="pills-home-tab-custom">
+                                                                            <div class="d-flex ">
+                                                                            </div>
+                                                                            <p style="margin-top: -10px;">
+                                                                                test6
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div style="margin-top: 0px;" class="col-md-12">
+                                                                    <ul class="nav nav-pills nav-pills-custom "
+                                                                        id="pills-tab-custom" role="tablist">
+
+                                                                            <li class="nav-item">
+                                                                                <a class=" active"
+                                                                                   id="pills-home-tab-custom-2"
+                                                                                   data-toggle="pill"
+                                                                                   href="#pills-health"
+                                                                                   role="tab" aria-controls="pills-home"
+                                                                                   aria-selected="true">
+                                                                                    Recommendations:
+                                                                                </a>
+                                                                            </li>
+
+                                                                    </ul>
+                                                                    <div class="tab-content tab-content-custom-pill"
+                                                                         id="pills-tabContent-custom">
+                                                                        <div class="tab-pane fade show active"
+                                                                             id="pills-health" role="tabpanel"
+                                                                             aria-labelledby="pills-home-tab-custom">
+                                                                            <div class="d-flex ">
+                                                                            </div>
+                                                                            <ul>
+
+                                                                                    <li>test7</li>
+
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-circle-progress/1.2.0/circle-progress.min.js'></script>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/vendors/base/vendor.bundle.base.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/off-canvas.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/hoverable-collapse.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/template.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/settings.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='new_static/js/todolist.js') }}"></script>
+
+
+</body>
+</html>
+</body>
+</html>
