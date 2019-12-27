@@ -721,7 +721,10 @@ def recommendation(datasourceID):
 @app.route('/account/insights')
 @login_required
 def insights():
-    return render_template('new_theme/insights.html')
+    datasources = db.find('datasource', query={'email': session['email']})
+    insight = db.find('insight', query={'datasourceID': ObjectId(datasources['_id'])})
+
+    return render_template('new_theme/insights.html', insight)
 
 
 @app.route('/account/connections-without-slack')
