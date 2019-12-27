@@ -122,7 +122,7 @@ def base():
 def home():
     current_analyticsemail = ""
     user = db.find_one('user', {'email': session['email']})
-    datasource = db.find_one("datasource", {"email":user["email"]})
+    datasource = db.find_one("datasource", {"email": user["email"]})
     if datasource:
         return redirect('/account/audit-history')
     if 'auth_token' in session.keys():
@@ -285,7 +285,7 @@ def getaudit_without_slack_added():
                                                      dataSourceID=_id,
                                                      channelID='', sendWelcome=False)
             if slack_token:
-                run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback = True)
+                run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
             else:
                 run_analyticsAudit_without_slack.delay(str(data['_id']))
         else:
@@ -293,7 +293,7 @@ def getaudit_without_slack_added():
                                                      dataSourceID=_id,
                                                      channelID='')
             if slack_token:
-                run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback = False)
+                run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=False)
             else:
                 run_analyticsAudit_without_slack.delay(str(data['_id']))
 
@@ -340,9 +340,9 @@ def getaudit_without_slack_added():
                            analytics_audits=analytics_audits)
 
 
-#@app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
-#@login_required
-#def getaudit_without_slack():
+# @app.route("/account/audit-history-without-slack", methods=['GET', 'POST'])
+# @login_required
+# def getaudit_without_slack():
 #    if not session['email']:
 #        return redirect('/getstarted/connect-accounts')
 #
@@ -464,8 +464,8 @@ def getaudit_without_slack_added():
 #                           analytics_audits=analytics_audits)
 
 
-#@app.route('/account/audit-history-without-slack<datasourceID>')
-#def audithistory_without_slack(datasourceID):
+# @app.route('/account/audit-history-without-slack<datasourceID>')
+# def audithistory_without_slack(datasourceID):
 #    user = db.find_one('user', {'email': session['email']})
 #    #    tz_offset = user['tz_offset']
 #    # tz_offset = 1
@@ -630,10 +630,12 @@ def recommendation(datasourceID):
         lastStates = report['lastStates']
         ####  Temporary Add-on ####
         if lastStates['contentGrouping'] == 'danger':
-            recommendations['contentGrouping'] = ['If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
-                            'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
+            recommendations['contentGrouping'] = [
+                'If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
+                'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
         if lastStates['internalSearchTermConsistency'] == 'danger':
-            recommendations['internalSearchTermConsistency'] = ['Apply lowercase filter under View Setting to enforce all terms to be seen as lowercase.']
+            recommendations['internalSearchTermConsistency'] = [
+                'Apply lowercase filter under View Setting to enforce all terms to be seen as lowercase.']
         ####  Temporary Add-on ####
         len_issues = list(lastStates.values()).count('danger')
         len_recommendations = 0
@@ -721,10 +723,16 @@ def recommendation(datasourceID):
 @app.route('/account/insights')
 @login_required
 def insights():
-    datasources = db.find_one('datasource', query={'email': session['email']})
-    insight = db.find_one('insight', query={'datasourceID': datasources['_id']})
+    datasources = db.find('datasource', query={'email': session['email']})
+    datasourceId = []
 
-    return render_template('new_theme/insights.html', insight=insight)
+    for datasource in datasources:
+        datasourceId.append(datasource['_id'])
+
+    for i in datasourceId:
+        insights = db.find('insight', query={'datasourceID': i})
+
+    return render_template('new_theme/insights.html', insights=insights)
 
 
 @app.route('/account/connections-without-slack')
@@ -838,11 +846,11 @@ def active_audit_test(UUID):
         return make_response("", 401)
 
 
-#@app.route('/test_test_without_slack/<datasourceID>')
-#@login_required
-#@limiter.limit("20/day")
-#@limiter.limit("5/minute")
-#def test_test_without_slack(datasourceID):
+# @app.route('/test_test_without_slack/<datasourceID>')
+# @login_required
+# @limiter.limit("20/day")
+# @limiter.limit("5/minute")
+# def test_test_without_slack(datasourceID):
 #    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
 #    if dataSource['email'] == session['email']:
 #        run_analyticsAudit_without_slack.delay(datasourceID)
@@ -851,11 +859,11 @@ def active_audit_test(UUID):
 #        return make_response("", 401)
 #
 #
-#@app.route('/test_test/<datasourceID>')
-#@login_required
-#@limiter.limit("20/day")
-#@limiter.limit("5/minute")
-#def test_test(datasourceID):
+# @app.route('/test_test/<datasourceID>')
+# @login_required
+# @limiter.limit("20/day")
+# @limiter.limit("5/minute")
+# def test_test(datasourceID):
 #    dataSource = db.find_one("datasource", query={"_id": ObjectId(datasourceID)})
 #    if dataSource['email'] == session['email']:
 #        user = db.find_one("user", query={"email": dataSource["email"]})
@@ -991,10 +999,12 @@ def audithistory(datasourceID):
             lastStates = report['lastStates']
             ####  Temporary Add-on ####
             if lastStates['contentGrouping'] == 'danger':
-                recommendations['contentGrouping'] = ['If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
-                                'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
+                recommendations['contentGrouping'] = [
+                    'If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
+                    'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
             if lastStates['internalSearchTermConsistency'] == 'danger':
-                recommendations['internalSearchTermConsistency'] = ['Apply lowercase filter under View Setting to enforce all terms to be seen as lowercase.']
+                recommendations['internalSearchTermConsistency'] = [
+                    'Apply lowercase filter under View Setting to enforce all terms to be seen as lowercase.']
             ####  Temporary Add-on ####
             len_issues = list(lastStates.values()).count('danger')
             len_recommendations = 0
@@ -1610,27 +1620,27 @@ def getaudit():
         tz_offset = user["tz_offset"]
     except:
         tz_offset = 0
-#        db.find_and_modify('user', query={'_id': user['_id']}, tz_offset=tz_offset)
+    #        db.find_and_modify('user', query={'_id': user['_id']}, tz_offset=tz_offset)
     if user['sl_accesstoken'] == '':
         if not session['email']:
             return redirect('/getstarted/connect-accounts')
 
-#        ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-#        #user = db.find_one('user', {'email': session['email']})
-#
-#        if ip_addr:
-#            url = 'https://ipinfo.io/' + ip_addr + '/json'
-#            res = urlopen(url)
-#            data = load(res)
-#            tz = data['timezone']
-#            pst = pytz.timezone(tz)
-#            now = datetime.now()
-#            now = datetime.strftime(now, '%d/%m/%Y')
-#            now = datetime.strptime(now, '%d/%m/%Y')
-#            localize = pst.localize(now)
-#            tz_offset = int(localize.tzname())
-#            db.find_and_modify('user', query={'_id': user['_id']},
-#                               tz_offset=tz_offset)
+        #        ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        #        #user = db.find_one('user', {'email': session['email']})
+        #
+        #        if ip_addr:
+        #            url = 'https://ipinfo.io/' + ip_addr + '/json'
+        #            res = urlopen(url)
+        #            data = load(res)
+        #            tz = data['timezone']
+        #            pst = pytz.timezone(tz)
+        #            now = datetime.now()
+        #            now = datetime.strftime(now, '%d/%m/%Y')
+        #            now = datetime.strptime(now, '%d/%m/%Y')
+        #            localize = pst.localize(now)
+        #            tz_offset = int(localize.tzname())
+        #            db.find_and_modify('user', query={'_id': user['_id']},
+        #                               tz_offset=tz_offset)
 
         #        counter = 0
         #        dt = db.find('datasource', {'email': session['email']})
