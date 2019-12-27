@@ -129,12 +129,12 @@
                                                            href="#collapse-10"
                                                            aria-controls="collapse-10"><i
                                                                 class="mdi mdi-chevron-right "></i>
-                                                            Test1
+                                                            {{ insight['title'] }}
                                                         </a>
 
                                                             <button style="font-size: 11px;padding-left: 2px;padding-right: 2px;  ; height: auto;"
                                                                     id="success-btn-ug" class="btn text-white">
-                                                                test2
+                                                                {{ insight['priority'] }}
                                                             </button>
 
                                                     </h6>
@@ -168,7 +168,7 @@
                                                                             <div class="d-flex ">
                                                                             </div>
                                                                             <p style="margin-top: -10px;">
-                                                                                test6
+                                                                                {{ insight['objective'] }}
                                                                             </p>
                                                                         </div>
                                                                     </div>
@@ -199,9 +199,7 @@
                                                                             <div class="d-flex ">
                                                                             </div>
                                                                             <ul>
-                                                                                {% for i in insight %}
-                                                                                    <li>{{ i }}</li>
-                                                                                {% endfor %}
+                                                                                <li>{{ insight.content | safe }}</li>
                                                                                 <br>
                                                                                  <img src="../../static/images/heyBooster.png" height="300" width="300">
 
