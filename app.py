@@ -721,8 +721,8 @@ def recommendation(datasourceID):
 @app.route('/account/insights')
 @login_required
 def insights():
-    datasources = db.find('datasource', query={'email': session['email']})
-    insight = db.find('insight', query={'datasourceID': ObjectId(datasources['_id'])})
+    datasources = db.find_one('datasource', query={'email': session['email']})
+    insight = db.find_one('insight', query={'datasourceID': datasources['_id']})
 
     return render_template('new_theme/insights.html', insight)
 
