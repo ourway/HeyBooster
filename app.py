@@ -724,7 +724,7 @@ def insights():
     datasources = db.find_one('datasource', query={'email': session['email']})
     insight = db.find_one('insight', query={'datasourceID': datasources['_id']})
 
-    return render_template('new_theme/insights.html', insight)
+    return render_template('new_theme/insights.html', insight=insight)
 
 
 @app.route('/account/connections-without-slack')
