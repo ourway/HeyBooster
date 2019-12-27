@@ -729,6 +729,8 @@ def insights():
     for datasource in datasources:
         datasourceId.append(datasource['_id'])
 
+    print(datasourceId)
+
     for i in datasourceId:
         insights = db.find('insight', query={'datasourceID': i})
 
