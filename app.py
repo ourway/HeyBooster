@@ -732,6 +732,9 @@ def insights():
     for i in datasourceId:
         insights = db.find('insight', query={'datasourceID': i})
 
+    for i in insights:
+        print(i)
+
     return render_template('new_theme/insights.html', insights=insights)
 
 
