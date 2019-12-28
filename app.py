@@ -728,8 +728,9 @@ def insights():
     insights = []
 
     for i in datasources:
-        insight = db.find_one('insight', query={'datasourceID': i['_id']})
-        insights.append(insight)
+        insight = db.find('insight', query={'datasourceID': i['_id']})
+        for i in insight:
+            insights.append(i)
 
     return render_template('new_theme/insights.html', insights=insights)
 
