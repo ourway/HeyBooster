@@ -734,6 +734,7 @@ def insights():
     print('*****************************************************')
 
     datasourceId = []
+    insights = []
 
     for datasource in datasources:
         datasourceId.append(datasource['_id'])
@@ -744,12 +745,12 @@ def insights():
     print('*****************************************************')
 
     for i in datasourceId:
-        insights = db.find('insight', query={'datasourceID': i})
-        print(insights)
+        insight = db.find('insight', query={'datasourceID': i})
+        insights.append(insight)
 
     print('*****************************************************')
 
-    return render_template('new_theme/insights.html', insights=insights)
+    return render_template('new_theme/insights.html', insight=insight)
 
 
 @app.route('/account/connections-without-slack')
