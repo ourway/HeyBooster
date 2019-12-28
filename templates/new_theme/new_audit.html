@@ -608,7 +608,7 @@
                                                 {% if session['sl_accesstoken'] %}
                                                     <div class="form-group col-lg-6 offset-md-3">
                                                         <label class="d-block"></label>
-                                                        <input id="checkbox_channel" type="checkbox" name="checkbox_channel" value="1" checked>
+                                                        <input id="checkbox_channel" type="checkbox" name="checkbox_channel" value="1" onchange="checkboxChanged()" checked>
                                                     </div>
                                                     
                                                     <div class="form-group col-lg-6 offset-md-3" id="channelSlack">
@@ -660,12 +660,10 @@
 </script>
 
 <script>
-$(function() {
-  $("input[name='checkbox_channel']").on('change', function() {
+function checkboxChanged() {
     var channel = document.getElementById("channel");
     channel.disabled = !channel.disabled;
-  });
-});
+  }
 </script>
 <script>
     document.getElementById('account').value = '';
