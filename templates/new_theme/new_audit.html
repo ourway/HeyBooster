@@ -662,7 +662,8 @@
 <script>
 $(function() {
   $("input[name='checkbox_channel']").on('change', function() {
-    $(document).find("select[name=channel]").prop("disabled", !this.checked)
+    var channel = document.getElementById("channel");
+    channel.disabled = !channel.disabled;
   });
 });
 </script>
