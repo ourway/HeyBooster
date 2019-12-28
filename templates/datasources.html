@@ -131,10 +131,8 @@
                 <div class="wrap-input100 input100-select">
                     <span class="label-input100">Slack</span>
                     <div class="form-group col-lg-6 offset-md-3">
-                        <label class="d-block">Send Via Slack&nbsp
-                            <input class="checkbox" id="checkbox_channel" type="checkbox" name="checkbox_channel" value="1" onchange="checkboxChanged()" checked>
-                        </label>
-                        
+                    <input type="checkbox" class="custom-control-input" name="checkbox_channel" id="checkbox_channel" value="1" onchange="checkboxChanged()" checked>
+                    <label class="custom-control-label" for="checkbox_channel">Send Via Slack</label>                       
                     </div>
                     <div>
                         {{ nForm.channel }}
