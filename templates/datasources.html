@@ -132,7 +132,7 @@
                     <span class="label-input100">Slack</span>
                     <div class="form-group col-lg-6 offset-md-3">
                         <label class="d-block"></label>
-                        <input id="checkbox_channel" type="checkbox" name="checkbox_channel" value="1">
+                        <input id="checkbox_channel" type="checkbox" name="checkbox_channel" value="1" checked>
                     </div>
                     <div>
                         {{ nForm.channel }}
@@ -179,11 +179,10 @@
 
 <script>
 $(function() {
-  $("input[id='checkbox_channel']").on('change', function() {
-    $(this).find("select[name=channel]").prop("disabled", !this.checked)
+  $("input[name='checkbox_channel']").on('change', function() {
+    $(document).find("select[name=channel]").prop("disabled", !this.checked)
   });
 });
-
 <script>
     document.getElementById('account').value = '';
     let account_select = document.getElementById("account");
