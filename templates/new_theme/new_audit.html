@@ -662,6 +662,7 @@
 <script>
 $(function() {
   $("input[name='checkbox_channel']").on('change', function() {
+      alert('Deneme');
     $(this).find("select[name=channel]").prop("disabled", !this.checked)
   });
 });
