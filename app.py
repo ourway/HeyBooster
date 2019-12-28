@@ -724,7 +724,6 @@ def recommendation(datasourceID):
 @login_required
 def insights():
     datasources = db.find('datasource', query={'email': session['email']})
-
     insights = []
 
     for i in datasources:
