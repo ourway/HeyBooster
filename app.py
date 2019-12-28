@@ -962,7 +962,7 @@ def audithistory(datasourceID):
                 'viewID': nForm.view.data.split('\u0007')[0],
                 'currency': nForm.view.data.split('\u0007')[1],
                 'viewName': nForm.view.data.split('\u0007')[2],
-                'channelType': "Slack",
+                'channelType': "Web",
                 'createdTS': ts
             }
             _id = db.insert_one("datasource", data=data).inserted_id
@@ -1061,32 +1061,55 @@ def audithistory(datasourceID):
             #        local_ts = time.asctime(time.localtime(ts))
             ts = time.time()
             uID = user['sl_userid']
-
-            data = {
-                'email': session['email'],
-                'sl_userid': uID,
-                'sourceType': "Google Analytics",
-                'dataSourceName': nForm.data_source_name.data,
-                'accountID': nForm.account.data.split('\u0007')[0],
-                'accountName': nForm.account.data.split('\u0007')[1],
-                'propertyID': nForm.property.data.split('\u0007')[0],
-                'propertyName': nForm.property.data.split('\u0007')[1],
-                'viewID': nForm.view.data.split('\u0007')[0],
-                'currency': nForm.view.data.split('\u0007')[1],
-                'viewName': nForm.view.data.split('\u0007')[2],
-                'channelType': "Slack",
-                'channelID': nForm.channel.data.split('\u0007')[0],
-                'channelName': nForm.channel.data.split('\u0007')[1],
-                'createdTS': ts
-            }
+            
+            if request.form.getlist('checkbox_channel'):
+                data = {
+                    'email': session['email'],
+                    'sl_userid': uID,
+                    'sourceType': "Google Analytics",
+                    'dataSourceName': nForm.data_source_name.data,
+                    'accountID': nForm.account.data.split('\u0007')[0],
+                    'accountName': nForm.account.data.split('\u0007')[1],
+                    'propertyID': nForm.property.data.split('\u0007')[0],
+                    'propertyName': nForm.property.data.split('\u0007')[1],
+                    'viewID': nForm.view.data.split('\u0007')[0],
+                    'currency': nForm.view.data.split('\u0007')[1],
+                    'viewName': nForm.view.data.split('\u0007')[2],
+                    'channelType': "Slack",
+                    'channelID': nForm.channel.data.split('\u0007')[0],
+                    'channelName': nForm.channel.data.split('\u0007')[1],
+                    'createdTS': ts
+                }
+            else:
+                data = {
+                    'email': session['email'],
+                    'sourceType': "Google Analytics",
+                    'dataSourceName': nForm.data_source_name.data,
+                    'accountID': nForm.account.data.split('\u0007')[0],
+                    'accountName': nForm.account.data.split('\u0007')[1],
+                    'propertyID': nForm.property.data.split('\u0007')[0],
+                    'propertyName': nForm.property.data.split('\u0007')[1],
+                    'viewID': nForm.view.data.split('\u0007')[0],
+                    'currency': nForm.view.data.split('\u0007')[1],
+                    'viewName': nForm.view.data.split('\u0007')[2],
+                    'channelType': "Web",
+                    'createdTS': ts
+                }
             _id = db.insert_one("datasource", data=data).inserted_id
             data['_id'] = _id
             unsortedargs.append(data)
-            insertdefaultnotifications(session['email'], userID=uID,
-                                       dataSourceID=_id,
-                                       channelID=nForm.channel.data.split('\u0007')[0])
-            #        analyticsAudit(slack_token, task=None, dataSource=data)
-            run_analyticsAudit.delay(slack_token, str(data['_id']))
+            if request.form.getlist('checkbox_channel'):
+                insertdefaultnotifications(session['email'], userID=uID,
+                                           dataSourceID=_id,
+                                           channelID=nForm.channel.data.split('\u0007')[0])
+                #        analyticsAudit(slack_token, task=None, dataSource=data)
+                run_analyticsAudit.delay(slack_token, str(data['_id']))
+            else:
+                insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                     dataSourceID=_id,
+                                                     channelID='')
+                #        analyticsAudit(slack_token, task=None, dataSource=data)
+                run_analyticsAudit_without_slack.delay(str(data['_id']))
             flash("Check out your connected slack channel, heybooster even wrote you.")
 
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
@@ -1436,7 +1459,7 @@ def connectaccount():
                 'viewID': nForm.view.data.split('\u0007')[0],
                 'currency': nForm.view.data.split('\u0007')[1],
                 'viewName': nForm.view.data.split('\u0007')[2],
-                'channelType': "Slack",
+                'channelType': "Web",
                 'createdTS': ts
             }
             _id = db.insert_one("datasource", data=data).inserted_id
@@ -1510,36 +1533,65 @@ def connectaccount():
             uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
             ts = time.time()
 
-            data = {
-                'email': session['email'],
-                'sl_userid': uID,
-                'sourceType': "Google Analytics",
-                'dataSourceName': nForm.data_source_name.data,
-                'accountID': nForm.account.data.split('\u0007')[0],
-                'accountName': nForm.account.data.split('\u0007')[1],
-                'propertyID': nForm.property.data.split('\u0007')[0],
-                'propertyName': nForm.property.data.split('\u0007')[1],
-                'viewID': nForm.view.data.split('\u0007')[0],
-                'currency': nForm.view.data.split('\u0007')[1],
-                'viewName': nForm.view.data.split('\u0007')[2],
-                'channelType': "Slack",
-                'channelID': nForm.channel.data.split('\u0007')[0],
-                'channelName': nForm.channel.data.split('\u0007')[1],
-                'createdTS': ts
-            }
+            if request.form.getlist('checkbox_channel'):
+                data = {
+                    'email': session['email'],
+                    'sl_userid': uID,
+                    'sourceType': "Google Analytics",
+                    'dataSourceName': nForm.data_source_name.data,
+                    'accountID': nForm.account.data.split('\u0007')[0],
+                    'accountName': nForm.account.data.split('\u0007')[1],
+                    'propertyID': nForm.property.data.split('\u0007')[0],
+                    'propertyName': nForm.property.data.split('\u0007')[1],
+                    'viewID': nForm.view.data.split('\u0007')[0],
+                    'currency': nForm.view.data.split('\u0007')[1],
+                    'viewName': nForm.view.data.split('\u0007')[2],
+                    'channelType': "Slack",
+                    'channelID': nForm.channel.data.split('\u0007')[0],
+                    'channelName': nForm.channel.data.split('\u0007')[1],
+                    'createdTS': ts
+                }
+            else:
+                data = {
+                    'email': session['email'],
+                    'sourceType': "Google Analytics",
+                    'dataSourceName': nForm.data_source_name.data,
+                    'accountID': nForm.account.data.split('\u0007')[0],
+                    'accountName': nForm.account.data.split('\u0007')[1],
+                    'propertyID': nForm.property.data.split('\u0007')[0],
+                    'propertyName': nForm.property.data.split('\u0007')[1],
+                    'viewID': nForm.view.data.split('\u0007')[0],
+                    'currency': nForm.view.data.split('\u0007')[1],
+                    'viewName': nForm.view.data.split('\u0007')[2],
+                    'channelType': "Web",
+                    'createdTS': ts
+                }
             _id = db.insert_one("datasource", data=data).inserted_id
             data['_id'] = _id
             unsortedargs.append(data)
             if len(unsortedargs) == 1:
-                insertdefaultnotifications(session['email'], userID=uID,
-                                           dataSourceID=_id,
-                                           channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
-                run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
+                if request.form.getlist('checkbox_channel'):
+                    insertdefaultnotifications(session['email'], userID=uID,
+                                               dataSourceID=_id,
+                                               channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+                    run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
+                else:
+                    insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                         dataSourceID=_id,
+                                                         channelID='')
+                    run_analyticsAudit_without_slack.delay(str(data['_id']))
             else:
-                insertdefaultnotifications(session['email'], userID=uID,
-                                           dataSourceID=_id,
-                                           channelID=nForm.channel.data.split('\u0007')[0])
-                run_analyticsAudit.delay(slack_token, str(data['_id']))
+                if request.form.getlist('checkbox_channel'):
+                    insertdefaultnotifications(session['email'], userID=uID,
+                                               dataSourceID=_id,
+                                               channelID=nForm.channel.data.split('\u0007')[0])
+                    run_analyticsAudit.delay(slack_token, str(data['_id']))
+                else:
+                    insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                         dataSourceID=_id,
+                                                         channelID='')
+                    run_analyticsAudit_without_slack.delay(str(data['_id']))
+                    
             #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
 
         #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
@@ -1778,36 +1830,67 @@ def getaudit():
             ts = time.time()
             uID = user['sl_userid']
 
-            data = {
-                'email': session['email'],
-                'sl_userid': uID,
-                'sourceType': "Google Analytics",
-                'dataSourceName': nForm.data_source_name.data,
-                'accountID': nForm.account.data.split('\u0007')[0],
-                'accountName': nForm.account.data.split('\u0007')[1],
-                'propertyID': nForm.property.data.split('\u0007')[0],
-                'propertyName': nForm.property.data.split('\u0007')[1],
-                'viewID': nForm.view.data.split('\u0007')[0],
-                'currency': nForm.view.data.split('\u0007')[1],
-                'viewName': nForm.view.data.split('\u0007')[2],
-                'channelType': "Slack",
-                'channelID': nForm.channel.data.split('\u0007')[0],
-                'channelName': nForm.channel.data.split('\u0007')[1],
-                'createdTS': ts
-            }
+            if request.form.getlist('checkbox_channel'):
+                data = {
+                    'email': session['email'],
+                    'sl_userid': uID,
+                    'sourceType': "Google Analytics",
+                    'dataSourceName': nForm.data_source_name.data,
+                    'accountID': nForm.account.data.split('\u0007')[0],
+                    'accountName': nForm.account.data.split('\u0007')[1],
+                    'propertyID': nForm.property.data.split('\u0007')[0],
+                    'propertyName': nForm.property.data.split('\u0007')[1],
+                    'viewID': nForm.view.data.split('\u0007')[0],
+                    'currency': nForm.view.data.split('\u0007')[1],
+                    'viewName': nForm.view.data.split('\u0007')[2],
+                    'channelType': "Slack",
+                    'channelID': nForm.channel.data.split('\u0007')[0],
+                    'channelName': nForm.channel.data.split('\u0007')[1],
+                    'createdTS': ts
+                }
+            else:
+                data = {
+                    'email': session['email'],
+                    'sourceType': "Google Analytics",
+                    'dataSourceName': nForm.data_source_name.data,
+                    'accountID': nForm.account.data.split('\u0007')[0],
+                    'accountName': nForm.account.data.split('\u0007')[1],
+                    'propertyID': nForm.property.data.split('\u0007')[0],
+                    'propertyName': nForm.property.data.split('\u0007')[1],
+                    'viewID': nForm.view.data.split('\u0007')[0],
+                    'currency': nForm.view.data.split('\u0007')[1],
+                    'viewName': nForm.view.data.split('\u0007')[2],
+                    'channelType': "Web",
+                    'createdTS': ts
+                }
+                
             _id = db.insert_one("datasource", data=data).inserted_id
             data['_id'] = _id
             unsortedargs.append(data)
             if len(unsortedargs) == 1:
-                insertdefaultnotifications(session['email'], userID=uID,
-                                           dataSourceID=_id,
-                                           channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+                if request.form.getlist('checkbox_channel'):
+                    insertdefaultnotifications(session['email'], userID=uID,
+                                               dataSourceID=_id,
+                                               channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+                else:
+                    #Without Slack
+                    insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                         dataSourceID=_id,
+                                                         channelID='')
+                    run_analyticsAudit_without_slack.delay(str(data['_id']))
                 run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
             else:
-                insertdefaultnotifications(session['email'], userID=uID,
-                                           dataSourceID=_id,
-                                           channelID=nForm.channel.data.split('\u0007')[0])
-                run_analyticsAudit.delay(slack_token, str(data['_id']))
+                if request.form.getlist('checkbox_channel'):
+                    insertdefaultnotifications(session['email'], userID=uID,
+                                               dataSourceID=_id,
+                                               channelID=nForm.channel.data.split('\u0007')[0])
+                    run_analyticsAudit.delay(slack_token, str(data['_id']))
+                else:
+                    #Without Slack
+                    insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                         dataSourceID=_id,
+                                                         channelID='')
+                    run_analyticsAudit_without_slack.delay(str(data['_id']))
 
             #        analyticsAudit(slack_token, task=None, dataSource=data)
             # flash("Check out your connected slack channel, heybooster even wrote you.")

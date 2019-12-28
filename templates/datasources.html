@@ -130,6 +130,10 @@
 
                 <div class="wrap-input100 input100-select">
                     <span class="label-input100">Slack</span>
+                    <div class="form-group col-lg-6 offset-md-3">
+                        <label class="d-block"></label>
+                        <input id="checkbox_channel" type="checkbox" name="checkbox_channel" value="1">
+                    </div>
                     <div>
                         {{ nForm.channel }}
                     </div>
@@ -171,6 +175,14 @@
         window.history.replaceState(null, null, window.location.href);
     }
 </script>
+
+
+<script>
+$(function() {
+  $("input[id='checkbox_channel']").on('change', function() {
+    $(this).find("select[name=channel]").prop("disabled", !this.checked)
+  });
+});
 
 <script>
     document.getElementById('account').value = '';

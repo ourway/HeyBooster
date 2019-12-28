@@ -55,7 +55,10 @@ def do_job(tasks_to_accomplish):
                                lastRunDate=time.time())
             elif task['type'] == 'analyticsAudit':
                 if slack_token:
-                    analyticsAudit(slack_token, task, dataSource)
+                    if "channelID" in dataSource:
+                        analyticsAudit(slack_token, task, dataSource)
+                    else:
+                        analyticsAudit_without_slack(task, dataSource)                        
                 else:
                     analyticsAudit_without_slack(task, dataSource)
             
