@@ -607,9 +607,8 @@
                                                 </div>
                                                 {% if session['sl_accesstoken'] %}
                                                     <div class="form-group col-lg-6 offset-md-3">
-                                                        <span class="label-input100">Send Via Slack&nbsp
-                                                            <input id="checkbox_channel" type="checkbox" name="checkbox_channel" value="1" onchange="checkboxChanged()" checked>
-                                                        </span>
+                                                        <input type="checkbox" class="custom-control-input" name="checkbox_channel" id="checkbox_channel" value="1" onchange="checkboxChanged()" checked>
+                                                        <label class="custom-control-label" for="checkbox_channel">Send Via Slack</label>       
                                                     </div>
                                                     
                                                     <div class="form-group col-lg-6 offset-md-3" id="channelSlack">
