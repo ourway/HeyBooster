@@ -724,18 +724,12 @@ def recommendation(datasourceID):
 @login_required
 def insights():
     datasources = db.find('datasource', query={'email': session['email']})
-    print('*****************************************************')
-    print(datasources)
-    print('*****************************************************')
+
     insights = []
 
     for i in datasources:
         insight = db.find_one('insight', query={'datasourceID': i['_id']})
         insights.append(insight)
-        print(insight)
-
-    print('*****************************************************')
-    print(insights)
 
     return render_template('new_theme/insights.html', insights=insights)
 
