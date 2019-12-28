@@ -727,30 +727,17 @@ def insights():
     print('*****************************************************')
     print(datasources)
     print('*****************************************************')
-
-    for i in datasources:
-        print(i)
-
-    print('*****************************************************')
-
-    datasourceId = []
     insights = []
 
-    for datasource in datasources:
-        datasourceId.append(datasource['_id'])
-        print(datasourceId)
-    print('*****************************************************')
-
-    print(datasourceId)
-    print('*****************************************************')
-
-    for i in datasourceId:
-        insight = db.find('insight', query={'datasourceID': i})
+    for i in datasources:
+        insight = db.find_one('insight', query={'datasourceID': i['_id']})
         insights.append(insight)
+        print(insight)
 
     print('*****************************************************')
+    print(insights)
 
-    return render_template('new_theme/insights.html', insight=insight)
+    return render_template('new_theme/insights.html', insights=insights)
 
 
 @app.route('/account/connections-without-slack')
