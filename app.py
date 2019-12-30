@@ -1750,7 +1750,7 @@ def getaudit():
             nForm.view.choices = [('', 'User does not have Google Analytics Account')]
 
         args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-        reports = sorted(unsortedreports, key=lambda i: i['ts'], reverse=False)
+        reports = sorted(unsortedreports, key=lambda i: i['ts'], reverse=True)
         # Sort Order is important, that's why analytics audits are queried
         # after sorting to use their status correctly
         analytics_audits = []
@@ -1906,7 +1906,7 @@ def getaudit():
         except:
             nForm.channel.choices = [('', 'User does not have Slack Connection')]
         args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-        reports = sorted(unsortedreports, key=lambda i: i['ts'], reverse=False)
+        reports = sorted(unsortedreports, key=lambda i: i['ts'], reverse=True)
         # Sort Order is important, that's why analytics audits are queried
         # after sorting to use their status correctly
         analytics_audits = []
@@ -3212,9 +3212,11 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
     #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
     lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
     #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-    data = [('token', session['sl_accesstoken']),
-            ('user', userID)]
-    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
+#    data = [('token', session['sl_accesstoken']),
+#            ('user', userID)]
+#    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
+    user = db.find_one("user", {"email": email})
+    usr_tz_offset = user["tz_offset"]
     if (7 >= (usr_tz_offset - lc_tz_offset)):
         default_time = str(7 - (usr_tz_offset - lc_tz_offset)).zfill(2)
     else:
@@ -3421,10 +3423,12 @@ def insertdefaultnotifications_without_slack(email, userID, dataSourceID, channe
     #    headers = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + session['sl_accesstoken']}
     #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
     lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
-    #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-    data = [('token', session['ga_accesstoken']),
-            ('user', session['ga_accesstoken'])]
-
+    user = db.find_one("user", {"email": email})
+    usr_tz_offset = user["tz_offset"]
+    if (6 >= (usr_tz_offset - lc_tz_offset)):
+        default_time = str(6 - (usr_tz_offset - lc_tz_offset)).zfill(2)
+    else:
+        default_time = str(24 + (6 - (usr_tz_offset - lc_tz_offset))).zfill(2)
     default_time = 2
 
     dataSource = db.find_one("datasource", query={"_id": dataSourceID})
@@ -3434,7 +3438,7 @@ def insertdefaultnotifications_without_slack(email, userID, dataSourceID, channe
         'email': email,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': "%s.01" % (default_time),
+        'timeofDay': "02.01" % (default_time),
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID,
