@@ -725,11 +725,19 @@ def recommendation(datasourceID):
 def insights():
     datasources = db.find('datasource', query={'email': session['email']})
     insights = []
+    print('***************************')
+    print(session['email'])
+    print('***************************')
+
 
     for i in datasources:
         insight = db.find('insight', query={'datasourceID': i['_id']})
         for j in insight:
             insights.append(j)
+            print(j)
+
+    print('***************************')
+
 
     return render_template('new_theme/insights.html', insights=insights)
 
