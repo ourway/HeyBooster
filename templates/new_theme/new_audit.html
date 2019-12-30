@@ -385,73 +385,6 @@
                             </div>
 
 
-                            <!-- PREVIOUS AUDIT KISIMI -----------------  -->
-                            <!--
-
-                            <div class="  pl-2 pr-2 card" style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #fff; border-radius: 0px; ">
-                              <div style="height: 50px;"  id="card-ug-mt"  class=" align-items-center card-body">
-
-
-
-                                <div class="table-responsive col-md-10 d-inline-block float-left grid-margin stretch-card">
-                                  <table  class="table table-striped">
-
-
-                                    <tbody id="border-ug-i" class="text-center">
-                                      <tr style=" background-color: #fff;">
-                                        <td style="border: none;border-bottom: 1px solid #cccccc; " class=" col-lg-2 text-left">
-                                            <h4 id="td-head-ug" style="color: #777777; font-weight: 400;">Previous Audit</h4>
-                                        </td>
-
-                                        <td class="col-lg-6"   style="border: none;">
-                                          <h4  id="td-head-ug"  class="text-center"></h4>
-                                        </td>
-
-
-                                        <td class="col-lg-2"  style="border: none;" >
-
-                                            <h4  id="td-head-ug" style="text-align: center;"></h4>
-                                        </td>
-
-
-                                      </tr>
-
-                                    </tbody>
-                                  </table>
-
-                                </div>
-
-                                <div   class="col-md-2 d-inline-block float-left mt-2 grid-margin stretch-card"><h4  id="td-head-ug" class="text-center"></h4></div>
-
-
-
-
-                              </div>
-                            </div>
-
-                            -->
-                            <!-- PREVIOUS AUDİT BİTİŞ -------------- -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                             {% for arg in selectedargs %}
                                 {% set AA = analytics_audits[loop.index0] %}
                                 {% if AA.totalScore == 0 %}
@@ -557,8 +490,84 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
+                        
+                        <div class="  pl-2 pr-2 card" style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #fff; border-radius: 0px; ">
+                            <div style="height: 50px;"  id="card-ug-mt"  class=" align-items-center card-body">
+                             
+                              
+                              
+                              <div class="table-responsive col-md-10 d-inline-block float-left grid-margin stretch-card">
+                                <table  class="table table-striped">
+                                 
+                                  
+                                  <tbody id="border-ug-i" class="text-center">
+                                    <tr style=" background-color: #fff;">
+                                      <td style="border: none;border-bottom: 1px solid #cccccc; " class=" col-lg-2 text-left">
+                                          <h4 id="td-head-ug" style="color: #777777; font-weight: 400;">Previous Audit</h4>
+                                      </td>
+                                      
+                                      <td class="col-lg-6"   style="border: none;">
+                                        <h4  id="td-head-ug"  class="text-center"></h4>
+                                      </td>
+                                      
+                                      
+                                      <td class="col-lg-2"  style="border: none;" >
+                                        
+                                          <h4  id="td-head-ug" style="text-align: center;"></h4>
+                                      </td>
+                                      
+                                      
+                                    </tr>
+                                
+                                  </tbody>
+                                </table>
+                                
+                              </div>
+                              
+                              <div   class="col-md-2 d-inline-block float-left mt-2 grid-margin stretch-card"><h4  id="td-head-ug" class="text-center"></h4></div>   
+                                
+                            </div>
+                          </div>
+                        
+                        {% for report in reports %}
+                                <div id="resp-height" class=" pl-2 pr-2 card"
+                                     style="border: none; margin-top: 15px;margin-bottom: 20px; background-color: #F1F5FA; border-radius: 0px; padding-top: 10px;">
+                                    <div id="card-ug-mt" class=" align-items-center card-body">
+                                        <div class="table-responsive col-md-11 d-inline-block float-left grid-margin stretch-card">
+                                            <table class="table table-striped">
+                                                <tbody class="text-center">
+                                                <tr style=" background-color: #F1F5FA;">
+                                                    <td style="border-right: 2px solid #F1F5FA;;"
+                                                        class=" col-lg-2 float-left d-inline-block py-1 text-center">
+                                                        <div id="audit-history-ug-score"><h4
+                                                                class="text-center">{{ report.totalScore }}</h4>
+                                                        </div>
+                                                    </td>
+                                                    <td class="mt-2 col-lg-7 float-left d-inline-block text-center">
+                                                        <b>{{ report.dataSourceName }}</b>
+                                                        <br>
+                                                        Last Updated Time: {{ report['localTime'] }}
+                                                    </td>
+                                                    <td class="col-lg-2 float-left d-inline-block text-center">
+                                                        <a href="/account/recommendation{{ report._id }}">
+                                                            <button id="show-ug-2"
+                                                                    class="btn btn-inverse-dark ">
+                                                                Show Detail
+                                                            </button>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        
                         </div>
                     </div>
+                    
+                    
                     <div class=" mt-5 col-lg-12 grid-margin stretch-card">
                         <div class="mt-4 col-lg-12">
                             <div class="accordion accordion-solid-header" id="accordion-4" role="tablist">

@@ -624,6 +624,9 @@ def recommendation(datasourceID):
     #    lastStates = notification['lastStates']
 
     report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
+    if not report:
+        report = db.find_one('reports', {'_id': ObjectId(datasourceID)})
+    
     if report:
         summaries = report['summaries']
         recommendations = report['recommendations']
@@ -1712,7 +1715,16 @@ def getaudit():
         datasources = db.find('datasource', query={'email': session['email']})
         nForm = DataSourceForm(request.form)
         unsortedargs = []
+        unsortedreports = []
         for datasource in datasources:
+            cursor = db.find('reports', query={'datasourceID': datasource['_id']})
+            try:
+                cursor.next()
+            except:
+                continue
+            for r in cursor:
+                r["dataSourceName"] = datasource["dataSourceName"]
+                unsortedreports.append(r)
             unsortedargs.append(datasource)
         if request.method == 'POST':
             #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
@@ -1764,7 +1776,7 @@ def getaudit():
             nForm.view.choices = [('', 'User does not have Google Analytics Account')]
 
         args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-
+        reports = sorted(unsortedreports, key=lambda i: i['createdTS'], reverse=False)
         # Sort Order is important, that's why analytics audits are queried
         # after sorting to use their status correctly
         analytics_audits = []
@@ -1784,9 +1796,12 @@ def getaudit():
             else:
                 analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
+        for report in reports:
+            report['localTime'] = Timestamp2Date(report['ts'], tz_offset)
+            
         return render_template('new_theme/new_audit.html', args=args, selectedargs=args, nForm=nForm,
                                current_analyticsemail=current_analyticsemail,
-                               analytics_audits=analytics_audits)
+                               analytics_audits=analytics_audits, reports = reports)
 
     else:
         if not (session['sl_accesstoken'] or session['ga_accesstoken']):
