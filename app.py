@@ -741,7 +741,7 @@ def insights():
     print(insights)
     print('***************************')
 
-    return render_template('new_theme/new_detail.html', insights=insights)
+    return render_template('new_theme/insights.html', insights=insights)
 
 
 @app.route('/account/connections-without-slack')
