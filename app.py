@@ -619,7 +619,6 @@ def recommendation(datasourceID):
               "samplingCheck": 1
               }
 
-    user = db.find_one('user', {'email': session['email']})
     #    notification = db.find_one('notification', {'datasourceID': ObjectId(datasourceID)})
     #    lastStates = notification['lastStates']
 
@@ -656,25 +655,8 @@ def recommendation(datasourceID):
         len_issues = list(lastStates.values()).count('danger')
     # tz_offset = user['tz_offset']
     # tz_offset = 1
-    current_analyticsemail = user['ga_email']
-
-    datasources = db.find('datasource', query={'email': session['email']})
-    unsortedargs = []
-    for datasource in datasources:
-        unsortedargs.append(datasource)
-
-    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
 
     selectedargs = [db.find_one("datasource", query={"_id": ObjectId(datasourceID)})]
-    analytics_audits = []
-    for arg in selectedargs:
-        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
-        # analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
-        if analytics_audit['status'] == '0':
-            analytics_audit['strstat'] = 'passive'
-        else:
-            analytics_audit['strstat'] = 'active'
-        analytics_audits += [analytics_audit]
 
     for key, value in lastStates.items():
         if value == 'good':
@@ -713,9 +695,8 @@ def recommendation(datasourceID):
 
     sortedLastStates = {k: v for k, v in sorted(lastStates.items(), key=lambda item: item[1])}
 
-    return render_template('new_theme/new_detail.html', args=args, selectedargs=selectedargs,
-                           current_analyticsemail=current_analyticsemail,
-                           analytics_audits=analytics_audits, lastStates=sortedLastStates,
+    return render_template('new_theme/new_detail.html', selectedargs=selectedargs,
+                           lastStates=sortedLastStates,
                            names=names, summaries=summaries,
                            recommendations=recommendations,
                            len_issues=len_issues,
@@ -1003,6 +984,7 @@ def audithistory(datasourceID):
                 continue
             for r in cursor:
                 r["dataSourceName"] = datasource["dataSourceName"]
+                r["localTime"] = Timestamp2Date(r['ts'], tz_offset)
                 reports.append(r)
 
         return render_template('new_theme/new_audit.html', args=args, selectedargs=selectedargs, nForm=nForm,
@@ -1134,6 +1116,7 @@ def audithistory(datasourceID):
                 continue
             for r in cursor:
                 r["dataSourceName"] = datasource["dataSourceName"]
+                r["localTime"] = Timestamp2Date(r['ts'], tz_offset)
                 reports.append(r)
                 
         return render_template('new_theme/new_audit.html', args=args, selectedargs=selectedargs, nForm=nForm,
