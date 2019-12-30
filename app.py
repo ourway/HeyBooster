@@ -986,6 +986,7 @@ def audithistory(datasourceID):
         # after sorting to use their status correctly
         selectedargs = [db.find_one("datasource", query={"_id": ObjectId(datasourceID)})]
         analytics_audits = []
+        reports = []
         for arg in selectedargs:
             analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
             analytics_audit['localTime'] = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
@@ -994,40 +995,19 @@ def audithistory(datasourceID):
             else:
                 analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
-
-        report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
-        if report:
-            recommendations = report['recommendations']
-            lastStates = report['lastStates']
-            ####  Temporary Add-on ####
-            if lastStates['contentGrouping'] == 'danger':
-                recommendations['contentGrouping'] = [
-                    'If you have a blog page with lots of different topic or e-commerce site with various product lists, It is helpful to compare each group in terms of their performance.',
-                    'There are 3 different method to create content grouping; url based, page title based and if you don’t have a clear structure for url and page title, you can use tracking code to define each page’s content group.']
-            if lastStates['internalSearchTermConsistency'] == 'danger':
-                recommendations['internalSearchTermConsistency'] = [
-                    'Apply lowercase filter under View Setting to enforce all terms to be seen as lowercase.']
-            ####  Temporary Add-on ####
-            len_issues = list(lastStates.values()).count('danger')
-            len_recommendations = 0
-            for rec in recommendations.values():
-                len_recommendations += len(rec)
-            totalScore = report['totalScore']
-        else:
-            # Old Version
-            notification = db.find_one('notification', query={'datasourceID': ObjectId(datasourceID)})
-            totalScore = notification['totalScore']
-            recommendations = None
-            len_recommendations = 0
-            lastStates = notification['lastStates']
-            len_issues = list(lastStates.values()).count('danger')
+            # Get reports for this selected datasource
+            cursor = db.find('reports', query={'datasourceID': arg['_id']})
+            try:
+                cursor.next()
+            except:
+                continue
+            for r in cursor:
+                r["dataSourceName"] = datasource["dataSourceName"]
+                reports.append(r)
 
         return render_template('new_theme/new_audit.html', args=args, selectedargs=selectedargs, nForm=nForm,
                                current_analyticsemail=current_analyticsemail,
-                               analytics_audits=analytics_audits,
-                               len_issues=len_issues,
-                               len_recommendations=len_recommendations,
-                               totalScore=totalScore)
+                               analytics_audits=analytics_audits, reports = reports)
     else:
         slack_token = user['sl_accesstoken']
         current_analyticsemail = user['ga_email']
@@ -1129,6 +1109,7 @@ def audithistory(datasourceID):
         # after sorting to use their status correctly
         selectedargs = [db.find_one("datasource", query={"_id": ObjectId(datasourceID)})]
         analytics_audits = []
+        reports = []
         for arg in selectedargs:
             #        analytics_audit = db.find_one('notification', query={"datasourceID": arg['_id'], "type": "analyticsAudit"})
             #        localTime = Timestamp2Date(analytics_audit['lastRunDate'], tz_offset)
@@ -1145,9 +1126,19 @@ def audithistory(datasourceID):
             else:
                 analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
+            # Get reports for this selected datasource
+            cursor = db.find('reports', query={'datasourceID': arg['_id']})
+            try:
+                cursor.next()
+            except:
+                continue
+            for r in cursor:
+                r["dataSourceName"] = datasource["dataSourceName"]
+                reports.append(r)
+                
         return render_template('new_theme/new_audit.html', args=args, selectedargs=selectedargs, nForm=nForm,
                                current_analyticsemail=current_analyticsemail, workspace=workspace,
-                               analytics_audits=analytics_audits)
+                               analytics_audits=analytics_audits, reports = reports)
 
 
 @app.route('/account/connections')
