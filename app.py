@@ -1058,7 +1058,7 @@ def audithistory(datasourceID):
             #        local_ts = time.asctime(time.localtime(ts))
             ts = time.time()
             uID = user['sl_userid']
-            
+
             if request.form.getlist('checkbox_channel'):
                 data = {
                     'email': session['email'],
@@ -1103,8 +1103,8 @@ def audithistory(datasourceID):
                 run_analyticsAudit.delay(slack_token, str(data['_id']))
             else:
                 insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                     dataSourceID=_id,
-                                                     channelID='')
+                                                         dataSourceID=_id,
+                                                         channelID='')
                 #        analyticsAudit(slack_token, task=None, dataSource=data)
                 run_analyticsAudit_without_slack.delay(str(data['_id']))
             flash("Check out your connected slack channel, heybooster even wrote you.")
@@ -1574,8 +1574,8 @@ def connectaccount():
                     run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
                 else:
                     insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                         dataSourceID=_id,
-                                                         channelID='')
+                                                             dataSourceID=_id,
+                                                             channelID='')
                     run_analyticsAudit_without_slack.delay(str(data['_id']))
             else:
                 if request.form.getlist('checkbox_channel'):
@@ -1585,10 +1585,10 @@ def connectaccount():
                     run_analyticsAudit.delay(slack_token, str(data['_id']))
                 else:
                     insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                         dataSourceID=_id,
-                                                         channelID='')
+                                                             dataSourceID=_id,
+                                                             channelID='')
                     run_analyticsAudit_without_slack.delay(str(data['_id']))
-                    
+
             #        analyticsAudit(slack_token, task=None, dataSource=dataSource)
 
         #        args = sorted(unsortedargs, key = lambda i: i['createdTS'], reverse=False)
@@ -1872,7 +1872,7 @@ def getaudit():
                     'channelType': "Web",
                     'createdTS': ts
                 }
-                
+
             _id = db.insert_one("datasource", data=data).inserted_id
             data['_id'] = _id
             unsortedargs.append(data)
@@ -1882,10 +1882,10 @@ def getaudit():
                                                dataSourceID=_id,
                                                channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
                 else:
-                    #Without Slack
+                    # Without Slack
                     insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                         dataSourceID=_id,
-                                                         channelID='')
+                                                             dataSourceID=_id,
+                                                             channelID='')
                     run_analyticsAudit_without_slack.delay(str(data['_id']))
                 run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
             else:
@@ -1895,10 +1895,10 @@ def getaudit():
                                                channelID=nForm.channel.data.split('\u0007')[0])
                     run_analyticsAudit.delay(slack_token, str(data['_id']))
                 else:
-                    #Without Slack
+                    # Without Slack
                     insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                         dataSourceID=_id,
-                                                         channelID='')
+                                                             dataSourceID=_id,
+                                                             channelID='')
                     run_analyticsAudit_without_slack.delay(str(data['_id']))
 
             #        analyticsAudit(slack_token, task=None, dataSource=data)
