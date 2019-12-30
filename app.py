@@ -1718,10 +1718,10 @@ def getaudit():
         unsortedreports = []
         for datasource in datasources:
             cursor = db.find('reports', query={'datasourceID': datasource['_id']})
-#            try:
-#                cursor.next()
-#            except:
-#                continue
+            try:
+                cursor.next()
+            except:
+                continue
             for r in cursor:
                 r["dataSourceName"] = datasource["dataSourceName"]
                 unsortedreports.append(r)
@@ -1834,10 +1834,10 @@ def getaudit():
         unsortedreports = []
         for datasource in datasources:
             cursor = db.find('reports', query={'datasourceID': datasource['_id']})
-#            try:
-#                cursor.next()
-#            except:
-#                continue
+            try:
+                cursor.next()
+            except:
+                continue
             for r in cursor:
                 r["dataSourceName"] = datasource["dataSourceName"]
                 unsortedreports.append(r)
