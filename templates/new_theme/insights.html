@@ -122,7 +122,6 @@
                                         </div>
                                     </div>
                                     {% for insight in insights %}
-                                        {% set index = loop.index0 %}
                                         <div class="mt-4">
                                             <div class="accordion accordion-solid-header" id="accordion-4"
                                                  role="tablist">
@@ -133,8 +132,8 @@
                                                             class="mb-0 col-lg-12 col-xlg-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                             <a class="col-xlg-12 col-lg-12 col-md-12 col-sm-12 col-xs-12"
                                                                id="a-ug" data-toggle="collapse"
-                                                               href="#collapse-{{ index }}"
-                                                               aria-controls="collapse-{{ index }}"><i
+                                                               href="#collapse-10"
+                                                               aria-controls="collapse-10"><i
                                                                     class="mdi mdi-chevron-right "></i>
                                                                 {{ insight['title'] }}
                                                             </a>
@@ -162,7 +161,7 @@
                                                             {% endif %}
                                                         </h6>
                                                     </div>
-                                                    <div id="collapse-{{ index }}" class="collapse" role="tabpanel"
+                                                    <div id="collapse-10" class="collapse" role="tabpanel"
                                                          aria-labelledby="heading-10" data-parent="#accordion-4">
                                                         <div class="card">
                                                             <div class="card-body">
@@ -175,7 +174,7 @@
                                                                                 <a class=" active"
                                                                                    id="pills-home-tab-custom-2"
                                                                                    data-toggle="pill"
-                                                                                   href="#pills-health-{{ index }}"
+                                                                                   href="#pills-health-10"
                                                                                    role="tab" aria-controls="pills-home"
                                                                                    aria-selected="true">
                                                                                     Summary:
@@ -185,7 +184,7 @@
                                                                         <div class="tab-content tab-content-custom-pill"
                                                                              id="pills-tabContent-custom">
                                                                             <div class="tab-pane fade show active"
-                                                                                 id="pills-health-{{ index }}"
+                                                                                 id="pills-health-10"
                                                                                  role="tabpanel"
                                                                                  aria-labelledby="pills-home-tab-custom">
                                                                                 <div class="d-flex ">
