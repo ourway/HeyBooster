@@ -19,11 +19,19 @@
 
     <link rel="shortcut icon" href="../static/images/heybooster-icon.png"/>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-KMNKXGH');
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KMNKXGH');
     </script>
     <!-- End Google Tag Manager -->
 </head>
@@ -248,6 +256,12 @@
                     <a class="nav-link" href="/account/connections">
                         <i style="color: #242635" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
                         <span style="color: #242635" class="menu-title">Connected Accounts</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/insights">
+                        <i style="color: #242635" class="mdi mdi-checkbox-marked-outline menu-icon"></i>
+                        <span style="color: #242635" class="menu-title">Insights</span>
                     </a>
                 </li>
             </ul>
