@@ -1773,7 +1773,7 @@ def getaudit():
             nForm.view.choices = [('', 'User does not have Google Analytics Account')]
 
         args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-        reports = sorted(unsortedreports, key=lambda i: i['ts'], reverse=True)
+        reports = sorted(unsortedreports, key=lambda i: i['ts'], reverse=False)
         # Sort Order is important, that's why analytics audits are queried
         # after sorting to use their status correctly
         analytics_audits = []
