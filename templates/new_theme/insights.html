@@ -230,7 +230,11 @@
                                                                                 <ul>
                                                                                     <li>{{ insight.content | safe }}</li>
                                                                                     <br>
-                                                                                    <img src="../../static/uploads/{{ img }}">
+                                                                                    {% if img %}
+                                                                                        <img src="../../static/uploads/{{ img }}">
+                                                                                    {% else %}
+                                                                                        <p></p>
+                                                                                    {% endif %}
                                                                                 </ul>
                                                                             </div>
                                                                         </div>
