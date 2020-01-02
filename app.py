@@ -625,7 +625,7 @@ def recommendation(datasourceID):
     report = db.find_one('reports', {'datasourceID': ObjectId(datasourceID)})
     if not report:
         report = db.find_one('reports', {'_id': ObjectId(datasourceID)})
-    
+
     if report:
         summaries = report['summaries']
         recommendations = report['recommendations']
@@ -709,13 +709,25 @@ def recommendation(datasourceID):
 def insights():
     datasources = db.find('datasource', query={'email': session['email']})
     insights = []
+    images_path = '/home/app/heybooster-v1.2/uploads'
+    image_names = []
 
     for i in datasources:
         insight = db.find('insight', query={'datasourceID': i['_id']})
         for j in insight:
             insights.append(j)
 
-    return render_template('new_theme/insights.html', insights=insights)
+    dirList = os.listdir(images_path)
+
+    for im in dirList:
+        image_names.append(im)
+
+    for ins in insights:
+        for img in image_names:
+            if str(ins['images']) == f"['{img}']":
+                images_path = images_path + '/' + img
+
+    return render_template('new_theme/insights.html', insights=insights, images_path=images_path)
 
 
 @app.route('/account/connections-without-slack')
@@ -989,7 +1001,7 @@ def audithistory(datasourceID):
 
         return render_template('new_theme/new_audit.html', args=args, selectedargs=selectedargs, nForm=nForm,
                                current_analyticsemail=current_analyticsemail,
-                               analytics_audits=analytics_audits, reports = reports)
+                               analytics_audits=analytics_audits, reports=reports)
     else:
         slack_token = user['sl_accesstoken']
         current_analyticsemail = user['ga_email']
@@ -1118,10 +1130,10 @@ def audithistory(datasourceID):
                 r["dataSourceName"] = datasource["dataSourceName"]
                 r["localTime"] = Timestamp2Date(r['ts'], tz_offset)
                 reports.append(r)
-                
+
         return render_template('new_theme/new_audit.html', args=args, selectedargs=selectedargs, nForm=nForm,
                                current_analyticsemail=current_analyticsemail, workspace=workspace,
-                               analytics_audits=analytics_audits, reports = reports)
+                               analytics_audits=analytics_audits, reports=reports)
 
 
 @app.route('/account/connections')
@@ -1772,10 +1784,10 @@ def getaudit():
             analytics_audits += [analytics_audit]
         for report in reports:
             report['localTime'] = Timestamp2Date(report['ts'], tz_offset)
-            
+
         return render_template('new_theme/new_audit.html', args=args, selectedargs=args, nForm=nForm,
                                current_analyticsemail=current_analyticsemail,
-                               analytics_audits=analytics_audits, reports = reports)
+                               analytics_audits=analytics_audits, reports=reports)
 
     else:
         if not (session['sl_accesstoken'] or session['ga_accesstoken']):
@@ -1930,7 +1942,7 @@ def getaudit():
             report['localTime'] = Timestamp2Date(report['ts'], tz_offset)
         return render_template('new_theme/new_audit.html', args=args, selectedargs=args, nForm=nForm,
                                current_analyticsemail=current_analyticsemail, workspace=workspace,
-                               analytics_audits=analytics_audits, reports = reports)
+                               analytics_audits=analytics_audits, reports=reports)
 
 
 @app.route("/gatest/<email>")
@@ -3212,9 +3224,9 @@ def insertdefaultnotifications(email, userID, dataSourceID, channelID, sendWelco
     #    requests.post(URL.format('chat.postMessage'), data=json.dumps(data), headers=headers)
     lc_tz_offset = datetime.now(timezone.utc).astimezone().utcoffset().seconds // 3600
     #    usr_tz_offset = self.post("users.info", data={'user':token['user_id']})['user']['tz_offset']
-#    data = [('token', session['sl_accesstoken']),
-#            ('user', userID)]
-#    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
+    #    data = [('token', session['sl_accesstoken']),
+    #            ('user', userID)]
+    #    usr_tz_offset = requests.post(URL.format('users.info'), data).json()['user']['tz_offset'] // 3600
     user = db.find_one("user", {"email": email})
     usr_tz_offset = user["tz_offset"]
     if (7 >= (usr_tz_offset - lc_tz_offset)):
