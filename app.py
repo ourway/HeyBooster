@@ -727,11 +727,14 @@ def insights():
     for ins in insights:
         for img in image_names:
             if str(ins['images']) == f"['{img}']":
+                print('Test Geçer *********************************')
                 try:
                     shutil.copyfile(images_path + '/' + img, new_images_path + '/' + img)
                     print('***********************************************--------------------------')
                 except:
                     print('***********************************************')
+            else:
+                print('Test kalır *********************************')
 
     return render_template('new_theme/insights.html', insights=insights, img=img)
 
