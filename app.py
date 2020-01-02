@@ -22,6 +22,7 @@ from analyticsAudit import analyticsAudit
 from tasks import run_analyticsAudit, run_analyticsAudit_without_slack
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+import shutil
 from urllib.request import urlopen
 from json import load
 import pytz
@@ -711,6 +712,8 @@ def insights():
     insights = []
     images_path = '/home/app/heybooster-v1.2/uploads'
     image_names = []
+    new_images_path = './uploads'
+    new_images_names = []
 
     for i in datasources:
         insight = db.find('insight', query={'datasourceID': i['_id']})
@@ -725,9 +728,10 @@ def insights():
     for ins in insights:
         for img in image_names:
             if str(ins['images']) == f"['{img}']":
-                images_path = images_path + '/' + img
+                dest = shutil.move(images_path + '/' + img, new_images_path)
+                new_images_names.append(dest)
 
-    return render_template('new_theme/insights.html', insights=insights, images_path=images_path)
+    return render_template('new_theme/insights.html', insights=insights, new_images_names=new_images_names)
 
 
 @app.route('/account/connections-without-slack')
