@@ -1796,6 +1796,10 @@ def getaudit():
         for report in reports:
             report['localTime'] = Timestamp2Date(report['ts'], tz_offset)
 
+        print('****************************')
+        print(reports)
+        print('****************************')
+
         return render_template('new_theme/new_audit.html', args=args, selectedargs=args, nForm=nForm,
                                current_analyticsemail=current_analyticsemail,
                                analytics_audits=analytics_audits, reports=reports)
