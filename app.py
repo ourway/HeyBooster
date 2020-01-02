@@ -727,9 +727,7 @@ def insights():
             if str(ins['images']) == f"['{img}']":
                 images_path = images_path + '/' + img
 
-    sss = '../heybooster-v1.2/uploads/eda44f6fca1a4aba8e66ba23a815decc.png'
-
-    return render_template('new_theme/insights.html', insights=insights, images_path=images_path, sss=sss)
+    return render_template('new_theme/insights.html', insights=insights, images_path=images_path)
 
 
 @app.route('/account/connections-without-slack')
