@@ -3452,7 +3452,6 @@ def insertdefaultnotifications_without_slack(email, userID, dataSourceID, channe
         default_time = str(6 - (usr_tz_offset - lc_tz_offset)).zfill(2)
     else:
         default_time = str(24 + (6 - (usr_tz_offset - lc_tz_offset))).zfill(2)
-    default_time = 2
 
     dataSource = db.find_one("datasource", query={"_id": dataSourceID})
 
@@ -3461,7 +3460,7 @@ def insertdefaultnotifications_without_slack(email, userID, dataSourceID, channe
         'email': email,
         'scheduleType': 'daily',
         'frequency': 0,
-        'timeofDay': "02.01" % (default_time),
+        'timeofDay': "%s.01" % (default_time),
         'status': '1',
         'lastRunDate': '',
         'datasourceID': dataSourceID,
