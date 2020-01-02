@@ -733,10 +733,8 @@ def insights():
                     print('***********************************************--------------------------')
                 except IOError as e:
                     print("************** Unable to copy file. %s" % e)
-                    exit(1)
                 except:
                     print("Unexpected error:", sys.exc_info())
-                    exit(1)
 
     return render_template('new_theme/insights.html', insights=insights, img=img)
 
