@@ -23,6 +23,7 @@ from tasks import run_analyticsAudit, run_analyticsAudit_without_slack
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import shutil
+import sys
 from urllib.request import urlopen
 from json import load
 import pytz
@@ -727,14 +728,15 @@ def insights():
     for ins in insights:
         for img in image_names:
             if str(ins['images']) == f"['{img}']":
-                print('Test Geçer *********************************')
                 try:
                     shutil.copyfile(images_path + '/' + img, new_images_path + '/' + img)
                     print('***********************************************--------------------------')
+                except IOError as e:
+                    print("************** Unable to copy file. %s" % e)
+                    exit(1)
                 except:
-                    print('***********************************************')
-            else:
-                print('Test kalır *********************************')
+                    print("Unexpected error:", sys.exc_info())
+                    exit(1)
 
     return render_template('new_theme/insights.html', insights=insights, img=img)
 
