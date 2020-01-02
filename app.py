@@ -715,29 +715,31 @@ def insights():
     image_names = []
     new_images_path = '/home/app/HeyBooster/static/uploads'
 
-    for i in datasources:
-        insight = db.find('insight', query={'datasourceID': i['_id']})
-        for j in insight:
-            insights.append(j)
+    try:
+        for i in datasources:
+            insight = db.find('insight', query={'datasourceID': i['_id']})
+            for j in insight:
+                insights.append(j)
 
-    dirList = os.listdir(images_path)
+        dirList = os.listdir(images_path)
 
-    for im in dirList:
-        image_names.append(im)
+        for im in dirList:
+            image_names.append(im)
 
-    for ins in insights:
-        for img in image_names:
-            if str(ins['images']) == f"['{img}']":
-                try:
-                    shutil.copyfile(images_path + '/' + img, new_images_path + '/' + img)
-                    print('***********************************************--------------------------')
-                except IOError as e:
-                    print("************** Unable to copy file. %s" % e)
-                except:
-                    print("Unexpected error:", sys.exc_info())
+        for ins in insights:
+            for img in image_names:
+                if str(ins['images']) == f"['{img}']":
+                    try:
+                        shutil.copyfile(images_path + '/' + img, new_images_path + '/' + img)
+                        print('***********************************************--------------------------')
+                    except IOError as e:
+                        print("************** Unable to copy file. %s" % e)
+                    except:
+                        print("Unexpected error:", sys.exc_info())
 
-    return render_template('new_theme/insights.html', insights=insights, img=img)
-
+        return render_template('new_theme/insights.html', insights=insights, img=img)
+    except:
+        return render_template('new_theme/insights.html', insights=insights)
 
 @app.route('/account/connections-without-slack')
 def wrongaccount_without_slack():
