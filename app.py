@@ -729,6 +729,7 @@ def insights():
             if str(ins['images']) == f"['{img}']":
                 try:
                     shutil.copyfile(images_path + '/' + img, new_images_path + '/' + img)
+                    print('***********************************************--------------------------')
                 except:
                     print('***********************************************')
 
