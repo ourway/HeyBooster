@@ -712,8 +712,7 @@ def insights():
     insights = []
     images_path = '/home/app/heybooster-v1.2/uploads'
     image_names = []
-    new_images_path = '/static/uploads'
-    new_images_names = []
+    new_images_path = '/home/app/HeyBooster/static/uploads'
 
     for i in datasources:
         insight = db.find('insight', query={'datasourceID': i['_id']})
@@ -731,7 +730,7 @@ def insights():
                 try:
                     shutil.copyfile(images_path + '/' + img, new_images_path + '/' + img)
                 except:
-                    print('olmadı')
+                    print('***********************************************')
 
     return render_template('new_theme/insights.html', insights=insights, img=img)
 
