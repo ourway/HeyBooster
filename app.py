@@ -728,7 +728,7 @@ def insights():
     for ins in insights:
         for img in image_names:
             if str(ins['images']) == f"['{img}']":
-                dest = shutil.move(images_path + '/' + img, img)
+                shutil.copyfile(images_path + '/' + img, img)
 
     return render_template('new_theme/insights.html', insights=insights, img=img)
 
