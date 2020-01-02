@@ -712,7 +712,7 @@ def insights():
     insights = []
     images_path = '/home/app/heybooster-v1.2/uploads'
     image_names = []
-    new_images_path = './uploads'
+    new_images_path = '/static/uploads'
     new_images_names = []
 
     for i in datasources:
@@ -728,10 +728,9 @@ def insights():
     for ins in insights:
         for img in image_names:
             if str(ins['images']) == f"['{img}']":
-                dest = shutil.move(images_path + '/' + img, new_images_path)
-                new_images_names.append(dest)
+                dest = shutil.move(images_path + '/' + img, img)
 
-    return render_template('new_theme/insights.html', insights=insights, new_images_names=new_images_names)
+    return render_template('new_theme/insights.html', insights=insights, img=img)
 
 
 @app.route('/account/connections-without-slack')
