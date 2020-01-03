@@ -1000,7 +1000,7 @@ def audithistory(datasourceID):
                 analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
             # Get reports for this selected datasource
-            cursor = db.find('reports', query={'datasourceID': arg['_id']})
+            cursor = db.find('reports', query={'datasourceID': arg['_id']}).sort([('_id', -1)])
             try:
                 cursor.next()
             except:
@@ -1132,7 +1132,7 @@ def audithistory(datasourceID):
                 analytics_audit['strstat'] = 'active'
             analytics_audits += [analytics_audit]
             # Get reports for this selected datasource
-            cursor = db.find('reports', query={'datasourceID': arg['_id']})
+            cursor = db.find('reports', query={'datasourceID': arg['_id']}).sort([('_id', -1)])
             try:
                 cursor.next()
             except:
@@ -1796,10 +1796,6 @@ def getaudit():
         for report in reports:
             report['localTime'] = Timestamp2Date(report['ts'], tz_offset)
 
-        print('****************************')
-        print(reports)
-        print('****************************')
-
         return render_template('new_theme/new_audit.html', args=args, selectedargs=args, nForm=nForm,
                                current_analyticsemail=current_analyticsemail,
                                analytics_audits=analytics_audits, reports=reports)
@@ -1834,7 +1830,7 @@ def getaudit():
         unsortedargs = []
         unsortedreports = []
         for datasource in datasources:
-            cursor = db.find('reports', query={'datasourceID': datasource['_id']})
+            cursor = db.find('reports', query={'datasourceID': datasource['_id']}).sort([('_id', -1)])
             try:
                 cursor.next()
             except:
