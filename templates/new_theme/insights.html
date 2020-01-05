@@ -230,11 +230,13 @@
                                                                                 <ul>
                                                                                     <li>{{ insight.content | safe }}</li>
                                                                                     <br>
-                                                                                    {% if img %}
-                                                                                        <img src="../../static/uploads/{{ img }}">
-                                                                                    {% else %}
-                                                                                        <p></p>
-                                                                                    {% endif %}
+                                                                                    {% for image in insight.images %}
+                                                                                        {% if img %}
+                                                                                            <img src="https://storage.googleapis.com/insight-images/{{ image }}">
+                                                                                        {% else %}
+                                                                                            <p></p>
+                                                                                        {% endif %}
+                                                                                    {% endfor %}
                                                                                 </ul>
                                                                             </div>
                                                                         </div>
