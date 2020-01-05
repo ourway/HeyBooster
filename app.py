@@ -706,7 +706,7 @@ def recommendation(datasourceID):
                            totalScore=totalScore)
 
 
-@app.route('/account/insights')
+@app.route('/account/insights', methods=['GET', 'POST'])
 @login_required
 def insights():
     datasources = db.find('datasource', query={'email': session['email']})
