@@ -771,7 +771,7 @@ def insights_for_datasource(datasourceID):
     for datasource in datasources:
         unsortedargs.append(datasource)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
-    datasource = db.find('datasource', query={'_id': ObjectId(datasourceID)})
+    datasource = db.find_one('datasource', query={'_id': ObjectId(datasourceID)})
     insights = []
 #    images_path = '/home/app/heybooster-v1.2/uploads'
 #    image_names = []
