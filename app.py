@@ -733,7 +733,7 @@ def insights():
         data = {"email": session['email'],
                 "createdTS": ts}
         db.insert('joinPrivateBeta', data=data)
-        flash('Join Private Beta Success', 'success')
+        #flash('Join Private Beta Success', 'success')
         return render_template('new_theme/insights.html', insights=insights, args = args)
     else:
         try:
