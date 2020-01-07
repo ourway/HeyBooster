@@ -756,7 +756,50 @@ def insights():
             return render_template('new_theme/insights.html', insights=insights)
         except:
             return render_template('new_theme/insights.html', insights=insights)
+        
+    
+@app.route('/account/insights/<datasourceID>', methods=['GET', 'POST'])
+@login_required
+def insights_for_datasource(datasourceID):
+    datasources = db.find('datasource', query={'email': session['email']})
+    insights = []
+    images_path = '/home/app/heybooster-v1.2/uploads'
+    image_names = []
+    new_images_path = '/home/app/HeyBooster/static/uploads'
 
+    if request.method == 'POST':
+        insight = db.find('insight', query={'datasourceID': i['_id']})
+        for j in insight:
+            insights.append(j)
+
+        ts = time.time()
+        data = {"email": session['email'],
+                "createdTS": ts}
+        db.insert('joinPrivateBeta', data=data)
+        flash('Join Private Beta Success', 'success')
+        return render_template('new_theme/insights.html', insights=insights)
+    else:
+        insight = db.find('insight', query={'datasourceID': i['_id']})
+        for j in insight:
+            insights.append(j)
+
+            # dirList = os.listdir(images_path)
+
+            # for im in dirList:
+            #     image_names.append(im)
+            #
+            # for ins in insights:
+            #     for img in image_names:
+            #         if str(ins['images']) == f"['{img}']":
+            #             try:
+            #                 shutil.copyfile(images_path + '/' + img, new_images_path + '/' + img)
+            #                 print('***********************************************--------------------------')
+            #             except IOError as e:
+            #                 print("************** Unable to copy file. %s" % e)
+            #             except:
+            #                 print("Unexpected error:", sys.exc_info())
+
+            return render_template('new_theme/insights.html', insights=insights)
 
 @app.route('/account/connections-without-slack')
 def wrongaccount_without_slack():
@@ -1023,7 +1066,7 @@ def audithistory(datasourceID):
             except:
                 continue
             for r in cursor:
-                r["dataSourceName"] = datasource["dataSourceName"]
+                r["dataSourceName"] = arg["dataSourceName"]
                 r["localTime"] = Timestamp2Date(r['ts'], tz_offset)
                 reports.append(r)
 
@@ -1155,7 +1198,7 @@ def audithistory(datasourceID):
             except:
                 continue
             for r in cursor:
-                r["dataSourceName"] = datasource["dataSourceName"]
+                r["dataSourceName"] = arg["dataSourceName"]
                 r["localTime"] = Timestamp2Date(r['ts'], tz_offset)
                 reports.append(r)
 
