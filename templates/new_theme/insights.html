@@ -281,7 +281,7 @@
                                                                                 <div class="d-flex ">
                                                                                 </div>
                                                                                 <ul>
-                                                                                    <li>{{ insight.content | safe }}</li>
+                                                                                    {{ insight.content | safe }}
                                                                                     <br>
                                                                                     {% for image in insight.images %}
                                                                                         <img src="https://storage.googleapis.com/insight-images/{{ image }}"
