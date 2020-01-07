@@ -280,12 +280,12 @@
                                                                                  aria-labelledby="pills-home-tab-custom">
                                                                                 <div class="d-flex ">
                                                                                 </div>
-                                                                                    {{ insight.content | safe }}
-                                                                                    <br>
-                                                                                    {% for image in insight.images %}
-                                                                                        <img src="https://storage.googleapis.com/insight-images/{{ image }}"
-                                                                                             style="max-width: 100%; max-height: 60%;">
-                                                                                    {% endfor %}
+                                                                                {{ insight.content | safe }}
+                                                                                <br>
+                                                                                {% for image in insight.images %}
+                                                                                    <img src="https://storage.googleapis.com/insight-images/{{ image }}"
+                                                                                         style="max-width: 100%; max-height: 60%;">
+                                                                                {% endfor %}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -314,10 +314,11 @@
                     </div>
                     <div class="text-center">
                         <form method="POST" action="/account/insights" name="myForm">
-                            <a href="https://app.monstercampaigns.com/c/mrecxjeltzu6ijfg8meo/" onclick="monsterFunction()"
-                                    class="btn btn-dark col-md-6 col-md-offset-3"
-                                    style="width: auto; margin-right: 10px;">
-                                Join Private Beta
+                            <a href="https://app.monstercampaigns.com/c/mrecxjeltzu6ijfg8meo/">
+                                <button class="btn btn-dark col-md-6 col-md-offset-3"
+                                        style="width: auto; margin-right: 10px;" onclick="monsterFunction()">Join
+                                    Private Beta
+                                </button>
                             </a>
                         </form>
                     </div>
