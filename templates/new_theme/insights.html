@@ -314,9 +314,8 @@
                     </div>
                     <div class="text-center">
                         <form method="POST" action="/account/insights" name="myForm">
-                            <a type="submit" onclick="monsterFunction()"
-                                    class="btn btn-dark col-md-6 col-md-offset-3"
-                                    style="width: auto; margin-right: 10px;">
+                            <a onclick="monsterFunction()" class="btn btn-dark col-md-6 col-md-offset-3"
+                               style="width: auto; margin-right: 10px;">
                                 Join Private Beta
                             </a>
                         </form>
@@ -352,7 +351,7 @@
     async function monsterFunction() {
         document.myForm.submit();
         await new Promise(r => setTimeout(r, 2000));
-        a.href= 'https://ilteriskeskin.github.io/';
+        a.href = 'https://ilteriskeskin.github.io/';
         a.click();
     }
 </script>
