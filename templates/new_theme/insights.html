@@ -113,9 +113,37 @@
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
+                                {% if datasource %}
+                                <!--
                                     <h4 id="info-h-ug" class="card-title ml-5"
-                                        style="letter-spacing: 1px; display: inline-block; float: left;">Data Source
-                                        Name</h4>
+                                        style="letter-spacing: 1px; display: inline-block; float: left;">
+                                        {% if datasource.dataSourceName %}
+                                            {{ datasource.dataSourceName }}
+                                        {% else %}
+                                            {{ datasource._id }}
+                                        {% endif %}
+                                    </h4>
+                                -->
+                                    <button style=" border-radius: 0px;" class="btn  dropdown-toggle"
+                                            type="button" id="dropdownMenuIconButton1" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            {% if datasource.dataSourceName %}
+                                                {{ datasource.dataSourceName }}
+                                            {% else %}
+                                                {{ datasource._id }}
+                                            {% endif %}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
+                                        {% for arg in args %}
+                                            {% if arg.dataSourceName %}
+                                                {% set dataSourceName = arg.dataSourceName %}
+                                            {% else %}
+                                                {% set dataSourceName = arg._id %}
+                                            {% endif %}
+                                            <a href="/account/insights/{{ arg._id }}"
+                                               class="dropdown-item">{{ dataSourceName }}</a>
+                                        {% endfor %}
+                                    </div>
                                     <!-- info için eklendi ------------ -->
                                     <div class="dropdown dropup" id=display-ug-ib>
                                         <button class="btn " type="button" id="dropdownMenuIconButton1"
@@ -124,9 +152,32 @@
                                         </button>
                                         <div style="cursor: text;" class="dropdown-menu"
                                              aria-labelledby="dropdownMenuIconButton1">
-                                            Deneme 12
+                                            <p> {{ datasource.accountName }}</p>
+                                            <p> {{ datasource.propertyName }}</p>
+                                            <p> {{ datasource.viewName }}</p>
                                         </div>
                                     </div>
+                                {% else %}
+                                <div class="dropdown text-center">
+                                            <button style=" border-radius: 0px;" class="btn  dropdown-toggle"
+                                                    type="button" id="dropdownMenuIconButton1" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">Data Source Name
+
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
+                                                {% for arg in args %}
+                                                    {% if arg.dataSourceName %}
+                                                        {% set dataSourceName = arg.dataSourceName %}
+                                                    {% else %}
+                                                        {% set dataSourceName = arg._id %}
+                                                    {% endif %}
+                                                    <a href="/account/insights/{{ arg._id }}"
+                                                       class="dropdown-item">{{ dataSourceName }}</a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                {% endif%}
+                                
                                     {% for insight in insights %}
                                         {% set index = loop.index0 %}
                                         <div class="mt-4">

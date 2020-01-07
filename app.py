@@ -710,6 +710,10 @@ def recommendation(datasourceID):
 @login_required
 def insights():
     datasources = db.find('datasource', query={'email': session['email']})
+    unsortedargs = []
+    for datasource in datasources:
+        unsortedargs.append(datasource)
+    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     insights = []
     images_path = '/home/app/heybooster-v1.2/uploads'
     image_names = []
@@ -729,7 +733,7 @@ def insights():
                 "createdTS": ts}
         db.insert('joinPrivateBeta', data=data)
         flash('Join Private Beta Success', 'success')
-        return render_template('new_theme/insights.html', insights=insights)
+        return render_template('new_theme/insights.html', insights=insights, args = args)
     else:
         try:
             for i in datasources:
@@ -753,22 +757,27 @@ def insights():
             #             except:
             #                 print("Unexpected error:", sys.exc_info())
 
-            return render_template('new_theme/insights.html', insights=insights)
+            return render_template('new_theme/insights.html', insights=insights, args = args)
         except:
-            return render_template('new_theme/insights.html', insights=insights)
+            return render_template('new_theme/insights.html', insights=insights, args = args)
         
     
 @app.route('/account/insights/<datasourceID>', methods=['GET', 'POST'])
 @login_required
 def insights_for_datasource(datasourceID):
     datasources = db.find('datasource', query={'email': session['email']})
+    unsortedargs = []
+    for datasource in datasources:
+        unsortedargs.append(datasource)
+    args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    datasource = db.find('datasource', query={'_id': ObjectId(datasourceID)})
     insights = []
-    images_path = '/home/app/heybooster-v1.2/uploads'
-    image_names = []
-    new_images_path = '/home/app/HeyBooster/static/uploads'
+#    images_path = '/home/app/heybooster-v1.2/uploads'
+#    image_names = []
+#    new_images_path = '/home/app/HeyBooster/static/uploads'
 
     if request.method == 'POST':
-        insight = db.find('insight', query={'datasourceID': i['_id']})
+        insight = db.find('insight', query={'datasourceID': ObjectId(datasourceID)})
         for j in insight:
             insights.append(j)
 
@@ -777,9 +786,9 @@ def insights_for_datasource(datasourceID):
                 "createdTS": ts}
         db.insert('joinPrivateBeta', data=data)
         flash('Join Private Beta Success', 'success')
-        return render_template('new_theme/insights.html', insights=insights)
+        return render_template('new_theme/insights.html', insights=insights, args = args)
     else:
-        insight = db.find('insight', query={'datasourceID': i['_id']})
+        insight = db.find('insight', query={'datasourceID': ObjectId(datasourceID)})
         for j in insight:
             insights.append(j)
 
@@ -799,7 +808,7 @@ def insights_for_datasource(datasourceID):
             #             except:
             #                 print("Unexpected error:", sys.exc_info())
 
-            return render_template('new_theme/insights.html', insights=insights)
+            return render_template('new_theme/insights.html', insights=insights, datasource = datasource, args = args)
 
 @app.route('/account/connections-without-slack')
 def wrongaccount_without_slack():
