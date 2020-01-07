@@ -146,23 +146,21 @@
                                     </div>
                                     <!-- info için eklendi ------------ -->
                                     <div class="dropdown dropup" id=display-ug-ib>
-                                        <button class="btn " type="button" id="dropdownMenuIconButton1"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i id="info-ug-2" class="mdi mdi-information-outline"></i>
+                                        <button style=" border-radius: 0px;" class="btn  dropdown-toggle"
+                                                    type="button" id="dropdownMenuIconButton1" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false"
                                         </button>
-                                        <div style="cursor: text;" class="dropdown-menu"
-                                             aria-labelledby="dropdownMenuIconButton1">
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
                                             <p> {{ datasource.accountName }}</p>
                                             <p> {{ datasource.propertyName }}</p>
                                             <p> {{ datasource.viewName }}</p>
                                         </div>
                                     </div>
                                 {% else %}
-                                <div class="dropdown text-center">
+                                <div class="dropdown">
                                             <button style=" border-radius: 0px;" class="btn  dropdown-toggle"
                                                     type="button" id="dropdownMenuIconButton1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="false">Data Source Name
-
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
                                                 {% for arg in args %}
