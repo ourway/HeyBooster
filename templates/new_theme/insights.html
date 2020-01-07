@@ -146,14 +146,17 @@
                                     </div>
                                     <!-- info için eklendi ------------ -->
                                     <div class="dropdown dropup" id=display-ug-ib>
-                                        <button style=" border-radius: 0px;" class="btn  dropdown-toggle"
-                                                    type="button" id="dropdownMenuIconButton1" data-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false"
+                                        <button class="btn " type="button" id="dropdownMenuIconButton1"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i id="info-ug-2" class="mdi mdi-information-outline"></i>
                                         </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
-                                            <p> {{ datasource.accountName }}</p>
-                                            <p> {{ datasource.propertyName }}</p>
-                                            <p> {{ datasource.viewName }}</p>
+                                        <div style="cursor: text;" class="dropdown-menu"
+                                             aria-labelledby="dropdownMenuIconButton1">
+                                            <a> {{ datasource.accountName }}</a>
+                                            <a> &nbsp-&nbsp </a>
+                                            <a> {{ datasource.propertyName }}</a>
+                                            <a> &nbsp-&nbsp </a>
+                                            <a> {{ datasource.viewName }}</a>
                                         </div>
                                     </div>
                                 {% else %}
@@ -161,6 +164,7 @@
                                             <button style=" border-radius: 0px;" class="btn  dropdown-toggle"
                                                     type="button" id="dropdownMenuIconButton1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="false">Data Source Name
+
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
                                                 {% for arg in args %}
