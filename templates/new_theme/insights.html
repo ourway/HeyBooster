@@ -280,14 +280,12 @@
                                                                                  aria-labelledby="pills-home-tab-custom">
                                                                                 <div class="d-flex ">
                                                                                 </div>
-                                                                                <ul>
                                                                                     {{ insight.content | safe }}
                                                                                     <br>
                                                                                     {% for image in insight.images %}
                                                                                         <img src="https://storage.googleapis.com/insight-images/{{ image }}"
                                                                                              style="max-width: 100%; max-height: 60%;">
                                                                                     {% endfor %}
-                                                                                </ul>
                                                                             </div>
                                                                         </div>
                                                                     </div>
