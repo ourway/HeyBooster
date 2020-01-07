@@ -714,6 +714,7 @@ def insights():
     for datasource in datasources:
         unsortedargs.append(datasource)
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
+    datasources = db.find('datasource', query={'email': session['email']})
     insights = []
     images_path = '/home/app/heybooster-v1.2/uploads'
     image_names = []
