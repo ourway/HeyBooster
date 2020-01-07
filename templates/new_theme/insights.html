@@ -314,11 +314,11 @@
                     </div>
                     <div class="text-center">
                         <form method="POST" action="/account/insights" name="myForm">
-                            <a href="https://app.monstercampaigns.com/c/mrecxjeltzu6ijfg8meo/">
-                                <button class="btn btn-dark col-md-6 col-md-offset-3"
-                                        style="width: auto; margin-right: 10px;" onclick="monsterFunction()">Join
-                                    Private Beta
-                                </button>
+                            <a href="https://app.monstercampaigns.com/c/mrecxjeltzu6ijfg8meo/"
+                               onclick="monsterFunction()"
+                               class="btn btn-dark col-md-6 col-md-offset-3"
+                               style="width: auto; margin-right: 10px;">
+                                Join Private Beta
                             </a>
                         </form>
                     </div>
@@ -352,6 +352,10 @@
 <script>
     function monsterFunction() {
         document.myForm.submit();
+        sleep(1000);
+        let a = document.createElement('a');
+        a.href = 'https://app.monstercampaigns.com/c/mrecxjeltzu6ijfg8meo/';
+        a.click();
     }
 </script>
 
