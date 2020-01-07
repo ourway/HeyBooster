@@ -809,7 +809,7 @@ def insights_for_datasource(datasourceID):
             #             except:
             #                 print("Unexpected error:", sys.exc_info())
 
-            return render_template('new_theme/insights.html', insights=insights, datasource = datasource, args = args)
+        return render_template('new_theme/insights.html', insights=insights, datasource = datasource, args = args)
 
 @app.route('/account/connections-without-slack')
 def wrongaccount_without_slack():
