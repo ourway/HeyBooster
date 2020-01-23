@@ -121,7 +121,8 @@ def base():
     else:
         user = db.find_one('user', query = {'email':session['email']})
         if user:
-            google_auth.check_tokens(user)
+            if not session.get('TOKENCHECKED'):
+                google_auth.check_tokens(user)
         return redirect('/account/audit-history')
 
 
@@ -131,7 +132,8 @@ def home():
     current_analyticsemail = ""
     user = db.find_one('user', {'email': session['email']})
     if user:
-        google_auth.check_tokens(user)
+        if not session.get('TOKENCHECKED'):
+            google_auth.check_tokens(user)
     datasource = db.find_one("datasource", {"email": user["email"]})
     if datasource:
         return redirect('/account/audit-history')
@@ -1746,7 +1748,8 @@ def account():
 def getaudit():
     user = db.find_one('user', {'email': session['email']})
     if user:
-        google_auth.check_tokens(user)
+        if not session.get('TOKENCHECKED'):
+            google_auth.check_tokens(user)
     try:
         tz_offset = user["tz_offset"]
     except:

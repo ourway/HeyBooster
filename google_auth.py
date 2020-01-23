@@ -93,10 +93,11 @@ def check_tokens(user):
                 if flask.session.get('ga_accesstoken'):
                     flask.session['ga_accesstoken'] = ''
                 gaActivity = False
-        f.write('INFO - Email: {} - Slack Response: {} - GA Response: {}'.format(user['email'], slackActivity, gaActivity))
+        f.write('INFO - Email: {} - Slack Response: {} - GA Response: {}\n'.format(user['email'], slackActivity, gaActivity))
+        flask.session['TOKENCHECKED'] = 'Checked'
         return True
     except Exception as ex:
-        f.write('ERROR - Email: {} - Error: {}'.format(user['email'], str(ex)))
+        f.write('ERROR - Email: {} - Error: {}\n'.format(user['email'], str(ex)))
         return False
     
                 
