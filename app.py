@@ -1,5 +1,5 @@
 from flask import Flask, render_template, flash, redirect, request, session, url_for, make_response, jsonify, send_file, \
-    render_template_string
+    render_template_string, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from forms import LoginForm, RegisterForm, DataSourceForm
@@ -51,7 +51,10 @@ def login_required(f):
 
     return decorated_function
 
-
+def logout_user(self):
+        session.clear()
+        g.user = None
+        
 app = Flask(__name__)
 
 # Rate Limiting for Incoming Requests
@@ -116,6 +119,9 @@ def base():
     if not session['email']:
         return redirect('/getstarted/connect-accounts')
     else:
+        user = db.find_one('user', query = {'email':session['email']})
+        if user:
+            google_auth.check_tokens(user)
         return redirect('/account/audit-history')
 
 
@@ -124,6 +130,8 @@ def base():
 def home():
     current_analyticsemail = ""
     user = db.find_one('user', {'email': session['email']})
+    if user:
+        google_auth.check_tokens(user)
     datasource = db.find_one("datasource", {"email": user["email"]})
     if datasource:
         return redirect('/account/audit-history')
@@ -1737,6 +1745,8 @@ def account():
 @login_required
 def getaudit():
     user = db.find_one('user', {'email': session['email']})
+    if user:
+        google_auth.check_tokens(user)
     try:
         tz_offset = user["tz_offset"]
     except:

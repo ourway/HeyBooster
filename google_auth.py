@@ -14,6 +14,7 @@ from urllib.request import urlopen
 from json import load
 import pytz
 from datetime import datetime
+from slack import WebClient
 
 
 TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}'
@@ -48,6 +49,58 @@ def is_logged_in():
     return True if AUTH_TOKEN_KEY in flask.session else False
 
 
+def check_tokens(user):
+    filename = 'check_tokens.log'
+    if os.path.exists(filename):
+        append_write = 'a' # append if already exists
+    else:
+        append_write = 'w' # make a new file if not
+    f = open(filename,append_write)
+    try:
+        #Check Slack Tokens
+        slack_token = user['sl_accesstoken']
+        slackActivity = True
+        gaActivity = True
+        if slack_token:
+            client = WebClient(token=slack_token)
+            try:
+                client.auth_test()
+                #Put token into session cache
+                if not flask.session.get('sl_accesstoken'):
+                    flask.session['sl_accesstoken'] = user['sl_accesstoken']
+            except Exception as err:
+                print('Slack Token Error:', str(err))
+                if 'token_revoked' in str(err) or 'account_inactive' in str(err):
+                    db.find_and_modify('user', query = {'_id':user['_id']},
+                                    sl_accesstoken = '',
+                                    sl_teamid = '',
+                                    sl_userid = '')
+                if flask.session.get('sl_accesstoken'):
+                    flask.session['sl_accesstoken'] = ''
+                slackActivity = False
+            
+        #Check Google Analytics Tokens
+        if user['ga_accesstoken']:
+            try:
+                get_user_info_woutSession(user['email'])
+                if not flask.session.get('ga_accesstoken'):
+                    flask.session['ga_accesstoken'] = user['ga_accesstoken']
+            except Exception as err:
+                print('Google Analytics Token Error:', str(err))
+                db.find_and_modify('user', query = {'_id':user['_id']},
+                                        ga_accesstoken = '',
+                                        ga_refreshtoken = '') 
+                if flask.session.get('ga_accesstoken'):
+                    flask.session['ga_accesstoken'] = ''
+                gaActivity = False
+        f.write('INFO - Email: {} - Slack Response: {} - GA Response: {}'.format(user['email'], slackActivity, gaActivity))
+        return True
+    except Exception as ex:
+        f.write('ERROR - Email: {} - Error: {}'.format(user['email'], str(ex)))
+        return False
+    
+                
+                
 def build_credentials():
     if not is_logged_in():
         raise Exception('User must be logged in')
@@ -215,8 +268,12 @@ def google_loginauth_redirect():
             tz_offset = 0
             db.find_and_modify('user', query={'_id': user['_id']},
                                    tz_offset=tz_offset)
-    flask.session['sl_accesstoken'] = user['sl_accesstoken']
-    flask.session['ga_accesstoken'] = user['ga_accesstoken']
+    
+    resp = check_tokens(user)
+    if resp:
+        flask.session['sl_accesstoken'] = user['sl_accesstoken']
+        flask.session['ga_accesstoken'] = user['ga_accesstoken']
+
     return flask.redirect(BASE_URI, code=302)
 
 
