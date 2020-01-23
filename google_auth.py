@@ -154,6 +154,7 @@ def get_user_info():
 
     return oauth2_client.userinfo().get().execute()
 
+
 def get_user_info_woutSession(email):
     credentials = build_credentials_woutSession(email)
 
@@ -162,6 +163,7 @@ def get_user_info_woutSession(email):
         credentials=credentials)
 
     return oauth2_client.userinfo().get().execute()
+
 
 def no_cache(view):
     @functools.wraps(view)

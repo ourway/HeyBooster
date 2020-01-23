@@ -83,6 +83,14 @@ app.register_blueprint(google_auth.app)
 app.register_blueprint(google_analytics.app)
 
 
+@app.errorhandler(500)
+def internal_error(error):
+    user = db.find_one('user', query = {'email':session['email']})
+    if user:
+        google_auth.check_tokens(user)
+    return redirect('/')
+
+
 # Force App to expire session after 20minutes of true inactivity.
 @app.before_request
 def before_request():
