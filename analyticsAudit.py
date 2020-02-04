@@ -1308,31 +1308,47 @@ def paymentReferral(dataSource):
             'reportRequests': [
                 {
                     'viewId': viewId,
-                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
                     'metrics': metrics,
+                    'dateRanges': [{'startDate': start_date_1, 'endDate': end_date_1}],
+                    'dimensions': [{'name': 'ga:source'}],
                     'filtersExpression': 'ga:medium==referral',
                     'includeEmptyRows': True
                 }]}
 #    results = makeRequestWithExponentialBackoff(service, body)
     req = service.reports().batchGet(body=body)
     results = makeRequestWithExponentialBackoff(req)
+    totalSession = int(results['reports'][0]['data']['totals'][0]['values'][1])
+    for row in results['reports'][0]['data'].get('rows'):
+        newUsers = int(row['metrics'][0]['values'][0])
+        sessions = int(row['metrics'][0]['values'][1])
+        transactionsPerSession = float(row['metrics'][0]['values'][2])
     
-    newUsers = int(results['reports'][0]['data']['totals'][0]['values'][0])
-    sessions = int(results['reports'][0]['data']['totals'][0]['values'][1])
-    transactionsPerSession = float(results['reports'][0]['data']['totals'][0]['values'][2])
-
-    if newUsers < sessions * 0.001 and transactionsPerSession > 0.20:
-        attachments += [{
-            "text": "You get traffic from payment referral gateways, this causes you to lose the original traffic sources which brought you transactions.",
-            "color": "danger",
-#            "pretext": text,
-            "title": text,
-            "callback_id": "notification_form",
-#            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
-            "attachment_type": "default",
-        }]
-        recommendations += ["To prevent the loss of traffic sources of users generated revenue, the payment gateway domain has to be excluded under Property → Tracking Info → Referral Exclusion."]
-    else:
+        if (newUsers < sessions * 0.001) and (transactionsPerSession > 0.20) and (sessions > totalSession * 0.0002):
+#            print('Payment Referral detected', row['dimensions'][0])
+            attachments += [{
+                "text": "You get traffic from payment referral gateways, this causes you to lose the original traffic sources which brought you transactions.",
+                "color": "danger",
+    #            "pretext": text,
+                "title": text,
+                "callback_id": "notification_form",
+    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+                "attachment_type": "default",
+            }]
+            recommendations += ["To prevent the loss of traffic sources of users generated revenue, the payment gateway domain has to be excluded under Property → Tracking Info → Referral Exclusion."]
+            break
+        else:
+#            print('Not Payment Referral', row['dimensions'][0])
+            pass
+#            attachments += [{
+#                "text": "No worries, you did a good job, but don’t forget to track your payment referrals if any new payment method is added.",
+#                "color": "good",
+#    #            "pretext": text,
+#                "title": text,
+#                "callback_id": "notification_form",
+#    #            "footer": f"{dataSource['propertyName']} & {dataSource['viewName']}\n",
+#                "attachment_type": "default",
+#            }]
+    if not attachments:
         attachments += [{
             "text": "No worries, you did a good job, but don’t forget to track your payment referrals if any new payment method is added.",
             "color": "good",
