@@ -1323,7 +1323,7 @@ def paymentReferral(dataSource):
         sessions = int(row['metrics'][0]['values'][1])
         transactionsPerSession = float(row['metrics'][0]['values'][2])
     
-        if (newUsers < sessions * 0.001) and (transactionsPerSession > 0.20) and (sessions > totalSession * 0.0002):
+        if (newUsers < sessions * 0.001) and (transactionsPerSession > 0.20) and (sessions > totalSession * 0.02):
 #            print('Payment Referral detected', row['dimensions'][0])
             attachments += [{
                 "text": "You get traffic from payment referral gateways, this causes you to lose the original traffic sources which brought you transactions.",
