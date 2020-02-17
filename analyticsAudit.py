@@ -1047,7 +1047,7 @@ def sessionClickDiscrepancy(dataSource):
     
     if sessions_result > 0 :
         if adclicks_result > 0:
-            if adclicks_result < sessions_result * 0.95 or adclicks_result > sessions_result * 1.05:
+            if adclicks_result < sessions_result * 0.93 or adclicks_result > sessions_result * 1.07:
                 attachments += [{
                     "text": "Click session discrepancy is higher than expected. That may have negative impact on the Google Ads performance.",
                     "color": "danger",
