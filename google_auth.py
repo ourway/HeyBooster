@@ -78,11 +78,11 @@ def check_tokens(user):
                 if flask.session.get('sl_accesstoken'):
                     flask.session['sl_accesstoken'] = ''
                 slackActivity = False
-            
+        #
         #Check Google Analytics Tokens
         if user['ga_accesstoken']:
             try:
-                get_user_info_woutSession(user['email'])
+                build_credentials_woutSession(user['email'])
                 if not flask.session.get('ga_accesstoken'):
                     flask.session['ga_accesstoken'] = user['ga_accesstoken']
             except Exception as err:
