@@ -139,12 +139,10 @@ def base():
 def home():
     current_analyticsemail = ""
     user = db.find_one('user', {'email': session['email']})
-#    if user:
-#        if not session.get('TOKENCHECKED'):
-#            google_auth.check_tokens(user)
-    datasource = db.find_one("datasource", {"email": user["email"]})
-    if datasource:
-        return redirect('/account/audit-history')
+    if user:
+        if not session.get('TOKENCHECKED'):
+            google_auth.check_tokens(user)
+
     if 'auth_token' in session.keys():
         try:
             if session['ga_accesstoken'] and session['sl_accesstoken']:
@@ -159,7 +157,9 @@ def home():
                 # Check if user has analytics connection
                 if session['ga_accesstoken']:
                     user = db.find_one('user', {'email': session['email']})
-
+                    datasource = db.find_one("datasource", {"email": user["email"]})
+                    if datasource:
+                        return redirect('/account/audit-history')
                     try:
                         current_analyticsemail = user['ga_email']
                     except:
