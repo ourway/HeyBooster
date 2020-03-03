@@ -87,9 +87,10 @@ def check_tokens(user):
                     flask.session['ga_accesstoken'] = user['ga_accesstoken']
             except Exception as err:
                 print('Google Analytics Token Error:', str(err))
-#                db.find_and_modify('user', query = {'_id':user['_id']},
-#                                        ga_accesstoken = '',
-#                                        ga_refreshtoken = '') 
+                if 'access_token' in str(err):
+                    db.find_and_modify('user', query = {'_id':user['_id']},
+                                            ga_accesstoken = '',
+                                            ga_refreshtoken = '') 
                 if flask.session.get('ga_accesstoken'):
                     flask.session['ga_accesstoken'] = ''
                 gaActivity = False
