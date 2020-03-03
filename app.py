@@ -582,7 +582,8 @@ def getaudit_without_slack_added():
 
 @app.route('/account/recommendation<datasourceID>')
 def recommendation(datasourceID):
-    names = {"adwordsAccountConnection": "Adwords Account Connection",
+    names = {
+             "adwordsAccountConnection": "Adwords Account Connection",
              "paymentReferral": "Payment Referral",
              "gdprCompliant": "GDPR Compliant",
              "dataRetentionPeriod": "Data Retention Period",
@@ -638,7 +639,6 @@ def recommendation(datasourceID):
               "internalSearchTermConsistency": 2,
               "samplingCheck": 1
               }
-
     #    notification = db.find_one('notification', {'datasourceID': ObjectId(datasourceID)})
     #    lastStates = notification['lastStates']
 
@@ -1252,7 +1252,8 @@ def wrongaccount():
         return render_template('new_theme/connected_accounts.html', current_analyticsemail=current_analyticsemail)
 
     else:
-        if not (session['sl_accesstoken'] or session['ga_accesstoken']):
+#        if not (session['sl_accesstoken'] or session['ga_accesstoken']):
+        if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
         slack_token = user['sl_accesstoken']
         client = WebClient(token=slack_token)
@@ -1577,7 +1578,8 @@ def connectaccount():
                                current_analyticsemail=current_analyticsemail)
 
     else:
-        if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+#        if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+        if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
 
         slack_token = user['sl_accesstoken']
@@ -1892,7 +1894,8 @@ def getaudit():
                                analytics_audits=analytics_audits, reports=reports)
 
     else:
-        if not (session['sl_accesstoken'] or session['ga_accesstoken']):
+#        if not (session['sl_accesstoken'] or session['ga_accesstoken']):
+        if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
         slack_token = user['sl_accesstoken']
         client = WebClient(token=slack_token)
