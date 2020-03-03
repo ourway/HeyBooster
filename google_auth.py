@@ -78,6 +78,8 @@ def check_tokens(user):
                 if flask.session.get('sl_accesstoken'):
                     flask.session['sl_accesstoken'] = ''
                 slackActivity = False
+        else:
+            flask.session['sl_accesstoken'] = ''            
         #
         #Check Google Analytics Tokens
         if user['ga_accesstoken']:
@@ -94,6 +96,8 @@ def check_tokens(user):
                 if flask.session.get('ga_accesstoken'):
                     flask.session['ga_accesstoken'] = ''
                 gaActivity = False
+        else:
+            flask.session['ga_accesstoken'] = ''
         f.write('INFO - Email: {} - Slack Response: {} - GA Response: {}\n'.format(user['email'], slackActivity, gaActivity))
         flask.session['TOKENCHECKED'] = 'Checked'
         return True
