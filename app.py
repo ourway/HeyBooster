@@ -125,7 +125,8 @@ def send_message():
 @app.route('/', methods=['GET'])
 @login_required
 def base():
-    if not session['email']:
+#    if not session['email']:
+    if not session.get('ga_accesstoken'):
         return redirect('/getstarted/connect-accounts')
     else:
         user = db.find_one('user', query = {'email':session['email']})
@@ -263,7 +264,8 @@ def connectaccount_without_slack():
 @app.route("/account/audit-history-without-slack-added", methods=['GET', 'POST'])
 @login_required
 def getaudit_without_slack_added():
-    if not session['email']:
+#    if not session['email']:
+    if not session.get('ga_accesstoken'):
         return redirect('/getstarted/connect-accounts')
 
     datasources = db.find('datasource', query={'email': session['email']})
@@ -1508,7 +1510,8 @@ def connectaccount():
     user = db.find_one('user', {'email': session['email']})
 
     if not user['sl_accesstoken']:
-        if not session['email']:
+#        if not session['email']:
+        if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
 
         user = db.find_one('user', {'email': session['email']})
@@ -1766,7 +1769,8 @@ def getaudit():
         tz_offset = 0
     #        db.find_and_modify('user', query={'_id': user['_id']}, tz_offset=tz_offset)
     if user['sl_accesstoken'] == '':
-        if not session['email']:
+#        if not session['email']:
+        if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
 
         #        ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
