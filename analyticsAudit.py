@@ -1141,7 +1141,7 @@ def goalSettingActivity(dataSource):
     results = makeRequestWithExponentialBackoff(req)
     result = int(results['reports'][0]['data']['totals'][0]['values'][0])
 
-    if result < 20:
+    if result == 0:
         attachments += [{
             "text": "When your goals are not yet set up, you should configure your macro and micro goals.",
             "color": "danger",
