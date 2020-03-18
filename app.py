@@ -28,7 +28,7 @@ from urllib.request import urlopen
 from json import load
 import pytz
 import logging
-from mailing import mail
+# from mailing import mail
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
 imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
