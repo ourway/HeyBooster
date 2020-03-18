@@ -27,6 +27,8 @@ import sys
 from urllib.request import urlopen
 from json import load
 import pytz
+import logging
+from mailing import mail
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
 imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
@@ -38,6 +40,9 @@ TOKEN_INFO_URI = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID').strip()
 CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET').strip()
+
+logging.basicConfig(filename="appPy.log", filemode='a',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
 # Kullanıcı Giriş Decorator'ı
@@ -51,10 +56,12 @@ def login_required(f):
 
     return decorated_function
 
+
 def logout_user(self):
-        session.clear()
-        g.user = None
-        
+    session.clear()
+    g.user = None
+
+
 app = Flask(__name__)
 
 # Rate Limiting for Incoming Requests
@@ -85,9 +92,9 @@ app.register_blueprint(google_analytics.app)
 
 @app.errorhandler(500)
 def internal_error(error):
-    user = db.find_one('user', query = {'email':session['email']})
+    user = db.find_one('user', query={'email': session['email']})
     if user:
-#        if not session.get('TOKENCHECKED'):
+        #        if not session.get('TOKENCHECKED'):
         google_auth.check_tokens(user)
     return redirect('/')
 
@@ -125,13 +132,13 @@ def send_message():
 @app.route('/', methods=['GET'])
 @login_required
 def base():
-#    if not session['email']:
+    #    if not session['email']:
     if not session.get('ga_accesstoken'):
         return redirect('/getstarted/connect-accounts')
     else:
-        user = db.find_one('user', query = {'email':session['email']})
+        user = db.find_one('user', query={'email': session['email']})
         if user:
-#            if not session.get('TOKENCHECKED'):
+            #            if not session.get('TOKENCHECKED'):
             google_auth.check_tokens(user)
         return redirect('/account/audit-history')
 
@@ -172,7 +179,8 @@ def home():
                 # Fill the boxes for the value of slack_confirm and analytics_confirm
                 return render_template('home.html', slack_confirm=slack_confirm, analytics_confirm=analytics_confirm,
                                        current_analyticsemail=current_analyticsemail)
-        except:
+        except Exception as error:
+            logging.error(f"Connect Accounts Failed--- User Email: {session['email']}  --- {str(error)}")
             return redirect('/logout')
     else:
         return redirect('/login')
@@ -181,10 +189,13 @@ def home():
 @app.route('/without_slack', methods=['GET', 'POST'])
 @login_required
 def without_slack():
-    if session['ga_accesstoken']:
-        return redirect('/getstarted/get-first-insight')
-    else:
-        return redirect('/account/audit-history')
+    try:
+        if session['ga_accesstoken']:
+            return redirect('/getstarted/get-first-insight')
+        else:
+            return redirect('/account/audit-history')
+    except Exception as error:
+        logging.error(f"Without Slack Failed--- User Email: {session['email']}  --- {str(error)}")
 
 
 @app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
@@ -264,7 +275,7 @@ def connectaccount_without_slack():
 @app.route("/account/audit-history-without-slack-added", methods=['GET', 'POST'])
 @login_required
 def getaudit_without_slack_added():
-#    if not session['email']:
+    #    if not session['email']:
     if not session.get('ga_accesstoken'):
         return redirect('/getstarted/connect-accounts')
 
@@ -585,34 +596,34 @@ def getaudit_without_slack_added():
 @app.route('/account/recommendation<datasourceID>')
 def recommendation(datasourceID):
     names = {
-             "adwordsAccountConnection": "Adwords Account Connection",
-             "paymentReferral": "Payment Referral",
-             "gdprCompliant": "GDPR Compliant",
-             "dataRetentionPeriod": "Data Retention Period",
-             "enhancedECommerceActivity": "Enhanced ECommerce Activity",
-             "domainControl": "Domain Control",
-             "rawDataView": "Raw Data View",
-             "userPermission": "User Permission",
-             "bounceRateTracking": "Bounce Rate Tracking",
-             "selfReferral": "Self Referral",
-             "botSpamExcluding": "Bot Spam Excluding",
-             "eventTracking": "Event Tracking",
-             "errorPage": "404 Error Page",
-             "timezone": "Timezone",
-             "currency": "Currency",
-             "notSetLandingPage": "Not Set Landing Page",
-             "sessionClickDiscrepancy": "Session Click Discrepancy",
-             "goalSettingActivity": "Goal Setting Activity",
-             "customDimension": "Custom Dimension",
-             "siteSearchTracking": "Site Search Tracking",
-             "remarketingLists": "Remarketing Lists",
-             "defaultPageControl": "Default Page Control",
-             "contentGrouping": "Content Grouping",
-             "othersInChannelGrouping": "Others In Channel Grouping",
-             "customMetric": "Custom Metric",
-             "internalSearchTermConsistency": "Internal Search Term Consistency",
-             "samplingCheck": "Sampling Check"
-             }
+        "adwordsAccountConnection": "Adwords Account Connection",
+        "paymentReferral": "Payment Referral",
+        "gdprCompliant": "GDPR Compliant",
+        "dataRetentionPeriod": "Data Retention Period",
+        "enhancedECommerceActivity": "Enhanced ECommerce Activity",
+        "domainControl": "Domain Control",
+        "rawDataView": "Raw Data View",
+        "userPermission": "User Permission",
+        "bounceRateTracking": "Bounce Rate Tracking",
+        "selfReferral": "Self Referral",
+        "botSpamExcluding": "Bot Spam Excluding",
+        "eventTracking": "Event Tracking",
+        "errorPage": "404 Error Page",
+        "timezone": "Timezone",
+        "currency": "Currency",
+        "notSetLandingPage": "Not Set Landing Page",
+        "sessionClickDiscrepancy": "Session Click Discrepancy",
+        "goalSettingActivity": "Goal Setting Activity",
+        "customDimension": "Custom Dimension",
+        "siteSearchTracking": "Site Search Tracking",
+        "remarketingLists": "Remarketing Lists",
+        "defaultPageControl": "Default Page Control",
+        "contentGrouping": "Content Grouping",
+        "othersInChannelGrouping": "Others In Channel Grouping",
+        "customMetric": "Custom Metric",
+        "internalSearchTermConsistency": "Internal Search Term Consistency",
+        "samplingCheck": "Sampling Check"
+    }
     scores = {"adwordsAccountConnection": 5,
               "paymentReferral": 5,
               "gdprCompliant": 5,
@@ -729,6 +740,7 @@ def recommendation(datasourceID):
 @app.route('/account/insights', methods=['GET', 'POST'])
 @login_required
 def insights():
+    mail.print_function
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
     for datasource in datasources:
@@ -753,8 +765,8 @@ def insights():
         data = {"email": session['email'],
                 "createdTS": ts}
         db.insert('joinPrivateBeta', data=data)
-        #flash('Join Private Beta Success', 'success')
-        return render_template('new_theme/insights.html', insights=insights, args = args)
+        # flash('Join Private Beta Success', 'success')
+        return render_template('new_theme/insights.html', insights=insights, args=args)
     else:
         try:
             for i in datasources:
@@ -778,11 +790,11 @@ def insights():
             #             except:
             #                 print("Unexpected error:", sys.exc_info())
 
-            return render_template('new_theme/insights.html', insights=insights, args = args)
+            return render_template('new_theme/insights.html', insights=insights, args=args)
         except:
-            return render_template('new_theme/insights.html', insights=insights, args = args)
-        
-    
+            return render_template('new_theme/insights.html', insights=insights, args=args)
+
+
 @app.route('/account/insights/<datasourceID>', methods=['GET', 'POST'])
 @login_required
 def insights_for_datasource(datasourceID):
@@ -793,9 +805,9 @@ def insights_for_datasource(datasourceID):
     args = sorted(unsortedargs, key=lambda i: i['createdTS'], reverse=False)
     datasource = db.find_one('datasource', query={'_id': ObjectId(datasourceID)})
     insights = []
-#    images_path = '/home/app/heybooster-v1.2/uploads'
-#    image_names = []
-#    new_images_path = '/home/app/HeyBooster/static/uploads'
+    #    images_path = '/home/app/heybooster-v1.2/uploads'
+    #    image_names = []
+    #    new_images_path = '/home/app/HeyBooster/static/uploads'
 
     if request.method == 'POST':
         insight = db.find('insight', query={'datasourceID': ObjectId(datasourceID)})
@@ -807,7 +819,7 @@ def insights_for_datasource(datasourceID):
                 "createdTS": ts}
         db.insert('joinPrivateBeta', data=data)
         flash('Join Private Beta Success', 'success')
-        return render_template('new_theme/insights.html', insights=insights, args = args)
+        return render_template('new_theme/insights.html', insights=insights, args=args)
     else:
         insight = db.find('insight', query={'datasourceID': ObjectId(datasourceID)})
         for j in insight:
@@ -829,7 +841,8 @@ def insights_for_datasource(datasourceID):
             #             except:
             #                 print("Unexpected error:", sys.exc_info())
 
-        return render_template('new_theme/insights.html', insights=insights, datasource = datasource, args = args)
+        return render_template('new_theme/insights.html', insights=insights, datasource=datasource, args=args)
+
 
 @app.route('/account/connections-without-slack')
 def wrongaccount_without_slack():
@@ -1254,7 +1267,7 @@ def wrongaccount():
         return render_template('new_theme/connected_accounts.html', current_analyticsemail=current_analyticsemail)
 
     else:
-#        if not (session['sl_accesstoken'] or session['ga_accesstoken']):
+        #        if not (session['sl_accesstoken'] or session['ga_accesstoken']):
         if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
         slack_token = user['sl_accesstoken']
@@ -1510,7 +1523,7 @@ def connectaccount():
     user = db.find_one('user', {'email': session['email']})
 
     if not user['sl_accesstoken']:
-#        if not session['email']:
+        #        if not session['email']:
         if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
 
@@ -1581,7 +1594,7 @@ def connectaccount():
                                current_analyticsemail=current_analyticsemail)
 
     else:
-#        if not (session['sl_accesstoken'] and session['ga_accesstoken']):
+        #        if not (session['sl_accesstoken'] and session['ga_accesstoken']):
         if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
 
@@ -1761,7 +1774,7 @@ def account():
 def getaudit():
     user = db.find_one('user', {'email': session['email']})
     if user:
-#        if not session.get('TOKENCHECKED'):
+        #        if not session.get('TOKENCHECKED'):
         google_auth.check_tokens(user)
     try:
         tz_offset = user["tz_offset"]
@@ -1769,7 +1782,7 @@ def getaudit():
         tz_offset = 0
     #        db.find_and_modify('user', query={'_id': user['_id']}, tz_offset=tz_offset)
     if user['sl_accesstoken'] == '':
-#        if not session['email']:
+        #        if not session['email']:
         if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
 
@@ -1820,45 +1833,48 @@ def getaudit():
                 r["dataSourceName"] = datasource["dataSourceName"]
                 unsortedreports.append(r)
             unsortedargs.append(datasource)
-        if request.method == 'POST':
-            #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
-            #        local_ts = time.asctime(time.localtime(ts))
-            ts = time.time()
+        try:
+            if request.method == 'POST':
+                #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
+                #        local_ts = time.asctime(time.localtime(ts))
+                ts = time.time()
 
-            data = {
-                'email': session['email'],
-                'sourceType': "Google Analytics",
-                'dataSourceName': nForm.data_source_name.data,
-                'accountID': nForm.account.data.split('\u0007')[0],
-                'accountName': nForm.account.data.split('\u0007')[1],
-                'propertyID': nForm.property.data.split('\u0007')[0],
-                'propertyName': nForm.property.data.split('\u0007')[1],
-                'viewID': nForm.view.data.split('\u0007')[0],
-                'currency': nForm.view.data.split('\u0007')[1],
-                'viewName': nForm.view.data.split('\u0007')[2],
-                'channelType': "Web",
-                'createdTS': ts
-            }
-            _id = db.insert_one("datasource", data=data).inserted_id
-            data['_id'] = _id
-            unsortedargs.append(data)
-            if len(unsortedargs) == 1:
-                insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                         dataSourceID=_id,
-                                                         channelID='', sendWelcome=False)
-                run_analyticsAudit_without_slack.delay(str(data['_id']))
-            else:
-                insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                         dataSourceID=_id,
-                                                         channelID='')
-                run_analyticsAudit_without_slack.delay(str(data['_id']))
+                data = {
+                    'email': session['email'],
+                    'sourceType': "Google Analytics",
+                    'dataSourceName': nForm.data_source_name.data,
+                    'accountID': nForm.account.data.split('\u0007')[0],
+                    'accountName': nForm.account.data.split('\u0007')[1],
+                    'propertyID': nForm.property.data.split('\u0007')[0],
+                    'propertyName': nForm.property.data.split('\u0007')[1],
+                    'viewID': nForm.view.data.split('\u0007')[0],
+                    'currency': nForm.view.data.split('\u0007')[1],
+                    'viewName': nForm.view.data.split('\u0007')[2],
+                    'channelType': "Web",
+                    'createdTS': ts
+                }
+                _id = db.insert_one("datasource", data=data).inserted_id
+                data['_id'] = _id
+                unsortedargs.append(data)
+                if len(unsortedargs) == 1:
+                    insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                             dataSourceID=_id,
+                                                             channelID='', sendWelcome=False)
+                    run_analyticsAudit_without_slack.delay(str(data['_id']))
+                else:
+                    insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                             dataSourceID=_id,
+                                                             channelID='')
+                    run_analyticsAudit_without_slack.delay(str(data['_id']))
 
-            #        analyticsAudit(slack_token, task=None, dataSource=data)
-            # flash("Check out your connected slack channel, heybooster even wrote you.")
+                #        analyticsAudit(slack_token, task=None, dataSource=data)
+                # flash("Check out your connected slack channel, heybooster even wrote you.")
 
-            #        analyticsAudit(slack_token, task=None, dataSource=data)
+                #        analyticsAudit(slack_token, task=None, dataSource=data)
 
-            flash("Check out your connected slack channel, heybooster even wrote you.")
+                flash("Check out your connected slack channel, heybooster even wrote you.")
+        except Exception as error:
+            logging.error(f"Get Audit Failed--- User Email: {session['email']}  --- {str(error)}")
 
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
         if (useraccounts):
@@ -1898,7 +1914,7 @@ def getaudit():
                                analytics_audits=analytics_audits, reports=reports)
 
     else:
-#        if not (session['sl_accesstoken'] or session['ga_accesstoken']):
+        #        if not (session['sl_accesstoken'] or session['ga_accesstoken']):
         if not session.get('ga_accesstoken'):
             return redirect('/getstarted/connect-accounts')
         slack_token = user['sl_accesstoken']
@@ -1937,80 +1953,83 @@ def getaudit():
                 r["dataSourceName"] = datasource["dataSourceName"]
                 unsortedreports.append(r)
             unsortedargs.append(datasource)
-        if request.method == 'POST':
-            #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
-            #        local_ts = time.asctime(time.localtime(ts))
-            ts = time.time()
-            uID = user['sl_userid']
+        try:
+            if request.method == 'POST':
+                #        uID = db.find_one("user", query={"email": session["email"]})['sl_userid']
+                #        local_ts = time.asctime(time.localtime(ts))
+                ts = time.time()
+                uID = user['sl_userid']
 
-            if request.form.getlist('checkbox_channel'):
-                data = {
-                    'email': session['email'],
-                    'sl_userid': uID,
-                    'sourceType': "Google Analytics",
-                    'dataSourceName': nForm.data_source_name.data,
-                    'accountID': nForm.account.data.split('\u0007')[0],
-                    'accountName': nForm.account.data.split('\u0007')[1],
-                    'propertyID': nForm.property.data.split('\u0007')[0],
-                    'propertyName': nForm.property.data.split('\u0007')[1],
-                    'viewID': nForm.view.data.split('\u0007')[0],
-                    'currency': nForm.view.data.split('\u0007')[1],
-                    'viewName': nForm.view.data.split('\u0007')[2],
-                    'channelType': "Slack",
-                    'channelID': nForm.channel.data.split('\u0007')[0],
-                    'channelName': nForm.channel.data.split('\u0007')[1],
-                    'createdTS': ts
-                }
-            else:
-                data = {
-                    'email': session['email'],
-                    'sourceType': "Google Analytics",
-                    'dataSourceName': nForm.data_source_name.data,
-                    'accountID': nForm.account.data.split('\u0007')[0],
-                    'accountName': nForm.account.data.split('\u0007')[1],
-                    'propertyID': nForm.property.data.split('\u0007')[0],
-                    'propertyName': nForm.property.data.split('\u0007')[1],
-                    'viewID': nForm.view.data.split('\u0007')[0],
-                    'currency': nForm.view.data.split('\u0007')[1],
-                    'viewName': nForm.view.data.split('\u0007')[2],
-                    'channelType': "Web",
-                    'createdTS': ts
-                }
-
-            _id = db.insert_one("datasource", data=data).inserted_id
-            data['_id'] = _id
-            unsortedargs.append(data)
-            if len(unsortedargs) == 1:
                 if request.form.getlist('checkbox_channel'):
-                    insertdefaultnotifications(session['email'], userID=uID,
-                                               dataSourceID=_id,
-                                               channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+                    data = {
+                        'email': session['email'],
+                        'sl_userid': uID,
+                        'sourceType': "Google Analytics",
+                        'dataSourceName': nForm.data_source_name.data,
+                        'accountID': nForm.account.data.split('\u0007')[0],
+                        'accountName': nForm.account.data.split('\u0007')[1],
+                        'propertyID': nForm.property.data.split('\u0007')[0],
+                        'propertyName': nForm.property.data.split('\u0007')[1],
+                        'viewID': nForm.view.data.split('\u0007')[0],
+                        'currency': nForm.view.data.split('\u0007')[1],
+                        'viewName': nForm.view.data.split('\u0007')[2],
+                        'channelType': "Slack",
+                        'channelID': nForm.channel.data.split('\u0007')[0],
+                        'channelName': nForm.channel.data.split('\u0007')[1],
+                        'createdTS': ts
+                    }
                 else:
-                    # Without Slack
-                    insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                             dataSourceID=_id,
-                                                             channelID='')
-                    run_analyticsAudit_without_slack.delay(str(data['_id']))
-                run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
-            else:
-                if request.form.getlist('checkbox_channel'):
-                    insertdefaultnotifications(session['email'], userID=uID,
-                                               dataSourceID=_id,
-                                               channelID=nForm.channel.data.split('\u0007')[0])
-                    run_analyticsAudit.delay(slack_token, str(data['_id']))
+                    data = {
+                        'email': session['email'],
+                        'sourceType': "Google Analytics",
+                        'dataSourceName': nForm.data_source_name.data,
+                        'accountID': nForm.account.data.split('\u0007')[0],
+                        'accountName': nForm.account.data.split('\u0007')[1],
+                        'propertyID': nForm.property.data.split('\u0007')[0],
+                        'propertyName': nForm.property.data.split('\u0007')[1],
+                        'viewID': nForm.view.data.split('\u0007')[0],
+                        'currency': nForm.view.data.split('\u0007')[1],
+                        'viewName': nForm.view.data.split('\u0007')[2],
+                        'channelType': "Web",
+                        'createdTS': ts
+                    }
+
+                _id = db.insert_one("datasource", data=data).inserted_id
+                data['_id'] = _id
+                unsortedargs.append(data)
+                if len(unsortedargs) == 1:
+                    if request.form.getlist('checkbox_channel'):
+                        insertdefaultnotifications(session['email'], userID=uID,
+                                                   dataSourceID=_id,
+                                                   channelID=nForm.channel.data.split('\u0007')[0], sendWelcome=True)
+                    else:
+                        # Without Slack
+                        insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                                 dataSourceID=_id,
+                                                                 channelID='')
+                        run_analyticsAudit_without_slack.delay(str(data['_id']))
+                    run_analyticsAudit.delay(slack_token, str(data['_id']), sendFeedback=True)
                 else:
-                    # Without Slack
-                    insertdefaultnotifications_without_slack(session['email'], userID='',
-                                                             dataSourceID=_id,
-                                                             channelID='')
-                    run_analyticsAudit_without_slack.delay(str(data['_id']))
+                    if request.form.getlist('checkbox_channel'):
+                        insertdefaultnotifications(session['email'], userID=uID,
+                                                   dataSourceID=_id,
+                                                   channelID=nForm.channel.data.split('\u0007')[0])
+                        run_analyticsAudit.delay(slack_token, str(data['_id']))
+                    else:
+                        # Without Slack
+                        insertdefaultnotifications_without_slack(session['email'], userID='',
+                                                                 dataSourceID=_id,
+                                                                 channelID='')
+                        run_analyticsAudit_without_slack.delay(str(data['_id']))
 
-            #        analyticsAudit(slack_token, task=None, dataSource=data)
-            # flash("Check out your connected slack channel, heybooster even wrote you.")
+                #        analyticsAudit(slack_token, task=None, dataSource=data)
+                # flash("Check out your connected slack channel, heybooster even wrote you.")
 
-            #        analyticsAudit(slack_token, task=None, dataSource=data)
+                #        analyticsAudit(slack_token, task=None, dataSource=data)
 
-            flash("Check out your connected slack channel, heybooster even wrote you.")
+                flash("Check out your connected slack channel, heybooster even wrote you.")
+        except Exception as error:
+            logging.error(f"Connect Accounts Failed--- User Email: {session['email']}  --- {str(error)}")
 
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
         if (useraccounts):
