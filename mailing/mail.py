@@ -1,5 +1,5 @@
 from __future__ import print_function
-import mailing.mailing_auth
+import mailing.auth
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email import encoders
