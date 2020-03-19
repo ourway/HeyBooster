@@ -28,7 +28,7 @@ from urllib.request import urlopen
 from json import load
 import pytz
 import logging
-# from mailing import mail
+from mailing import mail
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
 imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
@@ -740,7 +740,7 @@ def recommendation(datasourceID):
 @app.route('/account/insights', methods=['GET', 'POST'])
 @login_required
 def insights():
-    #mail.print_function
+    mail.print_function
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
     for datasource in datasources:

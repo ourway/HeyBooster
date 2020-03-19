@@ -1,5 +1,5 @@
 from __future__ import print_function
-import mailing.auth
+from mailing import auth
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email import encoders
@@ -55,10 +55,11 @@ def mail(text, STATUS, filename=None):
         print('A mail error occurred: %s' % error)
 
 
-authInst = auth.auth(SCOPES, CLIENT_SECRET_FILE, BOTNAME)
-credentials = authInst.get_credentials()
-http = credentials.authorize(httplib2.Http())
-gmail_service = discovery.build('gmail', 'v1', http=http)
-message = " Server has finished.\nINFO:\n{}\n"
-intro_string = ("Hi,\n{} in {}" + message.format(BOTNAME, SERVERNAME, message))
-mail(intro_string, 'INFO')
+if __name__ == '__main__':
+    authInst = auth.auth(SCOPES, CLIENT_SECRET_FILE, BOTNAME)
+    credentials = authInst.get_credentials()
+    http = credentials.authorize(httplib2.Http())
+    gmail_service = discovery.build('gmail', 'v1', http=http)
+    message = " Server has finished.\nINFO:\n{}\n"
+    intro_string = ("Hi,\n{} in {}" + message.format(BOTNAME, SERVERNAME, message))
+    mail(intro_string, 'INFO')
