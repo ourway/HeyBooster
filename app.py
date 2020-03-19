@@ -740,7 +740,13 @@ def recommendation(datasourceID):
 @app.route('/account/insights', methods=['GET', 'POST'])
 @login_required
 def insights():
-    mail.print_function
+    print('------------------------------')
+    try:
+        print('*****************************')
+        mail.print_function
+    except Exception as err:
+        print(err)
+
     datasources = db.find('datasource', query={'email': session['email']})
     unsortedargs = []
     for datasource in datasources:
