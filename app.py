@@ -750,8 +750,10 @@ def insights():
     join_private_beta_status = db.find_one('joinPrivateBeta', query={'email': session['email']})
 
     print('***********************************')
-    print('11111111111111111', join_private_beta_status)
-    print(len(join_private_beta_status))
+    try:
+        print(len(join_private_beta_status))
+    except Exception as err:
+        print(err)
     print('***********************************')
 
     unsortedargs = []
