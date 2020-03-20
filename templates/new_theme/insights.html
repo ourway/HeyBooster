@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Audit Details</title>
+    <title>Insights</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
           href="{{ url_for('static', filename='new_static/css/vertical-layout-light/style.css') }}">
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T">
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJT   QUOhcWr7x9JvoRxT2MZw1T">
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
         w[l] = w[l] || [];
@@ -313,20 +313,19 @@
                         </h3>
                     </div>
                     <div class="text-center">
-                        <form method="POST" action="/account/insights" name="myForm">
-                            <button class="btn btn-dark col-md-6 col-md-offset-3"
-                                    style="width: auto; margin-right: 10px;">
-                                Join Private Beta
-                            </button>
-                        </form>
                         {% if join_private_beta_status %}
                             <p>
                                 <b>
-                                    We will connect with you soon!🖐🖐 🖐🖐🖐&#128400;&#127996;
+                                    We will connect with you soon!🖐🖐 🖐🖐🖐&#128400;
                                 </b>
                             </p>
                         {% else %}
-                            <p></p>
+                            <form method="POST" action="/account/insights" name="myForm">
+                                <button class="btn btn-dark col-md-6 col-md-offset-3"
+                                        style="width: auto; margin-right: 10px;">
+                                    Join Private Beta
+                                </button>
+                            </form>
                         {% endif %}
                     </div>
                 </div>

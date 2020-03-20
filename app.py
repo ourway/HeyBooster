@@ -749,6 +749,10 @@ def insights():
 
     join_private_beta_status = db.find('joinPrivateBeta', query={'emial': session['email']})
 
+    print('***********************************')
+    print(join_private_beta_status)
+    print('***********************************')
+
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
