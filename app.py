@@ -741,7 +741,7 @@ def recommendation(datasourceID):
 def insights():
     try:
         print('**************************')
-        os.system('sudo python3 mailing/mail.py')
+        os.system('python3 mailing/mail.py')
     except Exception as error:
         print(error)
 
