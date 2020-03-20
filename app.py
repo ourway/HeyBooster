@@ -749,13 +749,6 @@ def insights():
 
     join_private_beta_status = db.find_one('joinPrivateBeta', query={'email': session['email']})
 
-    print('***********************************')
-    try:
-        print(len(join_private_beta_status))
-    except Exception as err:
-        print(err)
-    print('***********************************')
-
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)

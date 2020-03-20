@@ -313,19 +313,19 @@
                         </h3>
                     </div>
                     <div class="text-center">
-                        {% if join_private_beta_status %}
-                            <p>
-                                <b>
-                                    We will connect with you soon!🖐🖐 🖐🖐🖐&#128400;
-                                </b>
-                            </p>
-                        {% else %}
+                        {% if join_private_beta_status < 1 %}
                             <form method="POST" action="/account/insights" name="myForm">
                                 <button class="btn btn-dark col-md-6 col-md-offset-3"
                                         style="width: auto; margin-right: 10px;">
                                     Join Private Beta
                                 </button>
                             </form>
+                        {% else %}
+                            <p>
+                                <b>
+                                    We will connect with you soon!🖐🖐 🖐🖐🖐&#128400;
+                                </b>
+                            </p>
                         {% endif %}
                     </div>
                 </div>
