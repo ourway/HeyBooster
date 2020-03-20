@@ -750,9 +750,7 @@ def insights():
     join_private_beta_status = db.find('joinPrivateBeta', query={'emial': session['email']})
 
     print('***********************************')
-    for j in join_private_beta_status:
-        print(j)
-    print(len(j))
+
     print('***********************************')
 
     unsortedargs = []
