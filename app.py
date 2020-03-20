@@ -746,6 +746,9 @@ def insights():
         print(error)
 
     datasources = db.find('datasource', query={'email': session['email']})
+
+    join_private_beta_status = db.find('joinPrivateBeta', query={'emial': session['email']})
+
     unsortedargs = []
     for datasource in datasources:
         unsortedargs.append(datasource)
@@ -770,7 +773,7 @@ def insights():
                 "createdTS": ts}
         db.insert('joinPrivateBeta', data=data)
         # flash('Join Private Beta Success', 'success')
-        return render_template('new_theme/insights.html', insights=insights, args=args)
+        return render_template('new_theme/insights.html', insights=insights, args=args, join_private_beta_status=join_private_beta_status)
     else:
         try:
             for i in datasources:
@@ -794,9 +797,9 @@ def insights():
             #             except:
             #                 print("Unexpected error:", sys.exc_info())
 
-            return render_template('new_theme/insights.html', insights=insights, args=args)
+            return render_template('new_theme/insights.html', insights=insights, args=args, join_private_beta_status=join_private_beta_status)
         except:
-            return render_template('new_theme/insights.html', insights=insights, args=args)
+            return render_template('new_theme/insights.html', insights=insights, args=args, join_private_beta_status=join_private_beta_status)
 
 
 @app.route('/account/insights/<datasourceID>', methods=['GET', 'POST'])
