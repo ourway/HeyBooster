@@ -147,7 +147,7 @@ def base():
 @login_required
 def test():
     if request.method == 'GET':
-        call(['python3', 'mailing/mail.py'])
+        call(['python3', 'mail.py'])
         return render_template('test12.html')
 
 
