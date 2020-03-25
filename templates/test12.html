@@ -7,52 +7,9 @@
     <link rel="shortcut icon" href="../../static/images/heybooster-icon.png"/>
 
 </head>
-<style>
-    #prog {
-        width: 400px;
-        border: 1px solid red;
-        height: 20px;
-    }
-
-    #bar {
-        width: 0px;
-        background-color: blue;
-        height: 20px;
-    }
-</style>
-
 <body style="margin: 100px;">
 
-<h3></h3>
-<div id="prog">
-    <div id="bar"></div>
-</div>
-<div id="pct"></div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script>
-    function poll() {
-        $.ajax("{{url_for('.progress', jobid=JOBID)}}", {
-            dataType: "json"
-            , success: function (resp) {
-                console.log(resp);
-                $("#pct").html(resp.progress);
-                $("#bar").css({width: $("#prog").width() * resp.progress});
-                if (resp.progress >= 0.9) {
-                    $("#bar").css({backgroundColor: "green"});
-                    return;
-                } else {
-                    setTimeout(poll, 1000.0);
-                }
-            }
-        });
-    }
 
-    $(function () {
-        var JOBID = "{{ JOBID }}";
-        $("h3").html("JOB: " + JOBID);
-        poll();
-    });
-</script>
 
 </body>
 </html>

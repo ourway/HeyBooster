@@ -28,6 +28,7 @@ from urllib.request import urlopen
 from json import load
 import pytz
 import logging
+from subprocess import call
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME').strip()
 imageurl = "https://" + DOMAIN_NAME + "/images/{}.png"
@@ -140,6 +141,14 @@ def base():
             #            if not session.get('TOKENCHECKED'):
             google_auth.check_tokens(user)
         return redirect('/account/audit-history')
+
+
+@app.route('/test', methods=['GET'])
+@login_required
+def test():
+    if request.method == 'GET':
+        call(['python3', 'mailing/mail.py'])
+        return render_template('test12.html')
 
 
 @app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
@@ -773,7 +782,8 @@ def insights():
                 "createdTS": ts}
         db.insert('joinPrivateBeta', data=data)
         # flash('Join Private Beta Success', 'success')
-        return render_template('new_theme/insights.html', insights=insights, args=args, join_private_beta_status=join_private_beta_status)
+        return render_template('new_theme/insights.html', insights=insights, args=args,
+                               join_private_beta_status=join_private_beta_status)
     else:
         try:
             for i in datasources:
@@ -797,9 +807,11 @@ def insights():
             #             except:
             #                 print("Unexpected error:", sys.exc_info())
 
-            return render_template('new_theme/insights.html', insights=insights, args=args, join_private_beta_status=join_private_beta_status)
+            return render_template('new_theme/insights.html', insights=insights, args=args,
+                                   join_private_beta_status=join_private_beta_status)
         except:
-            return render_template('new_theme/insights.html', insights=insights, args=args, join_private_beta_status=join_private_beta_status)
+            return render_template('new_theme/insights.html', insights=insights, args=args,
+                                   join_private_beta_status=join_private_beta_status)
 
 
 @app.route('/account/insights/<datasourceID>', methods=['GET', 'POST'])
