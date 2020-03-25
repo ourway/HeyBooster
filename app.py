@@ -143,12 +143,12 @@ def base():
         return redirect('/account/audit-history')
 
 
-@app.route('/test', methods=['GET'])
-@login_required
-def test():
-    if request.method == 'GET':
-        call(['python3', 'mail.py'])
-        return render_template('test12.html')
+# @app.route('/test', methods=['GET'])
+# @login_required
+# def test():
+#     if request.method == 'GET':
+#         call(['python3', 'mail.py'])
+#         return render_template('test12.html')
 
 
 @app.route('/getstarted/connect-accounts', methods=['GET', 'POST'])
@@ -189,6 +189,7 @@ def home():
                                        current_analyticsemail=current_analyticsemail)
         except Exception as error:
             logging.error(f"Connect Accounts Failed--- User Email: {session['email']}  --- {str(error)}")
+            call(['python3', 'mail.py'])
             return redirect('/logout')
     else:
         return redirect('/login')
@@ -204,6 +205,7 @@ def without_slack():
             return redirect('/account/audit-history')
     except Exception as error:
         logging.error(f"Without Slack Failed--- User Email: {session['email']}  --- {str(error)}")
+        call(['python3', 'mail.py'])
 
 
 @app.route("/getstarted/get-first-insight-without-slack", methods=['GET', 'POST'])
@@ -1894,6 +1896,7 @@ def getaudit():
                 flash("Check out your connected slack channel, heybooster even wrote you.")
         except Exception as error:
             logging.error(f"Get Audit Failed--- User Email: {session['email']}  --- {str(error)}")
+            call(['python3', 'mail.py'])
 
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
         if (useraccounts):
@@ -2049,6 +2052,7 @@ def getaudit():
                 flash("Check out your connected slack channel, heybooster even wrote you.")
         except Exception as error:
             logging.error(f"Connect Accounts Failed--- User Email: {session['email']}  --- {str(error)}")
+            call(['python3', 'mail.py'])
 
         useraccounts = google_analytics.get_accounts(session['email'])['accounts']
         if (useraccounts):
