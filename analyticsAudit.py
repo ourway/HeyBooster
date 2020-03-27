@@ -15,13 +15,13 @@ TIMEDOUT_ERROR = "The read operation timed out"
 
 
 def makeRequestWithExponentialBackoff(req):
-    for n in range(0, 5):
+    for n in range(0, 7):
         try:
             return req.execute()
         except HttpError as error:
             loopError = error
             if error.resp.reason in ['userRateLimitExceeded', 'quotaExceeded',
-                                     'internalServerError', 'backendError']:
+                                     'internalServerError', 'backendError', 'Too Many Requests']:
                 time.sleep((2 ** n) + random.random())
             else:
                 break
@@ -351,9 +351,11 @@ def analyticsAudit(slack_token, task, dataSource, sendFeedback=False):
                 logging.error(f"TASK DID NOT RUN --- User Email: {dataSource['email']} Data Source ID: {dataSource['_id']} Task Type: {function.__name__} --- {str(ex)}")
                 #https://developers.google.com/analytics/devguides/reporting/core/v4/errors
                 if ex.resp.reason in ['userRateLimitExceeded', 'quotaExceeded',
-                                      'internalServerError', 'backendError']:
+                                      'internalServerError', 'backendError', 'Too Many Requests']:
                     time.sleep((2 ** trycount) + random.random())
-                trycount += 1
+                    trycount+= 1
+                else:
+                    raise ex
     
     db.find_and_modify('notification', query={'_id': task['_id']}, lastStates = currentStates,
                                                                       totalScore = totalScore,
