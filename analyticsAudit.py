@@ -1321,7 +1321,7 @@ def paymentReferral(dataSource):
     req = service.reports().batchGet(body=body)
     results = makeRequestWithExponentialBackoff(req)
     totalSession = int(results['reports'][0]['data']['totals'][0]['values'][1])
-    for row in results['reports'][0]['data'].get('rows'):
+    for row in results['reports'][0]['data'].get('rows', []):
         newUsers = int(row['metrics'][0]['values'][0])
         sessions = int(row['metrics'][0]['values'][1])
         transactionsPerSession = float(row['metrics'][0]['values'][2])
