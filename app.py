@@ -750,12 +750,6 @@ def recommendation(datasourceID):
 @app.route('/account/insights', methods=['GET', 'POST'])
 @login_required
 def insights():
-    try:
-        print('**************************')
-        os.system('python3 mailing/mail.py')
-    except Exception as error:
-        print(error)
-
     datasources = db.find('datasource', query={'email': session['email']})
 
     join_private_beta_status = db.find_one('joinPrivateBeta', query={'email': session['email']})
