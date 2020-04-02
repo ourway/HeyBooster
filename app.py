@@ -753,6 +753,7 @@ def insights():
     datasources = db.find('datasource', query={'email': session['email']})
 
     join_private_beta_status = db.find_one('joinPrivateBeta', query={'email': session['email']})
+    print(join_private_beta_status)
 
     unsortedargs = []
     for datasource in datasources:
