@@ -769,6 +769,7 @@ def insights():
             for i in datasources:
                 insight = db.find('insight', query={'datasourceID': i['_id']})
                 for j in insight:
+                    print("***********************",j)
                     insights.append(j)
         except:
             insights = []
