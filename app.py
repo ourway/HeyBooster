@@ -767,20 +767,26 @@ def insights():
     if request.method == 'POST':
         try:
             for i in datasources:
+                print("********DATASOURCE*********", i)
                 insight = db.find('insight', query={'datasourceID': i['_id']})
                 for j in insight:
+                    print("************INSIGHT********", j)
                     insights.append(j)
         except:
             insights = []
 
         print("*****************************")
         print(insights)
+        print("*****************************")
 
         ts = time.time()
         data = {"email": session['email'],
                 "createdTS": ts}
+        print(data)
+        print("************DATA*************")
+
         db.insert('joinPrivateBeta', data=data)
-        # flash('Join Private Beta Success', 'success')
+        flash('Join Private Beta Success', 'success')
         return render_template('new_theme/insights.html', insights=insights, args=args,
                                join_private_beta_status=join_private_beta_status)
     else:
