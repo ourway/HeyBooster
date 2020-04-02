@@ -773,6 +773,9 @@ def insights():
         except:
             insights = []
 
+        print("*****************************")
+        print(insights)
+
         ts = time.time()
         data = {"email": session['email'],
                 "createdTS": ts}
