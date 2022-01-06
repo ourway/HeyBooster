@@ -46,7 +46,7 @@ babel==2.5.3
 timezonefinder==4.1.0
 ccy==1.1.0
 redis==3.3.11
-celery==4.3.0
+celery==5.2.2
 Flask-Limiter==1.1.0
 gunicorn==19.9.0
 google-api-core==1.16.0
